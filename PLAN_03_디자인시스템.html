@@ -1,0 +1,1469 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>노블홍 디자인 시스템 기획서</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Serif+Display&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #faf9f7;
+        --surface: #ffffff;
+        --surface-2: #f3f1ed;
+        --border: #e5e0d8;
+        --border-light: #d4cec4;
+        --text: #1a1714;
+        --text-secondary: #5c564e;
+        --text-muted: #9e9893;
+        --gold: #a08030;
+        --gold-light: #c4a55a;
+        --gold-dark: #7a6020;
+        --purple: #7b2d8e;
+        --purple-light: #9b4dae;
+        --ivory: #faf9f7;
+        --linen: #e8ddd0;
+        --mocha: #2a2520;
+        --champagne: #d4b86a;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.8;
+        font-size: 15px;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 60px 32px;
+      }
+      .doc-header {
+        text-align: center;
+        padding: 80px 32px 60px;
+        border-bottom: 1px solid var(--border);
+      }
+      .doc-header .brand {
+        font-size: 13px;
+        letter-spacing: 4px;
+        color: var(--gold);
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      }
+      .doc-header h1 {
+        font-size: 36px;
+        font-weight: 300;
+        margin-bottom: 12px;
+      }
+      .doc-header h1 strong {
+        font-weight: 700;
+        color: var(--gold);
+      }
+      .doc-header .subtitle {
+        color: var(--text-secondary);
+        font-size: 16px;
+      }
+      .section {
+        padding: 64px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .section:last-child {
+        border-bottom: none;
+      }
+      .section-num {
+        font-size: 12px;
+        letter-spacing: 3px;
+        color: var(--gold);
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .section h2 {
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .section h2 span {
+        color: var(--gold);
+      }
+      .section .desc {
+        color: var(--text-secondary);
+        margin-bottom: 32px;
+      }
+      .section h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 32px 0 16px;
+        padding-left: 16px;
+        border-left: 3px solid var(--gold);
+      }
+      .section h4 {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--gold-light);
+      }
+      p {
+        margin-bottom: 12px;
+      }
+
+      /* Color System */
+      .color-row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin: 16px 0;
+      }
+      .color-chip {
+        flex: 1;
+        min-width: 160px;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .color-swatch {
+        height: 100px;
+        display: flex;
+        align-items: flex-end;
+        padding: 12px;
+      }
+      .color-swatch span {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 3px;
+      }
+      .color-info {
+        padding: 12px 16px;
+        background: var(--surface);
+      }
+      .color-name {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .color-hex {
+        font-size: 12px;
+        font-family: monospace;
+        color: var(--text-muted);
+      }
+      .color-use {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+
+      /* Gradient */
+      .gradient-bar {
+        height: 60px;
+        border-radius: 10px;
+        margin: 12px 0;
+      }
+      .gradient-info {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 16px;
+      }
+
+      /* Typography */
+      .type-specimen {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 32px;
+        margin: 12px 0;
+      }
+      .type-meta {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      /* Components */
+      .comp-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+      .comp-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .comp-preview {
+        padding: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 160px;
+        background: var(--bg);
+      }
+      .comp-info {
+        padding: 16px 20px;
+        border-top: 1px solid var(--border);
+      }
+      .comp-info h5 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .comp-info p {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin: 0;
+      }
+
+      /* Spacing */
+      .spacing-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .spacing-box {
+        background: rgba(196, 165, 90, 0.2);
+        border: 1px solid var(--gold);
+      }
+      .spacing-label {
+        font-size: 13px;
+        font-family: monospace;
+        color: var(--gold);
+        min-width: 60px;
+      }
+      .spacing-value {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      /* Button demos */
+      .btn-demo {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px 32px;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        border-radius: 2px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+      .btn-primary {
+        background: transparent;
+        border: 1px solid var(--gold);
+        color: var(--gold);
+      }
+      .btn-primary:hover {
+        background: var(--gold);
+        color: var(--bg);
+      }
+      .btn-filled {
+        background: var(--gold);
+        border: 1px solid var(--gold);
+        color: var(--bg);
+      }
+      .btn-filled:hover {
+        background: var(--gold-light);
+      }
+      .btn-ghost {
+        background: transparent;
+        border: 1px solid var(--border-light);
+        color: var(--text-secondary);
+      }
+      .btn-ghost:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+
+      /* Card demo */
+      .card-demo {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 28px;
+        max-width: 320px;
+      }
+      .card-demo:hover {
+        border-color: var(--gold);
+      }
+      .card-demo h5 {
+        font-size: 18px;
+        margin-bottom: 8px;
+      }
+      .card-demo p {
+        font-size: 14px;
+        color: var(--text-secondary);
+        margin: 0;
+      }
+
+      /* Input demo */
+      .input-demo {
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 14px 16px;
+        font-size: 14px;
+        color: var(--text);
+        font-family: inherit;
+        width: 100%;
+        max-width: 360px;
+        outline: none;
+      }
+      .input-demo:focus {
+        border-color: var(--gold);
+      }
+      .input-demo::placeholder {
+        color: var(--text-muted);
+      }
+
+      /* Nav demo */
+      .nav-demo {
+        display: flex;
+        gap: 32px;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-demo a {
+        text-decoration: none;
+        font-size: 14px;
+        color: var(--text-secondary);
+        letter-spacing: 0.5px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+      }
+      .nav-demo a:hover,
+      .nav-demo a.active {
+        color: var(--gold);
+        border-bottom-color: var(--gold);
+      }
+
+      /* Icon demo */
+      .icon-grid {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin: 16px 0;
+      }
+      .icon-item {
+        text-align: center;
+        width: 80px;
+      }
+      .icon-box {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      .icon-box svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--gold);
+        stroke-width: 1.5;
+        fill: none;
+      }
+      .icon-label {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        font-size: 14px;
+      }
+      th {
+        text-align: left;
+        padding: 12px 16px;
+        background: var(--surface);
+        color: var(--gold);
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--border);
+      }
+      td {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+
+      .callout {
+        background: var(--surface-2);
+        border-left: 3px solid var(--gold);
+        padding: 16px 20px;
+        margin: 16px 0;
+        border-radius: 0 8px 8px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      .callout strong {
+        color: var(--text);
+      }
+      .note {
+        font-size: 13px;
+        color: var(--text-muted);
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="doc-header">
+      <div class="brand">Noble HoNG</div>
+      <h1>디자인 <strong>시스템 기획서</strong></h1>
+      <p class="subtitle">
+        컬러 토큰 / 타이포그래피 / 컴포넌트 / 아이콘 / 스페이싱 규칙
+      </p>
+    </header>
+
+    <div class="container">
+      <!-- ===== SECTION 1: COLOR ===== -->
+      <section class="section">
+        <div class="section-num">Section 01</div>
+        <h2>컬러 <span>시스템</span></h2>
+        <p class="desc">
+          라이트 모드 기반. 로고(Noble: Black + HoNG: Purple)를 기반으로 설계한
+          프리미엄 웨딩 팔레트. 밝고 따뜻한 배경 위에 골드 액센트로 격조를 유지.
+        </p>
+
+        <h3>배경 계열 (Background)</h3>
+        <div class="color-row">
+          <div class="color-chip">
+            <div
+              class="color-swatch"
+              style="background: #faf9f7; border-bottom: 1px solid #e5e0d8"
+            >
+              <span
+                style="
+                  background: rgba(0, 0, 0, 0.06);
+                  color: #1a1714;
+                  font-size: 11px;
+                  font-weight: 600;
+                  padding: 2px 8px;
+                  border-radius: 3px;
+                "
+                >base</span
+              >
+            </div>
+            <div class="color-info">
+              <div class="color-name">Warm White</div>
+              <div class="color-hex">#faf9f7</div>
+              <div class="color-use">
+                페이지 전체 배경. 순백(#fff) 대신 따뜻한 크림 화이트.
+              </div>
+            </div>
+          </div>
+          <div class="color-chip">
+            <div
+              class="color-swatch"
+              style="background: #ffffff; border-bottom: 1px solid #e5e0d8"
+            >
+              <span
+                style="
+                  background: rgba(0, 0, 0, 0.06);
+                  color: #1a1714;
+                  font-size: 11px;
+                  font-weight: 600;
+                  padding: 2px 8px;
+                  border-radius: 3px;
+                "
+                >card</span
+              >
+            </div>
+            <div class="color-info">
+              <div class="color-name">Pure White</div>
+              <div class="color-hex">#ffffff</div>
+              <div class="color-use">
+                카드, 모달, 드롭다운 배경. 배경과 미세한 단차.
+              </div>
+            </div>
+          </div>
+          <div class="color-chip">
+            <div
+              class="color-swatch"
+              style="background: #f3f1ed; border-bottom: 1px solid #e5e0d8"
+            >
+              <span
+                style="
+                  background: rgba(0, 0, 0, 0.06);
+                  color: #1a1714;
+                  font-size: 11px;
+                  font-weight: 600;
+                  padding: 2px 8px;
+                  border-radius: 3px;
+                "
+                >elevated</span
+              >
+            </div>
+            <div class="color-info">
+              <div class="color-name">Warm Linen</div>
+              <div class="color-hex">#f3f1ed</div>
+              <div class="color-use">
+                호버 상태, 콜아웃, 강조 배경, 섹션 교차 배경
+              </div>
+            </div>
+          </div>
+          <div class="color-chip">
+            <div
+              class="color-swatch"
+              style="background: #e5e0d8; border-bottom: 1px solid #d4cec4"
+            >
+              <span
+                style="
+                  background: rgba(0, 0, 0, 0.06);
+                  color: #1a1714;
+                  font-size: 11px;
+                  font-weight: 600;
+                  padding: 2px 8px;
+                  border-radius: 3px;
+                "
+                >border</span
+              >
+            </div>
+            <div class="color-info">
+              <div class="color-name">Sand</div>
+              <div class="color-hex">#e5e0d8</div>
+              <div class="color-use">카드 테두리, 구분선, 테이블 라인</div>
+            </div>
+          </div>
+        </div>
+
+        <h3>텍스트 계열 (Text)</h3>
+        <div class="color-row">
+          <div class="color-chip">
+            <div
+              class="color-swatch"
+              style="background: #faf9f7; border-bottom: 1px solid #e5e0d8"
+            >
+              <span style="color: #1a1714; font-size: 18px; font-weight: 300"
+                >가나다 ABC 123</span
+              >
+            </div>
+            <div class="color-info">
+              <div class="color-name">Text Primary</div>
+              <div class="color-hex">#1a1714 (Rich Dark)</div>
+              <div class="color-use">
+                헤드라인, 본문. 순수 검정(#000) 대신 따뜻한 다크 브라운.
+              </div>
+            </div>
+          </div>
+          <div class="color-chip">
+            <div
+              class="color-swatch"
+              style="background: #faf9f7; border-bottom: 1px solid #e5e0d8"
+            >
+              <span style="color: #5c564e; font-size: 18px; font-weight: 300"
+                >가나다 ABC 123</span
+              >
+            </div>
+            <div class="color-info">
+              <div class="color-name">Text Secondary</div>
+              <div class="color-hex">#5c564e</div>
+              <div class="color-use">서브텍스트, 설명, 카드 본문</div>
+            </div>
+          </div>
+          <div class="color-chip">
+            <div
+              class="color-swatch"
+              style="background: #faf9f7; border-bottom: 1px solid #e5e0d8"
+            >
+              <span style="color: #9e9893; font-size: 18px; font-weight: 300"
+                >가나다 ABC 123</span
+              >
+            </div>
+            <div class="color-info">
+              <div class="color-name">Text Muted</div>
+              <div class="color-hex">#9e9893</div>
+              <div class="color-use">캡션, 출처, 비활성 텍스트</div>
+            </div>
+          </div>
+        </div>
+
+        <h3>액센트 계열 (Accent)</h3>
+        <div class="color-row">
+          <div class="color-chip">
+            <div class="color-swatch" style="background: #a08030">
+              <span
+                style="
+                  background: rgba(255, 255, 255, 0.9);
+                  color: #a08030;
+                  font-size: 11px;
+                  font-weight: 600;
+                  padding: 2px 8px;
+                  border-radius: 3px;
+                "
+                >Primary</span
+              >
+            </div>
+            <div class="color-info">
+              <div class="color-name">Noble Gold</div>
+              <div class="color-hex">#a08030</div>
+              <div class="color-use">
+                CTA, 하이라이트, 호버, 아이콘. 라이트 배경 위에서 충분한 대비.
+              </div>
+            </div>
+          </div>
+          <div class="color-chip">
+            <div class="color-swatch" style="background: #c4a55a">
+              <span
+                style="
+                  background: rgba(255, 255, 255, 0.9);
+                  color: #a08030;
+                  font-size: 11px;
+                  font-weight: 600;
+                  padding: 2px 8px;
+                  border-radius: 3px;
+                "
+                >Light</span
+              >
+            </div>
+            <div class="color-info">
+              <div class="color-name">Champagne</div>
+              <div class="color-hex">#c4a55a</div>
+              <div class="color-use">호버 밝기, 장식 라인, 배경 글로우</div>
+            </div>
+          </div>
+          <div class="color-chip">
+            <div class="color-swatch" style="background: #7a6020">
+              <span
+                style="
+                  background: rgba(255, 255, 255, 0.9);
+                  color: #7a6020;
+                  font-size: 11px;
+                  font-weight: 600;
+                  padding: 2px 8px;
+                  border-radius: 3px;
+                "
+                >Dark</span
+              >
+            </div>
+            <div class="color-info">
+              <div class="color-name">Deep Gold</div>
+              <div class="color-hex">#7a6020</div>
+              <div class="color-use">눌림 상태, 텍스트 위 골드 강조</div>
+            </div>
+          </div>
+          <div class="color-chip">
+            <div class="color-swatch" style="background: #7b2d8e">
+              <span style="background: rgba(0, 0, 0, 0.3); color: #fff"
+                >Brand</span
+              >
+            </div>
+            <div class="color-info">
+              <div class="color-name">HoNG Purple</div>
+              <div class="color-hex">#7b2d8e</div>
+              <div class="color-use">
+                로고, 시그니처 그라데이션, 특별 섹션 포인트
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>시그니처 그라데이션</h3>
+        <div
+          class="gradient-bar"
+          style="background: linear-gradient(135deg, #c4a55a, #7b2d8e)"
+        ></div>
+        <div class="gradient-info">
+          Gold &rarr; Purple &mdash; 브랜드 시그니처. 히어로 오버레이, 구분선
+          악센트, 호버 보더에만 제한 사용.
+        </div>
+        <div
+          class="gradient-bar"
+          style="background: linear-gradient(180deg, #faf9f7, #f3f1ed, #faf9f7)"
+        ></div>
+        <div class="gradient-info">
+          Depth Gradient &mdash; 섹션 간 배경 깊이감. Warm White &harr; Warm
+          Linen 교차로 레이어 구분.
+        </div>
+        <div
+          class="gradient-bar"
+          style="
+            background: radial-gradient(
+              ellipse at center,
+              rgba(160, 128, 48, 0.08),
+              transparent 70%
+            );
+          "
+        ></div>
+        <div class="gradient-info">
+          Gold Glow &mdash; CTA/통계 섹션 배경. 라이트 배경 위 골드 빛이
+          은은하게 퍼지는 효과. opacity 낮게 유지.
+        </div>
+
+        <h3>CSS 변수 정의</h3>
+        <div
+          class="type-specimen"
+          style="
+            font-family: monospace;
+            font-size: 13px;
+            line-height: 2;
+            color: var(--text-secondary);
+          "
+        >
+          :root {<br />
+          &nbsp;&nbsp;/* Background (Light) */<br />
+          &nbsp;&nbsp;--bg: #faf9f7;<br />
+          &nbsp;&nbsp;--surface: #ffffff;<br />
+          &nbsp;&nbsp;--surface-elevated: #f3f1ed;<br />
+          &nbsp;&nbsp;--border: #e5e0d8;<br />
+          &nbsp;&nbsp;--border-hover: #d4cec4;<br />
+          <br />
+          &nbsp;&nbsp;/* Text (Dark on Light) */<br />
+          &nbsp;&nbsp;--text-primary: #1a1714;<br />
+          &nbsp;&nbsp;--text-secondary: #5c564e;<br />
+          &nbsp;&nbsp;--text-muted: #9e9893;<br />
+          <br />
+          &nbsp;&nbsp;/* Accent */<br />
+          &nbsp;&nbsp;--gold: #a08030;<br />
+          &nbsp;&nbsp;--gold-light: #c4a55a;<br />
+          &nbsp;&nbsp;--gold-dark: #7a6020;<br />
+          &nbsp;&nbsp;--purple: #7b2d8e;<br />
+          &nbsp;&nbsp;--purple-light: #9b4dae;<br />
+          <br />
+          &nbsp;&nbsp;/* Gradient */<br />
+          &nbsp;&nbsp;--gradient-signature: linear-gradient(135deg, #c4a55a,
+          #7b2d8e);<br />
+          &nbsp;&nbsp;--gradient-glow: radial-gradient(ellipse at center,
+          rgba(160,128,48,0.08), transparent 70%);<br />
+          }
+        </div>
+      </section>
+
+      <!-- ===== SECTION 2: TYPOGRAPHY ===== -->
+      <section class="section">
+        <div class="section-num">Section 02</div>
+        <h2>타이포그래피 <span>시스템</span></h2>
+        <p class="desc">
+          한글 Pretendard + 영문/장식 Cormorant Garamond + 숫자 강조 DM Serif
+          Display.
+        </p>
+
+        <h3>한글 본문 &mdash; Pretendard Variable</h3>
+        <div class="type-specimen">
+          <div class="type-meta">
+            Heading 1 &mdash; 48px / Weight 300 / Letter-spacing -1px
+          </div>
+          <div
+            style="
+              font-size: 48px;
+              font-weight: 300;
+              letter-spacing: -1px;
+              line-height: 1.3;
+            "
+          >
+            행복한 결혼을 설계합니다
+          </div>
+        </div>
+        <div class="type-specimen">
+          <div class="type-meta">
+            Heading 2 &mdash; 32px / Weight 600 / Letter-spacing -0.5px
+          </div>
+          <div
+            style="
+              font-size: 32px;
+              font-weight: 600;
+              letter-spacing: -0.5px;
+              line-height: 1.4;
+            "
+          >
+            알고리즘이 아닌, 30년의 직관
+          </div>
+        </div>
+        <div class="type-specimen">
+          <div class="type-meta">Heading 3 &mdash; 22px / Weight 600</div>
+          <div style="font-size: 22px; font-weight: 600; line-height: 1.5">
+            매칭전략연구소
+          </div>
+        </div>
+        <div class="type-specimen">
+          <div class="type-meta">
+            Body &mdash; 16px / Weight 400 / Line-height 1.8
+          </div>
+          <div
+            style="
+              font-size: 16px;
+              font-weight: 400;
+              line-height: 1.8;
+              color: var(--text-secondary);
+            "
+          >
+            노블홍 결혼정보회사는 홍유진 대표의 이름을 걸고 책임감을 갖고
+            운영하는 회사입니다. 30년간 8,000명 이상을 성혼시킨 매칭 노하우로
+            빠른 교제와 높은 성혼율을 실현합니다.
+          </div>
+        </div>
+        <div class="type-specimen">
+          <div class="type-meta">
+            Caption &mdash; 13px / Weight 400 / Color: text-muted
+          </div>
+          <div
+            style="font-size: 13px; font-weight: 400; color: var(--text-muted)"
+          >
+            출처: 브로셔 2025 &middot; 2024년 12월 기준
+          </div>
+        </div>
+
+        <h3>영문 장식 &mdash; Cormorant Garamond</h3>
+        <div class="type-specimen">
+          <div class="type-meta">
+            Display &mdash; 64px / Weight 300 / Italic
+          </div>
+          <div
+            style="
+              font-family: &quot;Cormorant Garamond&quot;, serif;
+              font-size: 64px;
+              font-weight: 300;
+              font-style: italic;
+              line-height: 1.2;
+              color: var(--gold);
+            "
+          >
+            Noble HoNG
+          </div>
+        </div>
+        <div class="type-specimen">
+          <div class="type-meta">
+            Section Label &mdash; 14px / Weight 400 / Letter-spacing 4px /
+            Uppercase
+          </div>
+          <div
+            style="
+              font-family: &quot;Cormorant Garamond&quot;, serif;
+              font-size: 14px;
+              font-weight: 400;
+              letter-spacing: 4px;
+              text-transform: uppercase;
+              color: var(--gold);
+            "
+          >
+            Since 1996 &middot; Premium Matchmaking
+          </div>
+        </div>
+
+        <h3>숫자 강조 &mdash; DM Serif Display</h3>
+        <div class="type-specimen">
+          <div class="type-meta">Statistics &mdash; 72px / Weight 400</div>
+          <div style="display: flex; gap: 48px; align-items: baseline">
+            <div>
+              <div
+                style="
+                  font-family: &quot;DM Serif Display&quot;, serif;
+                  font-size: 72px;
+                  color: var(--gold);
+                  line-height: 1;
+                "
+              >
+                8,000+
+              </div>
+              <div
+                style="
+                  font-size: 14px;
+                  color: var(--text-secondary);
+                  margin-top: 8px;
+                "
+              >
+                성혼 실적
+              </div>
+            </div>
+            <div>
+              <div
+                style="
+                  font-family: &quot;DM Serif Display&quot;, serif;
+                  font-size: 72px;
+                  color: var(--gold);
+                  line-height: 1;
+                "
+              >
+                30
+              </div>
+              <div
+                style="
+                  font-size: 14px;
+                  color: var(--text-secondary);
+                  margin-top: 8px;
+                "
+              >
+                년의 노하우
+              </div>
+            </div>
+            <div>
+              <div
+                style="
+                  font-family: &quot;DM Serif Display&quot;, serif;
+                  font-size: 72px;
+                  color: var(--gold);
+                  line-height: 1;
+                "
+              >
+                75%
+              </div>
+              <div
+                style="
+                  font-size: 14px;
+                  color: var(--text-secondary);
+                  margin-top: 8px;
+                "
+              >
+                30대 교제율
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>타이포 스케일</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>토큰</th>
+              <th>사이즈</th>
+              <th>무게</th>
+              <th>행간</th>
+              <th>서체</th>
+              <th>용도</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>display</td>
+              <td>64px</td>
+              <td>300</td>
+              <td>1.2</td>
+              <td>Cormorant</td>
+              <td>히어로 영문 장식</td>
+            </tr>
+            <tr>
+              <td>h1</td>
+              <td>48px</td>
+              <td>300</td>
+              <td>1.3</td>
+              <td>Pretendard</td>
+              <td>페이지 메인 헤드라인</td>
+            </tr>
+            <tr>
+              <td>h2</td>
+              <td>32px</td>
+              <td>600</td>
+              <td>1.4</td>
+              <td>Pretendard</td>
+              <td>섹션 타이틀</td>
+            </tr>
+            <tr>
+              <td>h3</td>
+              <td>22px</td>
+              <td>600</td>
+              <td>1.5</td>
+              <td>Pretendard</td>
+              <td>서브 섹션</td>
+            </tr>
+            <tr>
+              <td>h4</td>
+              <td>18px</td>
+              <td>600</td>
+              <td>1.5</td>
+              <td>Pretendard</td>
+              <td>카드 타이틀</td>
+            </tr>
+            <tr>
+              <td>body</td>
+              <td>16px</td>
+              <td>400</td>
+              <td>1.8</td>
+              <td>Pretendard</td>
+              <td>본문</td>
+            </tr>
+            <tr>
+              <td>small</td>
+              <td>14px</td>
+              <td>400</td>
+              <td>1.7</td>
+              <td>Pretendard</td>
+              <td>보조 텍스트</td>
+            </tr>
+            <tr>
+              <td>caption</td>
+              <td>13px</td>
+              <td>400</td>
+              <td>1.6</td>
+              <td>Pretendard</td>
+              <td>캡션, 라벨</td>
+            </tr>
+            <tr>
+              <td>stat</td>
+              <td>72px</td>
+              <td>400</td>
+              <td>1.0</td>
+              <td>DM Serif</td>
+              <td>통계 숫자</td>
+            </tr>
+            <tr>
+              <td>label</td>
+              <td>12px</td>
+              <td>600</td>
+              <td>1.4</td>
+              <td>Pretendard</td>
+              <td>태그, 뱃지</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ===== SECTION 3: COMPONENTS ===== -->
+      <section class="section">
+        <div class="section-num">Section 03</div>
+        <h2>UI <span>컴포넌트</span></h2>
+        <p class="desc">
+          버튼, 카드, 입력, 네비게이션 등 기본 컴포넌트의 시각 규격.
+        </p>
+
+        <h3>버튼</h3>
+        <div class="comp-grid">
+          <div class="comp-card">
+            <div class="comp-preview">
+              <button class="btn-demo btn-primary">상담 시작하기</button>
+            </div>
+            <div class="comp-info">
+              <h5>Primary (Outlined)</h5>
+              <p>기본 CTA. 골드 테두리 + 투명 배경. 호버 시 골드 fill.</p>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-preview">
+              <button class="btn-demo btn-filled">1800-8194</button>
+            </div>
+            <div class="comp-info">
+              <h5>Primary (Filled)</h5>
+              <p>핵심 CTA. 골드 배경. 전화 연결, 폼 제출 등.</p>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-preview">
+              <button class="btn-demo btn-ghost">자세히 보기</button>
+            </div>
+            <div class="comp-info">
+              <h5>Ghost</h5>
+              <p>보조 액션. 연한 테두리. 호버 시 골드 전환.</p>
+            </div>
+          </div>
+        </div>
+
+        <h3>카드</h3>
+        <div class="comp-grid">
+          <div class="comp-card">
+            <div class="comp-preview">
+              <div class="card-demo">
+                <h5>명품결혼 컨설팅</h5>
+                <p>전문직, 명문가, 재력가를 위한 맞춤형 프리미엄 매칭</p>
+              </div>
+            </div>
+            <div class="comp-info">
+              <h5>Service Card</h5>
+              <p>
+                Surface 배경, Border 테두리. 호버 시 골드 보더. border-radius:
+                10px.
+              </p>
+            </div>
+          </div>
+          <div class="comp-card">
+            <div class="comp-preview" style="background: var(--surface)">
+              <div style="text-align: center; padding: 20px">
+                <div
+                  style="
+                    font-family: &quot;DM Serif Display&quot;, serif;
+                    font-size: 48px;
+                    color: var(--gold);
+                    line-height: 1;
+                  "
+                >
+                  75%
+                </div>
+                <div
+                  style="
+                    font-size: 14px;
+                    color: var(--text-secondary);
+                    margin-top: 8px;
+                  "
+                >
+                  30대 교제율
+                </div>
+                <div
+                  style="
+                    font-size: 12px;
+                    color: var(--text-muted);
+                    margin-top: 4px;
+                  "
+                >
+                  3회 이상 만남 기준
+                </div>
+              </div>
+            </div>
+            <div class="comp-info">
+              <h5>Stat Card</h5>
+              <p>DM Serif 숫자 + Pretendard 라벨. 골드 글로우 배경 옵션.</p>
+            </div>
+          </div>
+        </div>
+
+        <h3>입력 (Form)</h3>
+        <div class="comp-grid">
+          <div class="comp-card">
+            <div class="comp-preview">
+              <input
+                type="text"
+                class="input-demo"
+                placeholder="이름을 입력하세요"
+              />
+            </div>
+            <div class="comp-info">
+              <h5>Text Input</h5>
+              <p>
+                투명 배경 + Border. 포커스 시 골드 보더. border-radius: 4px.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <h3>네비게이션 (GNB)</h3>
+        <div class="type-specimen">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            "
+          >
+            <div
+              style="
+                font-family: &quot;Cormorant Garamond&quot;, serif;
+                font-size: 22px;
+                font-weight: 600;
+                letter-spacing: 1px;
+              "
+            >
+              <span style="color: var(--text)">Noble</span>
+              <span style="color: var(--purple)">HoNG</span>
+            </div>
+            <nav class="nav-demo">
+              <a href="#" class="active">노블홍</a>
+              <a href="#">노블매칭</a>
+              <a href="#">맞춤컨설팅</a>
+              <a href="#">매칭라운지</a>
+              <a href="#">상담문의</a>
+            </nav>
+            <button
+              class="btn-demo btn-primary"
+              style="padding: 8px 20px; font-size: 12px"
+            >
+              상담 시작
+            </button>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>GNB 규격:</strong> 고정 상단(sticky). 배경 blur + 반투명 Deep
+          Black. 스크롤 시 높이 축소. 로고 좌측, 메뉴 중앙, CTA 버튼 우측. 메뉴
+          호버 시 밑줄 SVG 드로잉 애니메이션. 모바일: 햄버거 메뉴 &rarr;
+          풀스크린 오버레이.
+        </div>
+
+        <h3>SVG 아이콘 세트</h3>
+        <div class="icon-grid">
+          <div class="icon-item">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div class="icon-label">상담</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+                />
+              </svg>
+            </div>
+            <div class="icon-label">전화</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </div>
+            <div class="icon-label">위치</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8" />
+                <circle cx="12" cy="12" r="5" />
+              </svg>
+            </div>
+            <div class="icon-label">매칭</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+                />
+              </svg>
+            </div>
+            <div class="icon-label">프로세스</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24">
+                <path d="M18 20V10M12 20V4M6 20v-6" />
+              </svg>
+            </div>
+            <div class="icon-label">데이터</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24">
+                <path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+              </svg>
+            </div>
+            <div class="icon-label">칼럼</div>
+          </div>
+          <div class="icon-item">
+            <div class="icon-box">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+            </div>
+            <div class="icon-label">이벤트</div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>아이콘 규칙:</strong> Lucide 기반 SVG. stroke: var(--gold),
+          stroke-width: 1.5, fill: none. 사이즈: 24px(인라인) / 32px(카드 내) /
+          48px(섹션 헤더). 컬러 이모지 전면 금지.
+        </div>
+      </section>
+
+      <!-- ===== SECTION 4: SPACING ===== -->
+      <section class="section">
+        <div class="section-num">Section 04</div>
+        <h2>스페이싱 & <span>레이아웃</span></h2>
+        <p class="desc">
+          8px 기반 스페이싱 시스템. 넉넉한 여백으로 고급감 연출.
+        </p>
+
+        <h3>스페이싱 스케일</h3>
+        <div class="spacing-row">
+          <div class="spacing-label">4px</div>
+          <div class="spacing-box" style="width: 4px; height: 16px"></div>
+          <div class="spacing-value">아이콘-텍스트 간격, 인라인 마진</div>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">8px</div>
+          <div class="spacing-box" style="width: 8px; height: 16px"></div>
+          <div class="spacing-value">
+            최소 단위. 태그 패딩, 리스트 아이템 간격
+          </div>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">16px</div>
+          <div class="spacing-box" style="width: 16px; height: 16px"></div>
+          <div class="spacing-value">카드 내부 패딩, 그리드 갭, 단락 간격</div>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">24px</div>
+          <div class="spacing-box" style="width: 24px; height: 16px"></div>
+          <div class="spacing-value">카드 패딩, 섹션 내 요소 간격</div>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">32px</div>
+          <div class="spacing-box" style="width: 32px; height: 16px"></div>
+          <div class="spacing-value">컨테이너 좌우 패딩, 섹션 내 블록 간격</div>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">48px</div>
+          <div class="spacing-box" style="width: 48px; height: 16px"></div>
+          <div class="spacing-value">섹션 타이틀 ~ 콘텐츠 간격</div>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">64px</div>
+          <div class="spacing-box" style="width: 64px; height: 16px"></div>
+          <div class="spacing-value">섹션 간 간격 (기본)</div>
+        </div>
+        <div class="spacing-row">
+          <div class="spacing-label">120px</div>
+          <div class="spacing-box" style="width: 120px; height: 16px"></div>
+          <div class="spacing-value">
+            섹션 간 간격 (넓은), 히어로 ~ 다음 섹션
+          </div>
+        </div>
+
+        <h3>레이아웃 그리드</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>브레이크포인트</th>
+              <th>컨테이너</th>
+              <th>그리드</th>
+              <th>거터</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Desktop (1280px+)</td>
+              <td>max-width: 1200px</td>
+              <td>12-column</td>
+              <td>24px</td>
+            </tr>
+            <tr>
+              <td>Tablet (768~1279px)</td>
+              <td>max-width: 100%, padding: 32px</td>
+              <td>8-column</td>
+              <td>20px</td>
+            </tr>
+            <tr>
+              <td>Mobile (~ 767px)</td>
+              <td>max-width: 100%, padding: 20px</td>
+              <td>4-column</td>
+              <td>16px</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>border-radius</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>토큰</th>
+              <th>값</th>
+              <th>용도</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>radius-sm</td>
+              <td>2px</td>
+              <td>버튼 (날카로운 프리미엄 느낌)</td>
+            </tr>
+            <tr>
+              <td>radius-md</td>
+              <td>4px</td>
+              <td>입력 필드, 태그</td>
+            </tr>
+            <tr>
+              <td>radius-lg</td>
+              <td>10px</td>
+              <td>카드, 모달</td>
+            </tr>
+            <tr>
+              <td>radius-xl</td>
+              <td>12px</td>
+              <td>컴포넌트 프리뷰, 특수 카드</td>
+            </tr>
+            <tr>
+              <td>radius-full</td>
+              <td>50%</td>
+              <td>아바타, 뱃지</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ===== SECTION 5: MOTION ===== -->
+      <section class="section">
+        <div class="section-num">Section 05</div>
+        <h2>모션 <span>토큰</span></h2>
+        <p class="desc">모든 트랜지션과 애니메이션에 적용할 타이밍 규격.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>토큰</th>
+              <th>Duration</th>
+              <th>Easing</th>
+              <th>용도</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>instant</td>
+              <td>100ms</td>
+              <td>ease-out</td>
+              <td>호버 컬러 전환, 포커스 보더</td>
+            </tr>
+            <tr>
+              <td>fast</td>
+              <td>200ms</td>
+              <td>ease-out</td>
+              <td>버튼 호버, 아이콘 전환</td>
+            </tr>
+            <tr>
+              <td>normal</td>
+              <td>400ms</td>
+              <td>cubic-bezier(0.16, 1, 0.3, 1)</td>
+              <td>카드 진입, 메뉴 열림</td>
+            </tr>
+            <tr>
+              <td>slow</td>
+              <td>800ms</td>
+              <td>cubic-bezier(0.16, 1, 0.3, 1)</td>
+              <td>섹션 리빌, 커튼 전환</td>
+            </tr>
+            <tr>
+              <td>dramatic</td>
+              <td>1200ms</td>
+              <td>cubic-bezier(0.22, 1, 0.36, 1)</td>
+              <td>히어로 진입, Lottie 스크롤 동기화</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <strong>스태거 규칙:</strong> 같은 레벨 요소가 순차 진입할 때
+          0.1~0.15s 간격. 최대 5개까지만 스태거. 6개 이상은 2줄로 나눠 행 단위로
+          스태거.
+        </div>
+      </section>
+    </div>
+
+    <footer
+      style="
+        text-align: center;
+        padding: 48px 32px;
+        border-top: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 13px;
+      "
+    >
+      Noble HoNG Design System v1.0 &mdash; 라이트 모드 / SVG 아이콘 전용 /
+      모션그래픽 기반
+    </footer>
+  </body>
+</html>

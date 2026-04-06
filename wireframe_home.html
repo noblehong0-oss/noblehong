@@ -1,0 +1,1863 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>노블홍 HOME 와이어프레임 v2</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Serif+Display&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <style>
+      :root {
+        --bg: #faf9f6;
+        --surface: #ffffff;
+        --surface-warm: #f6f3ee;
+        --surface-cream: #f0ece4;
+        --border: #e0d9ce;
+        --border-gold: rgba(160, 128, 48, 0.25);
+        --text: #1a1714;
+        --text-secondary: #5c564e;
+        --text-muted: #9e9893;
+        --gold: #a08030;
+        --gold-light: #c4a55a;
+        --gold-lighter: #d9c577;
+        --gold-dark: #7a6020;
+        --gold-bg: rgba(160, 128, 48, 0.04);
+        --purple: #7b2d8e;
+        --purple-light: #9b4dae;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* ===== ORNAMENTAL ELEMENTS ===== */
+      .ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 40px 0;
+      }
+      .ornament-line {
+        width: 80px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+      }
+      .ornament-diamond {
+        width: 8px;
+        height: 8px;
+        border: 1px solid var(--gold-light);
+        transform: rotate(45deg);
+      }
+      .ornament-lg .ornament-line {
+        width: 120px;
+      }
+
+      .section-ornament {
+        text-align: center;
+        padding: 0 32px;
+      }
+      .section-ornament svg {
+        width: 200px;
+        height: 20px;
+      }
+
+      /* Gold decorative borders */
+      .gold-frame {
+        position: relative;
+      }
+      .gold-frame::before,
+      .gold-frame::after {
+        content: "";
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        border-color: var(--gold-light);
+        border-style: solid;
+        opacity: 0.4;
+      }
+      .gold-frame::before {
+        top: -1px;
+        left: -1px;
+        border-width: 1px 0 0 1px;
+      }
+      .gold-frame::after {
+        bottom: -1px;
+        right: -1px;
+        border-width: 0 1px 1px 0;
+      }
+
+      /* ===== GNB ===== */
+      .gnb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: rgba(250, 249, 246, 0.9);
+        backdrop-filter: blur(20px) saturate(1.2);
+        transition: all 0.4s ease;
+      }
+      .gnb-border {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 10%,
+          var(--gold-light) 50%,
+          transparent 90%
+        );
+        opacity: 0.5;
+      }
+      .gnb-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        height: 88px;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-inner {
+        height: 64px;
+      }
+      .gnb-logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+      .gnb-logo img {
+        height: 56px;
+        width: auto;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-logo img {
+        height: 40px;
+      }
+
+      .gnb-menu {
+        display: flex;
+        gap: 40px;
+        list-style: none;
+      }
+      .gnb-menu a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        padding: 8px 0;
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          var(--gold-dark),
+          var(--gold),
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        transition: all 0.3s;
+      }
+      .gnb-menu a::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -12px;
+        width: 1px;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          transparent,
+          var(--border-gold),
+          transparent
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .gnb-menu li:first-child a::before {
+        display: none;
+      }
+      .gnb-menu a::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light),
+          var(--gold)
+        );
+        transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .gnb-menu a:hover {
+        filter: brightness(1.3);
+      }
+      .gnb-menu a:hover::after {
+        width: 100%;
+      }
+
+      .gnb-cta {
+        padding: 12px 28px;
+        border: 1px solid var(--gold-light);
+        background: linear-gradient(
+          135deg,
+          transparent,
+          rgba(196, 165, 90, 0.05)
+        );
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        border-radius: 1px;
+        text-decoration: none;
+        color: var(--gold);
+        transition: all 0.4s;
+      }
+      .gnb-cta:hover {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        border-color: var(--gold);
+        box-shadow: 0 4px 20px rgba(160, 128, 48, 0.2);
+      }
+
+      /* ===== HERO ===== */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        padding-top: 88px;
+        background:
+          radial-gradient(
+            ellipse at 30% 20%,
+            rgba(160, 128, 48, 0.04),
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 70% 80%,
+            rgba(123, 45, 142, 0.02),
+            transparent 50%
+          ),
+          var(--bg);
+      }
+      /* Decorative corner frames */
+      .hero-frame {
+        position: absolute;
+        inset: 40px;
+        pointer-events: none;
+      }
+      .hero-frame::before,
+      .hero-frame::after {
+        content: "";
+        position: absolute;
+        border-color: var(--gold-light);
+        border-style: solid;
+        opacity: 0.2;
+      }
+      .hero-frame::before {
+        top: 0;
+        left: 0;
+        width: 80px;
+        height: 80px;
+        border-width: 1px 0 0 1px;
+      }
+      .hero-frame::after {
+        bottom: 0;
+        right: 0;
+        width: 80px;
+        height: 80px;
+        border-width: 0 1px 1px 0;
+      }
+      .hero-frame-tr,
+      .hero-frame-bl {
+        position: absolute;
+        border-color: var(--gold-light);
+        border-style: solid;
+        opacity: 0.2;
+        width: 80px;
+        height: 80px;
+      }
+      .hero-frame-tr {
+        top: 40px;
+        right: 40px;
+        border-width: 1px 1px 0 0;
+      }
+      .hero-frame-bl {
+        bottom: 40px;
+        left: 40px;
+        border-width: 0 0 1px 1px;
+      }
+
+      /* Subtle pattern overlay */
+      .hero-pattern {
+        position: absolute;
+        inset: 0;
+        opacity: 0.015;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 40px,
+          var(--gold) 40px,
+          var(--gold) 41px
+        );
+      }
+
+      .hero-content {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        padding: 0 32px;
+      }
+      .hero-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 15px;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 32px;
+        opacity: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+      }
+      .hero-eyebrow-line {
+        width: 40px;
+        height: 1px;
+        background: var(--gold-light);
+      }
+
+      .hero-title {
+        font-size: clamp(40px, 5.5vw, 64px);
+        font-weight: 200;
+        letter-spacing: -1px;
+        line-height: 1.25;
+        margin-bottom: 24px;
+        opacity: 0;
+      }
+      .hero-title strong {
+        font-weight: 600;
+        background: linear-gradient(135deg, var(--text), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero-title em {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: var(--gold);
+        -webkit-text-fill-color: var(--gold);
+      }
+      .hero-sub {
+        font-size: 17px;
+        color: var(--text-secondary);
+        max-width: 480px;
+        margin: 0 auto 48px;
+        line-height: 1.8;
+        opacity: 0;
+        font-weight: 300;
+      }
+      .hero-cta-group {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        opacity: 0;
+      }
+
+      /* Buttons - luxury */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 36px;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        border-radius: 1px;
+        text-decoration: none;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        font-family: inherit;
+        cursor: pointer;
+        position: relative;
+      }
+      .btn-filled {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        border: none;
+        color: #fff;
+        box-shadow: 0 4px 20px rgba(160, 128, 48, 0.15);
+      }
+      .btn-filled:hover {
+        box-shadow: 0 8px 32px rgba(160, 128, 48, 0.25);
+        transform: translateY(-2px);
+      }
+      .btn-outlined {
+        background: transparent;
+        border: 1px solid var(--gold-light);
+        color: var(--gold);
+      }
+      .btn-outlined:hover {
+        background: var(--gold-bg);
+        border-color: var(--gold);
+      }
+
+      .scroll-cue {
+        position: absolute;
+        bottom: 48px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        opacity: 0;
+      }
+      .scroll-cue span {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12px;
+        color: var(--text-muted);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+      }
+      .scroll-cue-line {
+        width: 1px;
+        height: 48px;
+        background: var(--border);
+        position: relative;
+        overflow: hidden;
+      }
+      .scroll-cue-line::after {
+        content: "";
+        position: absolute;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, transparent, var(--gold));
+        animation: scrollPulse 2.5s ease-in-out infinite;
+      }
+      @keyframes scrollPulse {
+        0% {
+          top: -100%;
+        }
+        50% {
+          top: 100%;
+        }
+        100% {
+          top: 100%;
+        }
+      }
+
+      /* ===== STATS ===== */
+      .stats {
+        padding: 120px 32px;
+        position: relative;
+        background:
+          linear-gradient(
+            180deg,
+            var(--bg),
+            var(--surface-warm) 30%,
+            var(--surface-warm) 70%,
+            var(--bg)
+          ),
+          radial-gradient(
+            ellipse at 50% 50%,
+            rgba(160, 128, 48, 0.03),
+            transparent 60%
+          );
+      }
+      .stats-inner {
+        max-width: 1000px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .stats-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 16px;
+      }
+      .stats-title {
+        font-size: 30px;
+        font-weight: 300;
+        margin-bottom: 12px;
+      }
+      .stats-title strong {
+        font-weight: 600;
+      }
+      .stats-subtitle {
+        font-size: 15px;
+        color: var(--text-muted);
+        margin-bottom: 64px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+      }
+      .stat-item {
+        padding: 40px 24px;
+        opacity: 0;
+        transform: translateY(30px);
+        border-right: 1px solid var(--border);
+        position: relative;
+      }
+      .stat-item:last-child {
+        border-right: none;
+      }
+      .stat-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 1px;
+        background: var(--gold-light);
+        opacity: 0.5;
+      }
+      .stat-num {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(42px, 5vw, 64px);
+        line-height: 1;
+        background: linear-gradient(
+          180deg,
+          var(--gold-dark),
+          var(--gold),
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 12px;
+        white-space: nowrap;
+      }
+      .stat-label {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .stat-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      /* Charts */
+      .chart-section {
+        margin-top: 80px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        text-align: left;
+      }
+      .chart-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        padding: 36px;
+        position: relative;
+        opacity: 0;
+        transform: translateY(20px);
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.03);
+      }
+      .chart-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light),
+          var(--gold)
+        );
+      }
+      .chart-card h4 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .chart-card p {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 24px;
+      }
+      .chart-placeholder {
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .donut-svg {
+        width: 160px;
+        height: 160px;
+      }
+      .donut-ring {
+        fill: none;
+        stroke: var(--surface-warm);
+        stroke-width: 18;
+      }
+      .donut-segment {
+        fill: none;
+        stroke-width: 18;
+        stroke-linecap: butt;
+      }
+
+      /* ===== SERVICES ===== */
+      .services {
+        padding: 120px 32px;
+        position: relative;
+      }
+      .services-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .section-header {
+        margin-bottom: 60px;
+      }
+      .section-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 16px;
+      }
+      .section-title {
+        font-size: 34px;
+        font-weight: 200;
+        line-height: 1.4;
+        margin-bottom: 16px;
+      }
+      .section-title strong {
+        font-weight: 600;
+      }
+      .section-desc {
+        font-size: 16px;
+        color: var(--text-secondary);
+        max-width: 520px;
+        line-height: 1.8;
+      }
+
+      .service-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .service-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        padding: 40px 32px;
+        transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        opacity: 0;
+        transform: translateY(30px);
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+      /* Gold top line on hover */
+      .service-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-light));
+        transform: scaleX(0);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        transform-origin: left;
+      }
+      .service-card:hover::before {
+        transform: scaleX(1);
+      }
+      .service-card:hover {
+        border-color: var(--gold-light);
+        box-shadow: 0 16px 48px rgba(160, 128, 48, 0.08);
+        transform: translateY(-6px);
+      }
+      .service-icon {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        transition: all 0.4s;
+        position: relative;
+      }
+      .service-icon::after {
+        content: "";
+        position: absolute;
+        inset: 3px;
+        border: 1px solid transparent;
+        border-radius: 1px;
+        transition: border-color 0.4s;
+      }
+      .service-card:hover .service-icon {
+        border-color: var(--gold-light);
+        background: var(--gold-bg);
+      }
+      .service-card:hover .service-icon::after {
+        border-color: rgba(160, 128, 48, 0.1);
+      }
+      .service-icon svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--gold);
+        stroke-width: 1.5;
+        fill: none;
+      }
+      .service-card h3 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      .service-card p {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .service-card .card-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 20px;
+        font-size: 13px;
+        color: var(--gold);
+        letter-spacing: 1px;
+        font-weight: 500;
+      }
+      .service-card .card-link svg {
+        width: 14px;
+        height: 14px;
+        stroke: var(--gold);
+        stroke-width: 2;
+        fill: none;
+        transition: transform 0.3s;
+      }
+      .service-card:hover .card-link svg {
+        transform: translateX(6px);
+      }
+
+      /* ===== CEO ===== */
+      .ceo {
+        padding: 120px 32px;
+        position: relative;
+        background: linear-gradient(
+          180deg,
+          var(--bg),
+          var(--surface-warm) 20%,
+          var(--surface-warm) 80%,
+          var(--bg)
+        );
+      }
+      .ceo-inner {
+        max-width: 1060px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 72px;
+        align-items: center;
+      }
+      .ceo-image-wrap {
+        position: relative;
+        opacity: 0;
+        transform: translateX(-40px);
+      }
+      .ceo-image {
+        aspect-ratio: 3/4;
+        background: var(--surface-cream);
+        border-radius: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        font-size: 14px;
+        border: 1px solid var(--border);
+      }
+      /* Decorative frame around CEO image */
+      .ceo-image-frame {
+        position: absolute;
+        inset: -12px;
+        border: 1px solid var(--gold-light);
+        border-radius: 2px;
+        opacity: 0.3;
+      }
+      .ceo-image-badge {
+        position: absolute;
+        bottom: -16px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        padding: 8px 24px;
+        border-radius: 1px;
+        white-space: nowrap;
+        text-transform: uppercase;
+      }
+      .ceo-content {
+        opacity: 0;
+        transform: translateX(40px);
+      }
+      .ceo-quote {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 30px;
+        font-weight: 300;
+        font-style: italic;
+        line-height: 1.5;
+        margin-bottom: 28px;
+        background: linear-gradient(180deg, var(--gold-dark), var(--gold));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        padding-left: 28px;
+      }
+      .ceo-quote::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 4px;
+        bottom: 4px;
+        width: 2px;
+        background: linear-gradient(180deg, var(--gold), var(--gold-light));
+      }
+      .ceo-name {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .ceo-role {
+        font-size: 14px;
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+        letter-spacing: 0.5px;
+      }
+      .ceo-bio {
+        font-size: 15px;
+        color: var(--text-secondary);
+        line-height: 1.9;
+        margin-bottom: 28px;
+      }
+      .ceo-awards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .award-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border: 1px solid var(--border);
+        border-radius: 1px;
+        font-size: 12px;
+        color: var(--text-secondary);
+        letter-spacing: 0.3px;
+        background: var(--surface);
+        transition: all 0.3s;
+      }
+      .award-badge:hover {
+        border-color: var(--gold-light);
+      }
+      .award-badge svg {
+        width: 14px;
+        height: 14px;
+        stroke: var(--gold);
+        stroke-width: 1.5;
+        fill: none;
+      }
+
+      /* ===== MEDIA ===== */
+      .media {
+        padding: 80px 32px;
+        overflow: hidden;
+      }
+      .media-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .media-title {
+        font-size: 22px;
+        font-weight: 300;
+        margin-bottom: 4px;
+      }
+      .media-title strong {
+        font-weight: 600;
+      }
+      .media-sub {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 48px;
+        letter-spacing: 1px;
+      }
+      .media-track {
+        overflow: hidden;
+        position: relative;
+      }
+      .media-track::before,
+      .media-track::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 80px;
+        z-index: 2;
+      }
+      .media-track::before {
+        left: 0;
+        background: linear-gradient(90deg, var(--bg), transparent);
+      }
+      .media-track::after {
+        right: 0;
+        background: linear-gradient(90deg, transparent, var(--bg));
+      }
+      .media-scroll {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+        animation: mediaScroll 40s linear infinite;
+      }
+      .media-item {
+        flex-shrink: 0;
+        width: 120px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.5;
+        transition: opacity 0.3s;
+        filter: grayscale(1);
+      }
+      .media-item:hover {
+        opacity: 1;
+        filter: grayscale(0);
+      }
+      .media-item img {
+        max-width: 80px;
+        max-height: 36px;
+        width: auto;
+        height: auto;
+      }
+      @keyframes mediaScroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* ===== CTA ===== */
+      .cta-section {
+        padding: 140px 32px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            ellipse at 50% 50%,
+            rgba(160, 128, 48, 0.05),
+            transparent 50%
+          ),
+          var(--surface-warm);
+      }
+      .cta-frame {
+        position: absolute;
+        inset: 60px;
+        border: 1px solid var(--border-gold);
+        pointer-events: none;
+        border-radius: 2px;
+      }
+      .cta-content {
+        position: relative;
+        z-index: 2;
+      }
+      .cta-title {
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 200;
+        margin-bottom: 12px;
+        opacity: 0;
+      }
+      .cta-title strong {
+        font-weight: 600;
+      }
+      .cta-sub {
+        font-size: 16px;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+        opacity: 0;
+      }
+      .cta-phone {
+        font-family: "DM Serif Display", serif;
+        font-size: 42px;
+        margin: 28px 0;
+        opacity: 0;
+        background: linear-gradient(
+          135deg,
+          var(--gold-dark),
+          var(--gold),
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-note {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 36px;
+        opacity: 0;
+      }
+      .cta-buttons {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        opacity: 0;
+      }
+
+      /* ===== FOOTER ===== */
+      .footer {
+        padding: 56px 40px 40px;
+        border-top: 1px solid var(--border);
+        background: var(--surface-warm);
+      }
+      .footer-gold-line {
+        height: 1px;
+        margin-bottom: 56px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        opacity: 0.4;
+      }
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-logo {
+        margin-bottom: 16px;
+      }
+      .footer-logo img {
+        height: 36px;
+        width: auto;
+        opacity: 0.7;
+      }
+      .footer-info {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.9;
+      }
+      .footer-links {
+        display: flex;
+        gap: 28px;
+      }
+      .footer-links a {
+        font-size: 13px;
+        color: var(--text-muted);
+        text-decoration: none;
+        letter-spacing: 0.3px;
+        transition: color 0.3s;
+      }
+      .footer-links a:hover {
+        color: var(--gold);
+      }
+
+      /* ===== FIXED CTA ===== */
+      .fixed-cta {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        border-top: 1px solid var(--border);
+        padding: 14px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        transform: translateY(100%);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .fixed-cta.visible {
+        transform: translateY(0);
+      }
+      .fixed-cta::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        opacity: 0.5;
+      }
+      .fixed-cta span {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      /* Badge */
+      .wf-badge {
+        position: fixed;
+        top: 96px;
+        right: 20px;
+        z-index: 101;
+        background: var(--surface);
+        border: 1px solid var(--gold-light);
+        padding: 6px 14px;
+        border-radius: 1px;
+        font-size: 10px;
+        color: var(--gold);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 768px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .stat-item {
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+        .service-grid {
+          grid-template-columns: 1fr;
+        }
+        .ceo-inner {
+          grid-template-columns: 1fr;
+        }
+        .chart-section {
+          grid-template-columns: 1fr;
+        }
+        .gnb-menu {
+          display: none;
+        }
+        .hero-frame,
+        .hero-frame-tr,
+        .hero-frame-bl {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wf-badge">Wireframe v2.0</div>
+
+    <!-- GNB -->
+    <nav class="gnb" id="gnb">
+      <div class="gnb-inner">
+        <a href="#" class="gnb-logo"><img src="logo.png" alt="Noble HoNG" /></a>
+        <ul class="gnb-menu">
+          <li><a href="#">노블홍</a></li>
+          <li><a href="#">노블매칭</a></li>
+          <li><a href="#">맞춤컨설팅</a></li>
+          <li><a href="#">매칭라운지</a></li>
+          <li><a href="#">상담문의</a></li>
+        </ul>
+        <a href="#cta" class="gnb-cta">상담 시작</a>
+      </div>
+      <div class="gnb-border"></div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero-frame"></div>
+      <div class="hero-frame-tr"></div>
+      <div class="hero-frame-bl"></div>
+      <div class="hero-pattern"></div>
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <span class="hero-eyebrow-line"></span>
+          Since 1996 &middot; Premium Matchmaking
+          <span class="hero-eyebrow-line"></span>
+        </div>
+        <h1 class="hero-title">
+          행복한 결혼을<br /><strong>설계</strong>합니다
+        </h1>
+        <p class="hero-sub">
+          30년간 8,000명의 인연을 이은<br />대한민국 성혼 전문가, 노블홍
+        </p>
+        <div class="hero-cta-group">
+          <a href="#cta" class="btn btn-filled">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+              />
+            </svg>
+            1800-8194
+          </a>
+          <a href="#cta" class="btn btn-outlined">온라인 상담 신청</a>
+        </div>
+      </div>
+      <div class="scroll-cue">
+        <span>Scroll</span>
+        <div class="scroll-cue-line"></div>
+      </div>
+    </section>
+
+    <!-- Ornament divider -->
+    <div class="ornament ornament-lg">
+      <span class="ornament-line"></span>
+      <span class="ornament-diamond"></span>
+      <span class="ornament-line"></span>
+    </div>
+
+    <!-- STATS -->
+    <section class="stats" id="stats">
+      <div class="stats-inner">
+        <div class="stats-eyebrow">Noble HoNG in Numbers</div>
+        <h2 class="stats-title">숫자로 보는 <strong>노블홍</strong></h2>
+        <p class="stats-subtitle">
+          대한민국 커플매니저 제1호가 만들어 온 성혼의 역사
+        </p>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-num" data-target="30">0</div>
+            <div class="stat-label">년의 매칭 노하우</div>
+            <div class="stat-sub">1996년부터 현재까지</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" data-target="8000" data-suffix="+">0</div>
+            <div class="stat-label">성혼 실적</div>
+            <div class="stat-sub">대한민국 커플매니저 제1호</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" data-target="75" data-suffix="%">0</div>
+            <div class="stat-label">30대 교제율</div>
+            <div class="stat-sub">3회 이상 만남 기준</div>
+          </div>
+          <div class="stat-item">
+            <div
+              class="stat-num"
+              data-target="3"
+              data-suffix="년 연속"
+              style="white-space: nowrap"
+            >
+              0
+            </div>
+            <div class="stat-label">브랜드만족지수 1위</div>
+            <div class="stat-sub">2022~2024 결혼정보 부문</div>
+          </div>
+        </div>
+
+        <div class="chart-section">
+          <div class="chart-card gold-frame">
+            <h4>연령대별 교제율</h4>
+            <p>3회 이상 만남 기준 (2024년 12월)</p>
+            <div class="chart-placeholder">
+              <svg class="donut-svg" viewBox="0 0 200 200">
+                <circle class="donut-ring" cx="100" cy="100" r="70" />
+                <circle
+                  class="donut-segment"
+                  cx="100"
+                  cy="100"
+                  r="70"
+                  stroke="#a08030"
+                  stroke-dasharray="0 440"
+                  data-dash="330"
+                  transform="rotate(-90 100 100)"
+                />
+                <circle
+                  class="donut-segment"
+                  cx="100"
+                  cy="100"
+                  r="70"
+                  stroke="#c4a55a"
+                  stroke-dasharray="0 440"
+                  data-dash="286"
+                  transform="rotate(177 100 100)"
+                />
+                <circle
+                  class="donut-segment"
+                  cx="100"
+                  cy="100"
+                  r="70"
+                  stroke="#7b2d8e"
+                  stroke-dasharray="0 440"
+                  data-dash="242"
+                  transform="rotate(54 100 100)"
+                />
+                <text
+                  x="100"
+                  y="95"
+                  text-anchor="middle"
+                  font-family="DM Serif Display"
+                  font-size="28"
+                  fill="#a08030"
+                >
+                  75%
+                </text>
+                <text
+                  x="100"
+                  y="115"
+                  text-anchor="middle"
+                  font-family="Pretendard Variable"
+                  font-size="11"
+                  fill="#9e9893"
+                >
+                  30대 최고
+                </text>
+              </svg>
+            </div>
+          </div>
+          <div class="chart-card gold-frame">
+            <h4>회원 자산 분포</h4>
+            <p>노블홍 회원 평균 자산 현황</p>
+            <div class="chart-placeholder">
+              <svg class="donut-svg" viewBox="0 0 200 200">
+                <circle class="donut-ring" cx="100" cy="100" r="70" />
+                <circle
+                  class="donut-segment"
+                  cx="100"
+                  cy="100"
+                  r="70"
+                  stroke="#a08030"
+                  stroke-dasharray="0 440"
+                  data-dash="150"
+                  transform="rotate(-90 100 100)"
+                />
+                <circle
+                  class="donut-segment"
+                  cx="100"
+                  cy="100"
+                  r="70"
+                  stroke="#c4a55a"
+                  stroke-dasharray="0 440"
+                  data-dash="110"
+                  transform="rotate(33 100 100)"
+                />
+                <circle
+                  class="donut-segment"
+                  cx="100"
+                  cy="100"
+                  r="70"
+                  stroke="#7b2d8e"
+                  stroke-dasharray="0 440"
+                  data-dash="84"
+                  transform="rotate(123 100 100)"
+                />
+                <text
+                  x="100"
+                  y="95"
+                  text-anchor="middle"
+                  font-family="DM Serif Display"
+                  font-size="28"
+                  fill="#a08030"
+                >
+                  59%
+                </text>
+                <text
+                  x="100"
+                  y="115"
+                  text-anchor="middle"
+                  font-family="Pretendard Variable"
+                  font-size="11"
+                  fill="#9e9893"
+                >
+                  31억~100억
+                </text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ornament -->
+    <div class="ornament">
+      <span class="ornament-line"></span>
+      <span class="ornament-diamond"></span>
+      <span class="ornament-line"></span>
+    </div>
+
+    <!-- SERVICES -->
+    <section class="services" id="services">
+      <div class="services-inner">
+        <div class="section-header">
+          <div class="section-eyebrow">Consulting</div>
+          <h2 class="section-title">
+            격이 다른 매칭,<br /><strong>노블홍만의 방식</strong>
+          </h2>
+          <p class="section-desc">
+            전문직, 명문가, 재력가부터 자녀결혼, 재혼까지. 상황에 맞는 전문
+            컨설팅을 제공합니다.
+          </p>
+        </div>
+        <div class="service-grid">
+          <div class="service-card">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+                />
+              </svg>
+            </div>
+            <h3>명품결혼 컨설팅</h3>
+            <p>
+              전문직, 명문가, 재력가를 위한 맞춤형 프리미엄 매칭. 비공개 회원
+              관리로 철저한 보안.
+            </p>
+            <span class="card-link"
+              >자세히 보기
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg
+            ></span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <h3>자녀결혼 컨설팅</h3>
+            <p>
+              해외 거주 자녀까지, 부모님의 마음으로 매칭하는 전문 서비스. 미국,
+              호주 거주 자녀 전문.
+            </p>
+            <span class="card-link"
+              >자세히 보기
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg
+            ></span>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="8" />
+                <circle cx="12" cy="12" r="5" />
+                <path d="M12 4v1M12 19v1" />
+              </svg>
+            </div>
+            <h3>스페셜 재혼</h3>
+            <p>
+              재혼 전문가의 차별화된 접근으로 두 번째 행복을 설계합니다.
+              연령대별 맞춤 전략.
+            </p>
+            <span class="card-link"
+              >자세히 보기
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg
+            ></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CEO -->
+    <section class="ceo" id="ceo">
+      <div class="ceo-inner">
+        <div class="ceo-image-wrap">
+          <div class="ceo-image-frame"></div>
+          <div class="ceo-image">CEO 홍유진 대표 사진 영역</div>
+          <div class="ceo-image-badge">Since 1996</div>
+        </div>
+        <div class="ceo-content">
+          <div class="section-eyebrow">CEO &middot; 홍유진</div>
+          <div class="ceo-quote">
+            "제 이름을 걸고 책임지는 매칭,<br />그것이 노블홍입니다"
+          </div>
+          <div class="ceo-name">홍유진</div>
+          <div class="ceo-role">
+            대표이사 &middot; Ph.D &middot; 대한민국 커플매니저 제1호
+          </div>
+          <p class="ceo-bio">
+            30년간 5만 명 이상의 싱글과 부모님을 상담하고, 8,000명 이상의 성혼을
+            이끈 대한민국 대표 결혼 전문가. KBS 아침마당, MBC 기분좋은 날 고정
+            출연. 석·박사 학위와 2권의 저서로 결혼과 연애를 학문적으로
+            연구합니다.
+          </p>
+          <div class="ceo-awards">
+            <span class="award-badge"
+              ><svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                /></svg
+              >브랜드만족지수 3년 연속 1위</span
+            >
+            <span class="award-badge"
+              ><svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                /></svg
+              >파워리더 대상</span
+            >
+            <span class="award-badge"
+              ><svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                /></svg
+              >방송 300회+</span
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEDIA -->
+    <section class="media" id="media">
+      <div class="media-inner">
+        <div class="ornament" style="padding: 24px 0">
+          <span class="ornament-line"></span>
+          <span class="ornament-diamond"></span>
+          <span class="ornament-line"></span>
+        </div>
+        <h3 class="media-title">
+          매스컴이 인정한 <strong>성혼 전문가</strong>
+        </h3>
+        <p class="media-sub">
+          지상파 &middot; 종편 &middot; 라디오 300회 이상 출연
+        </p>
+        <div class="media-track">
+          <div class="media-scroll">
+            <div class="media-item">
+              <img src="assets/media-logos/kbs.svg" alt="KBS" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/mbc.svg" alt="MBC" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/sbs.svg" alt="SBS" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/jtbc.svg" alt="JTBC" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/tvchosun.svg" alt="TV조선" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/mbn.svg" alt="MBN" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/channela.svg" alt="채널A" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/ebs.svg" alt="EBS" />
+            </div>
+            <!-- Duplicate for infinite loop -->
+            <div class="media-item">
+              <img src="assets/media-logos/kbs.svg" alt="KBS" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/mbc.svg" alt="MBC" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/sbs.svg" alt="SBS" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/jtbc.svg" alt="JTBC" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/tvchosun.svg" alt="TV조선" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/mbn.svg" alt="MBN" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/channela.svg" alt="채널A" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/ebs.svg" alt="EBS" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" id="cta">
+      <div class="cta-frame"></div>
+      <div class="cta-content">
+        <div class="ornament" style="padding: 0 0 32px">
+          <span class="ornament-line"></span>
+          <span class="ornament-diamond"></span>
+          <span class="ornament-line"></span>
+        </div>
+        <h2 class="cta-title">
+          당신의 인연,<br /><strong>지금 시작됩니다</strong>
+        </h2>
+        <p class="cta-sub">주말 및 공휴일에도 상담 가능합니다</p>
+        <div class="cta-phone">1800-8194</div>
+        <p class="cta-note">
+          간단한 정보를 남겨주시면, 담당 커플매니저가 24시간 이내 연락드립니다
+        </p>
+        <div class="cta-buttons">
+          <a href="#" class="btn btn-filled">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+              />
+            </svg>
+            전화 상담
+          </a>
+          <a href="#" class="btn btn-outlined">온라인 상담 신청</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-gold-line"></div>
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo"><img src="logo.png" alt="Noble HoNG" /></div>
+          <div class="footer-info">
+            (주)노블홍 결혼정보회사 &middot; 대표 홍유진<br />
+            서울시 강남구 강남대로 354 혜천빌딩 705, 706<br />
+            사업자등록번호 321-81-03029 &middot; 국내결혼중개업
+            서울-강남-국내-22-0012호<br />
+            대표전화 1800-8194
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="#">개인정보처리방침</a>
+          <a href="#">이용약관</a>
+          <a href="#">손해배상절차</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Fixed CTA -->
+    <div class="fixed-cta" id="fixedCta">
+      <span>상담이 필요하신가요?</span>
+      <a
+        href="#cta"
+        class="btn btn-filled"
+        style="padding: 10px 24px; font-size: 13px"
+        >1800-8194</a
+      >
+      <a
+        href="#cta"
+        class="btn btn-outlined"
+        style="padding: 10px 24px; font-size: 13px"
+        >온라인 상담</a
+      >
+    </div>
+
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
+
+      // GNB
+      window.addEventListener("scroll", () => {
+        document
+          .getElementById("gnb")
+          .classList.toggle("scrolled", window.scrollY > 60);
+      });
+
+      // Hero entrance
+      const heroTl = gsap.timeline({ delay: 0.4 });
+      heroTl
+        .to(".hero-eyebrow", { opacity: 1, duration: 1, ease: "power3.out" })
+        .to(
+          ".hero-title",
+          { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" },
+          "-=0.6",
+        )
+        .to(
+          ".hero-sub",
+          { opacity: 1, duration: 0.8, ease: "power3.out" },
+          "-=0.7",
+        )
+        .to(
+          ".hero-cta-group",
+          { opacity: 1, duration: 0.8, ease: "power3.out" },
+          "-=0.5",
+        )
+        .to(".scroll-cue", { opacity: 1, duration: 0.6 }, "-=0.3");
+
+      // Stats
+      document.querySelectorAll(".stat-item").forEach((item, i) => {
+        gsap.to(item, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          delay: i * 0.15,
+          ease: "power3.out",
+          scrollTrigger: { trigger: ".stats-grid", start: "top 80%" },
+        });
+      });
+
+      // Count up
+      document.querySelectorAll(".stat-num").forEach((el) => {
+        const target = parseInt(el.dataset.target);
+        const suffix = el.dataset.suffix || "";
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 85%",
+          onEnter: () => {
+            gsap.to(
+              { val: 0 },
+              {
+                val: target,
+                duration: 2.5,
+                ease: "expo.out",
+                onUpdate: function () {
+                  el.textContent =
+                    Math.round(this.targets()[0].val).toLocaleString() + suffix;
+                },
+              },
+            );
+          },
+          once: true,
+        });
+      });
+
+      // Charts
+      document.querySelectorAll(".chart-card").forEach((card, i) => {
+        gsap.to(card, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          delay: i * 0.2,
+          ease: "power3.out",
+          scrollTrigger: { trigger: ".chart-section", start: "top 80%" },
+        });
+      });
+      document.querySelectorAll(".donut-segment").forEach((seg) => {
+        const d = parseInt(seg.dataset.dash);
+        if (!d) return;
+        ScrollTrigger.create({
+          trigger: seg.closest(".chart-card"),
+          start: "top 80%",
+          onEnter: () =>
+            gsap.to(seg, {
+              attr: { "stroke-dasharray": d + " 440" },
+              duration: 1.8,
+              ease: "power3.out",
+            }),
+          once: true,
+        });
+      });
+
+      // Services
+      document.querySelectorAll(".service-card").forEach((card, i) => {
+        gsap.to(card, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          delay: i * 0.15,
+          ease: "power3.out",
+          scrollTrigger: { trigger: ".service-grid", start: "top 80%" },
+        });
+      });
+
+      // CEO
+      gsap.to(".ceo-image-wrap", {
+        opacity: 1,
+        x: 0,
+        duration: 1.2,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".ceo", start: "top 70%" },
+      });
+      gsap.to(".ceo-content", {
+        opacity: 1,
+        x: 0,
+        duration: 1.2,
+        delay: 0.2,
+        ease: "power3.out",
+        scrollTrigger: { trigger: ".ceo", start: "top 70%" },
+      });
+
+      // CTA
+      gsap
+        .timeline({
+          scrollTrigger: { trigger: ".cta-section", start: "top 70%" },
+        })
+        .to(".cta-title", { opacity: 1, duration: 0.8, ease: "power3.out" })
+        .to(".cta-sub", { opacity: 1, duration: 0.6 }, "-=0.5")
+        .to(
+          ".cta-phone",
+          { opacity: 1, duration: 1, ease: "back.out(1.5)" },
+          "-=0.4",
+        )
+        .to(".cta-note", { opacity: 1, duration: 0.6 }, "-=0.4")
+        .to(".cta-buttons", { opacity: 1, duration: 0.6 }, "-=0.3");
+
+      // Fixed CTA
+      ScrollTrigger.create({
+        trigger: ".stats",
+        start: "top 50%",
+        onEnter: () =>
+          document.getElementById("fixedCta").classList.add("visible"),
+        onLeaveBack: () =>
+          document.getElementById("fixedCta").classList.remove("visible"),
+      });
+      ScrollTrigger.create({
+        trigger: ".cta-section",
+        start: "top 80%",
+        onEnter: () =>
+          document.getElementById("fixedCta").classList.remove("visible"),
+        onLeaveBack: () =>
+          document.getElementById("fixedCta").classList.add("visible"),
+      });
+    </script>
+  </body>
+</html>

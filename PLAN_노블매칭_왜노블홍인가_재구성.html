@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>왜 노블홍인가 — 풀섹션 재구성 기획</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: #faf9f6;
+        color: #1a1714;
+        line-height: 1.7;
+      }
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 60px 40px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 8px;
+        color: #1a1714;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 48px 0 16px;
+        color: #1a1714;
+        border-bottom: 2px solid #c4a55a;
+        padding-bottom: 8px;
+      }
+      h3 {
+        font-size: 17px;
+        font-weight: 700;
+        margin: 24px 0 8px;
+        color: #7a6020;
+      }
+      .subtitle {
+        color: #9e9893;
+        font-size: 15px;
+        margin-bottom: 40px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0 32px;
+        font-size: 14px;
+      }
+      th {
+        background: #1a1714;
+        color: #c4a55a;
+        padding: 10px 12px;
+        text-align: left;
+        font-weight: 600;
+      }
+      td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #e0d9ce;
+        vertical-align: top;
+      }
+      tr:nth-child(even) td {
+        background: #f6f3ee;
+      }
+      .badge {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 3px;
+        margin-right: 4px;
+      }
+      .badge-new {
+        background: #c4a55a;
+        color: #fff;
+      }
+      .badge-keep {
+        background: #e0d9ce;
+        color: #7a6020;
+      }
+      .badge-merge {
+        background: #f0e6c8;
+        color: #7a6020;
+      }
+      .badge-remove {
+        background: #f5ddd5;
+        color: #a04030;
+      }
+      .section-preview {
+        background: #1a1714;
+        color: #fff;
+        border-radius: 12px;
+        padding: 32px;
+        margin: 16px 0;
+      }
+      .section-preview .sp-num {
+        color: #c4a55a;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+      }
+      .section-preview .sp-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 8px 0;
+      }
+      .section-preview .sp-desc {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.6;
+      }
+      .layout-note {
+        background: #f6f3ee;
+        border-left: 3px solid #c4a55a;
+        padding: 12px 16px;
+        margin: 8px 0 16px;
+        font-size: 13px;
+        color: #5c564e;
+      }
+      .highlight {
+        background: #fff8e0;
+        padding: 2px 4px;
+      }
+      ul {
+        padding-left: 20px;
+        margin: 8px 0;
+      }
+      li {
+        margin: 4px 0;
+        font-size: 14px;
+      }
+      .divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #c4a55a, transparent);
+        margin: 48px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>"왜 노블홍인가" 풀섹션 재구성 기획</h1>
+      <div class="subtitle">
+        노블매칭 페이지 · 기존 6개 → 신규 10개 강점 · 풀섹션 일관 레이아웃
+      </div>
+
+      <h2>1. 기존 vs 신규 비교</h2>
+
+      <table>
+        <tr>
+          <th>구분</th>
+          <th>기존 사이트 (6개)</th>
+          <th>신규 기획 (10개)</th>
+          <th>변경</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>커플매니저 1호</td>
+          <td>CEO 직접 매칭 + 커플매니저 1호</td>
+          <td>
+            <span class="badge badge-merge">통합분리</span> 기존 1개 → 2개로
+            분리. CEO 직접 관여 강조 추가
+          </td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>공정거래위원회 표준약관</td>
+          <td>신원인증 및 보안 (약관 포함)</td>
+          <td>
+            <span class="badge badge-merge">통합</span> 약관 + 보안을 하나로
+          </td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>신원 인증 및 보안</td>
+          <td>(위 항목에 통합)</td>
+          <td><span class="badge badge-merge">통합</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>차별화 서비스</td>
+          <td>3.3.3 프로모션 시스템</td>
+          <td>
+            <span class="badge badge-keep">유지+강화</span> 막연한 "차별화" →
+            구체적 시스템명
+          </td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>매칭 프로그램</td>
+          <td>매주 전략회의 + 교제율 데이터</td>
+          <td>
+            <span class="badge badge-keep">유지+강화</span> 데이터 시각화 추가
+          </td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>소비자 선정 명품 브랜드</td>
+          <td>브랜드만족지수 3년 연속 1위</td>
+          <td><span class="badge badge-keep">유지</span> 구체적 수상 실적</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>—</td>
+          <td>30년 / 4,000쌍 실적</td>
+          <td><span class="badge badge-new">신규</span></td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>—</td>
+          <td>방송 300회+ 고정 출연</td>
+          <td><span class="badge badge-new">신규</span></td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>—</td>
+          <td>박사 학위 / 논문 / 저서</td>
+          <td><span class="badge badge-new">신규</span></td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>—</td>
+          <td>해외거주 자녀결혼 특화</td>
+          <td><span class="badge badge-new">신규</span></td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td>—</td>
+          <td>저출생 캠페인 / 사회공헌</td>
+          <td><span class="badge badge-new">신규</span></td>
+        </tr>
+      </table>
+
+      <div class="layout-note">
+        <strong>기존 문제점:</strong> 6개 강점이 각기 다른 이미지 크기, 폰트,
+        여백으로 구성 → 일관성 부재, 뒤죽박죽 느낌<br />
+        <strong>개선 방향:</strong> 10개 강점을 통일된 풀섹션 레이아웃으로 구성.
+        좌우 교차 배치 + 일관된 타이포/여백/이미지 비율
+      </div>
+
+      <div class="divider"></div>
+
+      <h2>2. 풀섹션 일관 레이아웃 규칙</h2>
+
+      <h3>공통 구조 (모든 섹션 동일)</h3>
+      <ul>
+        <li>
+          <strong>레이아웃:</strong> 좌우 5:5 분할 (이미지 50% + 텍스트 50%)
+        </li>
+        <li>
+          <strong>교차 배치:</strong> 홀수 섹션 = 이미지 좌 / 텍스트 우, 짝수
+          섹션 = 텍스트 좌 / 이미지 우
+        </li>
+        <li>
+          <strong>텍스트 영역:</strong> 번호 라벨 → 제목 → 서브 카피 → 핵심
+          수치/뱃지 (있을 경우)
+        </li>
+        <li>
+          <strong>이미지 영역:</strong> 16:10 비율, 라운드 코너 12px, 다크
+          오버레이 가능
+        </li>
+        <li><strong>섹션 높이:</strong> min-height 480px, 패딩 80px 상하</li>
+        <li><strong>구분선:</strong> 섹션 간 골드 그라데이션 얇은 라인</li>
+        <li>
+          <strong>배경:</strong> 홀수 = 다크(#1a1714), 짝수 = 크림(#faf9f6) 교차
+        </li>
+      </ul>
+
+      <h3>스크롤 인터랙션</h3>
+      <ul>
+        <li>각 섹션 진입 시 이미지 fade-in + 텍스트 slide-up</li>
+        <li>숫자 카운터가 있는 섹션은 뷰포트 진입 시 카운팅 애니메이션</li>
+      </ul>
+
+      <div class="divider"></div>
+
+      <h2>3. 10개 섹션 상세 기획</h2>
+
+      <div class="section-preview">
+        <div class="sp-num">STRENGTH 01</div>
+        <div class="sp-title">대한민국 커플매니저 제1호</div>
+        <div class="sp-desc">
+          직업사전 등록 기준 대한민국 최초 커플매니저. 1996년부터 30년간 오직 한
+          길.<br />
+          <strong>이미지:</strong> 홍유진 대표 프로필 사진 또는 직업사전 등록
+          이미지<br />
+          <strong>뱃지:</strong> "직업사전 등록 인증" "1996~"<br />
+          <strong>배경:</strong> 다크
+        </div>
+      </div>
+
+      <div class="section-preview" style="background: #f6f3ee; color: #1a1714">
+        <div class="sp-num" style="color: #7a6020">STRENGTH 02</div>
+        <div class="sp-title" style="color: #1a1714">
+          CEO가 직접 관여하는 매칭
+        </div>
+        <div class="sp-desc" style="color: #5c564e">
+          대형사의 매니저 돌려막기와 차별화. 대표 이름을 건 책임 경영.<br />
+          <strong>이미지:</strong> 상담 장면 / 1:1 미팅 이미지<br />
+          <strong>핵심 카피:</strong> "대표가 직접, 처음부터 끝까지"<br />
+          <strong>배경:</strong> 크림
+        </div>
+      </div>
+
+      <div class="section-preview">
+        <div class="sp-num">STRENGTH 03</div>
+        <div class="sp-title">30년 경력 · 4,000쌍 성혼</div>
+        <div class="sp-desc">
+          숫자 자체가 메시지. 카운터 애니메이션으로 강조.<br />
+          <strong>카운터:</strong> 30년+ / 4,000쌍+ / 50,000건+ 상담<br />
+          <strong>이미지:</strong> 성혼 커플 이미지 콜라주 또는 타임라인<br />
+          <strong>배경:</strong> 다크
+        </div>
+      </div>
+
+      <div class="section-preview" style="background: #f6f3ee; color: #1a1714">
+        <div class="sp-num" style="color: #7a6020">STRENGTH 04</div>
+        <div class="sp-title" style="color: #1a1714">
+          석·박사 연구 기반 매칭
+        </div>
+        <div class="sp-desc" style="color: #5c564e">
+          연세대 석사, 자연치유학 박사. 논문 2편, 저서 2권. 감이 아닌 학술적
+          근거.<br />
+          <strong>이미지:</strong> 논문/저서 표지 이미지 또는 연구 장면<br />
+          <strong>뱃지:</strong> "연세대 석사" "박사학위" "논문 2편" "저서
+          2권"<br />
+          <strong>배경:</strong> 크림
+        </div>
+      </div>
+
+      <div class="section-preview">
+        <div class="sp-num">STRENGTH 05</div>
+        <div class="sp-title">방송 300회+ 고정 출연</div>
+        <div class="sp-desc">
+          KBS 아침마당·기분좋은날 고정 패널. 방송사 권위를 브랜드 신뢰로
+          전환.<br />
+          <strong>이미지:</strong> 방송 출연 장면 스틸컷<br />
+          <strong>로고 배열:</strong> KBS, MBC, SBS, JTBC, TV조선, MBN, 채널A,
+          EBS<br />
+          <strong>배경:</strong> 다크
+        </div>
+      </div>
+
+      <div class="section-preview" style="background: #f6f3ee; color: #1a1714">
+        <div class="sp-num" style="color: #7a6020">STRENGTH 06</div>
+        <div class="sp-title" style="color: #1a1714">
+          브랜드만족지수 3년 연속 1위
+        </div>
+        <div class="sp-desc" style="color: #5c564e">
+          소비자가 선정한 명품 브랜드 대상. 제3자 인증의 객관적 신뢰.<br />
+          <strong>이미지:</strong> 수상 트로피/인증서 이미지<br />
+          <strong>뱃지:</strong> 수상 배지 시각화<br />
+          <strong>배경:</strong> 크림
+        </div>
+      </div>
+
+      <div class="section-preview">
+        <div class="sp-num">STRENGTH 07</div>
+        <div class="sp-title">3.3.3 매칭 프로그램</div>
+        <div class="sp-desc">
+          3명 이상 교제, 3번 이상 만남, 3명 추가 미팅. 구체적이고 기억하기 쉬운
+          시스템.<br />
+          <strong>이미지:</strong> 인포그래픽 또는 다이어그램<br />
+          <strong>핵심 카피:</strong> "성혼을 위한 독자 프로그램"<br />
+          <strong>배경:</strong> 다크
+        </div>
+      </div>
+
+      <div class="section-preview" style="background: #f6f3ee; color: #1a1714">
+        <div class="sp-num" style="color: #7a6020">STRENGTH 08</div>
+        <div class="sp-title" style="color: #1a1714">
+          신원인증 및 보안 시스템
+        </div>
+        <div class="sp-desc" style="color: #5c564e">
+          공정거래위원회 표준약관 준수. 철저한 신원 검증과 개인정보 보호.<br />
+          <strong>이미지:</strong> 인증 마크 / 보안 관련 비주얼<br />
+          <strong>뱃지:</strong> "공정거래위원회 표준약관" "개인정보보호"<br />
+          <strong>배경:</strong> 크림
+        </div>
+      </div>
+
+      <div class="section-preview">
+        <div class="sp-num">STRENGTH 09</div>
+        <div class="sp-title">해외거주 자녀결혼 특화</div>
+        <div class="sp-desc">
+          미국(시애틀·LA·뉴욕), 호주(브리즈번·시드니·멜버른) 거주 자녀 매칭.<br />
+          <strong>이미지:</strong> 글로벌 네트워크 맵 또는 해외 도시 이미지<br />
+          <strong>핵심 카피:</strong> "국경을 넘는 매칭 네트워크"<br />
+          <strong>배경:</strong> 다크
+        </div>
+      </div>
+
+      <div class="section-preview" style="background: #f6f3ee; color: #1a1714">
+        <div class="sp-num" style="color: #7a6020">STRENGTH 10</div>
+        <div class="sp-title" style="color: #1a1714">
+          저출생 캠페인 · 사회공헌
+        </div>
+        <div class="sp-desc" style="color: #5c564e">
+          단순 영리가 아닌 사회적 사명감. 지자체장 미팅 8건, MOU 파트너십 9건,
+          국회의원 표창.<br />
+          <strong>이미지:</strong> MOU 체결 장면 / 캠페인 활동 사진<br />
+          <strong>뱃지:</strong> "지자체 협력 8건" "MOU 9건"<br />
+          <strong>배경:</strong> 크림
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <h2>4. 기존 대비 변경 요약</h2>
+
+      <table>
+        <tr>
+          <th>항목</th>
+          <th>기존 사이트</th>
+          <th>신규 기획</th>
+        </tr>
+        <tr>
+          <td>강점 수</td>
+          <td>6개</td>
+          <td>10개</td>
+        </tr>
+        <tr>
+          <td>레이아웃</td>
+          <td>각기 다른 크기/구성, 일관성 없음</td>
+          <td>좌우 5:5 교차 풀섹션, 통일된 구조</td>
+        </tr>
+        <tr>
+          <td>배경</td>
+          <td>흰 배경 단일</td>
+          <td>다크/크림 교차 (프리미엄 느낌)</td>
+        </tr>
+        <tr>
+          <td>이미지</td>
+          <td>크기 제각각, 일부 저화질</td>
+          <td>16:10 통일, AI 생성 고퀄리티</td>
+        </tr>
+        <tr>
+          <td>인터랙션</td>
+          <td>없음 (정적 페이지)</td>
+          <td>스크롤 reveal + 카운터 + 호버 효과</td>
+        </tr>
+        <tr>
+          <td>데이터</td>
+          <td>텍스트 서술만</td>
+          <td>카운터 애니메이션 + 뱃지 시각화</td>
+        </tr>
+        <tr>
+          <td>신규 항목</td>
+          <td>—</td>
+          <td>
+            CEO 직접 매칭, 30년/4000쌍, 방송 300회, 박사연구, 해외특화, 사회공헌
+          </td>
+        </tr>
+        <tr>
+          <td>제거 항목</td>
+          <td>표준약관 (별도), 신원인증 (별도)</td>
+          <td>→ 하나로 통합 (STRENGTH 08)</td>
+        </tr>
+      </table>
+
+      <div class="divider"></div>
+
+      <h2>5. 구현 우선순위</h2>
+
+      <ol style="font-size: 14px">
+        <li>
+          <strong>Phase 1 — 와이어프레임:</strong> 10개 풀섹션 HTML 구조 + 교차
+          레이아웃 구현
+        </li>
+        <li>
+          <strong>Phase 2 — 이미지:</strong> 각 섹션별 AI 이미지 생성 (프롬프트
+          제공)
+        </li>
+        <li>
+          <strong>Phase 3 — 인터랙션:</strong> 스크롤 reveal, 카운터, 호버 효과
+        </li>
+        <li><strong>Phase 4 — 카피:</strong> 최종 문구 검수 및 반영</li>
+      </ol>
+    </div>
+  </body>
+</html>

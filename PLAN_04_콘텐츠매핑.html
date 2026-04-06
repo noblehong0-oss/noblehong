@@ -1,0 +1,907 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>노블홍 콘텐츠 매핑표 — 기존→신규 페이지 재배치</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #faf9f7;
+        --surface: #ffffff;
+        --border: #e5e0d8;
+        --text: #1a1714;
+        --text-secondary: #5c564e;
+        --text-muted: #9e9893;
+        --gold: #a08030;
+        --gold-light: #c4a55a;
+        --green: #059669;
+        --orange: #d97706;
+        --red: #dc2626;
+        --blue: #2563eb;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.8;
+        font-size: 14px;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 48px 32px;
+      }
+      .doc-header {
+        text-align: center;
+        padding-bottom: 48px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 48px;
+      }
+      .doc-header .brand {
+        font-size: 12px;
+        letter-spacing: 4px;
+        color: var(--gold);
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      .doc-header h1 {
+        font-size: 32px;
+        font-weight: 300;
+        margin-bottom: 8px;
+      }
+      .doc-header h1 strong {
+        font-weight: 700;
+        color: var(--gold);
+      }
+      .doc-header .meta {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 12px;
+      }
+
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 48px 0 8px;
+      }
+      h2 span {
+        color: var(--gold);
+      }
+      h2 + .desc {
+        color: var(--text-secondary);
+        margin-bottom: 24px;
+        font-size: 14px;
+      }
+      h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 32px 0 12px;
+        padding-left: 14px;
+        border-left: 3px solid var(--gold);
+      }
+
+      /* UX Journey */
+      .journey {
+        display: flex;
+        gap: 4px;
+        margin: 32px 0;
+        flex-wrap: wrap;
+      }
+      .journey-step {
+        flex: 1;
+        min-width: 140px;
+        padding: 16px;
+        border-radius: 8px;
+        text-align: center;
+        position: relative;
+      }
+      .journey-step::after {
+        content: "→";
+        position: absolute;
+        right: -12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 18px;
+      }
+      .journey-step:last-child::after {
+        display: none;
+      }
+      .journey-num {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--gold);
+        letter-spacing: 2px;
+        margin-bottom: 4px;
+      }
+      .journey-title {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .journey-q {
+        font-size: 12px;
+        color: var(--text-secondary);
+        font-style: italic;
+      }
+      .j-aware {
+        background: #f0f9ff;
+      }
+      .j-trust {
+        background: #f0fdf4;
+      }
+      .j-fit {
+        background: #fffbeb;
+      }
+      .j-how {
+        background: #fef3c7;
+      }
+      .j-cost {
+        background: #fef2f2;
+      }
+      .j-act {
+        background: #fce7f3;
+      }
+
+      /* Mapping Table */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0 32px;
+        font-size: 13px;
+      }
+      th {
+        background: #f3f1ed;
+        font-weight: 600;
+        text-align: left;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+      }
+      td {
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+        vertical-align: top;
+      }
+      tr:hover td {
+        background: rgba(160, 128, 48, 0.02);
+      }
+      .tag {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 3px;
+        font-size: 11px;
+        font-weight: 600;
+        margin: 1px;
+      }
+      .tag-home {
+        background: rgba(37, 99, 235, 0.1);
+        color: var(--blue);
+      }
+      .tag-brand {
+        background: rgba(124, 58, 237, 0.1);
+        color: #7c3aed;
+      }
+      .tag-match {
+        background: rgba(5, 150, 105, 0.1);
+        color: var(--green);
+      }
+      .tag-consult {
+        background: rgba(217, 119, 6, 0.1);
+        color: var(--orange);
+      }
+      .tag-lounge {
+        background: rgba(236, 72, 153, 0.1);
+        color: #ec4899;
+      }
+      .tag-contact {
+        background: rgba(220, 38, 38, 0.1);
+        color: var(--red);
+      }
+      .tag-new {
+        background: rgba(160, 128, 48, 0.15);
+        color: var(--gold);
+        border: 1px dashed var(--gold-light);
+      }
+      .tag-drop {
+        background: rgba(156, 163, 175, 0.1);
+        color: #9ca3af;
+        text-decoration: line-through;
+      }
+
+      .status {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 10px;
+      }
+      .s-ok {
+        background: rgba(5, 150, 105, 0.1);
+        color: var(--green);
+      }
+      .s-miss {
+        background: rgba(220, 38, 38, 0.1);
+        color: var(--red);
+      }
+      .s-partial {
+        background: rgba(217, 119, 6, 0.1);
+        color: var(--orange);
+      }
+      .s-move {
+        background: rgba(37, 99, 235, 0.1);
+        color: var(--blue);
+      }
+
+      /* New Structure */
+      .new-structure {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin: 24px 0;
+      }
+      .ns-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px;
+      }
+      .ns-card h4 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .ns-card .ns-role {
+        font-size: 12px;
+        color: var(--gold);
+        margin-bottom: 12px;
+      }
+      .ns-card ul {
+        list-style: none;
+      }
+      .ns-card li {
+        padding: 4px 0;
+        font-size: 13px;
+        border-bottom: 1px solid #f3f1ed;
+      }
+      .ns-card li:last-child {
+        border-bottom: none;
+      }
+      .ns-card li strong {
+        color: var(--gold);
+      }
+      .ns-highlight {
+        border-color: var(--gold-light);
+        box-shadow: 0 2px 12px rgba(160, 128, 48, 0.08);
+      }
+
+      /* Callout */
+      .callout {
+        background: rgba(160, 128, 48, 0.04);
+        border: 1px solid rgba(160, 128, 48, 0.15);
+        border-radius: 8px;
+        padding: 20px 24px;
+        margin: 24px 0;
+      }
+      .callout strong {
+        color: var(--gold);
+      }
+
+      /* HOME additions */
+      .home-check {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin: 16px 0;
+      }
+      .home-check-header {
+        padding: 12px 16px;
+        font-weight: 700;
+        border-bottom: 1px solid var(--border);
+        font-size: 14px;
+      }
+      .home-check-row {
+        display: flex;
+        align-items: center;
+        padding: 10px 16px;
+        border-bottom: 1px solid #f3f1ed;
+        font-size: 13px;
+      }
+      .home-check-row:last-child {
+        border-bottom: none;
+      }
+      .home-check-row .check {
+        width: 20px;
+        margin-right: 12px;
+        text-align: center;
+      }
+      .check-yes {
+        color: var(--green);
+      }
+      .check-no {
+        color: var(--red);
+        font-weight: 700;
+      }
+      .home-check-row .item {
+        flex: 1;
+      }
+      .home-check-row .note {
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="doc-header">
+        <div class="brand">Noble Hong · Content Mapping</div>
+        <h1>콘텐츠 <strong>재배치 매핑표</strong></h1>
+        <p style="color: var(--text-secondary)">
+          기존 23개 서브페이지 → 신규 5개 페이지 콘텐츠 매핑
+        </p>
+        <div class="meta">2026.04.04 · UX 기반 잠재고객 전환 최적화</div>
+      </div>
+
+      <!-- ===== UX JOURNEY ===== -->
+      <h2>잠재고객 <span>의사결정 여정</span></h2>
+      <p class="desc">
+        결혼정보회사를 처음 알아보는 잠재고객의 심리 단계별 필요 정보
+      </p>
+
+      <div class="journey">
+        <div class="journey-step j-aware">
+          <div class="journey-num">STEP 01</div>
+          <div class="journey-title">인지</div>
+          <div class="journey-q">"이게 뭐하는 곳이지?"</div>
+        </div>
+        <div class="journey-step j-trust">
+          <div class="journey-num">STEP 02</div>
+          <div class="journey-title">신뢰</div>
+          <div class="journey-q">"믿을 만한가?"</div>
+        </div>
+        <div class="journey-step j-fit">
+          <div class="journey-num">STEP 03</div>
+          <div class="journey-title">적합성</div>
+          <div class="journey-q">"나한테 맞나?"</div>
+        </div>
+        <div class="journey-step j-how">
+          <div class="journey-num">STEP 04</div>
+          <div class="journey-title">절차</div>
+          <div class="journey-q">"어떻게 진행되지?"</div>
+        </div>
+        <div class="journey-step j-cost">
+          <div class="journey-num">STEP 05</div>
+          <div class="journey-title">비용</div>
+          <div class="journey-q">"얼마지?"</div>
+        </div>
+        <div class="journey-step j-act">
+          <div class="journey-num">STEP 06</div>
+          <div class="journey-title">행동</div>
+          <div class="journey-q">"연락하자"</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>핵심 원칙:</strong> 각 페이지는 여정의 특정 단계를 담당하되,
+        다음 단계로 자연스럽게 유도해야 합니다. 모든 페이지 하단에 CTA(상담
+        신청)를 배치하여 어느 단계에서든 전환 가능하게 합니다.
+      </div>
+
+      <!-- ===== NEW PAGE STRUCTURE ===== -->
+      <h2>신규 페이지 <span>구조 (수정안)</span></h2>
+      <p class="desc">잠재고객 여정 단계별 페이지 역할 재정의</p>
+
+      <div class="new-structure">
+        <div class="ns-card">
+          <h4>HOME</h4>
+          <div class="ns-role">여정 전체 하이라이트 허브</div>
+          <ul>
+            <li>히어로 — 첫인상 + CTA</li>
+            <li>숫자로 보는 노블홍 (Stats)</li>
+            <li>서비스 카드 3종 (맞춤컨설팅 유도)</li>
+            <li>CEO 프로필 요약</li>
+            <li><strong>★ 가입 자격 요약</strong></li>
+            <li><strong>★ 가입 절차 미리보기</strong></li>
+            <li>미디어 출연 스트립</li>
+            <li>하단 CTA</li>
+          </ul>
+        </div>
+
+        <div class="ns-card">
+          <h4>노블홍</h4>
+          <div class="ns-role">STEP 01~02 인지+신뢰</div>
+          <ul>
+            <li>브랜드 철학 (이름의 의미)</li>
+            <li>CEO 홍유진 상세 프로필</li>
+            <li>수상 & 인증 배지</li>
+            <li>미디어 출연 300회+ 타임라인</li>
+            <li>사회공헌 캠페인</li>
+            <li><strong>★ 공정거래위원회 표준약관 준수</strong></li>
+            <li><strong>★ 개인정보 보호 정책</strong></li>
+          </ul>
+        </div>
+
+        <div class="ns-card ns-highlight">
+          <h4>노블매칭</h4>
+          <div class="ns-role">STEP 02~04 신뢰+적합성+절차</div>
+          <ul>
+            <li>왜 노블홍인가 (차별화 강점)</li>
+            <li>매칭 시스템 설명</li>
+            <li><strong>★ 가입 자격 조건 (초혼/재혼/프리미엄)</strong></li>
+            <li><strong>★ 서비스 유형별 안내 (3종)</strong></li>
+            <li><strong>★ 가입~성혼 상세 절차 (8단계)</strong></li>
+            <li><strong>★ 커플매니저 소개</strong></li>
+            <li>3.3.3 프로모션 + 교제율 데이터</li>
+            <li><strong>★ 프로그램/비용 안내</strong></li>
+          </ul>
+        </div>
+
+        <div class="ns-card ns-highlight">
+          <h4>맞춤컨설팅</h4>
+          <div class="ns-role">STEP 03 "나에게 맞는 서비스"</div>
+          <ul>
+            <li><strong>★ 전문직/엘리트 — 자격+서비스</strong></li>
+            <li><strong>★ 대기업/명문대 — 자격+서비스</strong></li>
+            <li><strong>★ 명문가/재력가 — 자격+서비스</strong></li>
+            <li><strong>★ 자녀결혼 — 부모 관점 서비스</strong></li>
+            <li><strong>★ 스페셜 재혼 — 차별화 서비스</strong></li>
+            <li>명품결혼 컨설팅</li>
+            <li>각 서비스별 CTA</li>
+          </ul>
+        </div>
+
+        <div class="ns-card">
+          <h4>매칭라운지</h4>
+          <div class="ns-role">관심 유지 + 재방문</div>
+          <ul>
+            <li>매칭전략 연구소 소개</li>
+            <li><strong>★ 미팅성공 가이드</strong></li>
+            <li>러브 칼럼</li>
+            <li><strong>★ 노블레스 파티 6종 소개</strong></li>
+            <li><strong>★ 스페셜 맞선 안내</strong></li>
+            <li>유튜브 영상 갤러리</li>
+          </ul>
+        </div>
+
+        <div class="ns-card">
+          <h4>상담문의</h4>
+          <div class="ns-role">STEP 05~06 비용+행동</div>
+          <ul>
+            <li><strong>★ 상담 방법 3가지 (전화/온라인/방문)</strong></li>
+            <li>상담 신청 폼</li>
+            <li><strong>★ 운영시간 (평일+주말 09~21시)</strong></li>
+            <li>오시는 길 (강남역 4번출구)</li>
+            <li>전화번호 1800-8194</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>★ 표시 = 현재 와이어프레임에 누락된 항목.</strong>
+        아래 매핑표에서 기존 콘텐츠별 이동 경로와 현재 반영 상태를 확인할 수
+        있습니다.
+      </div>
+
+      <!-- ===== FULL MAPPING TABLE ===== -->
+      <h2>기존 → 신규 <span>전체 매핑표</span></h2>
+      <p class="desc">
+        기존 23개 서브페이지의 모든 콘텐츠가 어디로 가는지 추적
+      </p>
+
+      <h3>sub01 — 노블홍 소개 (6페이지)</h3>
+      <table>
+        <tr>
+          <th style="width: 140px">기존 페이지</th>
+          <th style="width: 280px">핵심 콘텐츠</th>
+          <th style="width: 120px">이동할 페이지</th>
+          <th style="width: 80px">반영 상태</th>
+          <th>비고</th>
+        </tr>
+        <tr>
+          <td>sub01_01<br />CEO 인사말</td>
+          <td>대표 인사말, 30년 경력, 8000명 성혼, 커플매니저 1호</td>
+          <td>
+            <span class="tag tag-home">HOME</span>
+            <span class="tag tag-brand">노블홍</span>
+          </td>
+          <td><span class="status s-ok">반영됨</span></td>
+          <td>HOME CEO 섹션에 요약, 노블홍에 상세</td>
+        </tr>
+        <tr>
+          <td>sub01_02<br />언론에 비친 노블홍</td>
+          <td>
+            미디어 보도자료 모음, 글로벌사이버대 홍보대사, 저출산위원회 미팅,
+            공동저서 발간
+          </td>
+          <td><span class="tag tag-brand">노블홍</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>노블홍 미디어 섹션으로 이동. 기사 카드 리스트</td>
+        </tr>
+        <tr>
+          <td>sub01_03<br />유튜브 채널</td>
+          <td>유튜브 영상 6개 (이벤트 미팅, MZ세대 트렌드 등)</td>
+          <td><span class="tag tag-lounge">매칭라운지</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>매칭라운지에 영상 갤러리로 통합</td>
+        </tr>
+        <tr>
+          <td>sub01_04<br />아름다운 캠페인</td>
+          <td>수상내역 (파워리더대상), CSR 활동, 아프리카 봉사 "옹달샘"</td>
+          <td><span class="tag tag-brand">노블홍</span></td>
+          <td><span class="status s-partial">일부</span></td>
+          <td>HOME 수상뱃지에 요약 반영. 상세는 노블홍으로</td>
+        </tr>
+        <tr>
+          <td>sub01_05<br />공지사항</td>
+          <td>본사 이전, MOU 체결 (닥터쁘띠, 건축사협회, 경비협회)</td>
+          <td><span class="tag tag-drop">제외</span></td>
+          <td>—</td>
+          <td>게시판 형태 불필요. MOU는 노블홍 사회공헌에 통합</td>
+        </tr>
+        <tr>
+          <td>sub01_06<br />오시는 길</td>
+          <td>강남역 4번출구 도보 3분, 혜천빌딩 705호</td>
+          <td><span class="tag tag-contact">상담문의</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>상담문의에 지도 + 약도 섹션</td>
+        </tr>
+      </table>
+
+      <h3>sub02 — 가입안내 (6페이지)</h3>
+      <table>
+        <tr>
+          <th style="width: 140px">기존 페이지</th>
+          <th style="width: 280px">핵심 콘텐츠</th>
+          <th style="width: 120px">이동할 페이지</th>
+          <th style="width: 80px">반영 상태</th>
+          <th>비고</th>
+        </tr>
+        <tr>
+          <td>sub02_01<br />왜 노블홍인가</td>
+          <td>
+            차별화 5가지: 표준약관 준수, 신원인증, 고객만족 서비스,
+            매칭전략연구소, 명품 브랜드
+          </td>
+          <td><span class="tag tag-match">노블매칭</span></td>
+          <td><span class="status s-partial">일부</span></td>
+          <td>
+            10대 강점에 포함되었으나
+            <strong>표준약관 준수, 신원인증</strong> 항목 미흡 → 보강 필요
+          </td>
+        </tr>
+        <tr>
+          <td>sub02_02<br />서비스 안내</td>
+          <td>
+            <strong>가입 자격 조건:</strong><br />
+            · 초혼 남28+/여25+, 대졸/초대졸, 안정된 직업<br />
+            · 재혼 남28+/여25+, 결혼경험자<br />
+            · 프리미엄 노블레스 기준 충족<br />
+            <strong>서비스 3종:</strong> 성혼서비스, 비공개관리, 고객맞춤서비스
+          </td>
+          <td>
+            <span class="tag tag-match">노블매칭</span>
+            <span class="tag tag-home">HOME</span>
+          </td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>
+            <strong>전환 핵심 콘텐츠.</strong> 노블매칭에 가입자격+서비스유형
+            섹션 추가 필수. HOME에 자격 요약
+          </td>
+        </tr>
+        <tr>
+          <td>sub02_03<br />회원가입 절차</td>
+          <td>
+            상담→매니저 지정→가입서 작성→서류인증→매칭매니저
+            지정→감성매칭→미팅→교제→성혼<br />
+            <strong>3:1 매칭전략회의</strong> (상담+매칭+총괄), 매주 2~3회
+          </td>
+          <td>
+            <span class="tag tag-match">노블매칭</span>
+            <span class="tag tag-home">HOME</span>
+          </td>
+          <td><span class="status s-partial">일부</span></td>
+          <td>
+            현재 6단계가 너무 추상적.
+            <strong>실제 8단계 상세 절차로 교체</strong>. HOME에 미리보기
+            3~4단계
+          </td>
+        </tr>
+        <tr>
+          <td>sub02_04<br />프로그램 안내</td>
+          <td>5개 프로그램 (이미지), "가입비는 상담 후 변동"</td>
+          <td><span class="tag tag-match">노블매칭</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>
+            노블매칭 하단에 프로그램/비용 안내 섹션 추가. 상담 유도 CTA 연결
+          </td>
+        </tr>
+        <tr>
+          <td>sub02_05<br />상담문의 방법</td>
+          <td>전화(1800-8194, 09~21시)/온라인/방문(예약필수) 3채널</td>
+          <td><span class="tag tag-contact">상담문의</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>상담문의 페이지에 3채널 안내 섹션</td>
+        </tr>
+        <tr>
+          <td>sub02_06<br />커플매니저</td>
+          <td>10~27년차 베테랑 매니저 소개, 매니저 이름 검색 기능</td>
+          <td><span class="tag tag-match">노블매칭</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>
+            노블매칭에 "당신을 담당할 커플매니저" 섹션 추가. 검색 기능은 구현
+            단계에서 검토
+          </td>
+        </tr>
+      </table>
+
+      <h3>sub03 — 맞춤컨설팅 (6페이지)</h3>
+      <table>
+        <tr>
+          <th style="width: 140px">기존 페이지</th>
+          <th style="width: 280px">핵심 콘텐츠</th>
+          <th style="width: 120px">이동할 페이지</th>
+          <th style="width: 80px">반영 상태</th>
+          <th>비고</th>
+        </tr>
+        <tr>
+          <td>sub03_01<br />전문직/엘리트</td>
+          <td>
+            판사/검사/변호사/의사/약사/회계사/교수 등. 연수입 1억+.
+            성혼서비스/비공개관리/맞춤서비스
+          </td>
+          <td><span class="tag tag-consult">맞춤컨설팅</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>맞춤컨설팅 탭/아코디언 UI로 자격+서비스 상세</td>
+        </tr>
+        <tr>
+          <td>sub03_02<br />대기업/명문대</td>
+          <td>
+            100대 기업, 공기업, 금융사, 외국계 정규직. 명문대 총동창회 협력
+          </td>
+          <td><span class="tag tag-consult">맞춤컨설팅</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>맞춤컨설팅 내 별도 탭</td>
+        </tr>
+        <tr>
+          <td>sub03_03<br />명문가/재력가</td>
+          <td>국회의원/고위공무원/100대그룹CEO 자제. 자산 500억+ VVIP</td>
+          <td><span class="tag tag-consult">맞춤컨설팅</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>맞춤컨설팅 내 VVIP 전용 섹션</td>
+        </tr>
+        <tr>
+          <td>sub03_04<br />명품결혼 컨설팅</td>
+          <td>초혼/재혼/프리미엄 통합. "잘 하기 위해 오는 곳"</td>
+          <td><span class="tag tag-consult">맞춤컨설팅</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>맞춤컨설팅 페이지 히어로 카피로 활용</td>
+        </tr>
+        <tr>
+          <td>sub03_05<br />자녀결혼 컨설팅</td>
+          <td>부모 대신 결혼 준비. 자녀 설득 전문 상담</td>
+          <td><span class="tag tag-consult">맞춤컨설팅</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>맞춤컨설팅 내 부모 전용 섹션. 해외거주 자녀 포함</td>
+        </tr>
+        <tr>
+          <td>sub03_06<br />스페셜 재혼</td>
+          <td>이혼/사별/사실혼 대상 재혼 전문 매칭</td>
+          <td><span class="tag tag-consult">맞춤컨설팅</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>맞춤컨설팅 내 재혼 전용 섹션</td>
+        </tr>
+      </table>
+
+      <h3>sub05 — 맞선&파티 (2페이지)</h3>
+      <table>
+        <tr>
+          <th style="width: 140px">기존 페이지</th>
+          <th style="width: 280px">핵심 콘텐츠</th>
+          <th style="width: 120px">이동할 페이지</th>
+          <th style="width: 80px">반영 상태</th>
+          <th>비고</th>
+        </tr>
+        <tr>
+          <td>sub05_01<br />노블레스 파티</td>
+          <td>
+            6종 파티: Doctor/Professional/Premium/Collaboration/Thema/Remarry
+          </td>
+          <td><span class="tag tag-lounge">매칭라운지</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>매칭라운지 이벤트 섹션에 파티 6종 카드</td>
+        </tr>
+        <tr>
+          <td>sub05_02<br />스페셜 맞선</td>
+          <td>1:1 맞춤형 스페셜 매칭, 무료상담 CTA</td>
+          <td><span class="tag tag-lounge">매칭라운지</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>매칭라운지에 스페셜맞선 CTA 섹션</td>
+        </tr>
+      </table>
+
+      <h3>sub06 — 매칭전략연구소 (3페이지)</h3>
+      <table>
+        <tr>
+          <th style="width: 140px">기존 페이지</th>
+          <th style="width: 280px">핵심 콘텐츠</th>
+          <th style="width: 120px">이동할 페이지</th>
+          <th style="width: 80px">반영 상태</th>
+          <th>비고</th>
+        </tr>
+        <tr>
+          <td>sub06_01<br />매칭전략 연구소</td>
+          <td>30년 노하우 기반 매칭 컨설팅. 커플매니저 업무 범위 6가지</td>
+          <td><span class="tag tag-lounge">매칭라운지</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>매칭라운지 첫 섹션</td>
+        </tr>
+        <tr>
+          <td>sub06_02<br />미팅성공 가이드</td>
+          <td>
+            미팅 성공 팁 7가지 + 주의사항 5가지 (3번 더 만나기, 세미정장, 3일내
+            애프터 등)
+          </td>
+          <td><span class="tag tag-lounge">매칭라운지</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>매칭라운지에 가이드 카드 UI</td>
+        </tr>
+        <tr>
+          <td>sub06_03<br />러브칼럼</td>
+          <td>연애/결혼 칼럼 시리즈 (20대 판타지, 방어심리 등)</td>
+          <td><span class="tag tag-lounge">매칭라운지</span></td>
+          <td><span class="status s-miss">미반영</span></td>
+          <td>매칭라운지 칼럼 카드 리스트</td>
+        </tr>
+      </table>
+
+      <!-- ===== HOME CHECK ===== -->
+      <h2>HOME 페이지 <span>추가 검토</span></h2>
+      <p class="desc">
+        메인 페이지에 잠재고객 전환을 위해 반드시 있어야 할 항목
+      </p>
+
+      <div class="home-check">
+        <div class="home-check-header">HOME 필수 요소 체크리스트</div>
+        <div class="home-check-row">
+          <div class="check check-yes">✓</div>
+          <div class="item">히어로 — 임팩트 첫인상 + CTA 2개</div>
+          <div class="note">반영됨 (1800-8194 + 온라인 상담)</div>
+        </div>
+        <div class="home-check-row">
+          <div class="check check-yes">✓</div>
+          <div class="item">숫자로 보는 노블홍 — 30년, 8000+, 75%, 3년연속</div>
+          <div class="note">반영됨</div>
+        </div>
+        <div class="home-check-row">
+          <div class="check check-yes">✓</div>
+          <div class="item">서비스 카드 3종 — 명품결혼/자녀결혼/재혼</div>
+          <div class="note">반영됨 (호버 확장 카드)</div>
+        </div>
+        <div class="home-check-row">
+          <div class="check check-yes">✓</div>
+          <div class="item">CEO 프로필 — 신뢰 구축</div>
+          <div class="note">반영됨 (다크 섹션)</div>
+        </div>
+        <div class="home-check-row">
+          <div class="check check-yes">✓</div>
+          <div class="item">미디어 출연 — 방송 사진 스트립</div>
+          <div class="note">반영됨</div>
+        </div>
+        <div class="home-check-row">
+          <div class="check check-no">✗</div>
+          <div class="item">
+            <strong>가입 자격 요약 — "이런 분이 오시는 곳입니다"</strong>
+          </div>
+          <div class="note">
+            누락. 잠재고객이 "나도 가입할 수 있나?" 즉시 확인 필요
+          </div>
+        </div>
+        <div class="home-check-row">
+          <div class="check check-no">✗</div>
+          <div class="item">
+            <strong>가입 절차 미리보기 — 3~4단계 요약</strong>
+          </div>
+          <div class="note">누락. "어떻게 시작하나?" 불안 해소 필요</div>
+        </div>
+        <div class="home-check-row">
+          <div class="check check-no">✗</div>
+          <div class="item">
+            <strong>파티/이벤트 미리보기 — 부가 혜택 어필</strong>
+          </div>
+          <div class="note">누락. Doctor Party 등 프리미엄 이미지 강화</div>
+        </div>
+        <div class="home-check-row">
+          <div class="check check-yes">✓</div>
+          <div class="item">하단 CTA — 상담 유도</div>
+          <div class="note">반영됨 (꽃 배경 CTA)</div>
+        </div>
+      </div>
+
+      <!-- ===== SUMMARY ===== -->
+      <h2>반영 현황 <span>요약</span></h2>
+      <table>
+        <tr>
+          <th>신규 페이지</th>
+          <th>와이어프레임</th>
+          <th>반영된 기존 콘텐츠</th>
+          <th>누락 콘텐츠</th>
+          <th>액션</th>
+        </tr>
+        <tr>
+          <td><strong>HOME</strong></td>
+          <td><span class="status s-ok">완료</span></td>
+          <td>sub01_01(CEO), sub01_04(수상) 일부</td>
+          <td>가입 자격 요약, 가입 절차 미리보기, 이벤트 미리보기</td>
+          <td>와이어프레임 섹션 3개 추가</td>
+        </tr>
+        <tr>
+          <td><strong>노블홍</strong></td>
+          <td><span class="status s-miss">미작성</span></td>
+          <td>—</td>
+          <td>sub01 전체 (CEO, 언론, 캠페인) + 표준약관/개인정보보호</td>
+          <td>와이어프레임 신규 제작</td>
+        </tr>
+        <tr>
+          <td><strong>노블매칭</strong></td>
+          <td><span class="status s-partial">보강 필요</span></td>
+          <td>sub02_01(강점) 일부, sub02_03(절차) 일부</td>
+          <td>가입 자격, 서비스 3종, 상세 절차, 커플매니저, 프로그램/비용</td>
+          <td>와이어프레임 섹션 4개 추가</td>
+        </tr>
+        <tr>
+          <td><strong>맞춤컨설팅</strong></td>
+          <td><span class="status s-miss">미작성</span></td>
+          <td>—</td>
+          <td>sub03 전체 6건 (전문직/대기업/명문가/명품결혼/자녀/재혼)</td>
+          <td>와이어프레임 신규 제작</td>
+        </tr>
+        <tr>
+          <td><strong>매칭라운지</strong></td>
+          <td><span class="status s-miss">미작성</span></td>
+          <td>—</td>
+          <td>sub05(파티2건) + sub06(연구소3건) + sub01_03(유튜브)</td>
+          <td>와이어프레임 신규 제작</td>
+        </tr>
+        <tr>
+          <td><strong>상담문의</strong></td>
+          <td><span class="status s-miss">미작성</span></td>
+          <td>—</td>
+          <td>sub02_05(상담방법) + sub01_06(오시는길) + 폼</td>
+          <td>와이어프레임 신규 제작</td>
+        </tr>
+      </table>
+
+      <div class="callout">
+        <strong>우선순위 작업:</strong><br />
+        1. 노블매칭 와이어프레임 보강 (가입자격, 서비스유형, 상세절차,
+        커플매니저, 비용) ← 전환 핵심<br />
+        2. HOME 와이어프레임 보강 (가입자격 요약, 절차 미리보기) ← 이탈 방지<br />
+        3. 맞춤컨설팅 와이어프레임 (전문직/대기업/명문가/자녀/재혼) ← 타겟별
+        전환<br />
+        4. 상담문의 와이어프레임 (폼+채널+지도) ← 최종 전환<br />
+        5. 노블홍 와이어프레임 (브랜드+CEO+미디어) ← 신뢰 보강<br />
+        6. 매칭라운지 와이어프레임 (파티+가이드+칼럼) ← 관심 유지
+      </div>
+
+      <p
+        style="
+          text-align: center;
+          color: var(--text-muted);
+          font-size: 12px;
+          margin-top: 48px;
+          padding-top: 24px;
+          border-top: 1px solid var(--border);
+        "
+      >
+        노블홍 홈페이지 리뉴얼 · 콘텐츠 매핑표 v1.0 · 2026.04.04
+      </p>
+    </div>
+  </body>
+</html>

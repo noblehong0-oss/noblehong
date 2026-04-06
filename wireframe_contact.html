@@ -1,0 +1,1636 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>상담문의 — Noble HoNG</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <style>
+      :root {
+        --bg: #faf9f6;
+        --surface: #ffffff;
+        --surface-warm: #f6f3ee;
+        --surface-cream: #f0ece4;
+        --border: #e0d9ce;
+        --border-gold: rgba(160, 128, 48, 0.25);
+        --text: #1a1714;
+        --text-secondary: #5c564e;
+        --text-muted: #9e9893;
+        --gold: #a08030;
+        --gold-light: #c4a55a;
+        --gold-lighter: #d9c577;
+        --gold-dark: #7a6020;
+        --gold-bg: rgba(160, 128, 48, 0.04);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* ===== GNB ===== */
+      .gnb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: #ffffff;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+        transition: all 0.4s ease;
+      }
+      .gnb-border {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 10%,
+          var(--gold-light) 50%,
+          transparent 90%
+        );
+        opacity: 0.5;
+      }
+      .gnb-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        height: 88px;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-inner {
+        height: 64px;
+      }
+      .gnb-logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+      .gnb-logo img {
+        height: 56px;
+        width: auto;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-logo img {
+        height: 40px;
+      }
+      .gnb-menu {
+        display: flex;
+        gap: 40px;
+        list-style: none;
+      }
+      .gnb-menu a {
+        text-decoration: none;
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        padding: 8px 0;
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          var(--gold-dark),
+          var(--gold),
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        transition: all 0.3s;
+      }
+      .gnb-menu a.active {
+        filter: brightness(1.3);
+      }
+      .gnb-menu a.active::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light),
+          var(--gold)
+        );
+      }
+      .gnb-menu a::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light),
+          var(--gold)
+        );
+        transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .gnb-menu a:hover::after {
+        width: 100%;
+      }
+      .gnb-cta {
+        padding: 8px 20px;
+        border: 1px solid var(--gold-light);
+        background: linear-gradient(
+          135deg,
+          transparent,
+          rgba(196, 165, 90, 0.05)
+        );
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        border-radius: 1px;
+        text-decoration: none;
+        color: var(--gold);
+        transition: all 0.4s;
+      }
+      .gnb-cta:hover {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        border-color: var(--gold);
+      }
+
+      /* ===== REVEAL ===== */
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      /* ===== HERO ===== */
+      .page-hero {
+        padding-top: 88px;
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        background: #1a1714;
+      }
+      .page-hero-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .page-hero-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .page-hero-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(20, 18, 14, 0.8);
+        pointer-events: none;
+      }
+      .page-hero-pattern {
+        position: absolute;
+        inset: 0;
+        opacity: 0.02;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 40px,
+          var(--gold) 40px,
+          var(--gold) 41px
+        );
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 400px;
+        background: radial-gradient(
+          ellipse,
+          rgba(196, 165, 90, 0.08) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .page-hero-content {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+      .page-hero-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        font-weight: 400;
+        font-style: italic;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        background: linear-gradient(
+          90deg,
+          #c4a55a,
+          #e8d090,
+          #f0dda0,
+          #e8d090,
+          #c4a55a
+        );
+        background-size: 280% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer 5s ease-in-out infinite;
+        margin-bottom: 20px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 100% 50%;
+        }
+        50% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+      .page-hero h1 {
+        font-size: clamp(36px, 5vw, 56px);
+        font-weight: 300;
+        color: #fff;
+        letter-spacing: -1px;
+        margin-bottom: 16px;
+      }
+      .page-hero h1 strong {
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          #e8d090,
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-sub {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.55);
+        font-weight: 300;
+        letter-spacing: 0.5px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+      .page-hero-phone {
+        font-size: 48px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #f0dda0, #fff8e0, #f0dda0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+      }
+      .page-hero-hours {
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      /* ===== SECTION COMMON ===== */
+      .section {
+        padding: 100px 40px;
+      }
+      .section-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .section-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .section-title {
+        font-size: clamp(28px, 3.5vw, 42px);
+        font-weight: 700;
+        margin-bottom: 16px;
+        line-height: 1.3;
+      }
+      .section-desc {
+        font-size: 16px;
+        line-height: 1.7;
+        margin-bottom: 48px;
+      }
+      .section-dark {
+        background: #1a1714;
+        color: #fff;
+      }
+      .section-dark .section-eyebrow {
+        color: var(--gold-light);
+      }
+      .section-dark .section-title {
+        color: #fff;
+      }
+      .section-dark .section-title strong {
+        background: linear-gradient(135deg, var(--gold-light), #e8d090);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .section-dark .section-desc {
+        color: rgba(255, 255, 255, 0.55);
+      }
+      .section-cream {
+        background: var(--bg);
+      }
+      .section-cream .section-eyebrow {
+        color: var(--gold);
+      }
+      .section-cream .section-title strong {
+        color: var(--gold);
+      }
+      .section-cream .section-desc {
+        color: var(--text-secondary);
+      }
+
+      /* ===== SECTION 2: 상담 방법 3가지 ===== */
+      .channel-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .channel-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 40px 32px;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        overflow: hidden;
+      }
+      .channel-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-light));
+        transform: scaleX(0);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .channel-card:hover::before {
+        transform: scaleX(1);
+      }
+      .channel-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(160, 128, 48, 0.1);
+        border-color: var(--border-gold);
+      }
+      .channel-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          rgba(160, 128, 48, 0.08),
+          rgba(196, 165, 90, 0.04)
+        );
+        border: 1px solid var(--border-gold);
+      }
+      .channel-icon svg {
+        width: 28px;
+        height: 28px;
+        stroke: var(--gold);
+        fill: none;
+        stroke-width: 1.5;
+      }
+      .channel-card h4 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: var(--text);
+      }
+      .channel-card p {
+        font-size: 15px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .channel-highlight {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--gold);
+        margin: 16px 0 8px;
+        letter-spacing: 1px;
+      }
+      .channel-sub {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      /* ===== SECTION 3: 상담 신청 폼 ===== */
+      .form-wrap {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      .form-notice {
+        background: rgba(196, 165, 90, 0.06);
+        border: 1px solid var(--border-gold);
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-bottom: 40px;
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.7;
+        text-align: center;
+      }
+      .form-notice strong {
+        color: var(--gold-light);
+      }
+      .form-row {
+        margin-bottom: 24px;
+      }
+      .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+      }
+      .form-label .required {
+        color: #e85555;
+        margin-left: 4px;
+        font-size: 12px;
+      }
+      .form-radio-group {
+        display: flex;
+        gap: 16px;
+      }
+      .form-radio {
+        display: none;
+      }
+      .form-radio-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.6);
+        transition: all 0.3s;
+        flex: 1;
+        justify-content: center;
+      }
+      .form-radio:checked + .form-radio-label {
+        border-color: var(--gold);
+        color: var(--gold-light);
+        background: rgba(196, 165, 90, 0.08);
+      }
+      .form-radio-label:hover {
+        border-color: rgba(196, 165, 90, 0.4);
+      }
+      .form-input,
+      .form-select {
+        width: 100%;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 8px;
+        font-size: 15px;
+        color: #fff;
+        font-family: inherit;
+        transition: border-color 0.3s;
+        outline: none;
+      }
+      .form-input:focus,
+      .form-select:focus {
+        border-color: var(--gold);
+      }
+      .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.25);
+      }
+      .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c4a55a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+      }
+      .form-select option {
+        background: #1a1714;
+        color: #fff;
+      }
+      .form-checkbox-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .form-checkbox {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--gold);
+        margin-top: 2px;
+        cursor: pointer;
+      }
+      .form-checkbox-text {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.5);
+        line-height: 1.5;
+      }
+      .form-checkbox-text a {
+        color: var(--gold-light);
+        text-decoration: underline;
+      }
+      .form-submit-wrap {
+        text-align: center;
+        margin-top: 36px;
+      }
+      .form-submit {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 48px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+        font-family: inherit;
+      }
+      .form-submit:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(160, 128, 48, 0.3);
+      }
+      .form-submit:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        filter: none;
+      }
+      .form-security {
+        text-align: center;
+        margin-top: 16px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .form-security svg {
+        width: 14px;
+        height: 14px;
+        stroke: rgba(255, 255, 255, 0.2);
+        fill: none;
+        stroke-width: 1.5;
+      }
+      .form-result {
+        text-align: center;
+        margin-top: 20px;
+        padding: 16px;
+        border-radius: 8px;
+        font-size: 15px;
+        display: none;
+      }
+      .form-result.success {
+        display: block;
+        background: rgba(0, 180, 80, 0.1);
+        border: 1px solid rgba(0, 180, 80, 0.3);
+        color: #00b450;
+      }
+      .form-result.error {
+        display: block;
+        background: rgba(220, 50, 50, 0.1);
+        border: 1px solid rgba(220, 50, 50, 0.3);
+        color: #dc3232;
+      }
+
+      /* ===== SECTION 4: 오시는 길 ===== */
+      .location-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: start;
+      }
+      .location-map {
+        aspect-ratio: 4 / 3;
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--surface-warm);
+        border: 1px solid var(--border);
+      }
+      .location-map iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+      .location-info h3 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        color: var(--text);
+      }
+      .location-item {
+        display: flex;
+        gap: 14px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .location-item:last-child {
+        border-bottom: none;
+      }
+      .location-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(160, 128, 48, 0.08);
+        border: 1px solid var(--border-gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .location-icon svg {
+        width: 16px;
+        height: 16px;
+        stroke: var(--gold);
+        fill: none;
+        stroke-width: 1.5;
+      }
+      .location-text {
+        font-size: 15px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+      .location-text strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .location-badge {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 8px 16px;
+        background: rgba(160, 128, 48, 0.06);
+        border: 1px solid var(--border-gold);
+        border-radius: 999px;
+        font-size: 13px;
+        color: var(--gold);
+        font-weight: 600;
+      }
+
+      /* ===== ORNAMENT ===== */
+      .ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 40px 0;
+      }
+      .ornament-line {
+        width: 80px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+      }
+      .ornament-diamond {
+        width: 8px;
+        height: 8px;
+        border: 1px solid var(--gold-light);
+        transform: rotate(45deg);
+      }
+
+      /* ===== CTA ===== */
+      .cta-section {
+        padding: 140px 32px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-bg-wrap {
+        position: absolute;
+        inset: 0;
+      }
+      .cta-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .cta-bg img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        filter: contrast(0.7) brightness(0.85);
+        transition: opacity 1.2s ease;
+      }
+      .cta-bg video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        opacity: 0;
+        filter: contrast(0.7) brightness(0.85);
+        transition: opacity 1.2s ease;
+      }
+      .cta-bg.playing img {
+        opacity: 0;
+      }
+      .cta-bg.playing video {
+        opacity: 1;
+      }
+      .cta-bg-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(30, 24, 10, 0.85);
+        z-index: 1;
+      }
+      .cta-frame {
+        position: absolute;
+        inset: 60px;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+        pointer-events: none;
+        border-radius: 2px;
+        z-index: 2;
+      }
+      .cta-content {
+        position: relative;
+        z-index: 3;
+      }
+      .cta-title {
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 200;
+        margin-bottom: 12px;
+        color: rgba(255, 255, 255, 0.95);
+      }
+      .cta-title strong {
+        font-weight: 600;
+        background: linear-gradient(135deg, #f0dda0, var(--gold-lighter));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-sub {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 8px;
+      }
+      .cta-phone {
+        font-family: "Pretendard Variable", sans-serif;
+        font-size: 42px;
+        margin: 28px 0;
+        background: linear-gradient(135deg, #f0dda0, #fff8e0, #f0dda0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-note {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.4);
+        margin-bottom: 32px;
+      }
+      .cta-buttons {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+      }
+      .cta-section .btn-filled {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 28px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .cta-section .btn-filled:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(160, 128, 48, 0.3);
+      }
+      .cta-section .btn-outlined {
+        display: inline-flex;
+        align-items: center;
+        padding: 14px 28px;
+        border: 1px solid var(--gold-light);
+        color: var(--gold-light);
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .cta-section .btn-outlined:hover {
+        background: rgba(196, 165, 90, 0.1);
+        transform: translateY(-2px);
+      }
+
+      /* ===== FOOTER ===== */
+      .footer {
+        padding: 56px 40px 40px;
+        background: linear-gradient(135deg, #2a2318 0%, #1e1a14 100%);
+        border-top: 2px solid var(--gold);
+      }
+      .footer-gold-line {
+        height: 1px;
+        margin-bottom: 56px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        opacity: 0.3;
+      }
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-logo {
+        margin-bottom: 16px;
+      }
+      .footer-logo img {
+        height: 36px;
+        width: auto;
+        opacity: 0.8;
+        filter: brightness(0) invert(1);
+      }
+      .footer-info {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.45);
+        line-height: 1.9;
+      }
+      .footer-links {
+        display: flex;
+        gap: 28px;
+      }
+      .footer-links a {
+        font-size: 13px;
+        color: rgba(196, 165, 90, 0.6);
+        text-decoration: none;
+        letter-spacing: 0.3px;
+        transition: color 0.3s;
+      }
+      .footer-links a:hover {
+        color: var(--gold-lighter);
+      }
+
+      .ai-image-badge {
+        font-size: 11px;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+        color: rgba(255, 255, 255, 0.18);
+        background: rgba(0, 0, 0, 0.08);
+        backdrop-filter: blur(4px);
+        padding: 4px 10px;
+        border-radius: 2px;
+        pointer-events: none;
+      }
+      /* 인앱브라우저 전화 바로연결 바 */
+      .inapp-call-bar {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        text-align: center;
+      }
+      .inapp-call-bar a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .inapp-call-bar svg {
+        width: 20px;
+        height: 20px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2;
+      }
+      .inapp-call-bar.visible {
+        display: block;
+      }
+
+      .wf-badge {
+        position: fixed;
+        bottom: 16px;
+        left: 16px;
+        z-index: 999;
+        background: rgba(26, 23, 20, 0.95);
+        color: var(--gold-light);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 4px;
+        letter-spacing: 1px;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wf-badge">WIREFRAME — 상담문의</div>
+
+    <!-- GNB -->
+    <nav class="gnb" id="gnb">
+      <div class="gnb-inner">
+        <a href="wireframe_home_v3_motion.html" class="gnb-logo"
+          ><img src="logo.png" alt="Noble HoNG"
+        /></a>
+        <ul class="gnb-menu">
+          <li><a href="wireframe_home_v3_motion.html">노블홍</a></li>
+          <li><a href="wireframe_noblematching.html">노블매칭</a></li>
+          <li><a href="wireframe_consulting.html">맞춤컨설팅</a></li>
+          <li><a href="wireframe_matchinglounge.html">매칭라운지</a></li>
+          <li><a href="wireframe_contact.html" class="active">상담문의</a></li>
+        </ul>
+        <a href="#form" class="gnb-cta">상담 신청</a>
+      </div>
+      <div class="gnb-border"></div>
+    </nav>
+
+    <!-- ===== SECTION 1: HERO ===== -->
+    <section class="page-hero">
+      <div class="page-hero-bg">
+        <img src="images/qualify/호텔.png" alt="상담문의" />
+      </div>
+      <div class="page-hero-pattern"></div>
+      <div class="page-hero-glow"></div>
+      <div class="page-hero-content">
+        <div class="page-hero-eyebrow">Consultation</div>
+        <h1>당신의 인연,<br /><strong>지금 시작됩니다</strong></h1>
+        <div class="page-hero-phone">1800-8194</div>
+        <p class="page-hero-hours">
+          평일 · 주말 · 공휴일 오전 09:00 ~ 오후 09:00
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 2: 상담 방법 3가지 (크림) ===== -->
+    <section class="section section-cream" id="channels">
+      <div class="section-inner">
+        <div class="section-eyebrow reveal">How to Consult</div>
+        <h2 class="section-title reveal">
+          편한 방법으로 <strong>상담을 시작하세요</strong>
+        </h2>
+        <p class="section-desc reveal">
+          10년 이상 경력의 전문 커플매니저가 1:1 맞춤 상담을 진행합니다
+        </p>
+
+        <div class="channel-grid">
+          <!-- 전화 상담 -->
+          <div class="channel-card reveal">
+            <div class="channel-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+                />
+              </svg>
+            </div>
+            <h4>전화 상담</h4>
+            <div class="channel-highlight">1800-8194</div>
+            <p>무료 전화 상담<br />평일·주말·공휴일 09:00~21:00</p>
+            <div class="channel-sub">가장 빠르고 편한 상담 방법</div>
+          </div>
+
+          <!-- 온라인 상담 -->
+          <div class="channel-card reveal">
+            <div class="channel-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+            </div>
+            <h4>온라인 상담</h4>
+            <div class="channel-highlight" style="font-size: 18px">
+              24시간 접수 가능
+            </div>
+            <p>
+              아래 폼으로 간단한 정보를 남겨주시면<br />담당 매니저가 24시간
+              이내 연락
+            </p>
+            <div class="channel-sub">시간에 구애받지 않는 상담</div>
+          </div>
+
+          <!-- 방문 상담 -->
+          <div class="channel-card reveal">
+            <div class="channel-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </div>
+            <h4>방문 상담</h4>
+            <div class="channel-highlight" style="font-size: 18px">
+              사전 예약 필수
+            </div>
+            <p>강남역 4번 출구 도보 3분<br />혜천빌딩 705, 706호</p>
+            <div class="channel-sub">전화 또는 온라인으로 예약</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 3: 온라인 상담 신청 폼 (다크) ===== -->
+    <section class="section section-dark" id="form">
+      <div class="section-inner">
+        <div class="section-eyebrow reveal" style="text-align: center">
+          Online Consultation
+        </div>
+        <h2 class="section-title reveal" style="text-align: center">
+          <strong>온라인 상담</strong> 신청
+        </h2>
+
+        <div class="form-wrap">
+          <div class="form-notice reveal">
+            간단한 정보를 남겨주시면, 담당 커플매니저가
+            <strong>24시간 이내</strong> 연락드립니다.<br />
+            모든 상담 내용은 철저히 비밀이 보장되며, 상담만으로도 비용이
+            발생하지 않습니다.
+          </div>
+
+          <form id="consultForm" onsubmit="return handleSubmit(event);">
+            <!-- 성별 -->
+            <div class="form-row reveal">
+              <label class="form-label"
+                >성별 <span class="required">*</span></label
+              >
+              <div class="form-radio-group">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="남성"
+                  id="genderM"
+                  class="form-radio"
+                  required
+                />
+                <label for="genderM" class="form-radio-label">남성</label>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="여성"
+                  id="genderF"
+                  class="form-radio"
+                />
+                <label for="genderF" class="form-radio-label">여성</label>
+              </div>
+            </div>
+
+            <!-- 혼인상태 -->
+            <div class="form-row reveal">
+              <label class="form-label"
+                >혼인상태 <span class="required">*</span></label
+              >
+              <div class="form-radio-group">
+                <input
+                  type="radio"
+                  name="marriage"
+                  value="초혼"
+                  id="marriageFirst"
+                  class="form-radio"
+                  required
+                />
+                <label for="marriageFirst" class="form-radio-label">초혼</label>
+                <input
+                  type="radio"
+                  name="marriage"
+                  value="재혼"
+                  id="marriageRe"
+                  class="form-radio"
+                />
+                <label for="marriageRe" class="form-radio-label">재혼</label>
+              </div>
+            </div>
+
+            <!-- 출생년도 -->
+            <div class="form-row reveal">
+              <label class="form-label" for="birthYear"
+                >출생년도 <span class="required">*</span></label
+              >
+              <select
+                name="birthYear"
+                id="birthYear"
+                class="form-select"
+                required
+              >
+                <option value="">출생년도를 선택해주세요</option>
+              </select>
+            </div>
+
+            <!-- 이름 -->
+            <div class="form-row reveal">
+              <label class="form-label" for="name"
+                >이름 <span class="required">*</span></label
+              >
+              <input
+                type="text"
+                name="name"
+                id="name"
+                class="form-input"
+                placeholder="실명을 입력해주세요"
+                required
+              />
+            </div>
+
+            <!-- 이메일 -->
+            <div class="form-row reveal">
+              <label class="form-label" for="email"
+                >이메일 <span class="required">*</span></label
+              >
+              <input
+                type="email"
+                name="email"
+                id="email"
+                class="form-input"
+                placeholder="example@email.com"
+                required
+              />
+            </div>
+
+            <!-- 휴대폰번호 -->
+            <div class="form-row reveal">
+              <label class="form-label" for="phone"
+                >휴대폰번호 <span class="required">*</span></label
+              >
+              <input
+                type="tel"
+                name="phone"
+                id="phone"
+                class="form-input"
+                placeholder="010-0000-0000"
+                required
+              />
+            </div>
+
+            <!-- 약관 동의 -->
+            <div class="form-row reveal" style="margin-top: 32px">
+              <div class="form-checkbox-row">
+                <input
+                  type="checkbox"
+                  id="agreePrivacy"
+                  class="form-checkbox"
+                  required
+                />
+                <label for="agreePrivacy" class="form-checkbox-text">
+                  <a href="privacy.html" target="_blank"
+                    >개인정보 수집 및 이용안내</a
+                  >
+                  동의 <strong>[필수]</strong>
+                </label>
+              </div>
+              <div class="form-checkbox-row">
+                <input
+                  type="checkbox"
+                  id="agreeMarketing"
+                  class="form-checkbox"
+                  required
+                />
+                <label for="agreeMarketing" class="form-checkbox-text">
+                  마케팅 활용 동의 (서비스 및 가입 안내) <strong>[필수]</strong>
+                </label>
+              </div>
+            </div>
+
+            <!-- 제출 -->
+            <div class="form-submit-wrap reveal">
+              <button type="submit" class="form-submit" id="submitBtn">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+                상담 신청하기
+              </button>
+            </div>
+
+            <div class="form-security reveal">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              모든 정보는 SSL 암호화로 안전하게 전송됩니다 · IP 주소가 자동
+              수집됩니다
+            </div>
+
+            <div class="form-result" id="formResult"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 4: 오시는 길 (크림) ===== -->
+    <section class="section section-cream" id="location">
+      <div class="section-inner">
+        <div class="section-eyebrow reveal">Location</div>
+        <h2 class="section-title reveal">
+          노블홍으로 <strong>오시는 길</strong>
+        </h2>
+
+        <div class="location-split">
+          <div class="location-map reveal">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3165.3!2d127.028!3d37.4979!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca15a0a2a0001%3A0x1!2z7ISc7Jq47Yq567OE7IucIOqwleuCqOq1rCDqsJXrgqjrjIDroZwgMzU0IO2YnOyynOu5jOuUqSA3MDU!5e0!3m2!1sko!2skr!4v1"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          </div>
+
+          <div class="location-info reveal">
+            <h3>Noble HoNG</h3>
+
+            <div class="location-item">
+              <div class="location-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </div>
+              <div class="location-text">
+                <strong>서울시 강남구 강남대로 354</strong><br />
+                혜천빌딩 705, 706호
+              </div>
+            </div>
+
+            <div class="location-item">
+              <div class="location-icon">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <div class="location-text">
+                <strong>강남역 4번 출구</strong> 도보 3분
+              </div>
+            </div>
+
+            <div class="location-item">
+              <div class="location-icon">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+                  />
+                </svg>
+              </div>
+              <div class="location-text">
+                <strong>대표전화</strong> 1800-8194
+              </div>
+            </div>
+
+            <div class="location-item">
+              <div class="location-icon">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <div class="location-text">
+                <strong>운영시간</strong> 평일·주말·공휴일<br />
+                오전 09:00 ~ 오후 09:00
+              </div>
+            </div>
+
+            <div class="location-badge">방문 상담은 사전 예약 필수</div>
+
+            <div
+              style="
+                margin-top: 24px;
+                padding-top: 20px;
+                border-top: 1px solid var(--border);
+                font-size: 13px;
+                color: var(--text-muted);
+                line-height: 1.8;
+              "
+            >
+              (주)노블홍 결혼정보회사 · 대표 홍유진<br />
+              사업자등록번호 321-81-03029<br />
+              국내결혼중개업 서울-강남-국내-22-0012호
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta-section" id="cta">
+      <div class="cta-bg-wrap">
+        <div class="cta-bg" id="ctaBgContact">
+          <img src="images/qualify/cta.png" alt="웨딩" />
+          <video src="images/qualify/cta.mp4" muted playsinline loop></video>
+        </div>
+        <div class="cta-bg-overlay"></div>
+      </div>
+      <span
+        class="ai-image-badge"
+        style="position: absolute; bottom: 16px; right: 16px; z-index: 6"
+        >AI 이미지 사용</span
+      >
+      <div class="cta-frame"></div>
+      <div class="cta-content">
+        <h2 class="cta-title">
+          당신의 인연,<br /><strong>지금 시작됩니다</strong>
+        </h2>
+        <p class="cta-sub">주말 및 공휴일에도 상담 가능합니다</p>
+        <div class="cta-phone">1800-8194</div>
+        <p class="cta-note">
+          간단한 정보를 남겨주시면, 담당 커플매니저가 24시간 이내 연락드립니다
+        </p>
+        <div class="cta-buttons">
+          <a href="tel:1800-8194" class="btn-filled">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+              />
+            </svg>
+            전화 상담
+          </a>
+          <a href="#form" class="btn-outlined">온라인 상담 신청</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 인앱브라우저 전화 바로연결 (모바일 하단 고정) -->
+    <div class="inapp-call-bar" id="inappCallBar">
+      <a href="tel:1800-8194">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+          />
+        </svg>
+        지금 바로 전화 상담 1800-8194
+      </a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-gold-line"></div>
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo"><img src="logo.png" alt="Noble HoNG" /></div>
+          <div class="footer-info">
+            (주)노블홍 결혼정보회사 &middot; 대표 홍유진<br />
+            서울시 강남구 강남대로 354 혜천빌딩 705, 706<br />
+            사업자등록번호 321-81-03029 &middot; 국내결혼중개업
+            서울-강남-국내-22-0012호<br />
+            대표전화 1800-8194
+          </div>
+          <div
+            style="
+              margin-top: 16px;
+              padding-top: 12px;
+              border-top: 1px solid rgba(255, 255, 255, 0.06);
+              font-size: 12px;
+              color: rgba(255, 255, 255, 0.25);
+            "
+          >
+            <span>&copy; 2026 Noble Hong. All rights reserved.</span>
+            <span style="margin-left: 16px"
+              >Designed by
+              <a
+                href="https://polarad.co.kr"
+                target="_blank"
+                rel="noopener"
+                style="color: rgba(196, 165, 90, 0.5); text-decoration: none"
+                >POLA</a
+              ></span
+            >
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="privacy.html">개인정보처리방침</a>
+          <a href="terms.html">이용약관</a>
+          <a href="damages.html">손해배상절차</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // GNB scroll effect
+      window.addEventListener("scroll", () => {
+        document
+          .getElementById("gnb")
+          .classList.toggle("scrolled", window.scrollY > 60);
+      });
+
+      // GSAP
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.utils.toArray(".reveal").forEach((el, i) => {
+        gsap.to(el, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+          delay: (i % 5) * 0.08,
+        });
+      });
+
+      // 인앱브라우저 감지 + 하단 전화바 표시
+      (() => {
+        const ua = navigator.userAgent || "";
+        const isInApp =
+          /FBAN|FBAV|Instagram|KAKAOTALK|NAVER|Line|DaumApps|SamsungBrowser.*CrossApp/i.test(
+            ua,
+          );
+        const isMobile = /iPhone|iPad|Android|Mobile/i.test(ua);
+        if (isInApp || isMobile) {
+          const bar = document.getElementById("inappCallBar");
+          if (bar) bar.classList.add("visible");
+        }
+        // 개인정보 링크: 인앱에서 target="_blank" 안 열릴 수 있으므로 같은 창으로 전환
+        if (isInApp) {
+          document
+            .querySelectorAll('.form-checkbox-text a[target="_blank"]')
+            .forEach((a) => {
+              a.removeAttribute("target");
+            });
+        }
+      })();
+
+      // 출생년도 select 동적 생성
+      (() => {
+        const select = document.getElementById("birthYear");
+        const currentYear = new Date().getFullYear();
+        for (let y = currentYear - 24; y >= currentYear - 64; y--) {
+          const age = currentYear - y + 1; // 한국 나이
+          const opt = document.createElement("option");
+          opt.value = y;
+          opt.textContent = y + "년생 (" + age + "세)";
+          select.appendChild(opt);
+        }
+      })();
+
+      // 폼 제출 핸들러 (와이어프레임 — 실제 API는 Next.js에서 연결)
+      async function handleSubmit(e) {
+        e.preventDefault();
+        const btn = document.getElementById("submitBtn");
+        const result = document.getElementById("formResult");
+        btn.disabled = true;
+        btn.textContent = "접수 중...";
+        result.className = "form-result";
+        result.style.display = "none";
+
+        const form = document.getElementById("consultForm");
+
+        // 클라이언트 IP 수집 시도 (서버에서도 x-forwarded-for로 이중 수집)
+        let clientIp = "";
+        try {
+          const ipRes = await fetch("https://api.ipify.org?format=json");
+          const ipData = await ipRes.json();
+          clientIp = ipData.ip || "";
+        } catch (e) {
+          /* 실패해도 접수 진행 — 서버에서 수집 */
+        }
+
+        const ua = navigator.userAgent || "";
+        const data = {
+          gender: form.gender.value,
+          marriage: form.marriage.value,
+          birthYear: form.birthYear.value,
+          name: form.name.value,
+          email: form.email.value,
+          phone: form.phone.value,
+          agreePrivacy: form.agreePrivacy.checked,
+          agreeMarketing: form.agreeMarketing.checked,
+          clientIp: clientIp,
+          userAgent: ua,
+          referrer: document.referrer || "",
+          // 서버에서 추가 수집: x-forwarded-for IP, 타임스탬프, 인앱 여부 판별
+        };
+
+        // === 와이어프레임 시뮬레이션 ===
+        // 실제 구현 시: POST /api/consultation
+        // 서버에서 처리:
+        // 1. 무조건 접수 먼저 저장 (접수 과정에서 절대 차단하지 않음 — 광고 유입 고객 손실 방지)
+        // 2. IP 수집 (x-forwarded-for) — 수집만, 차단 안 함
+        // 3. Airtable 저장 (IP + 타임스탬프 포함)
+        // 4. 텔레그램 알림 ([노블홍/상담접수] IP + 이름 + 연락처 + 접수시각)
+        // 5. 관리자 이메일 발송
+        // 6. 사후 필터링: 관리자 대시보드에서 동일IP 중복접수 플래그 표시 (자동 차단 아님)
+        // 인앱브라우저 대응: 팝업/리다이렉트 없음, tel: 링크, 단일 페이지 폼
+
+        await new Promise((r) => setTimeout(r, 1500));
+
+        result.className = "form-result success";
+        result.innerHTML =
+          "상담 신청이 접수되었습니다. 담당 커플매니저가 24시간 이내 연락드리겠습니다.";
+        btn.textContent = "접수 완료";
+
+        // 실패 시:
+        // result.className = 'form-result error';
+        // result.innerHTML = '접수에 실패했습니다. 전화(1800-8194)로 문의해주세요.';
+        // btn.disabled = false;
+        // btn.textContent = '상담 신청하기';
+      }
+
+      // CTA background video
+      (() => {
+        const bg = document.getElementById("ctaBgContact");
+        if (!bg) return;
+        const video = bg.querySelector("video");
+        if (!video) return;
+        let timer = null;
+        ScrollTrigger.create({
+          trigger: bg,
+          start: "top 80%",
+          end: "bottom 20%",
+          onEnter: () => {
+            timer = setTimeout(() => {
+              bg.classList.add("playing");
+              video.play().catch(() => {});
+            }, 2000);
+          },
+          onLeave: () => {
+            clearTimeout(timer);
+            bg.classList.remove("playing");
+            video.pause();
+          },
+          onEnterBack: () => {
+            timer = setTimeout(() => {
+              bg.classList.add("playing");
+              video.play().catch(() => {});
+            }, 2000);
+          },
+          onLeaveBack: () => {
+            clearTimeout(timer);
+            bg.classList.remove("playing");
+            video.pause();
+          },
+        });
+      })();
+    </script>
+  </body>
+</html>

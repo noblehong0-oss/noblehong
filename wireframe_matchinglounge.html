@@ -1,0 +1,3736 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>매칭라운지 — Noble HoNG</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <style>
+      :root {
+        --bg: #faf9f6;
+        --surface: #ffffff;
+        --surface-warm: #f6f3ee;
+        --surface-cream: #f0ece4;
+        --border: #e0d9ce;
+        --border-gold: rgba(160, 128, 48, 0.25);
+        --text: #1a1714;
+        --text-secondary: #5c564e;
+        --text-muted: #9e9893;
+        --gold: #a08030;
+        --gold-light: #c4a55a;
+        --gold-lighter: #d9c577;
+        --gold-dark: #7a6020;
+        --gold-bg: rgba(160, 128, 48, 0.04);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* ===== GNB ===== */
+      .gnb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: #ffffff;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+        transition: all 0.4s ease;
+      }
+      .gnb-border {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 10%,
+          var(--gold-light) 50%,
+          transparent 90%
+        );
+        opacity: 0.5;
+      }
+      .gnb-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        height: 88px;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-inner {
+        height: 64px;
+      }
+      .gnb-logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+      .gnb-logo img {
+        height: 56px;
+        width: auto;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-logo img {
+        height: 40px;
+      }
+      .gnb-menu {
+        display: flex;
+        gap: 40px;
+        list-style: none;
+      }
+      .gnb-menu a {
+        text-decoration: none;
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        padding: 8px 0;
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          var(--gold-dark),
+          var(--gold),
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        transition: all 0.3s;
+      }
+      .gnb-menu a.active {
+        filter: brightness(1.3);
+      }
+      .gnb-menu a.active::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light),
+          var(--gold)
+        );
+      }
+      .gnb-menu a::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light),
+          var(--gold)
+        );
+        transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .gnb-menu a:hover::after {
+        width: 100%;
+      }
+      .gnb-cta {
+        padding: 8px 20px;
+        border: 1px solid var(--gold-light);
+        background: linear-gradient(
+          135deg,
+          transparent,
+          rgba(196, 165, 90, 0.05)
+        );
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        border-radius: 1px;
+        text-decoration: none;
+        color: var(--gold);
+        transition: all 0.4s;
+      }
+      .gnb-cta:hover {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        border-color: var(--gold);
+      }
+
+      /* ===== ORNAMENTS ===== */
+      .ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 40px 0;
+      }
+      .ornament-line {
+        width: 80px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+      }
+      .ornament-diamond {
+        width: 8px;
+        height: 8px;
+        border: 1px solid var(--gold-light);
+        transform: rotate(45deg);
+      }
+
+      /* ===== REVEAL ===== */
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      /* ===== HERO ===== */
+      .page-hero {
+        padding-top: 88px;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        background: #1a1714;
+      }
+      .page-hero-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .page-hero-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.8s ease;
+      }
+      .page-hero-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(20, 18, 14, 0.75);
+        pointer-events: none;
+      }
+      .page-hero-pattern {
+        position: absolute;
+        inset: 0;
+        opacity: 0.02;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 40px,
+          var(--gold) 40px,
+          var(--gold) 41px
+        );
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 400px;
+        background: radial-gradient(
+          ellipse,
+          rgba(196, 165, 90, 0.08) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .page-hero-content {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+      .page-hero-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        font-weight: 400;
+        font-style: italic;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        background: linear-gradient(
+          90deg,
+          #c4a55a,
+          #e8d090,
+          #f0dda0,
+          #e8d090,
+          #c4a55a
+        );
+        background-size: 280% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: shimmer 5s ease-in-out infinite;
+        margin-bottom: 20px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 100% 50%;
+        }
+        50% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+      .page-hero h1 {
+        font-size: clamp(36px, 5vw, 56px);
+        font-weight: 300;
+        color: #fff;
+        letter-spacing: -1px;
+        margin-bottom: 16px;
+      }
+      .page-hero h1 strong {
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          #e8d090,
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-sub {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.55);
+        font-weight: 300;
+        letter-spacing: 0.5px;
+        line-height: 1.6;
+        margin-bottom: 40px;
+      }
+
+      /* ===== SECTION COMMON ===== */
+      .section {
+        padding: 100px 40px;
+      }
+      .section-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .section-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .section-title {
+        font-size: clamp(28px, 3.5vw, 42px);
+        font-weight: 700;
+        margin-bottom: 16px;
+        line-height: 1.3;
+      }
+      .section-desc {
+        font-size: 16px;
+        line-height: 1.7;
+        margin-bottom: 48px;
+      }
+
+      /* Dark section */
+      .section-dark {
+        background: #1a1714;
+        color: #fff;
+      }
+      .section-dark .section-eyebrow {
+        color: var(--gold-light);
+      }
+      .section-dark .section-title {
+        color: #fff;
+      }
+      .section-dark .section-title strong {
+        background: linear-gradient(135deg, var(--gold-light), #e8d090);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .section-dark .section-desc {
+        color: rgba(255, 255, 255, 0.55);
+      }
+
+      /* Cream section */
+      .section-cream {
+        background: var(--bg);
+      }
+      .section-cream .section-eyebrow {
+        color: var(--gold);
+      }
+      .section-cream .section-title strong {
+        color: var(--gold);
+      }
+      .section-cream .section-desc {
+        color: var(--text-secondary);
+      }
+
+      /* ===== SECTION 1.5: 매거진 콘텐츠 허브 (탭+피처드) ===== */
+      .magazine-section {
+        background: #0a0a0a;
+        padding: 100px 0;
+      }
+      .magazine-inner {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0 60px;
+      }
+      .magazine-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 32px;
+      }
+      .magazine-header h2 {
+        font-size: 28px;
+        font-weight: 300;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .magazine-header h2 strong {
+        font-weight: 700;
+        background: linear-gradient(135deg, #cb9b51, #f6e27a);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .magazine-header .mag-label {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: #d9c577;
+        margin-bottom: 8px;
+      }
+      /* 탭 */
+      .mag-tabs {
+        display: none;
+        gap: 4px;
+        margin-bottom: 40px;
+        border-bottom: 1px solid rgba(196, 165, 90, 0.15);
+      }
+      .mag-tab {
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.35);
+        cursor: pointer;
+        border: none;
+        background: none;
+        position: relative;
+        transition: 0.3s;
+        font-family: inherit;
+      }
+      .mag-tab:hover {
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .mag-tab.active {
+        color: #d9c577;
+        font-weight: 700;
+      }
+      .mag-tab.active::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #d9c577;
+      }
+      /* 패널 */
+      .mag-panel {
+        display: none;
+      }
+      .mag-panel.active {
+        display: block;
+      }
+      /* 피처드 레이아웃 — 메인+리스트 */
+      .mag-featured-layout {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 24px;
+      }
+      .mag-featured {
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+        min-height: 400px;
+        background: linear-gradient(135deg, #1e1a14, #2a2318);
+        cursor: pointer;
+      }
+      .mag-featured-bg {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, #1e1a14, #2a2318);
+      }
+      .mag-featured-overlay {
+        position: absolute;
+        inset: 0;
+        display: none;
+      }
+      .mag-featured-body {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 32px;
+        z-index: 1;
+      }
+      .mag-featured h3 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.4;
+        margin-bottom: 6px;
+      }
+      .mag-featured p {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .mag-play {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: rgba(255, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+      }
+      .mag-play svg {
+        width: 20px;
+        height: 20px;
+        margin-left: 3px;
+      }
+      /* 태그 */
+      .mag-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 2px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .mag-tag-video {
+        background: rgba(255, 0, 0, 0.8);
+        color: #fff;
+      }
+      .mag-tag-column {
+        background: rgba(196, 165, 90, 0.8);
+        color: #fff;
+      }
+      .mag-tag-news {
+        background: rgba(255, 255, 255, 0.15);
+        color: rgba(255, 255, 255, 0.8);
+      }
+      /* 사이드 글 목록 */
+      .mag-side-list {
+        display: flex;
+        gap: 0 24px;
+        border: 1px solid rgba(196, 165, 90, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .mag-news-col {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .mag-news-col + .mag-news-col {
+        border-left: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .mag-list-info h4 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 280px;
+      }
+      .mag-list-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 10px 16px;
+        cursor: pointer;
+        transition: 0.3s;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .mag-list-item:last-child {
+        border-bottom: none;
+      }
+      .mag-list-item:hover {
+        background: rgba(196, 165, 90, 0.04);
+      }
+      .mag-list-info {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 4px;
+      }
+      .mag-list-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .mag-list-info .mag-tag {
+        font-size: 9px;
+        padding: 2px 8px;
+        opacity: 0.7;
+        flex-shrink: 0;
+        margin-bottom: 0;
+      }
+      .mag-list-info h4 {
+        font-size: 14px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.3;
+      }
+      .mag-list-meta {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .mag-list-num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.5);
+        flex-shrink: 0;
+        width: 28px;
+        text-align: center;
+      }
+
+      /* 하단 미니박스 행 */
+      .mag-mini-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 16px;
+        margin-top: 24px;
+      }
+      .mag-mini-card {
+        flex: none;
+        border-radius: 12px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(196, 165, 90, 0.08);
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .mag-mini-card:hover {
+        border-color: rgba(196, 165, 90, 0.25);
+        transform: translateY(-3px);
+      }
+      .mag-mini-thumb {
+        aspect-ratio: 1;
+        background: linear-gradient(135deg, #1e1a14, #2a2318);
+        position: relative;
+        overflow: hidden;
+      }
+      .mag-mini-body {
+        padding: 14px;
+      }
+      .mag-mini-body .mag-tag {
+        display: none;
+      }
+      .mag-mini-body h5 {
+        font-size: 13px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.4;
+      }
+      .mag-mini-play {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 0, 0, 0.75);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .mag-mini-play svg {
+        width: 12px;
+        height: 12px;
+        fill: #fff;
+        margin-left: 2px;
+      }
+
+      /* 하단 쇼츠 행 */
+      .mag-shorts-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 40px;
+        margin-bottom: 16px;
+        font-size: 15px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .mag-shorts-label svg {
+        width: 20px;
+        height: 20px;
+        fill: #ff0000;
+      }
+      .mag-shorts-row {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+      }
+      .mag-shorts-row::-webkit-scrollbar {
+        display: none;
+      }
+      .mag-shorts-card {
+        flex: 0 0 200px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(196, 165, 90, 0.06);
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .mag-shorts-card:hover {
+        border-color: rgba(196, 165, 90, 0.2);
+        transform: translateY(-3px);
+      }
+      .mag-shorts-thumb {
+        aspect-ratio: 9/16;
+        background: linear-gradient(180deg, #1e1a14, #2a2318);
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        padding: 12px;
+      }
+      .mag-shorts-thumb h5 {
+        display: none;
+      }
+      .mag-shorts-thumb::after {
+        display: none;
+      }
+      .mag-shorts-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(255, 0, 0, 0.7);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 3px 6px;
+        border-radius: 2px;
+        letter-spacing: 0.5px;
+        z-index: 1;
+      }
+
+      @media (max-width: 768px) {
+        .mag-featured-layout {
+          grid-template-columns: 1fr;
+        }
+        .mag-slider {
+          min-height: 320px;
+        }
+      }
+
+      /* 슬라이더 */
+      .mag-slider-wrap {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .mag-slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .mag-slide.active {
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 1;
+      }
+      .mag-slider {
+        position: relative;
+        aspect-ratio: 16/9;
+        width: 100%;
+      }
+      .mag-slide .mag-featured-bg {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, #1e1a14, #2a2318);
+      }
+      .mag-slide .mag-featured-overlay {
+        position: absolute;
+        inset: 0;
+        display: none;
+      }
+      .mag-slide .mag-featured-body {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 32px;
+        z-index: 1;
+      }
+      .mag-slide .mag-play {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: rgba(255, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+      }
+      .mag-slide .mag-play svg {
+        width: 20px;
+        height: 20px;
+        margin-left: 3px;
+      }
+      .mag-slide h3 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.4;
+        margin-bottom: 6px;
+      }
+      .mag-slide p {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .mag-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(8px);
+        color: #d9c577;
+        font-size: 28px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+        transition: 0.3s;
+        line-height: 1;
+      }
+      .mag-arrow:hover {
+        background: rgba(196, 165, 90, 0.2);
+        border-color: rgba(196, 165, 90, 0.6);
+      }
+      .mag-arrow-prev {
+        left: 16px;
+      }
+      .mag-arrow-next {
+        right: 16px;
+      }
+      .mag-dots {
+        position: absolute;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 5;
+      }
+      .mag-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .mag-dot.active {
+        background: #d9c577;
+        width: 24px;
+        border-radius: 4px;
+      }
+
+      /* 쇼츠 슬라이더 래퍼 */
+      .mag-shorts-slider {
+        position: relative;
+      }
+      .mag-shorts-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        color: #d9c577;
+        font-size: 26px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+        transition: 0.3s;
+        line-height: 1;
+      }
+      .mag-shorts-arrow:hover {
+        background: rgba(196, 165, 90, 0.2);
+        border-color: rgba(196, 165, 90, 0.6);
+      }
+      .mag-shorts-prev {
+        left: -20px;
+      }
+      .mag-shorts-next {
+        right: -20px;
+      }
+
+      /* ===== 노블홍 SNS 콘텐츠 피드 ===== */
+      .sns-section {
+        background: var(--surface-warm);
+        padding: 100px 32px;
+      }
+      .sns-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .sns-header {
+        text-align: center;
+        margin-bottom: 48px;
+      }
+      .sns-label {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 12px;
+      }
+      .sns-header h2 {
+        font-size: clamp(28px, 3.5vw, 40px);
+        font-weight: 300;
+      }
+      .sns-header h2 strong {
+        font-weight: 700;
+        color: var(--gold-dark);
+      }
+      .sns-feed-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+      .sns-channel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .sns-channel-top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .sns-more {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--gold);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .sns-more:hover {
+        text-decoration: underline;
+      }
+      /* 인스타 정사각 그리드 */
+      .sns-insta-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3px;
+        padding: 3px;
+      }
+      .sns-insta-item {
+        aspect-ratio: 1;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .sns-insta-item:hover .sns-placeholder-img {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+      .sns-placeholder-img {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #e8e0d0, #d4c8b0);
+        transition: 0.3s;
+      }
+      /* 블로그 리스트 */
+      .sns-blog-list {
+        display: flex;
+        flex-direction: column;
+      }
+      .sns-blog-item {
+        display: flex;
+        gap: 16px;
+        padding: 16px 20px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        transition: 0.2s;
+      }
+      .sns-blog-item:last-child {
+        border-bottom: none;
+      }
+      .sns-blog-item:hover {
+        background: var(--gold-bg);
+      }
+      .sns-blog-thumb {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #e8e0d0, #d4c8b0);
+        flex-shrink: 0;
+      }
+      .sns-blog-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .sns-blog-info h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 4px;
+        line-height: 1.4;
+      }
+      .sns-blog-info p {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.5;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .sns-blog-date {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 6px;
+      }
+      @media (max-width: 768px) {
+        .sns-feed-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ===== SECTION 2: 매칭전략 연구소 ===== */
+      .lab-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .lab-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px 24px;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        overflow: hidden;
+      }
+      .lab-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-light));
+        transform: scaleX(0);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .lab-card:hover::before {
+        transform: scaleX(1);
+      }
+      .lab-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(160, 128, 48, 0.1);
+        border-color: var(--border-gold);
+      }
+      .lab-icon {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          rgba(160, 128, 48, 0.08),
+          rgba(196, 165, 90, 0.04)
+        );
+        border: 1px solid var(--border-gold);
+      }
+      .lab-icon svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--gold);
+        fill: none;
+        stroke-width: 1.5;
+      }
+      .lab-card h4 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text);
+      }
+      .lab-card p {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      /* ===== SECTION 3: 미팅성공 가이드 ===== */
+      .guide-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+      }
+      .guide-group h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .guide-group h3 .badge {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 999px;
+        letter-spacing: 1px;
+      }
+      .guide-tips h3 .badge {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+      }
+      .guide-cautions h3 .badge {
+        background: rgba(196, 165, 90, 0.15);
+        color: var(--gold-light);
+      }
+      .guide-item {
+        display: flex;
+        gap: 16px;
+        padding: 16px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .guide-num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--gold-light);
+        min-width: 28px;
+      }
+      .guide-text {
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.75);
+        line-height: 1.6;
+      }
+      .guide-text strong {
+        color: #fff;
+        font-weight: 600;
+      }
+
+      /* ===== SECTION 4: 러브 칼럼 ===== */
+      .column-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .column-card {
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+      }
+      .column-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        border-color: var(--border-gold);
+      }
+      .column-thumb {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        background: linear-gradient(
+          135deg,
+          var(--surface-warm),
+          var(--surface-cream)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+      }
+      .column-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .column-thumb .ai-badge {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        font-size: 10px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.35);
+        background: none;
+        padding: 0;
+        letter-spacing: 0.3px;
+        z-index: 3;
+      }
+      .column-thumb-placeholder {
+        font-size: 13px;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+      }
+      .column-body {
+        padding: 20px 24px 24px;
+      }
+      .column-body h4 {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text);
+        line-height: 1.4;
+      }
+      .column-body p {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* ===== SECTION 5: 노블레스 파티 6종 ===== */
+      .party-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .party-card {
+        background: linear-gradient(165deg, #1e1b16, #141210);
+        border: 1px solid rgba(160, 128, 48, 0.3);
+        border-radius: 16px;
+        padding: 32px 28px;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+      }
+      .party-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        transform: scaleX(0);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .party-card:hover::before {
+        transform: scaleX(1);
+      }
+      .party-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--gold);
+        box-shadow: 0 12px 48px rgba(160, 128, 48, 0.15);
+      }
+      .party-num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 3px;
+        color: var(--gold-light);
+        margin-bottom: 12px;
+      }
+      .party-name {
+        font-size: 22px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 4px;
+      }
+      .party-name-en {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        font-style: italic;
+        color: rgba(196, 165, 90, 0.6);
+        margin-bottom: 16px;
+        letter-spacing: 1px;
+      }
+      .party-desc {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.5);
+        line-height: 1.6;
+      }
+      .party-icon {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(196, 165, 90, 0.08);
+        border: 1px solid rgba(196, 165, 90, 0.2);
+      }
+      .party-icon svg {
+        width: 18px;
+        height: 18px;
+        stroke: var(--gold-light);
+        fill: none;
+        stroke-width: 1.5;
+      }
+
+      /* ===== SECTION 6: 스페셜 맞선 ===== */
+      .special-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: center;
+      }
+      .special-img {
+        aspect-ratio: 16 / 10;
+        border-radius: 16px;
+        overflow: hidden;
+        background: linear-gradient(
+          135deg,
+          var(--surface-warm),
+          var(--surface-cream)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border);
+      }
+      .special-img-placeholder {
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+      .special-text h3 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: var(--text);
+      }
+      .special-text h3 strong {
+        color: var(--gold);
+      }
+      .special-text p {
+        font-size: 16px;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        margin-bottom: 32px;
+      }
+      .special-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 32px;
+      }
+      .special-badge {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(160, 128, 48, 0.08);
+        color: var(--gold);
+        border: 1px solid var(--border-gold);
+        letter-spacing: 0.3px;
+      }
+      .btn-gold {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .btn-gold:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(160, 128, 48, 0.3);
+      }
+
+      /* ===== SECTION 7: 콘텐츠 피드 ===== */
+      .feed-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .feed-card {
+        border-radius: 16px;
+        overflow: hidden;
+        background: linear-gradient(165deg, #1e1b16, #141210);
+        border: 1px solid rgba(160, 128, 48, 0.2);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+      }
+      .feed-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--gold);
+        box-shadow: 0 12px 40px rgba(160, 128, 48, 0.12);
+      }
+      .feed-thumb {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: linear-gradient(135deg, #2a2520, #1e1a14);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .feed-thumb-placeholder {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.2);
+      }
+      .feed-platform {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+      .feed-platform.blog {
+        background: rgba(0, 199, 60, 0.15);
+        color: #00c73c;
+      }
+      .feed-platform.insta {
+        background: rgba(225, 48, 108, 0.15);
+        color: #e1306c;
+      }
+      .feed-platform svg {
+        width: 14px;
+        height: 14px;
+      }
+      .feed-body {
+        padding: 20px 24px 24px;
+      }
+      .feed-body h4 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+        line-height: 1.4;
+      }
+      .feed-body p {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.45);
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 12px;
+      }
+      .feed-date {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.25);
+        letter-spacing: 0.5px;
+      }
+
+      /* ===== 노블홍 최신소식 게시판 레이아웃 ===== */
+      .news-feed-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; margin-top: 48px; }
+      .news-board-wrap { border: 1px solid rgba(196,165,90,0.15); border-radius: 12px; overflow: hidden; }
+      .news-board-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid rgba(196,165,90,0.1); }
+      .news-board-title { font-size: 15px; font-weight: 700; color: #d9c577; }
+      .news-board-more { font-size: 12px; color: rgba(255,255,255,0.4); text-decoration: none; }
+      .news-board-more:hover { color: #d9c577; }
+      .news-board-item { display: flex; align-items: center; gap: 14px; padding: 11px 20px; border-bottom: 1px solid rgba(255,255,255,0.03); text-decoration: none; transition: 0.2s; }
+      .news-board-item:hover { background: rgba(196,165,90,0.04); }
+      .news-board-item:last-child { border-bottom: none; }
+      .news-board-cat { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 2px; letter-spacing: 0.5px; flex-shrink: 0; background: rgba(196,165,90,0.12); color: #d9c577; }
+      .news-board-cat.media { background: rgba(255,0,0,0.12); color: #ff6b6b; }
+      .news-board-cat.event { background: rgba(124,58,237,0.12); color: #a78bfa; }
+      .news-board-cat.award { background: rgba(245,158,11,0.12); color: #fbbf24; }
+      .news-board-item-title { flex: 1; font-size: 13px; color: rgba(255,255,255,0.75); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .news-board-date { font-size: 11px; color: rgba(255,255,255,0.25); flex-shrink: 0; }
+      .news-sns-stack { display: flex; flex-direction: column; gap: 16px; }
+      .news-sns-box { border: 1px solid rgba(196,165,90,0.1); border-radius: 12px; overflow: hidden; }
+      .news-sns-top { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.7); }
+      .news-sns-link { margin-left: auto; font-size: 11px; color: rgba(255,255,255,0.35); text-decoration: none; }
+      .news-sns-link:hover { color: #d9c577; }
+      .news-insta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
+      .news-insta-item { aspect-ratio: 4/5; background: linear-gradient(135deg, rgba(196,165,90,0.08), rgba(196,165,90,0.03)); cursor: pointer; transition: 0.3s; }
+      .news-insta-item:hover { opacity: 0.7; }
+      .news-blog-list { display: flex; flex-direction: column; }
+      .news-blog-item { display: flex; gap: 12px; padding: 12px 16px; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.03); transition: 0.2s; }
+      .news-blog-item:last-child { border-bottom: none; }
+      .news-blog-item:hover { background: rgba(196,165,90,0.04); }
+      .news-blog-thumb { width: 56px; height: 56px; border-radius: 6px; background: linear-gradient(135deg, rgba(196,165,90,0.08), rgba(196,165,90,0.03)); flex-shrink: 0; }
+      .news-blog-info { display: flex; flex-direction: column; justify-content: center; }
+      .news-blog-info h5 { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); margin-bottom: 4px; }
+      .news-blog-info span { font-size: 11px; color: rgba(255,255,255,0.25); }
+      @media (max-width: 768px) { .news-feed-layout { grid-template-columns: 1fr; } }
+
+      /* ===== SECTION 8: 유튜브 갤러리 ===== */
+      .yt-section-label {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .yt-section-label svg {
+        width: 28px;
+        height: 28px;
+        fill: #ff0000;
+      }
+      .yt-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+      .yt-card {
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+      }
+      .yt-card.hidden {
+        display: none;
+      }
+      .yt-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        border-color: var(--border-gold);
+      }
+      .yt-thumb {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: #1a1714;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .yt-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+      }
+      .yt-card:hover .yt-thumb img {
+        transform: scale(1.05);
+      }
+      .yt-play {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(255, 0, 0, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s;
+      }
+      .yt-card:hover .yt-play {
+        transform: scale(1.1);
+      }
+      .yt-play svg {
+        width: 18px;
+        height: 18px;
+        fill: #fff;
+        margin-left: 2px;
+      }
+      .yt-body {
+        padding: 12px 16px 16px;
+      }
+      .yt-body h4 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .yt-more-wrap {
+        text-align: center;
+        margin-top: 32px;
+      }
+      .yt-more-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 32px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-secondary);
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        letter-spacing: 0.3px;
+      }
+      .yt-more-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .yt-more-btn svg {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.3s;
+      }
+      .yt-more-btn.expanded svg {
+        transform: rotate(180deg);
+      }
+
+      /* Shorts */
+      .shorts-divider {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--border),
+          transparent
+        );
+        margin: 56px 0;
+      }
+      /* Shorts Slider */
+      .shorts-slider-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .shorts-viewport {
+        flex: 1;
+        overflow: hidden;
+        border-radius: 12px;
+      }
+      .shorts-track {
+        display: flex;
+        gap: 14px;
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .shorts-card {
+        flex: 0 0 calc((100% - 14px * 5) / 6);
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+      }
+      .shorts-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        border-color: var(--border-gold);
+      }
+      .shorts-thumb {
+        width: 100%;
+        aspect-ratio: 9 / 16;
+        background: #1a1714;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .shorts-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+      }
+      .shorts-card:hover .shorts-thumb img {
+        transform: scale(1.05);
+      }
+      .shorts-badge {
+        position: absolute;
+        bottom: 8px;
+        left: 8px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        background: rgba(255, 0, 0, 0.9);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+      .shorts-play {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .shorts-card:hover .shorts-play {
+        opacity: 1;
+      }
+      .shorts-play svg {
+        width: 16px;
+        height: 16px;
+        fill: #fff;
+        margin-left: 2px;
+      }
+      .shorts-arrow {
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        z-index: 2;
+      }
+      .shorts-arrow:hover {
+        border-color: var(--gold);
+        background: rgba(160, 128, 48, 0.06);
+      }
+      .shorts-arrow:disabled {
+        opacity: 0.3;
+        cursor: default;
+      }
+      .shorts-arrow svg {
+        width: 20px;
+        height: 20px;
+        stroke: var(--text-secondary);
+      }
+      .shorts-arrow:hover svg {
+        stroke: var(--gold);
+      }
+      .yt-subscribe {
+        text-align: center;
+        margin-top: 48px;
+      }
+      .yt-subscribe a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        background: #ff0000;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+      }
+      .yt-subscribe a:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+      }
+
+      /* Video Modal */
+      .video-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(0, 0, 0, 0.92);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+      .video-modal-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .video-modal {
+        width: 90%;
+        max-width: 960px;
+        aspect-ratio: 16 / 9;
+        position: relative;
+      }
+      .video-modal.shorts-mode {
+        max-width: 400px;
+        aspect-ratio: 9 / 16;
+      }
+      .video-modal iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 8px;
+      }
+      .video-modal-close {
+        position: absolute;
+        top: -48px;
+        right: 0;
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 24px;
+        cursor: pointer;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s;
+      }
+      .video-modal-close:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      /* ===== CTA ===== */
+      .cta-section {
+        padding: 140px 32px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-bg-wrap {
+        position: absolute;
+        inset: 0;
+      }
+      .cta-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .cta-bg img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        filter: contrast(0.7) brightness(0.85);
+        transition: opacity 1.2s ease;
+      }
+      .cta-bg video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        opacity: 0;
+        filter: contrast(0.7) brightness(0.85);
+        transition: opacity 1.2s ease;
+      }
+      .cta-bg.playing img {
+        opacity: 0;
+      }
+      .cta-bg.playing video {
+        opacity: 1;
+      }
+      .cta-bg-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(30, 24, 10, 0.85);
+        z-index: 1;
+      }
+      .cta-frame {
+        position: absolute;
+        inset: 60px;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+        pointer-events: none;
+        border-radius: 2px;
+        z-index: 2;
+      }
+      .cta-content {
+        position: relative;
+        z-index: 3;
+      }
+      .cta-title {
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 200;
+        margin-bottom: 12px;
+        color: rgba(255, 255, 255, 0.95);
+      }
+      .cta-title strong {
+        font-weight: 600;
+        background: linear-gradient(135deg, #f0dda0, var(--gold-lighter));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-sub {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 8px;
+      }
+      .cta-phone {
+        font-family: "Pretendard Variable", sans-serif;
+        font-size: 42px;
+        margin: 28px 0;
+        background: linear-gradient(135deg, #f0dda0, #fff8e0, #f0dda0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-note {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.4);
+        margin-bottom: 32px;
+      }
+      .cta-buttons {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+      }
+      .cta-section .btn-filled {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 28px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .cta-section .btn-filled:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(160, 128, 48, 0.3);
+      }
+      .cta-section .btn-outlined {
+        display: inline-flex;
+        align-items: center;
+        padding: 14px 28px;
+        border: 1px solid var(--gold-light);
+        color: var(--gold-light);
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .cta-section .btn-outlined:hover {
+        background: rgba(196, 165, 90, 0.1);
+        transform: translateY(-2px);
+      }
+
+      /* ===== FOOTER ===== */
+      .footer {
+        padding: 56px 40px 40px;
+        background: linear-gradient(135deg, #2a2318 0%, #1e1a14 100%);
+        border-top: 2px solid var(--gold);
+      }
+      .footer-gold-line {
+        height: 1px;
+        margin-bottom: 56px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        opacity: 0.3;
+      }
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-logo {
+        margin-bottom: 16px;
+      }
+      .footer-logo img {
+        height: 36px;
+        width: auto;
+        opacity: 0.8;
+        filter: brightness(0) invert(1);
+      }
+      .footer-info {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.45);
+        line-height: 1.9;
+      }
+      .footer-links {
+        display: flex;
+        gap: 28px;
+      }
+      .footer-links a {
+        font-size: 13px;
+        color: rgba(196, 165, 90, 0.6);
+        text-decoration: none;
+        letter-spacing: 0.3px;
+        transition: color 0.3s;
+      }
+      .footer-links a:hover {
+        color: var(--gold-lighter);
+      }
+
+      /* ===== AI IMAGE BADGE ===== */
+      .ai-image-badge {
+        font-size: 11px;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+        color: rgba(255, 255, 255, 0.18);
+        background: rgba(0, 0, 0, 0.08);
+        backdrop-filter: blur(4px);
+        padding: 4px 10px;
+        border-radius: 2px;
+        pointer-events: none;
+      }
+
+      /* ===== WIREFRAME BADGE ===== */
+      .wf-badge {
+        position: fixed;
+        bottom: 16px;
+        left: 16px;
+        z-index: 999;
+        background: rgba(26, 23, 20, 0.95);
+        color: var(--gold-light);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 4px;
+        letter-spacing: 1px;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- WIREFRAME BADGE -->
+    <div class="wf-badge">WIREFRAME — 매칭라운지</div>
+
+    <!-- GNB -->
+    <nav class="gnb" id="gnb">
+      <div class="gnb-inner">
+        <a href="wireframe_home_v3_motion.html" class="gnb-logo"
+          ><img src="logo.png" alt="Noble HoNG"
+        /></a>
+        <ul class="gnb-menu">
+          <li><a href="wireframe_home_v3_motion.html">노블홍</a></li>
+          <li><a href="wireframe_noblematching.html">노블매칭</a></li>
+          <li><a href="wireframe_consulting.html">맞춤컨설팅</a></li>
+          <li>
+            <a href="wireframe_matchinglounge.html" class="active"
+              >매칭라운지</a
+            >
+          </li>
+          <li><a href="wireframe_contact.html">상담문의</a></li>
+        </ul>
+        <a href="#cta" class="gnb-cta">상담 시작</a>
+      </div>
+      <div class="gnb-border"></div>
+    </nav>
+
+    <!-- ===== SECTION 1: HERO ===== -->
+    <section class="page-hero">
+      <div class="page-hero-bg">
+        <img src="images/qualify/호텔.png" alt="매칭라운지" />
+      </div>
+      <div class="page-hero-pattern"></div>
+      <div class="page-hero-glow"></div>
+      <div class="page-hero-content">
+        <div class="page-hero-eyebrow">Matching Lounge</div>
+        <h1>만남을 넘어,<br /><strong>관계를 디자인합니다</strong></h1>
+        <p class="page-hero-sub">
+          30년 매칭 노하우가 만드는 특별한 경험<br />
+          전문 연구와 프리미엄 이벤트로 성공적인 만남을 준비합니다
+        </p>
+        <div class="ornament" style="padding: 0 0 32px">
+          <span class="ornament-line"></span>
+          <span class="ornament-diamond"></span>
+          <span class="ornament-line"></span>
+        </div>
+        <a href="#cta" class="btn-gold">상담 시작하기</a>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 1.5: 매거진 콘텐츠 허브 (탭+피처드) ===== -->
+    <section class="magazine-section">
+      <div class="magazine-inner">
+        <div class="magazine-header">
+          <div>
+            <div class="mag-label">Latest Contents</div>
+            <h2>노블홍의 <strong>최신 콘텐츠</strong></h2>
+          </div>
+        </div>
+
+        <!-- 탭 -->
+        <div class="mag-tabs">
+          <button class="mag-tab active" data-mag="0">전체</button>
+          <button class="mag-tab" data-mag="1">영상</button>
+          <button class="mag-tab" data-mag="2">칼럼</button>
+          <button class="mag-tab" data-mag="3">소식</button>
+        </div>
+
+        <!-- 전체 탭 -->
+        <div class="mag-panel active" id="magTab0">
+          <div class="mag-featured-layout">
+            <div class="mag-slider-wrap">
+              <div class="mag-slider" id="magSlider"></div>
+              <button class="mag-arrow mag-arrow-prev" id="magPrev">
+                &#8249;
+              </button>
+              <button class="mag-arrow mag-arrow-next" id="magNext">
+                &#8250;
+              </button>
+              <div class="mag-dots" id="magDots"></div>
+            </div>
+            <div class="mag-side-list" id="magSideList"></div>
+          </div>
+        </div>
+
+        <!-- 미니박스 제거됨 — SNS 섹션으로 분리 -->
+
+        <!-- 쇼츠 행 -->
+        <div class="mag-shorts-label">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"
+            />
+          </svg>
+          짧게 보는 결혼이야기
+        </div>
+        <div class="mag-shorts-slider">
+          <button class="mag-shorts-arrow mag-shorts-prev" id="shortsPrev">
+            &#8249;
+          </button>
+          <div class="mag-shorts-row" id="magShortsRow"></div>
+          <button class="mag-shorts-arrow mag-shorts-next" id="shortsNext">
+            &#8250;
+          </button>
+        </div>
+
+        <!-- 영상 탭 -->
+
+        <!-- 칼럼 탭 -->
+
+        <!-- 소식 탭 -->
+      </div>
+    </section>
+
+    
+
+    <!-- ===== SECTION 2: 매칭전략 연구소 (크림) ===== -->
+    <section class="section section-cream" id="lab">
+      <div class="section-inner">
+        <div class="section-eyebrow reveal">Matching Strategy Lab</div>
+        <h2 class="section-title reveal">
+          30년 노하우를 담은 <strong>매칭전략 연구소</strong>
+        </h2>
+        <p class="section-desc reveal">
+          감이 아닌 전략, 경험이 아닌 데이터.<br />
+          노블홍 매칭전략연구소는<br />
+          성공적인 만남을 위한 전문 컨설팅을 제공합니다.
+        </p>
+
+        <div class="lab-grid">
+          <!-- Card 1 -->
+          <div class="lab-card reveal">
+            <div class="lab-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <h4>1:1 상담 분석</h4>
+            <p>
+              개인의 성향과 가치관을 심층 분석하여<br />
+              최적의 매칭 전략을 수립합니다
+            </p>
+          </div>
+          <!-- Card 2 -->
+          <div class="lab-card reveal">
+            <div class="lab-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"
+                />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="16" y1="13" x2="8" y2="13" />
+                <line x1="16" y1="17" x2="8" y2="17" />
+              </svg>
+            </div>
+            <h4>프로필 전략</h4>
+            <p>
+              매력을 극대화하는 프로필 구성과<br />
+              사진 연출을 전문적으로 코칭합니다
+            </p>
+          </div>
+          <!-- Card 3 -->
+          <div class="lab-card reveal">
+            <div class="lab-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"
+                />
+              </svg>
+            </div>
+            <h4>교제 코칭</h4>
+            <p>
+              만남 이후의 관계 발전을 위한<br />
+              커뮤니케이션과 데이트 전략을 안내합니다
+            </p>
+          </div>
+          <!-- Card 4 -->
+          <div class="lab-card reveal">
+            <div class="lab-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                <path d="M16 3.13a4 4 0 010 7.75" />
+              </svg>
+            </div>
+            <h4>미팅 조율</h4>
+            <p>
+              장소, 시간, 분위기까지 완벽하게<br />
+              세팅된 미팅 환경을 조율합니다
+            </p>
+          </div>
+          <!-- Card 5 -->
+          <div class="lab-card reveal">
+            <div class="lab-icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="7" />
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+              </svg>
+            </div>
+            <h4>성혼 관리</h4>
+            <p>
+              교제부터 성혼까지 전 과정을<br />
+              밀착 관리하며 성공률을 극대화합니다
+            </p>
+          </div>
+          <!-- Card 6 -->
+          <div class="lab-card reveal">
+            <div class="lab-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h4>사후 케어</h4>
+            <p>
+              성혼 이후에도 원만한 신혼 생활을 위한<br />
+              사후 관리 서비스를 제공합니다
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 3: 미팅성공 가이드 (다크) ===== -->
+    <section class="section section-dark" id="guide">
+      <div class="section-inner">
+        <div class="section-eyebrow reveal">Meeting Success Guide</div>
+        <h2 class="section-title reveal">
+          성공적인 미팅을 위한 <strong>실전 가이드</strong>
+        </h2>
+        <p class="section-desc reveal">
+          30년간 수만 건의 미팅 데이터에서 추출한 성공 비결과 주의사항
+        </p>
+
+        <div class="guide-split">
+          <!-- 성공 전략 -->
+          <div class="guide-group guide-tips reveal">
+            <h3>
+              <span class="badge">SUCCESS</span>
+              미팅 성공 7가지 전략
+            </h3>
+            <div class="guide-item">
+              <div class="guide-num">01</div>
+              <div class="guide-text">
+                <strong>단점보다 숨은 매력을 찾으세요.</strong> 첫인상의
+                아쉬움은 두 번째 만남에서 뒤집어질 수 있습니다.
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-num">02</div>
+              <div class="guide-text">
+                <strong>최소 3번은 만나보세요.</strong> 한 번의 만남으로 사람을
+                판단하기엔 너무 이릅니다.
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-num">03</div>
+              <div class="guide-text">
+                <strong>대화의 주도권을 자연스럽게.</strong> 질문과 경청의
+                균형이 좋은 인상을 만듭니다.
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-num">04</div>
+              <div class="guide-text">
+                <strong>미팅 후 3일 이내에 애프터 의사를 전달하세요.</strong>
+                타이밍이 관계의 시작을 좌우합니다.
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-num">05</div>
+              <div class="guide-text">
+                <strong>자신의 이상형을 현실적으로 조정하세요.</strong> 7~10명을
+                만나도 호감이 없다면 기준 재설정이 필요합니다.
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-num">06</div>
+              <div class="guide-text">
+                <strong>첫 만남은 가볍게, 두 번째부터 깊게.</strong> 무거운
+                주제는 관계가 무르익은 후에.
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-num">07</div>
+              <div class="guide-text">
+                <strong>커플매니저의 조언을 신뢰하세요.</strong> 객관적 시선이
+                내 사각지대를 보완합니다.
+              </div>
+            </div>
+          </div>
+
+          <!-- 주의사항 -->
+          <div class="guide-group guide-cautions reveal">
+            <h3>
+              <span class="badge">CAUTION</span>
+              미팅 주의사항 5가지
+            </h3>
+            <div class="guide-item">
+              <div class="guide-num">01</div>
+              <div class="guide-text">
+                <strong>지각은 절대 금물.</strong> 첫인상에서 성실함과 배려가
+                드러납니다.
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-num">02</div>
+              <div class="guide-text">
+                <strong>세미 정장 수준의 단정한 복장.</strong> 과하지 않되,
+                정성을 보여주는 수준이 적절합니다.
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-num">03</div>
+              <div class="guide-text">
+                <strong>장소 선택에 신경 쓰세요.</strong> 조용하고 대화에 집중할
+                수 있는 공간이 좋습니다.
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-num">04</div>
+              <div class="guide-text">
+                <strong>SNS 검색은 자제하세요.</strong> 선입견 없이 직접 만나서
+                느끼는 것이 중요합니다.
+              </div>
+            </div>
+            <div class="guide-item">
+              <div class="guide-num">05</div>
+              <div class="guide-text">
+                <strong>과거 연애 이야기는 피하세요.</strong> 첫 만남에서 전
+                애인 이야기는 감점 요소입니다.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 8: 유튜브 영상 갤러리 (크림) ===== -->
+    <section class="section section-cream" id="youtube">
+      <div class="section-inner">
+        <div class="section-eyebrow reveal">YouTube Gallery</div>
+        <h2 class="section-title reveal">
+          노블홍 <strong>영상 갤러리</strong>
+        </h2>
+        <p class="section-desc reveal">
+          매칭 이야기, 미팅 팁, 이벤트 현장을 영상으로 만나보세요
+        </p>
+
+        <!-- 결혼박사 홍유진TV — 일반 영상 -->
+        <div class="yt-section-label reveal">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.546 12 3.546 12 3.546s-7.505 0-9.377.504A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.504 9.376.504 9.376.504s7.505 0 9.377-.504a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+            />
+          </svg>
+          결혼박사 홍유진TV
+        </div>
+
+        <div class="yt-grid" id="ytVideoGrid">
+          <!-- JS로 렌더링 -->
+        </div>
+
+        <div class="yt-more-wrap reveal">
+          <button class="yt-more-btn" id="ytMoreBtn" onclick="toggleYtVideos()">
+            전체보기
+          </button>
+        </div>
+
+        <!-- 짧게 보는 결혼이야기 — Shorts -->
+        <div class="shorts-divider"></div>
+
+        <div class="yt-section-label reveal">
+          <svg viewBox="0 0 24 24" fill="#ff0000">
+            <path
+              d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"
+            />
+          </svg>
+          짧게 보는 결혼이야기
+        </div>
+
+        <div class="shorts-slider-wrap" id="shortsSliderWrap">
+          <button
+            class="shorts-arrow shorts-arrow-left"
+            id="shortsLeft"
+            onclick="slideShorts(-1)"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <div class="shorts-viewport">
+            <div class="shorts-track" id="ytShortsGrid">
+              <!-- JS로 렌더링 -->
+            </div>
+          </div>
+          <button
+            class="shorts-arrow shorts-arrow-right"
+            id="shortsRight"
+            onclick="slideShorts(1)"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="yt-subscribe reveal">
+          <a
+            href="https://www.youtube.com/@TV-nx6mu"
+            target="_blank"
+            rel="noopener"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.546 12 3.546 12 3.546s-7.505 0-9.377.504A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.504 9.376.504 9.376.504s7.505 0 9.377-.504a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+              />
+            </svg>
+            유튜브 채널 구독하기
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div class="video-modal-overlay" id="videoModal">
+      <div class="video-modal" id="videoModalInner">
+        <button class="video-modal-close" onclick="closeVideoModal()">
+          &times;
+        </button>
+        <iframe
+          id="videoIframe"
+          src=""
+          allow="autoplay; encrypted-media"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+
+    <!-- ===== SECTION 5: 노블레스 파티 6종 (다크) ===== -->
+    <section class="section section-dark" id="party">
+      <div class="section-inner">
+        <div class="section-eyebrow reveal">Noblesse Party</div>
+        <h2 class="section-title reveal">
+          특별한 만남을 위한 <strong>노블레스 파티 6종</strong>
+        </h2>
+        <p class="section-desc reveal">
+          대상과 테마에 따라 설계된 프리미엄 미팅 이벤트
+        </p>
+
+        <div class="party-grid">
+          <!-- Doctor Party -->
+          <div class="party-card reveal">
+            <div class="party-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+              </svg>
+            </div>
+            <div class="party-num">PARTY 01</div>
+            <div class="party-name">닥터 파티</div>
+            <div class="party-name-en">Doctor Party</div>
+            <p class="party-desc">
+              의사, 약사, 한의사 등 의료 전문직을 위한 프리미엄 미팅. 같은
+              분야의 이해와 공감을 기반으로 합니다.
+            </p>
+          </div>
+
+          <!-- Professional Party -->
+          <div class="party-card reveal">
+            <div class="party-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+              </svg>
+            </div>
+            <div class="party-num">PARTY 02</div>
+            <div class="party-name">프로페셔널 파티</div>
+            <div class="party-name-en">Professional Party</div>
+            <p class="party-desc">
+              법조, 금융, 회계 등 고소득 전문직 대상. 커리어와 가치관이 맞는
+              파트너를 만날 수 있습니다.
+            </p>
+          </div>
+
+          <!-- Premium Party -->
+          <div class="party-card reveal">
+            <div class="party-icon">
+              <svg viewBox="0 0 24 24">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+            </div>
+            <div class="party-num">PARTY 03</div>
+            <div class="party-name">프리미엄 파티</div>
+            <div class="party-name-en">Premium Party</div>
+            <p class="party-desc">
+              상위 0.1% VVIP 회원 전용 초대제 파티. 완벽한 프라이버시와 최상위
+              네트워킹.
+            </p>
+          </div>
+
+          <!-- Collaboration Party -->
+          <div class="party-card reveal">
+            <div class="party-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                <path d="M16 3.13a4 4 0 010 7.75" />
+              </svg>
+            </div>
+            <div class="party-num">PARTY 04</div>
+            <div class="party-name">콜라보레이션 파티</div>
+            <div class="party-name-en">Collaboration Party</div>
+            <p class="party-desc">
+              기업, 기관, 단체와 협업하는 대규모 미팅 이벤트. 다양한 배경의
+              싱글들이 만납니다.
+            </p>
+          </div>
+
+          <!-- Thema Party -->
+          <div class="party-card reveal">
+            <div class="party-icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polygon points="10 8 16 12 10 16 10 8" />
+              </svg>
+            </div>
+            <div class="party-num">PARTY 05</div>
+            <div class="party-name">테마 파티</div>
+            <div class="party-name-en">Thema Party</div>
+            <p class="party-desc">
+              골프, 승마, 요트, 와인 테이스팅 등 취미를 공유하며 자연스럽게
+              만남이 이루어집니다.
+            </p>
+          </div>
+
+          <!-- Remarry Party -->
+          <div class="party-card reveal">
+            <div class="party-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"
+                />
+              </svg>
+            </div>
+            <div class="party-num">PARTY 06</div>
+            <div class="party-name">리매리 파티</div>
+            <div class="party-name-en">Remarry Party</div>
+            <p class="party-desc">
+              재혼을 희망하는 분들을 위한 전용 파티. 이해와 배려 속에서 새로운
+              시작을 함께합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 6: 스페셜 맞선 (크림) ===== -->
+    <section class="section section-cream" id="special">
+      <div class="section-inner">
+        <div class="special-split">
+          <div class="special-img reveal" style="position: relative">
+            <img
+              class="seg-poster"
+              src="output/thumbnails/프리미엄맞선.jpg"
+              alt="1:1 프리미엄 스페셜 맞선"
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                position: absolute;
+                top: 0;
+                left: 0;
+                transition: opacity 0.6s;
+                z-index: 2;
+              "
+            />
+            <video
+              src="output/프리미엄맞선.mp4"
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              style="width: 100%; height: 100%; object-fit: cover"
+            ></video>
+          </div>
+          <div class="special-text">
+            <div class="section-eyebrow reveal">Special Matching</div>
+            <h3 class="reveal">
+              1:1 프리미엄<br /><strong>스페셜 맞선</strong>
+            </h3>
+            <p class="reveal">
+              노블홍이 엄선한 최상위 회원을 대상으로 하는 1:1 맞춤형 스페셜
+              매칭. 대표가 직접 관여하여 양측의 조건과 가치관을 세밀하게
+              조율합니다. 일반 매칭으로는 만나기 어려운 특별한 인연을
+              연결합니다.
+            </p>
+            <div class="special-features reveal">
+              <span class="special-badge">대표 직접 매칭</span>
+              <span class="special-badge">완벽한 프라이버시</span>
+              <span class="special-badge">맞춤형 장소 세팅</span>
+              <span class="special-badge">사전 호감도 검증</span>
+            </div>
+            <a href="#cta" class="btn-gold reveal">스페셜 맞선 상담</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 7: 노블홍 최신소식 게시판 (다크) ===== -->
+    <section class="section section-dark" id="feed">
+      <div class="section-inner">
+        <div class="section-eyebrow reveal">Content Feed</div>
+        <h2 class="section-title reveal">
+          노블홍의 <strong>최신 소식</strong>
+        </h2>
+        <p class="section-desc reveal">
+          블로그와 인스타그램에서 전하는 매칭 이야기와 라이프스타일
+        </p>
+
+        <div class="news-feed-layout">
+          <div class="news-board-wrap">
+            <div class="news-board-header">
+              <span class="news-board-title">노블홍 소식</span>
+              <a href="news.html" class="news-board-more">전체보기 &rarr;</a>
+            </div>
+            <div class="news-board-list" id="newsBoardList"></div>
+          </div>
+          <div class="news-sns-stack">
+            <div class="news-sns-box">
+              <div class="news-sns-top">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c13584" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="#c13584" stroke="none"/></svg>
+                <span>Instagram</span>
+                <a href="#" target="_blank" class="news-sns-link">팔로우</a>
+              </div>
+              <div class="news-insta-grid">
+                <div class="news-insta-item"></div>
+                <div class="news-insta-item"></div>
+                <div class="news-insta-item"></div>
+                <div class="news-insta-item"></div>
+                <div class="news-insta-item"></div>
+                <div class="news-insta-item"></div>
+              </div>
+            </div>
+            <div class="news-sns-box">
+              <div class="news-sns-top">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2a8a4e" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span>Blog</span>
+                <a href="#" target="_blank" class="news-sns-link">구독</a>
+              </div>
+              <div class="news-blog-list">
+                <a href="#" class="news-blog-item"><div class="news-blog-thumb"></div><div class="news-blog-info"><h5>결혼 준비 체크리스트 TOP 10</h5><span>2026.03.28</span></div></a>
+                <a href="#" class="news-blog-item"><div class="news-blog-thumb"></div><div class="news-blog-info"><h5>노블홍 회원 성혼 후기 인터뷰</h5><span>2026.03.20</span></div></a>
+                <a href="#" class="news-blog-item"><div class="news-blog-thumb"></div><div class="news-blog-info"><h5>강남 데이트 코스 추천 BEST 5</h5><span>2026.03.15</span></div></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 4: 러브 칼럼 (크림) ===== -->
+    <section class="section section-cream" id="column">
+      <div class="section-inner">
+        <div class="section-eyebrow reveal">Love Column</div>
+        <h2 class="section-title reveal">
+          홍유진 대표의 <strong>러브 칼럼</strong>
+        </h2>
+        <p class="section-desc reveal">
+          30년 경력의 커플매니저가 전하는 사랑과 결혼에 대한 솔직한 이야기
+        </p>
+
+        <div class="column-grid">
+          <div class="column-card reveal">
+            <div class="column-thumb">
+              <img src="images/qualify/unnamed (31).jpg" alt="연애 판타지" />
+              <span class="ai-badge">AI생성</span>
+            </div>
+            <div class="column-body">
+              <h4>당신의 연애 판타지는 20대에 이미 끝났다</h4>
+              <p>
+                가슴 찌릿한 연애 경험 한번 없는 사회 초년생에게 백마 탄 왕자님이
+                나타났다. 그런데 판타지는 현실이 될 수 있을까?
+              </p>
+            </div>
+          </div>
+
+          <div class="column-card reveal">
+            <div class="column-thumb">
+              <img src="images/qualify/unnamed (32).jpg" alt="괜찮은 싱글녀" />
+              <span class="ai-badge">AI생성</span>
+            </div>
+            <div class="column-body">
+              <h4>괜찮은 싱글녀 라는 것은 착각일까?</h4>
+              <p>
+                여성들이 상호 칭찬하는 "괜찮은 여성"의 이면에 무의식적으로
+                투영된 남성상이 있을 수 있습니다.
+              </p>
+            </div>
+          </div>
+
+          <div class="column-card reveal">
+            <div class="column-thumb">
+              <img src="images/qualify/unnamed (33).jpg" alt="싱글 가산점" />
+              <span class="ai-badge">AI생성</span>
+            </div>
+            <div class="column-body">
+              <h4>싱글이면 가산점이 있는 줄 알았다</h4>
+              <p>
+                선택의 기준은 성격과 매력이지, 미혼 여부가 아닙니다. 싱글이라는
+                조건 자체가 특별한 것은 아닙니다.
+              </p>
+            </div>
+          </div>
+
+          <div class="column-card reveal">
+            <div class="column-thumb">
+              <img src="images/qualify/unnamed (34).jpg" alt="철벽녀" />
+              <span class="ai-badge">AI생성</span>
+            </div>
+            <div class="column-body">
+              <h4>상대방 호의를 의심하는 나는 철벽녀인가?</h4>
+              <p>
+                관계 시작 전 방어 자세를 갖추는 것의 부작용. 호의를 거부하는
+                순간 기회는 닫힙니다.
+              </p>
+            </div>
+          </div>
+
+          <div class="column-card reveal">
+            <div class="column-thumb">
+              <img src="images/qualify/unnamed (35).jpg" alt="외로움" />
+              <span class="ai-badge">AI생성</span>
+            </div>
+            <div class="column-body">
+              <h4>혼자서도 외롭지 않다는 당신, 진심일까?</h4>
+              <p>
+                혼자임을 자위하는 태도에 대한 성찰. 정말 외롭지 않은 건지,
+                외로움을 인정하기 싫은 건지.
+              </p>
+            </div>
+          </div>
+
+          <div class="column-card reveal">
+            <div class="column-thumb">
+              <img src="images/qualify/unnamed (36).jpg" alt="욕심" />
+              <span class="ai-badge">AI생성</span>
+            </div>
+            <div class="column-body">
+              <h4>연애를 초치는 주범은 욕심이다</h4>
+              <p>
+                현실 연애에서 나이의 의미와 욕심이 미치는 영향. 기대를 낮추면
+                만족은 높아집니다.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta-section" id="cta">
+      <div class="cta-bg-wrap">
+        <div class="cta-bg" id="ctaBgLounge">
+          <img src="images/qualify/cta.png" alt="웨딩" />
+          <video src="images/qualify/cta.mp4" muted playsinline loop></video>
+        </div>
+        <div class="cta-bg-overlay"></div>
+      </div>
+      <span
+        class="ai-image-badge"
+        style="position: absolute; bottom: 16px; right: 16px; z-index: 6"
+        >AI 이미지 사용</span
+      >
+      <div class="cta-frame"></div>
+      <div class="cta-content">
+        <h2 class="cta-title">
+          당신의 인연,<br /><strong>지금 시작됩니다</strong>
+        </h2>
+        <p class="cta-sub">주말 및 공휴일에도 상담 가능합니다</p>
+        <div class="cta-phone">1800-8194</div>
+        <p class="cta-note">
+          간단한 정보를 남겨주시면, 담당 커플매니저가 24시간 이내 연락드립니다
+        </p>
+        <div class="cta-buttons">
+          <a href="tel:1800-8194" class="btn-filled">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+              />
+            </svg>
+            전화 상담
+          </a>
+          <a href="#" class="btn-outlined">온라인 상담 신청</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-gold-line"></div>
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo"><img src="logo.png" alt="Noble HoNG" /></div>
+          <div class="footer-info">
+            (주)노블홍 결혼정보회사 &middot; 대표 홍유진<br />
+            서울시 강남구 강남대로 354 혜천빌딩 705, 706<br />
+            사업자등록번호 321-81-03029 &middot; 국내결혼중개업
+            서울-강남-국내-22-0012호<br />
+            대표전화 1800-8194
+          </div>
+          <div
+            style="
+              margin-top: 16px;
+              padding-top: 12px;
+              border-top: 1px solid rgba(255, 255, 255, 0.06);
+              font-size: 12px;
+              color: rgba(255, 255, 255, 0.25);
+            "
+          >
+            <span>&copy; 2026 Noble Hong. All rights reserved.</span>
+            <span style="margin-left: 16px"
+              >Designed by
+              <a
+                href="https://polarad.co.kr"
+                target="_blank"
+                rel="noopener"
+                style="color: rgba(196, 165, 90, 0.5); text-decoration: none"
+                >POLA</a
+              ></span
+            >
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="privacy.html">개인정보처리방침</a>
+          <a href="terms.html">이용약관</a>
+          <a href="damages.html">손해배상절차</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // 노블홍 최신소식 게시판 렌더링
+      (() => {
+        const catMap = { "수상": "award", "미디어": "media", "이벤트": "event", "제휴": "", "출간": "", "활동": "", "VIP": "award" };
+        const newsItems = [
+          { title: "KBSI 대한민국브랜드만족지수 3년 연속 1위 수상", date: "2026.04.01", cat: "수상" },
+          { title: "KBS 아침마당 — 가입할까 말까 결혼정보회사", date: "2026.03.28", cat: "미디어" },
+          { title: "2026 Doctor Party 성료, 매칭 12건 성사", date: "2026.03.25", cat: "이벤트" },
+          { title: "국회의원 이양수 표창 — 지역경제 기여", date: "2026.03.22", cat: "수상" },
+          { title: "MBC 기분좋은날 — 부모가 결혼 망치는 원인", date: "2026.03.20", cat: "미디어" },
+          { title: "대한건축사협회 MOU 체결", date: "2026.03.18", cat: "제휴" },
+          { title: "저출산문제 해결방안 공동저서 출간", date: "2026.03.15", cat: "출간" },
+          { title: "KBS 아침마당 — 황혼 재혼은 노후 망치는 주범?", date: "2026.03.12", cat: "미디어" },
+          { title: "법무법인 원앤파트너스 고문 협약 체결", date: "2026.03.10", cat: "제휴" },
+          { title: "글로벌사이버대학교 홍보대사 위촉", date: "2026.03.08", cat: "활동" },
+          { title: "연세대 행정대학원 총동창회 부회장 취임", date: "2026.03.05", cat: "활동" },
+          { title: "MBC 기분좋은날 — 극과극 시어머니의 사랑법", date: "2026.03.03", cat: "미디어" },
+        ];
+        const board = document.getElementById("newsBoardList");
+        if (!board) return;
+        board.innerHTML = newsItems.map(n =>
+          '<a href="news.html" class="news-board-item">' +
+            '<span class="news-board-cat ' + (catMap[n.cat] || '') + '">' + n.cat + '</span>' +
+            '<span class="news-board-item-title">' + n.title + '</span>' +
+            '<span class="news-board-date">' + n.date + '</span>' +
+          '</a>'
+        ).join("");
+      })();
+
+      // GNB scroll effect
+      window.addEventListener("scroll", () => {
+        document
+          .getElementById("gnb")
+          .classList.toggle("scrolled", window.scrollY > 60);
+      });
+
+      // GSAP Scroll Animations
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Reveal animations
+      gsap.utils.toArray(".reveal").forEach((el, i) => {
+        gsap.to(el, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+          delay: (i % 5) * 0.08,
+        });
+      });
+
+      // CTA background video — 2초 후 재생
+      (() => {
+        const bg = document.getElementById("ctaBgLounge");
+        if (!bg) return;
+        const video = bg.querySelector("video");
+        if (!video) return;
+        let timer = null;
+        ScrollTrigger.create({
+          trigger: bg,
+          start: "top 80%",
+          end: "bottom 20%",
+          onEnter: () => {
+            timer = setTimeout(() => {
+              bg.classList.add("playing");
+              video.play().catch(() => {});
+            }, 2000);
+          },
+          onLeave: () => {
+            clearTimeout(timer);
+            bg.classList.remove("playing");
+            video.pause();
+          },
+          onEnterBack: () => {
+            timer = setTimeout(() => {
+              bg.classList.add("playing");
+              video.play().catch(() => {});
+            }, 2000);
+          },
+          onLeaveBack: () => {
+            clearTimeout(timer);
+            bg.classList.remove("playing");
+            video.pause();
+          },
+        });
+      })();
+
+      // ===== YouTube Data & Rendering =====
+      const ytVideoIds = [
+        "9pVRRU5Bahg",
+        "dxBVwPhmum0",
+        "XG4u_Eqngs0",
+        "yeebW70oT44",
+        "2Ifm4MxbGWw",
+        "y8wJ77Pnzkc",
+        "9O7PGLJawJE",
+        "C4YH6ok6P4w",
+        "SqPFYzdqom4",
+        "A9JCWuwYr4Q",
+        "ioBe1Ss66mw",
+        "ci8clgx-8E0",
+        "CiLQEmQhISU",
+        "3cPJUupAlDQ",
+        "cs-CgUT3kcI",
+        "xzkNCivI2V4",
+        "l-k8tXbQR4Q",
+        "kYujmE1PDkg",
+        "Yp9o3PZfKWU",
+        "es0fBxPDc_M",
+        "BqZ1o25CRg8",
+        "CYs7stTso3s",
+        "FGisCLhIu5k",
+        "L2X2uW5ZOuw",
+        "JqNqAioA2Pg",
+        "WXSR-aRPPCc",
+        "OewApb16Dy8",
+        "5GvZaftdIsQ",
+        "lqEB9IJT59Q",
+        "G_8Vj8d4Sg4",
+        "GjLADeU8_5U",
+        "Y4y26vkiocA",
+        "ajLFC7assQo",
+        "Sh_7Nt_QBzA",
+        "1fuINPTMyN8",
+        "8_r3tFW5j2w",
+        "EtW507sB1vY",
+        "wx6gd6ZQw9M",
+        "ocbJV12gU7M",
+        "W3j-IZYmDEs",
+        "Ix3bCeW9dVI",
+        "38-4pZbS6jU",
+        "tCGXcu3PpRQ",
+        "4V1kLtCTqns",
+        "-V-k6TElECg",
+        "adc02gz4zGY",
+        "xY5B-EuuBEA",
+        "tlQkAr6agUM",
+        "PqiIrD11Ekc",
+        "OGCRcMJoOZU",
+        "gj7MquBsMkc",
+        "1QkDvLR0NOU",
+        "hFyvBlxJd6Q",
+        "7OHs9anbUsw",
+        "gFbajc0mwgU",
+        "H9wb4AtVeUg",
+        "GIo34f76JQg",
+        "HgQ6zbFnTxs",
+        "0s0O9C3x_N8",
+        "GOcZwvqL1Jg",
+        "aBTtdS4BgFU",
+        "rHAO6aNIExc",
+        "m0i6sUP6jkE",
+        "svaGcGlhYBo",
+        "-Ea5LxwvGaY",
+        "ZMT1NzKl51o",
+        "USYQzxbVOaI",
+        "hImL4TCX0Ow",
+        "Ed0nD3h5XYo",
+        "aDqXAThh3qs",
+        "Pyp04x-VS80",
+        "UAfhkLo-DlM",
+        "0LFlzgkt3dQ",
+        "LRwU5XuuwJc",
+        "Xe1haW3P7Ks",
+        "pgmdWvPYQYM",
+        "aeYMeIOGiuw",
+        "9PiWuyJQysQ",
+        "kqTTbl3gMHs",
+        "TBrdWS_Y2TI",
+        "4zwM4HgFKw4",
+        "7KccPDIc6C8",
+        "O1Tgnecn8w0",
+        "pnZdHF0v0cU",
+        "r6qA4y1ZCu0",
+        "8HI9NGuMZ5A",
+        "JInSCRbFNh4",
+        "ckEpMt0qMMY",
+        "_Z1ekHufia4",
+        "yevpq0Egxb8",
+        "HhCfh9XGM_Y",
+        "7LZW69XTXp8",
+        "dzk8Zkl69Dc",
+        "fXSdz-AlB6k",
+        "G4cmHgxlJ3s",
+        "-mYWIr0Cy_8",
+        "uLTsxGBgD6g",
+        "zFdgJn7pGqc",
+        "8fN6NYREHew",
+        "i5dxnAmQp5I",
+        "XP6IUdINN3s",
+        "IepVQKMVADY",
+        "Kqy_wLDdXaw",
+        "eqogdpVBiQ8",
+        "Jsul0OtctuI",
+        "oBXpjIkvfl0",
+        "AB75sUCVej0",
+        "b4NU-fUO8-U",
+        "iWGfllYjumM",
+        "xpsTRdkU71Q",
+        "UjXanK8IqTc",
+        "zNEwKjn12i8",
+        "tKI-QSkkurw",
+        "AztEnsnHqAs",
+        "ep_UF3k4ZKs",
+        "OXyk8r9MC2c",
+        "ja5IB0yqxr8",
+        "EVN6P1Y-780",
+        "bkz9PbLFxF4",
+        "3V-KBDoU0Mg",
+        "L8eZB1TJOhA",
+        "3fQugusK0GY",
+        "4rT0S9YAO8I",
+        "8B0EJ0KFdgg",
+        "KGUNGMq8_3U",
+        "CWAMZK-vhX0",
+        "QvzxZsbF1b4",
+        "mLf3VAYuYnk",
+        "RIKGB2Lx2Zs",
+        "UYRxgQrbPpY",
+        "UW3EbARoqag",
+        "soRyTaUUQXU",
+        "0PGkbDemubM",
+        "lKESORSXUWs",
+        "jK1BRvf2shs",
+        "T3vZsWyD_5Y",
+        "kpejOrrfZ6w",
+        "7tjOn_J-_P8",
+        "rWEKZ4s96qw",
+        "Ji1-XRpgO5E",
+        "C44n52R5Hhw",
+        "z8nUrYU514U",
+        "ptGMMly9HAg",
+        "1NE0dUH2nRc",
+        "oohhLXtFaMs",
+        "3g1g2RU2QG8",
+        "icXPWursUs8",
+      ];
+
+      const ytShorts = [
+        { t: "연인이 보내는 이별 시그널 대처방법", id: "4fh6c6xRuik" },
+        { t: "제발 거울부터 보고 오세요", id: "GbB8z4LTRng" },
+        { t: "남자가 어린 여자만 찾는 이유", id: "LLTxb9yYpYg" },
+        { t: "맞춤법이 연애에 미치는 영향", id: "Js33eCAuf8U" },
+        { t: "MBTI 과몰입은 모솔을 부른다", id: "8GGiMksvu0M" },
+        { t: "차은우 만나는 법 알려줌", id: "APRkc5UjUT4" },
+        { t: "딱딱한 남자 좋아하는 사람?", id: "bD_pRlYufH0" },
+        { t: "직진남 류수영의 결혼이야기", id: "Dprn0VtozLs" },
+        { t: "극과긁 그 커플매니저 홍유진!", id: "dJcSMudPaHg" },
+        { t: "이런 결혼정보회사는 무조건 거르세요", id: "wJyQkpoJz_c" },
+        { t: "이런 사람 절대 만나지마세요!", id: "SqCOAlvfs3o" },
+        { t: "가장 중요한 배우자 조건은?!", id: "7iZhVXx3pfA" },
+        { t: "장서갈등 배우자에게도 문제가 있다?!", id: "6YrjtBae2SA" },
+        { t: "전세사기꾼들아 잘 들어라!", id: "0cEcpTxSee4" },
+        { t: "이 시대에 결혼, 꼭 해야할까?", id: "ynW_rNSKFB4" },
+        { t: "상간녀의 최후는 뻔하다?!", id: "Q1FTNDrfpKA" },
+        { t: "혼전동거, 이것만 알면 된다!", id: "kYz8P4oX5HA" },
+        { t: "결혼정보회사 비용, 왜 비밀일까?", id: "xR9vTqM2abc" },
+      ];
+
+      const VIDEOS_PER_PAGE = 20;
+      let ytExpanded = false;
+
+      function renderVideos() {
+        const grid = document.getElementById("ytVideoGrid");
+        grid.innerHTML = ytVideoIds
+          .map(
+            (id, i) => `
+          <div class="yt-card reveal ${i >= VIDEOS_PER_PAGE ? "hidden" : ""}" onclick="openVideoModal('${id}', false)">
+            <div class="yt-thumb">
+              <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg" alt="" loading="lazy" />
+              <div class="yt-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+        const btn = document.getElementById("ytMoreBtn");
+        if (btn) {
+          btn.style.display =
+            ytVideoIds.length <= VIDEOS_PER_PAGE ? "none" : "";
+          btn.textContent = "전체보기 (" + ytVideoIds.length + "개)";
+        }
+      }
+
+      function toggleYtVideos() {
+        ytExpanded = !ytExpanded;
+        const cards = document.querySelectorAll("#ytVideoGrid .yt-card");
+        cards.forEach((card, i) => {
+          if (i >= VIDEOS_PER_PAGE) {
+            card.classList.toggle("hidden", !ytExpanded);
+            if (ytExpanded) {
+              card.style.opacity = "0";
+              card.style.transform = "translateY(24px)";
+              gsap.to(card, {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                ease: "expo.out",
+                delay: ((i - VIDEOS_PER_PAGE) % 4) * 0.06,
+              });
+            }
+          }
+        });
+        const btn = document.getElementById("ytMoreBtn");
+        btn.textContent = ytExpanded
+          ? "접기"
+          : "전체보기 (" + ytVideoIds.length + "개)";
+        btn.classList.toggle("expanded", ytExpanded);
+      }
+
+      let shortsOffset = 0;
+      const SHORTS_VISIBLE = 6;
+
+      function renderShorts() {
+        const track = document.getElementById("ytShortsGrid");
+        track.innerHTML = ytShorts
+          .map(
+            (s) => `
+          <div class="shorts-card" onclick="openVideoModal('${s.id}', true)">
+            <div class="shorts-thumb">
+              <img src="https://img.youtube.com/vi/${s.id}/0.jpg" alt="${s.t}" loading="lazy" />
+              <div class="shorts-badge">Shorts</div>
+              <div class="shorts-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+        updateShortsArrows();
+      }
+
+      function slideShorts(dir) {
+        const maxOffset = Math.max(0, ytShorts.length - SHORTS_VISIBLE);
+        shortsOffset = Math.max(0, Math.min(shortsOffset + dir * 3, maxOffset));
+        const track = document.getElementById("ytShortsGrid");
+        const cardWidth = track.children[0].offsetWidth + 14; // card + gap
+        track.style.transform =
+          "translateX(-" + shortsOffset * cardWidth + "px)";
+        updateShortsArrows();
+      }
+
+      function updateShortsArrows() {
+        const maxOffset = Math.max(0, ytShorts.length - SHORTS_VISIBLE);
+        document.getElementById("shortsLeft").disabled = shortsOffset <= 0;
+        document.getElementById("shortsRight").disabled =
+          shortsOffset >= maxOffset;
+      }
+
+      // Video Modal
+      function openVideoModal(videoId, isShorts) {
+        const overlay = document.getElementById("videoModal");
+        const inner = document.getElementById("videoModalInner");
+        const iframe = document.getElementById("videoIframe");
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        inner.classList.toggle("shorts-mode", isShorts);
+        overlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeVideoModal() {
+        const overlay = document.getElementById("videoModal");
+        const iframe = document.getElementById("videoIframe");
+        iframe.src = "";
+        overlay.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+
+      document
+        .getElementById("videoModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeVideoModal();
+        });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeVideoModal();
+      });
+
+      // Init
+      renderVideos();
+
+      // ===== 매거진 허브 렌더링 =====
+      (() => {
+        // --- 메인 슬라이더 (최신 영상 4개) ---
+        const SLIDE_COUNT = 4;
+        const slider = document.getElementById("magSlider");
+        const dotsWrap = document.getElementById("magDots");
+        if (!slider) return;
+
+        slider.innerHTML = ytVideoIds
+          .slice(0, SLIDE_COUNT)
+          .map(
+            (id, i) => `
+          <div class="mag-slide ${i === 0 ? "active" : ""}" onclick="openVideoModal('${id}', false)">
+            <div class="mag-featured-bg">
+              <img src="https://img.youtube.com/vi/${id}/maxresdefault.jpg" style="width:100%;height:100%;object-fit:cover;opacity:1" />
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+
+        dotsWrap.innerHTML = ytVideoIds
+          .slice(0, SLIDE_COUNT)
+          .map(
+            (_, i) =>
+              `<span class="mag-dot ${i === 0 ? "active" : ""}"></span>`,
+          )
+          .join("");
+
+        const slides = slider.querySelectorAll(".mag-slide");
+        const dots = dotsWrap.querySelectorAll(".mag-dot");
+        let current = 0,
+          timer = null;
+
+        function goTo(idx) {
+          current = (idx + slides.length) % slides.length;
+          slides.forEach((s, i) => s.classList.toggle("active", i === current));
+          dots.forEach((d, i) => d.classList.toggle("active", i === current));
+        }
+        function autoPlay() {
+          timer = setInterval(() => goTo(current + 1), 5000);
+        }
+        function resetTimer() {
+          clearInterval(timer);
+          autoPlay();
+        }
+
+        document.getElementById("magPrev").addEventListener("click", () => {
+          goTo(current - 1);
+          resetTimer();
+        });
+        document.getElementById("magNext").addEventListener("click", () => {
+          goTo(current + 1);
+          resetTimer();
+        });
+        dots.forEach((d, i) =>
+          d.addEventListener("click", () => {
+            goTo(i);
+            resetTimer();
+          }),
+        );
+        autoPlay();
+
+        // --- 사이드: 노블홍 소식 2컬럼 (1~8 / 9~16) ---
+        const newsData = [
+          {
+            title: "KBSI 대한민국브랜드만족지수 3년 연속 1위 수상",
+            date: "2026.04.01",
+            category: "수상",
+          },
+          {
+            title: "KBS 아침마당 — 가입할까 말까 결혼정보회사",
+            date: "2026.03.28",
+            category: "미디어",
+          },
+          {
+            title: "2026 Doctor Party 성료, 매칭 12건 성사",
+            date: "2026.03.25",
+            category: "이벤트",
+          },
+          {
+            title: "국회의원 이양수 표창 — 지역경제 기여",
+            date: "2026.03.22",
+            category: "수상",
+          },
+          {
+            title: "MBC 기분좋은날 — 부모가 결혼 망치는 원인",
+            date: "2026.03.20",
+            category: "미디어",
+          },
+          {
+            title: "대한건축사협회 MOU 체결",
+            date: "2026.03.18",
+            category: "제휴",
+          },
+          {
+            title: "저출산문제 해결방안 공동저서 출간",
+            date: "2026.03.15",
+            category: "출간",
+          },
+          {
+            title: "KBS 아침마당 — 황혼 재혼은 노후 망치는 주범?",
+            date: "2026.03.12",
+            category: "미디어",
+          },
+          {
+            title: "법무법인 원앤파트너스 고문 협약 체결",
+            date: "2026.03.10",
+            category: "제휴",
+          },
+          {
+            title: "글로벌사이버대학교(BTS 모교) 홍보대사 위촉",
+            date: "2026.03.08",
+            category: "활동",
+          },
+          {
+            title: "연세대 행정대학원 총동창회 부회장 취임",
+            date: "2026.03.05",
+            category: "활동",
+          },
+          {
+            title: "MBC 기분좋은날 — 극과극 시어머니의 사랑법",
+            date: "2026.03.03",
+            category: "미디어",
+          },
+          {
+            title: "2026 상반기 노블레스 파티 6종 일정 공개",
+            date: "2026.02.28",
+            category: "이벤트",
+          },
+          {
+            title: "닥터쁘띠 성형외과 업무 제휴 MOU 체결",
+            date: "2026.02.25",
+            category: "제휴",
+          },
+          {
+            title: "대한민국 파워리더 대상 수상",
+            date: "2026.02.20",
+            category: "수상",
+          },
+          {
+            title: "KBS 아침마당 — 비혼 선언하는 자녀 결혼 해결법",
+            date: "2026.02.15",
+            category: "미디어",
+          },
+          {
+            title: "연세를 빛낸 행정인상 2년 연속 수상",
+            date: "2026.02.10",
+            category: "수상",
+          },
+          {
+            title: "SBS 생방송 투데이 — 매칭 전문가 출연",
+            date: "2026.02.05",
+            category: "미디어",
+          },
+          {
+            title: "한국결혼장려운동연합 법인이사 취임",
+            date: "2026.01.28",
+            category: "활동",
+          },
+          {
+            title: "Professional Party 2026 봄 시즌 오픈",
+            date: "2026.01.25",
+            category: "이벤트",
+          },
+          {
+            title: "대한민국파워리더대상 저출생 정책 기여",
+            date: "2026.01.20",
+            category: "수상",
+          },
+          {
+            title: "인구문제연구소 소장 취임",
+            date: "2026.01.15",
+            category: "활동",
+          },
+          {
+            title: "KBS 여유만만 — 공개 구혼 내 자식을 소개합니다",
+            date: "2026.01.10",
+            category: "미디어",
+          },
+          {
+            title: "카이스트 766억 기부 광원산업 손주 결혼상담",
+            date: "2026.01.05",
+            category: "VIP",
+          },
+          {
+            title: "TV조선 와카남 — 재벌가의 결혼 상담 출연",
+            date: "2025.12.28",
+            category: "미디어",
+          },
+          {
+            title: "당신에게 연애가 어려운 이유 연애 저서 증쇄",
+            date: "2025.12.20",
+            category: "출간",
+          },
+        ];
+
+        function renderCol(items, start) {
+          return items
+            .map(
+              (n, i) => `
+            <a href="news_detail.html?id=${start + i}" class="mag-list-item" style="text-decoration:none">
+              <div class="mag-list-num">${String(start + i + 1).padStart(2, "0")}</div>
+              <div class="mag-list-info">
+                <div class="mag-list-top">
+                  <span class="mag-tag mag-tag-news">${n.category}</span>
+                  <h4>${n.title}</h4>
+                </div>
+                <div class="mag-list-meta">${n.date}</div>
+              </div>
+            </a>`,
+            )
+            .join("");
+        }
+
+        const sideList = document.getElementById("magSideList");
+        sideList.innerHTML =
+          '<div class="mag-news-col">' +
+          '<div style="padding:12px 16px;font-size:14px;font-weight:700;color:#d9c577;border-bottom:1px solid rgba(196,165,90,0.15)">노블홍 소식</div>' +
+          renderCol(newsData.slice(0, 8), 0) +
+          "</div>" +
+          '<div class="mag-news-col">' +
+          '<div style="padding:12px 16px;border-bottom:1px solid rgba(196,165,90,0.15)">&nbsp;</div>' +
+          renderCol(newsData.slice(8, 16), 8) +
+          "</div>";
+
+        // --- 쇼츠 (전체, 세로 9:16) ---
+        const shortsRow = document.getElementById("magShortsRow");
+        shortsRow.innerHTML = ytShorts
+          .map(
+            (s) => `
+          <div class="mag-shorts-card" onclick="openVideoModal('${s.id}', true)">
+            <div class="mag-shorts-thumb">
+              <img src="https://img.youtube.com/vi/${s.id}/oar2.jpg" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" />
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+
+        // 쇼츠 좌우 스크롤
+        document.getElementById("shortsPrev").addEventListener("click", () => {
+          shortsRow.scrollBy({ left: -500, behavior: "smooth" });
+        });
+        document.getElementById("shortsNext").addEventListener("click", () => {
+          shortsRow.scrollBy({ left: 500, behavior: "smooth" });
+        });
+      })();
+
+      // 매거진 허브 — 실제 유튜브 데이터 연결
+      (() => {
+        const SLIDE_COUNT = 4;
+        const MINI_COUNT = 5;
+        const SHORTS_COUNT = ytShorts.length;
+
+        // 메인 슬라이더 렌더링 (최신 영상 4개)
+        const slider = document.getElementById("magSlider");
+        const dotsWrap = document.getElementById("magDots");
+        if (!slider) return;
+
+        slider.innerHTML = ytVideoIds
+          .slice(0, SLIDE_COUNT)
+          .map(
+            (id, i) => `
+          <div class="mag-slide ${i === 0 ? "active" : ""}" onclick="openVideoModal('${id}', false)">
+            <div class="mag-featured-bg">
+              <img src="https://img.youtube.com/vi/${id}/maxresdefault.jpg" style="width:100%;height:100%;object-fit:cover;opacity:1" />
+            </div>
+
+          </div>
+        `,
+          )
+          .join("");
+
+        dotsWrap.innerHTML = ytVideoIds
+          .slice(0, SLIDE_COUNT)
+          .map(
+            (_, i) =>
+              `<span class="mag-dot ${i === 0 ? "active" : ""}"></span>`,
+          )
+          .join("");
+
+        // 슬라이더 제어
+        const slides = slider.querySelectorAll(".mag-slide");
+        const dots = dotsWrap.querySelectorAll(".mag-dot");
+        let current = 0;
+        let timer = null;
+
+        function goTo(idx) {
+          current = (idx + slides.length) % slides.length;
+          slides.forEach((s, i) => s.classList.toggle("active", i === current));
+          dots.forEach((d, i) => d.classList.toggle("active", i === current));
+        }
+        function autoPlay() {
+          timer = setInterval(() => goTo(current + 1), 5000);
+        }
+        function resetTimer() {
+          clearInterval(timer);
+          autoPlay();
+        }
+
+        document.getElementById("magPrev").addEventListener("click", () => {
+          goTo(current - 1);
+          resetTimer();
+        });
+        document.getElementById("magNext").addEventListener("click", () => {
+          goTo(current + 1);
+          resetTimer();
+        });
+        dots.forEach((d, i) =>
+          d.addEventListener("click", () => {
+            goTo(i);
+            resetTimer();
+          }),
+        );
+        autoPlay();
+
+        // 사이드 목록 — 노블홍 소식 게시판
+        // 쇼츠 렌더링 (실제 쇼츠 데이터)
+        const shortsRow = document.getElementById("magShortsRow");
+        shortsRow.innerHTML = ytShorts
+          .slice(0, SHORTS_COUNT)
+          .map(
+            (s) => `
+          <div class="mag-shorts-card" onclick="openVideoModal('${s.id}', true)">
+            <div class="mag-shorts-thumb">
+              <img src="https://img.youtube.com/vi/${s.id}/oar2.jpg" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:.6" />
+              
+              <h5>${s.t}</h5>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+      })();
+      renderShorts();
+
+      // 쇼츠 좌우 스크롤
+      (() => {
+        const row = document.getElementById("magShortsRow");
+        if (!row) return;
+        document.getElementById("shortsPrev").addEventListener("click", () => {
+          row.scrollBy({ left: -500, behavior: "smooth" });
+        });
+        document.getElementById("shortsNext").addEventListener("click", () => {
+          row.scrollBy({ left: 500, behavior: "smooth" });
+        });
+      })();
+
+      // Re-apply GSAP reveal to dynamically rendered cards
+      requestAnimationFrame(() => {
+        document
+          .querySelectorAll("#ytVideoGrid .reveal, #ytShortsGrid .reveal")
+          .forEach((el, i) => {
+            gsap.to(el, {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "expo.out",
+              scrollTrigger: {
+                trigger: el,
+                start: "top 85%",
+                toggleActions: "play none none none",
+              },
+              delay: (i % 4) * 0.06,
+            });
+          });
+      });
+      // 스페셜 맞선: 썸네일 1초 후 영상 재생
+      (() => {
+        const specialSection = document.querySelector("#special");
+        if (!specialSection) return;
+        const poster = specialSection.querySelector(".seg-poster");
+        const video = specialSection.querySelector("video");
+        if (!poster || !video) return;
+
+        const obs = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                setTimeout(() => {
+                  video
+                    .play()
+                    .then(() => {
+                      poster.style.opacity = "0";
+                    })
+                    .catch(() => {});
+                }, 1000);
+                obs.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.3 },
+        );
+        obs.observe(specialSection);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1984 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>노블홍 홈페이지 마이그레이션 기획서</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0d0b09;
+        --surface: #161310;
+        --surface-2: #1e1a16;
+        --border: #2a2520;
+        --border-light: #3a3530;
+        --text: #f5f0e8;
+        --text-secondary: #a89e90;
+        --text-muted: #6b6358;
+        --accent-gold: #c4a55a;
+        --accent-gold-light: #d4b86a;
+        --accent-purple: #7b2d8e;
+        --accent-purple-light: #9b4dae;
+        --tag-blue: #2563eb;
+        --tag-green: #059669;
+        --tag-orange: #d97706;
+        --tag-red: #dc2626;
+        --tag-purple: #7c3aed;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.8;
+        font-size: 15px;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 60px 32px;
+      }
+
+      /* Header */
+      .doc-header {
+        text-align: center;
+        padding: 80px 32px 60px;
+        border-bottom: 1px solid var(--border);
+      }
+      .doc-header .brand {
+        font-size: 13px;
+        letter-spacing: 4px;
+        color: var(--accent-gold);
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      }
+      .doc-header h1 {
+        font-size: 36px;
+        font-weight: 300;
+        letter-spacing: -0.5px;
+        margin-bottom: 12px;
+      }
+      .doc-header h1 strong {
+        font-weight: 700;
+        color: var(--accent-gold);
+      }
+      .doc-header .subtitle {
+        color: var(--text-secondary);
+        font-size: 16px;
+      }
+      .doc-header .meta {
+        margin-top: 24px;
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      /* TOC */
+      .toc {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 32px 40px;
+        margin: 48px auto;
+        max-width: 700px;
+      }
+      .toc h3 {
+        font-size: 14px;
+        letter-spacing: 2px;
+        color: var(--accent-gold);
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      .toc ol {
+        list-style: none;
+        counter-reset: toc;
+      }
+      .toc ol li {
+        counter-increment: toc;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 15px;
+      }
+      .toc ol li:last-child {
+        border-bottom: none;
+      }
+      .toc ol li::before {
+        content: "0" counter(toc);
+        color: var(--accent-gold);
+        font-weight: 600;
+        margin-right: 16px;
+        font-size: 13px;
+      }
+      .toc ol li a {
+        color: var(--text);
+        text-decoration: none;
+      }
+      .toc ol li a:hover {
+        color: var(--accent-gold);
+      }
+
+      /* Section */
+      .section {
+        padding: 64px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .section:last-child {
+        border-bottom: none;
+      }
+      .section-num {
+        font-size: 12px;
+        letter-spacing: 3px;
+        color: var(--accent-gold);
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .section h2 {
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .section h2 span {
+        color: var(--accent-gold);
+      }
+      .section .section-desc {
+        color: var(--text-secondary);
+        margin-bottom: 32px;
+        font-size: 15px;
+      }
+
+      .section h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 32px 0 12px;
+        padding-left: 16px;
+        border-left: 3px solid var(--accent-gold);
+      }
+      .section h4 {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--accent-gold-light);
+      }
+
+      p {
+        margin-bottom: 12px;
+      }
+
+      /* Tags */
+      .tag {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-right: 4px;
+        vertical-align: middle;
+      }
+      .tag-phase {
+        background: rgba(37, 99, 235, 0.15);
+        color: #60a5fa;
+      }
+      .tag-priority {
+        background: rgba(220, 38, 38, 0.15);
+        color: #f87171;
+      }
+      .tag-type {
+        background: rgba(124, 58, 237, 0.15);
+        color: #a78bfa;
+      }
+      .tag-tech {
+        background: rgba(5, 150, 105, 0.15);
+        color: #34d399;
+      }
+      .tag-decision {
+        background: rgba(217, 119, 6, 0.15);
+        color: #fbbf24;
+      }
+
+      /* Cards */
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 16px;
+        margin: 16px 0;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 24px;
+        transition: border-color 0.2s;
+      }
+      .card:hover {
+        border-color: var(--border-light);
+      }
+      .card .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .card .card-body {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .card .card-footer {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      /* Full-width card */
+      .card-full {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 28px 32px;
+        margin: 16px 0;
+      }
+
+      /* Table */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        font-size: 14px;
+      }
+      th {
+        text-align: left;
+        padding: 12px 16px;
+        background: var(--surface);
+        color: var(--accent-gold);
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--border);
+      }
+      td {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      tr:hover td {
+        background: var(--surface);
+      }
+
+      /* Comparison */
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 40px 1fr;
+        gap: 0;
+        align-items: start;
+        margin: 20px 0;
+      }
+      .compare-col {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 24px;
+      }
+      .compare-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent-gold);
+        font-size: 24px;
+        padding-top: 40px;
+      }
+      .compare-col h4 {
+        font-size: 13px;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .compare-col ul {
+        list-style: none;
+        font-size: 14px;
+      }
+      .compare-col ul li {
+        padding: 6px 0;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-secondary);
+      }
+      .compare-col ul li:last-child {
+        border-bottom: none;
+      }
+
+      /* List */
+      ul.feature-list {
+        list-style: none;
+        margin: 12px 0;
+      }
+      ul.feature-list li {
+        padding: 8px 0 8px 24px;
+        position: relative;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      ul.feature-list li::before {
+        content: "→";
+        position: absolute;
+        left: 0;
+        color: var(--accent-gold);
+      }
+
+      ol.step-list {
+        list-style: none;
+        counter-reset: step;
+        margin: 16px 0;
+      }
+      ol.step-list li {
+        counter-increment: step;
+        padding: 16px 16px 16px 60px;
+        position: relative;
+        margin-bottom: 8px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      ol.step-list li::before {
+        content: counter(step);
+        position: absolute;
+        left: 16px;
+        top: 16px;
+        width: 28px;
+        height: 28px;
+        background: var(--accent-gold);
+        color: var(--bg);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 13px;
+      }
+      ol.step-list li strong {
+        color: var(--text);
+      }
+      ol.step-list li p {
+        color: var(--text-secondary);
+        font-size: 14px;
+        margin-top: 4px;
+      }
+
+      /* Interaction showcase */
+      .interaction-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 28px;
+        margin: 12px 0;
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+      .interaction-icon {
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(
+          135deg,
+          var(--accent-gold),
+          var(--accent-purple)
+        );
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .interaction-icon svg {
+        width: 28px;
+        height: 28px;
+        stroke: var(--text);
+        stroke-width: 1.5;
+        fill: none;
+      }
+      .interaction-content h4 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .interaction-content .where {
+        font-size: 12px;
+        color: var(--accent-gold);
+        margin-bottom: 8px;
+      }
+      .interaction-content p {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .interaction-content .tech-stack {
+        margin-top: 8px;
+      }
+
+      /* Color palette */
+      .palette {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 16px 0;
+      }
+      .palette-item {
+        text-align: center;
+      }
+      .palette-swatch {
+        width: 80px;
+        height: 80px;
+        border-radius: 10px;
+        margin-bottom: 6px;
+        border: 1px solid var(--border);
+      }
+      .palette-name {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+      .palette-hex {
+        font-size: 12px;
+        font-weight: 600;
+        font-family: monospace;
+      }
+
+      /* Callout */
+      .callout {
+        background: var(--surface-2);
+        border-left: 3px solid var(--accent-gold);
+        padding: 16px 20px;
+        margin: 16px 0;
+        border-radius: 0 8px 8px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      .callout strong {
+        color: var(--text);
+      }
+
+      /* Milestone */
+      .milestone-track {
+        display: flex;
+        gap: 0;
+        margin: 24px 0;
+        overflow-x: auto;
+      }
+      .milestone {
+        flex: 1;
+        min-width: 140px;
+        padding: 20px 16px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        text-align: center;
+        position: relative;
+      }
+      .milestone:first-child {
+        border-radius: 10px 0 0 10px;
+      }
+      .milestone:last-child {
+        border-radius: 0 10px 10px 0;
+      }
+      .milestone .ms-phase {
+        font-size: 11px;
+        color: var(--accent-gold);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .milestone .ms-name {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 4px 0;
+      }
+      .milestone .ms-detail {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      .milestone::after {
+        content: "→";
+        position: absolute;
+        right: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--accent-gold);
+        font-size: 16px;
+        z-index: 1;
+      }
+      .milestone:last-child::after {
+        display: none;
+      }
+
+      .note {
+        font-size: 13px;
+        color: var(--text-muted);
+        font-style: italic;
+        margin: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== HEADER ===== -->
+    <header class="doc-header">
+      <div class="brand">Noble HoNG</div>
+      <h1>홈페이지 <strong>마이그레이션 기획서</strong></h1>
+      <p class="subtitle">
+        noblehong.com 텍스트 콘텐츠 이관 + 프리미엄 인터랙티브 UI 전략
+      </p>
+      <p class="meta">
+        v1.0 — 2026.04.02 | 로컬 HTML 와이어프레임 → 서비스 연결
+      </p>
+    </header>
+
+    <div class="container">
+      <!-- ===== TOC ===== -->
+      <nav class="toc">
+        <h3>Contents</h3>
+        <ol>
+          <li><a href="#s1">현행 분석 — 기존 사이트 구조 & 콘텐츠 맵</a></li>
+          <li><a href="#s2">IA 재설계 — 메뉴 통합 & 페이지 구조</a></li>
+          <li><a href="#s3">콘텐츠 마이그레이션 매트릭스</a></li>
+          <li><a href="#s4">컬러 & 비주얼 컨셉</a></li>
+          <li><a href="#s5">인터랙션 전략 — WebGL / 3D / 스크롤 연동</a></li>
+          <li><a href="#s6">비주얼 에셋 전략 — 이미지 & 오브제</a></li>
+          <li><a href="#s7">페이지별 와이어프레임 설계 방향</a></li>
+          <li><a href="#s8">기술 스택 & 구현 로드맵</a></li>
+        </ol>
+      </nav>
+
+      <!-- ===== SECTION 1: 현행 분석 ===== -->
+      <section class="section" id="s1">
+        <div class="section-num">Section 01</div>
+        <h2>현행 분석 — <span>기존 사이트 구조</span></h2>
+        <p class="section-desc">
+          noblehong.com 기준 6개 상위메뉴, 24개 서브페이지. 브로셔(16p) 최신
+          정보 반영.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>상위메뉴</th>
+              <th>서브페이지</th>
+              <th>핵심 콘텐츠</th>
+              <th>비고</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>노블홍 소개</strong></td>
+              <td>CEO 인사말, 언론, 유튜브, 캠페인, 공지, 오시는길</td>
+              <td>
+                대표 프로필, 30년 경력, 수상 이력, 방송 300회+, 저서 2권, MOU
+                협력사
+              </td>
+              <td>브로셔 p2~p15 최신 정보로 업데이트</td>
+            </tr>
+            <tr>
+              <td><strong>가입안내</strong></td>
+              <td>
+                왜 노블홍, 서비스, 회원가입, 프로그램, 상담문의, 커플매니저
+              </td>
+              <td>6단계 가입프로세스, 3.3.3 프로모션, 매칭시스템 설명</td>
+              <td>브로셔 p5~p7 데이터 반영</td>
+            </tr>
+            <tr>
+              <td><strong>맞춤컨설팅</strong></td>
+              <td>
+                전문직/명문대, 대기업/공기업, 명문가/재력가, 명품결혼, 자녀결혼,
+                재혼
+              </td>
+              <td>타겟별 차별화 메시지, 해외거주 자녀(p8), 재혼 전략(p9)</td>
+              <td>브로셔 p8~p9 신규 콘텐츠 포함</td>
+            </tr>
+            <tr>
+              <td><strong>맞선&파티</strong></td>
+              <td>노블레스 파티, 스페셜 맞선</td>
+              <td>이벤트성 매칭 프로그램</td>
+              <td>콘텐츠 경량</td>
+            </tr>
+            <tr>
+              <td><strong>매칭전략연구소</strong></td>
+              <td>연구소, 미팅성공가이드, 러브컬럼</td>
+              <td>연구 기반 매칭, 칼럼 아카이브</td>
+              <td>칼럼 최신 8건</td>
+            </tr>
+            <tr>
+              <td><strong>상담문의</strong></td>
+              <td>상담 폼</td>
+              <td>문의 접수</td>
+              <td>CTA 통합</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <strong>브로셔 신규 정보 (기존 사이트 미반영):</strong> 연령대별
+          교제율 데이터(p7), 회원 자산분포도(p7), 부모님 초청 좌담회(p7),
+          해외거주 자녀결혼 서비스(p8), 2024~2025 KBS 아침마당·기분좋은 날
+          고정출연(p11), 저출생 공익캠페인 & 지자체 협력(p14), MOU 파트너십
+          9건(p15)
+        </div>
+      </section>
+
+      <!-- ===== SECTION 2: IA 재설계 ===== -->
+      <section class="section" id="s2">
+        <div class="section-num">Section 02</div>
+        <h2>IA 재설계 — <span>메뉴 통합 & 페이지 구조</span></h2>
+        <p class="section-desc">
+          24개 서브페이지 → 5개 메인 페이지로 통합. 상단 GNB 메뉴 유지, 서브는
+          인페이지 섹션으로.
+        </p>
+
+        <div class="compare">
+          <div class="compare-col">
+            <h4>기존 구조 (AS-IS)</h4>
+            <ul>
+              <li><strong>노블홍 소개</strong> — 6개 서브페이지</li>
+              <li><strong>가입안내</strong> — 6개 서브페이지</li>
+              <li><strong>맞춤컨설팅</strong> — 6개 서브페이지</li>
+              <li><strong>맞선&파티</strong> — 2개 서브페이지</li>
+              <li><strong>매칭전략연구소</strong> — 3개 서브페이지</li>
+              <li><strong>상담문의</strong> — 1개 페이지</li>
+              <li style="color: var(--text-muted)">총 24개 페이지 분산</li>
+            </ul>
+          </div>
+          <div class="compare-arrow">→</div>
+          <div class="compare-col">
+            <h4>신규 구조 (TO-BE)</h4>
+            <ul>
+              <li><strong>HOME</strong> — 메인 랜딩 (풀스크린 히어로)</li>
+              <li>
+                <strong>노블홍</strong> — 브랜드 + CEO + 미디어 + 사회공헌
+              </li>
+              <li>
+                <strong>노블매칭</strong> — 매칭 시스템 + 프로세스 + 데이터
+              </li>
+              <li><strong>맞춤컨설팅</strong> — 타겟별 컨설팅 솔루션</li>
+              <li><strong>매칭라운지</strong> — 연구소 + 칼럼 + 파티</li>
+              <li><strong>상담문의</strong> — 상담 폼 + 오시는길</li>
+              <li style="color: var(--accent-gold)">
+                총 6개 페이지 (개별 페이지 방식)
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>GNB (상단 네비게이션) 설계</h3>
+        <div class="card-full">
+          <table>
+            <thead>
+              <tr>
+                <th>GNB 메뉴</th>
+                <th>인페이지 섹션</th>
+                <th>통합된 기존 서브페이지</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>노블홍</strong><br /><span class="tag tag-type"
+                    >브랜드</span
+                  >
+                </td>
+                <td>
+                  ① 브랜드 소개 & 철학<br />
+                  ② CEO 홍유진 — 30년 성혼의 달인<br />
+                  ③ 수상 & 인증 — 브랜드만족지수 3년 연속 1위<br />
+                  ④ 미디어 — 방송 300회+ & 유튜브<br />
+                  ⑤ 사회공헌 — 저출생 캠페인 & MOU
+                </td>
+                <td>CEO인사말, 언론, 유튜브, 캠페인, 공지사항</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>노블매칭</strong><br /><span class="tag tag-type"
+                    >시스템</span
+                  >
+                </td>
+                <td>
+                  ① 왜 노블홍인가 — 8,000명 성혼 실적<br />
+                  ② 매칭 시스템 — 6단계 프로세스<br />
+                  ③ 3.3.3 프로모션 — 교제율 극대화<br />
+                  ④ 교제율·자산 데이터 시각화
+                </td>
+                <td>왜노블홍, 서비스안내, 회원가입, 프로그램, 커플매니저</td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>맞춤컨설팅</strong><br /><span class="tag tag-type"
+                    >솔루션</span
+                  >
+                </td>
+                <td>
+                  ① 전문직·명문가·재력가 컨설팅<br />
+                  ② 자녀결혼 & 해외거주 — 부모 전용<br />
+                  ③ 스페셜 재혼 — 차별화 매칭<br />
+                  ④ 명품결혼 컨설팅
+                </td>
+                <td>
+                  맞춤컨설팅 전체 6건 (전문직, 대기업, 명문가, 명품, 자녀, 재혼)
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>매칭라운지</strong><br /><span class="tag tag-type"
+                    >콘텐츠</span
+                  >
+                </td>
+                <td>
+                  ① 매칭전략 연구소 — 데이터 기반 인사이트<br />
+                  ② 러브 칼럼 — 연애/결혼 가이드<br />
+                  ③ 노블레스 이벤트 — 파티 & 스페셜 맞선
+                </td>
+                <td>
+                  매칭전략연구소, 미팅성공가이드, 러브컬럼, 노블레스파티,
+                  스페셜맞선
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>상담문의</strong><br /><span class="tag tag-type"
+                    >전환</span
+                  >
+                </td>
+                <td>
+                  ① 상담 문의 폼 (주요 CTA)<br />
+                  ② 찾아오시는 길 — 강남역 4번 출구<br />
+                  ③ 전화 상담 — 1800-8194
+                </td>
+                <td>상담문의, 찾아오시는길</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <strong
+            >HOME 페이지는 GNB에 별도 메뉴 없이 로고 클릭으로 복귀.</strong
+          >
+          메인 랜딩은 각 섹션의 하이라이트를 풀스크린 인터랙티브로 보여주고, 각
+          섹션에서 해당 상세 페이지로 유도하는 허브 역할.
+        </div>
+      </section>
+
+      <!-- ===== SECTION 3: 콘텐츠 마이그레이션 매트릭스 ===== -->
+      <section class="section" id="s3">
+        <div class="section-num">Section 03</div>
+        <h2>콘텐츠 <span>마이그레이션 매트릭스</span></h2>
+        <p class="section-desc">
+          기존 텍스트를 소스별로 분류하고, 신규 페이지 어디에 배치할지 매핑.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>콘텐츠</th>
+              <th>소스</th>
+              <th>TO-BE 위치</th>
+              <th>처리</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CEO 프로필 & 경력</td>
+              <td>브로셔 p2 (최신)</td>
+              <td>노블홍 §2</td>
+              <td><span class="tag tag-decision">브로셔 우선</span></td>
+            </tr>
+            <tr>
+              <td>커플매니저 제1호 설명</td>
+              <td>브로셔 p3 + 사이트</td>
+              <td>노블홍 §1</td>
+              <td><span class="tag tag-decision">병합</span></td>
+            </tr>
+            <tr>
+              <td>방송/매스컴 출연 내역</td>
+              <td>브로셔 p4, p10~p11</td>
+              <td>노블홍 §4</td>
+              <td><span class="tag tag-decision">브로셔 우선</span></td>
+            </tr>
+            <tr>
+              <td>왜 노블홍 — 10대 강점</td>
+              <td>브로셔 p5 (최신)</td>
+              <td>노블매칭 §1</td>
+              <td><span class="tag tag-decision">브로셔 우선</span></td>
+            </tr>
+            <tr>
+              <td>매칭 시스템 4단계</td>
+              <td>브로셔 p6</td>
+              <td>노블매칭 §2</td>
+              <td><span class="tag tag-decision">신규</span></td>
+            </tr>
+            <tr>
+              <td>6단계 가입 프로세스</td>
+              <td>사이트 홈</td>
+              <td>노블매칭 §2</td>
+              <td><span class="tag tag-decision">유지</span></td>
+            </tr>
+            <tr>
+              <td>3.3.3 프로모션</td>
+              <td>브로셔 p6~p7</td>
+              <td>노블매칭 §3</td>
+              <td><span class="tag tag-decision">브로셔 우선</span></td>
+            </tr>
+            <tr>
+              <td>연령대별 교제율 데이터</td>
+              <td>브로셔 p7 (신규)</td>
+              <td>노블매칭 §3 또는 HOME</td>
+              <td><span class="tag tag-priority">신규 콘텐츠</span></td>
+            </tr>
+            <tr>
+              <td>회원 자산분포도</td>
+              <td>브로셔 p7 (신규)</td>
+              <td>HOME 또는 노블매칭</td>
+              <td><span class="tag tag-priority">신규 콘텐츠</span></td>
+            </tr>
+            <tr>
+              <td>맞춤컨설팅 — 전문직/명문대/재력가</td>
+              <td>사이트 sub03</td>
+              <td>맞춤컨설팅 §1</td>
+              <td><span class="tag tag-decision">유지+리라이팅</span></td>
+            </tr>
+            <tr>
+              <td>해외거주 자녀결혼</td>
+              <td>브로셔 p8 (신규)</td>
+              <td>맞춤컨설팅 §2</td>
+              <td><span class="tag tag-priority">신규 콘텐츠</span></td>
+            </tr>
+            <tr>
+              <td>스페셜 재혼</td>
+              <td>브로셔 p9 + 사이트</td>
+              <td>맞춤컨설팅 §3</td>
+              <td><span class="tag tag-decision">병합</span></td>
+            </tr>
+            <tr>
+              <td>저출생 캠페인 & 지자체 협력</td>
+              <td>브로셔 p14 (신규)</td>
+              <td>노블홍 §5</td>
+              <td><span class="tag tag-priority">신규 콘텐츠</span></td>
+            </tr>
+            <tr>
+              <td>MOU 파트너십</td>
+              <td>브로셔 p15 (신규)</td>
+              <td>노블홍 §5</td>
+              <td><span class="tag tag-priority">신규 콘텐츠</span></td>
+            </tr>
+            <tr>
+              <td>수상 이력 & 표창</td>
+              <td>브로셔 p2, p13</td>
+              <td>노블홍 §3</td>
+              <td><span class="tag tag-decision">브로셔 우선</span></td>
+            </tr>
+            <tr>
+              <td>저서 & 논문</td>
+              <td>브로셔 p12</td>
+              <td>노블홍 §2</td>
+              <td><span class="tag tag-decision">브로셔 우선</span></td>
+            </tr>
+            <tr>
+              <td>매칭전략연구소</td>
+              <td>사이트 sub06</td>
+              <td>매칭라운지 §1</td>
+              <td><span class="tag tag-decision">유지</span></td>
+            </tr>
+            <tr>
+              <td>러브컬럼 8건</td>
+              <td>사이트 sub06</td>
+              <td>매칭라운지 §2</td>
+              <td><span class="tag tag-decision">유지</span></td>
+            </tr>
+            <tr>
+              <td>이용약관/개인정보/피해보상</td>
+              <td>사이트 sub00</td>
+              <td>Footer 링크</td>
+              <td><span class="tag tag-decision">유지</span></td>
+            </tr>
+            <tr>
+              <td>회사정보 (사업자, 면허)</td>
+              <td>사이트 Footer</td>
+              <td>Footer</td>
+              <td><span class="tag tag-decision">유지</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <strong>원칙:</strong> 브로셔(2025 최신) 정보가 사이트 정보보다 우선.
+          사이트에만 있는 상세 텍스트는 리라이팅 후 병합. noblehong.kr 콘텐츠는
+          무시.
+        </div>
+      </section>
+
+      <!-- ===== SECTION 4: 컬러 & 비주얼 컨셉 ===== -->
+      <section class="section" id="s4">
+        <div class="section-num">Section 04</div>
+        <h2>컬러 & <span>비주얼 컨셉</span></h2>
+        <p class="section-desc">
+          로고(Noble: Black + HoNG: Purple)를 기반으로 프리미엄 웨딩 톤 설계.
+        </p>
+
+        <h3>컬러 팔레트</h3>
+
+        <div class="palette">
+          <div class="palette-item">
+            <div
+              class="palette-swatch"
+              style="background: #faf9f7; border: 1px solid #e5e0d8"
+            ></div>
+            <div class="palette-name">Warm White</div>
+            <div class="palette-hex">#faf9f7</div>
+          </div>
+          <div class="palette-item">
+            <div
+              class="palette-swatch"
+              style="background: #f3f1ed; border: 1px solid #e5e0d8"
+            ></div>
+            <div class="palette-name">Warm Linen</div>
+            <div class="palette-hex">#f3f1ed</div>
+          </div>
+          <div class="palette-item">
+            <div class="palette-swatch" style="background: #a08030"></div>
+            <div class="palette-name">Noble Gold</div>
+            <div class="palette-hex">#a08030</div>
+          </div>
+          <div class="palette-item">
+            <div class="palette-swatch" style="background: #7b2d8e"></div>
+            <div class="palette-name">HoNG Purple</div>
+            <div class="palette-hex">#7b2d8e</div>
+          </div>
+          <div class="palette-item">
+            <div class="palette-swatch" style="background: #1a1714"></div>
+            <div class="palette-name">Rich Dark</div>
+            <div class="palette-hex">#1a1714</div>
+          </div>
+          <div class="palette-item">
+            <div class="palette-swatch" style="background: #5c564e"></div>
+            <div class="palette-name">Text Secondary</div>
+            <div class="palette-hex">#5c564e</div>
+          </div>
+          <div class="palette-item">
+            <div
+              class="palette-swatch"
+              style="background: #e5e0d8; border: 1px solid #d4cec4"
+            ></div>
+            <div class="palette-name">Sand</div>
+            <div class="palette-hex">#e5e0d8</div>
+          </div>
+          <div class="palette-item">
+            <div class="palette-swatch" style="background: #c4a55a"></div>
+            <div class="palette-name">Champagne</div>
+            <div class="palette-hex">#c4a55a</div>
+          </div>
+        </div>
+
+        <h4>컬러 운용 전략</h4>
+        <ul class="feature-list">
+          <li>
+            <strong>배경:</strong> Warm White(#faf9f7) 기본. 섹션 교차 시 Warm
+            Linen(#f3f1ed)으로 깊이감
+          </li>
+          <li>
+            <strong>주요 액센트:</strong> Noble Gold(#a08030) — CTA, 하이라이트,
+            아이콘. 라이트 배경 위 충분한 대비
+          </li>
+          <li>
+            <strong>보조 액센트:</strong> HoNG Purple — 로고, 시그니처
+            그라데이션, 특별 포인트
+          </li>
+          <li>
+            <strong>텍스트:</strong> Rich Dark(#1a1714, 본문) +
+            Secondary(#5c564e, 보조). 순수 검정 대신 따뜻한 다크
+          </li>
+          <li>
+            <strong>그라데이션 키:</strong> Gold → Purple 그라데이션은 브랜드
+            시그니처로 제한적 사용 (히어로, 구분선, 호버)
+          </li>
+        </ul>
+
+        <h3>타이포그래피</h3>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-title">한글 — Pretendard</div>
+            <div class="card-body">
+              본문: Variable 400<br />
+              강조: Variable 600~700<br />
+              캡션: Variable 300<br />
+              <span class="note"
+                >기존 proposal.html에서 이미 적용 중. 유지.</span
+              >
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">영문 — Cormorant Garamond</div>
+            <div class="card-body">
+              헤딩/장식: Light 300~Regular 400<br />
+              브랜드 표현: Italic 사용<br />
+              <span class="note"
+                >로고의 세리프 톤과 일치하는 고전적 우아함.</span
+              >
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">숫자 강조 — DM Serif Display</div>
+            <div class="card-body">
+              통계 수치: "8,000+", "30년", "75%"<br />
+              <span class="note">데이터 시각화 섹션에서 임팩트 용도.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>비주얼 무드</h3>
+        <div class="card-full">
+          <h4>핵심 키워드</h4>
+          <p
+            style="
+              font-size: 20px;
+              color: var(--accent-gold);
+              letter-spacing: 2px;
+              margin: 8px 0;
+            "
+          >
+            중후 · 격조 · 신뢰 · 품격 · 따뜻함
+          </p>
+          <p style="color: var(--text-secondary); font-size: 14px">
+            럭셔리 주얼리/하이엔드 호텔 웹사이트의 톤. 화려하지 않되 비싸 보이는
+            절제된 고급감.<br />
+            참조 무드: 불가리(Bulgari), 해리윈스턴(Harry Winston), 아만
+            리조트(Aman) 웹사이트의 다크 톤 + 골드 액센트 운용.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===== SECTION 5: 인터랙션 전략 ===== -->
+      <section class="section" id="s5">
+        <div class="section-num">Section 05</div>
+        <h2>인터랙션 전략 — <span>모션그래픽 / WebGL / 스크롤 연동</span></h2>
+        <p class="section-desc">
+          모션그래픽 수준의 정교한 애니메이션. 단순 CSS 트윈이 아닌 After
+          Effects급 퀄리티를 웹에서 구현.
+        </p>
+
+        <div class="callout">
+          <strong>인터랙션 4원칙:</strong><br />
+          1. <strong>의미 기반</strong> — 모든 모션에 이유가 있어야 함 (장식적
+          움직임 금지)<br />
+          2. <strong>절제된 밀도</strong> — 한 뷰포트에 1개의 주요 인터랙션만.
+          동시다발 금지<br />
+          3. <strong>서사적 연결</strong> — 스크롤이 내려가면서 '만남 &rarr;
+          연애 &rarr; 결혼 &rarr; 행복'의 여정을 은유<br />
+          4. <strong>모션그래픽 퀄리티</strong> — Lottie/Rive로 AE 수준
+          애니메이션 구현. 단순 fade/slide 금지. 이징 커브, 오버슈트, 스태거 등
+          정교한 타이밍 설계
+        </div>
+
+        <h3>아이콘 규칙</h3>
+        <div class="card-full">
+          <h4>컬러 이모지 사용 금지 — SVG 아이콘 전용</h4>
+          <p style="color: var(--text-secondary); font-size: 14px">
+            컬러 이모지는 프리미엄 톤을 저해합니다. 모든 아이콘은 다음 규칙을
+            따릅니다:
+          </p>
+          <ul class="feature-list">
+            <li>
+              <strong>UI 아이콘:</strong> Lucide Icons (SVG, 모노라인 스타일) —
+              네비게이션, 버튼, 리스트 마커
+            </li>
+            <li>
+              <strong>장식 아이콘:</strong> 커스텀 SVG 일러스트 — 카라꽃, 링,
+              리본 등 브랜드 오브제를 라인아트로
+            </li>
+            <li>
+              <strong>애니메이션 아이콘:</strong> Lottie JSON — After
+              Effects에서 제작한 마이크로 인터랙션 (호버, 로딩, 전환)
+            </li>
+            <li>
+              <strong>컬러:</strong> 골드(stroke) 또는 아이보리(stroke) 단색.
+              그라데이션은 시그니처 포인트에만
+            </li>
+            <li>
+              <strong>사이즈:</strong> 24px(인라인), 32px(카드), 48~64px(섹션
+              아이콘). 일관된 stroke-width: 1.5px
+            </li>
+          </ul>
+        </div>
+
+        <h3>모션그래픽 기술 스택</h3>
+        <div class="card-full">
+          <table>
+            <thead>
+              <tr>
+                <th>도구</th>
+                <th>역할</th>
+                <th>적용 영역</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Lottie (lottie-web)</strong></td>
+                <td>
+                  After Effects 제작 애니메이션을 JSON으로 export하여 웹에서
+                  재생. 벡터 기반으로 해상도 무관. 스크롤 위치에 프레임 매핑
+                  가능.
+                </td>
+                <td>
+                  카라꽃 블룸, 텍스트 리빌, 아이콘 마이크로 인터랙션, 로딩
+                  애니메이션
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Rive</strong></td>
+                <td>
+                  인터랙티브 스테이트 머신 기반 애니메이션. 마우스/스크롤/클릭에
+                  실시간 반응하는 복합 모션. Lottie보다 인터랙션 자유도 높음.
+                </td>
+                <td>
+                  CTA 버튼 모션, 서비스 카드 호버 트랜지션, 프로세스 인포그래픽
+                </td>
+              </tr>
+              <tr>
+                <td><strong>GSAP + ScrollTrigger</strong></td>
+                <td>
+                  스크롤 기반 타임라인 오케스트레이션. 정교한 이징 커브(elastic,
+                  back, expo), 스태거, 핀닝. Lottie/Rive 재생을 스크롤에
+                  동기화하는 컨트롤러 역할.
+                </td>
+                <td>
+                  전체 스크롤 플로우 제어, 커튼 리빌, 섹션 전환, Lottie 프레임
+                  매핑
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Three.js (WebGL)</strong></td>
+                <td>
+                  실시간 3D 렌더링. PBR 머티리얼 + 환경맵으로 사실적 금속 질감.
+                  모바일은 정적 이미지 폴백.
+                </td>
+                <td>웨딩 링 3D, 골드 파티클 시스템</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="note">
+            Lottie = 사전 제작된 정교한 모션 재생, Rive = 실시간 인터랙티브
+            모션, GSAP = 오케스트레이션 레이어. 세 도구가 각자의 강점 영역을
+            담당.
+          </p>
+        </div>
+
+        <h3>A. 히어로 — 카라꽃 블룸 (메인 시그니처)</h3>
+        <div class="interaction-card">
+          <div class="interaction-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2C8 7 4 10 4 14a8 8 0 0016 0c0-4-4-7-8-12z" />
+              <path d="M12 10v8M9 15l3 3 3-3" />
+            </svg>
+          </div>
+          <div class="interaction-content">
+            <h4>Calla Lily Bloom on Scroll — Lottie Sequence</h4>
+            <div class="where">HOME 히어로 영역 (100vh)</div>
+            <p>
+              페이지 로드 시 흰 카라꽃 봉오리가 화면 중앙에 위치. 스크롤을
+              내리기 시작하면 꽃잎이 서서히 펼쳐지며 활짝 핌. 꽃이 피는 동안
+              배경이 미세하게 밝아지고, 골드 파티클이 꽃술 주변에서 흩날림.<br /><br />
+              <strong>모션그래픽 접근:</strong><br />
+              &bull; After Effects에서 카라꽃 개화 시퀀스 제작 (Shape Layer
+              기반, 60fps, 3초 분량)<br />
+              &bull; Bodymovin 플러그인으로 Lottie JSON export<br />
+              &bull; lottie-web의 <code>goToAndStop(frame)</code>을 GSAP
+              ScrollTrigger에 연결 &mdash; 스크롤 위치(0~100vh)가 Lottie
+              프레임(0~90)에 1:1 매핑<br />
+              &bull; 꽃 주변 골드 파티클은 별도 Canvas 레이어에서 Three.js
+              Points로 렌더링<br />
+              &bull; 모바일: Lottie는 해상도 무관이므로 동일 JSON 사용. 파티클만
+              비활성화.
+            </p>
+            <div class="tech-stack">
+              <span class="tag tag-tech">Lottie</span>
+              <span class="tag tag-tech">GSAP ScrollTrigger</span>
+              <span class="tag tag-tech">After Effects</span>
+              <span class="tag tag-tech">Three.js Points</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>B. 골드 링 회전 (브랜드 신뢰 섹션)</h3>
+        <div class="interaction-card">
+          <div class="interaction-icon">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="8" />
+              <circle cx="12" cy="12" r="5" />
+              <path d="M12 4v1M12 19v1" />
+            </svg>
+          </div>
+          <div class="interaction-content">
+            <h4>Wedding Ring — PBR 3D with Scroll Parallax</h4>
+            <div class="where">노블홍 수상/인증 영역 또는 HOME 중간</div>
+            <p>
+              골드 웨딩 링 3D 오브젝트가 화면 한쪽에 배치. 마우스 위치(또는
+              스크롤)에 따라 미세하게 회전하며 빛 반사가 변화. 링 안쪽에 "Since
+              1996" 각인이 스크롤 시 드러남.<br /><br />
+              <strong>모션그래픽 접근:</strong><br />
+              &bull; Three.js Torus 지오메트리 + 골드 PBR 머티리얼 (metalness:
+              1.0, roughness: 0.15) + HDRI 환경맵<br />
+              &bull; GSAP ScrollTrigger로 rotation.y를 스크롤에 매핑 (0&deg;
+              &rarr; 360&deg;)<br />
+              &bull; 카메라 앵글 변화로 내부 각인 리빌 &mdash; 정교한 ease:
+              "power3.inOut" 커브<br />
+              &bull; 링 주변 미세한 빛 플레어: EffectComposer +
+              UnrealBloomPass<br />
+              &bull; 모바일 폴백: Lottie로 사전 렌더링된 링 회전 시퀀스 (3D
+              대체)
+            </p>
+            <div class="tech-stack">
+              <span class="tag tag-tech">Three.js</span>
+              <span class="tag tag-tech">WebGL PBR</span>
+              <span class="tag tag-tech">GSAP ScrollTrigger</span>
+              <span class="tag tag-tech">UnrealBloom</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>C. 숫자 카운트업 + 데이터 시각화 (실적 섹션)</h3>
+        <div class="interaction-card">
+          <div class="interaction-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M18 20V10M12 20V4M6 20v-6" />
+            </svg>
+          </div>
+          <div class="interaction-content">
+            <h4>Animated Statistics — Motion Graphic Infographics</h4>
+            <div class="where">HOME 또는 노블매칭 &mdash; 핵심 수치 영역</div>
+            <p>
+              "8,000+" "30년" "75%" 같은 핵심 수치가 뷰포트에 들어오면
+              모션그래픽 시퀀스로 등장. 연령대별 교제율 도넛차트, 자산분포도
+              차트가 정교한 스태거 타이밍으로 드로잉됨.<br /><br />
+              <strong>모션그래픽 접근:</strong><br />
+              &bull; 숫자 카운트업: GSAP <code>TextPlugin</code>으로 0 &rarr;
+              타겟값. 이징 커브 <code>expo.out</code>으로 마지막에 감속하며
+              착지<br />
+              &bull; 숫자 뒤에 SVG 장식 라인이 함께 드로잉 (stroke-dashoffset,
+              GSAP timeline)<br />
+              &bull; 도넛차트: After Effects에서 제작한 차트 빌드업 Lottie
+              &mdash; 각 세그먼트가 순차적으로 채워지며 숫자 레이블이 팝인<br />
+              &bull; 전체 섹션: GSAP ScrollTrigger batch로 각 요소가 0.15초 간격
+              스태거 진입<br />
+              &bull; 배경: 골드 그라디언트 글로우가 radial-gradient로 서서히
+              확산 (opacity 0 &rarr; 0.3)
+            </p>
+            <div class="tech-stack">
+              <span class="tag tag-tech">Lottie (차트)</span>
+              <span class="tag tag-tech">GSAP TextPlugin</span>
+              <span class="tag tag-tech">SVG Stroke Animation</span>
+              <span class="tag tag-tech">ScrollTrigger Batch</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>D. 텍스트 리빌 — 서예 모션 (CEO 섹션)</h3>
+        <div class="interaction-card">
+          <div class="interaction-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+            </svg>
+          </div>
+          <div class="interaction-content">
+            <h4>Calligraphic Text Reveal — Lottie Path Animation</h4>
+            <div class="where">노블홍 &mdash; CEO 인사말 또는 브랜드 철학</div>
+            <p>
+              "행복한 연애와 결혼을 리드하는 노블홍" 핵심 카피가 붓으로 쓰는
+              듯한 정교한 모션으로 등장.<br /><br />
+              <strong>모션그래픽 접근:</strong><br />
+              &bull; After Effects에서 한글 캘리그래피 패스를 Trim Path로 획순
+              애니메이션 제작<br />
+              &bull; 붓의 잉크 번짐(splatter) 효과: Shape Layer + Gaussian Blur
+              시뮬레이션<br />
+              &bull; Lottie JSON으로 export &rarr; 스크롤 동기화(GSAP
+              ScrollTrigger goToAndStop)<br />
+              &bull; 글씨가 완성되면 0.5초 뒤 일반 Pretendard 텍스트로
+              크로스페이드 &mdash; 가독성 확보<br />
+              &bull; 나머지 본문 텍스트: GSAP SplitText로 글자 단위 스태거
+              fade-in (duration: 0.8s, stagger: 0.02s)
+            </p>
+            <div class="tech-stack">
+              <span class="tag tag-tech">Lottie (서예)</span>
+              <span class="tag tag-tech">AE Trim Path</span>
+              <span class="tag tag-tech">GSAP SplitText</span>
+              <span class="tag tag-tech">ScrollTrigger</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>E. 섹션 전환 — 커튼 리빌 + 모션 트랜지션</h3>
+        <div class="interaction-card">
+          <div class="interaction-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 4h16v16H4z" fill="none" />
+              <path d="M4 4v16M20 4v16M4 4c4 4 4 12 0 16M20 4c-4 4-4 12 0 16" />
+            </svg>
+          </div>
+          <div class="interaction-content">
+            <h4>Curtain Reveal — Fabric Physics Simulation</h4>
+            <div class="where">
+              모든 페이지 &mdash; 섹션 간 전환 (핵심 3~4곳)
+            </div>
+            <p>
+              전통적 패럴랙스 대신, 실크 커튼이 양쪽으로 걷히며 다음 섹션을
+              드러내는 방식. 웨딩홀의 커튼이 열리는 은유.<br /><br />
+              <strong>모션그래픽 접근:</strong><br />
+              &bull; GSAP ScrollTrigger + clip-path polygon 애니메이션으로 커튼
+              형태 시뮬레이션<br />
+              &bull; 커튼 텍스처: CSS backdrop-filter(blur) + 실크 패브릭 SVG
+              패턴 오버레이<br />
+              &bull; 커튼이 걷힐 때 미세한 주름 움직임: Rive State Machine으로
+              실시간 패브릭 시뮬레이션<br />
+              &bull; 이징 커브: <code>power4.inOut</code> &mdash; 처음엔 천천히,
+              중간 가속, 끝에서 부드럽게 착지<br />
+              &bull; 커튼 걷힘과 동시에 다음 섹션 콘텐츠가 scale(0.95) &rarr;
+              scale(1) + opacity 0 &rarr; 1 로 리빌<br />
+              &bull; 핵심 전환 포인트 3~4곳에만 적용. 나머지 섹션은 GSAP stagger
+              fade-in.
+            </p>
+            <div class="tech-stack">
+              <span class="tag tag-tech">GSAP ScrollTrigger</span>
+              <span class="tag tag-tech">Rive State Machine</span>
+              <span class="tag tag-tech">clip-path</span>
+              <span class="tag tag-tech">backdrop-filter</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>F. 골드 파티클 앰비언트 (배경 레이어)</h3>
+        <div class="interaction-card">
+          <div class="interaction-icon">
+            <svg viewBox="0 0 24 24">
+              <circle cx="8" cy="8" r="1.5" />
+              <circle cx="16" cy="6" r="1" />
+              <circle cx="12" cy="16" r="1.5" />
+              <circle cx="6" cy="18" r="1" />
+              <circle cx="18" cy="14" r="1" />
+              <circle cx="14" cy="10" r="0.5" />
+            </svg>
+          </div>
+          <div class="interaction-content">
+            <h4>Ambient Gold Particles — WebGL Shader</h4>
+            <div class="where">HOME 히어로 + CTA 섹션 배경</div>
+            <p>
+              극도로 절제된 골드 입자가 천천히 떠다님. 밀도: 화면 전체에 15~20개
+              수준. 마우스 근처에서 미세하게 반응(반발력). 눈에 띄지 않지만,
+              없으면 허전한 수준.<br /><br />
+              <strong>모션그래픽 접근:</strong><br />
+              &bull; Three.js Points + Custom ShaderMaterial로 골드 파티클
+              렌더링<br />
+              &bull; 각 파티클에 개별 opacity 펄스 (sin wave, 서로 다른 phase)
+              &mdash; 반딧불이처럼 깜빡임<br />
+              &bull; 마우스 인터랙션: GPU 기반 repulsion (vertex shader에서
+              마우스 좌표와의 거리 계산)<br />
+              &bull; 파티클 형태: 원형 + 미세한 글로우 (fragment shader
+              radial-gradient)<br />
+              &bull; 모바일: 파티클 5개로 축소, shader 복잡도 낮춤. 저사양
+              디바이스는 CSS radial-gradient 폴백.
+            </p>
+            <div class="tech-stack">
+              <span class="tag tag-tech">Three.js</span>
+              <span class="tag tag-tech">Custom Shader</span>
+              <span class="tag tag-tech">GLSL</span>
+              <span class="tag tag-tech">GPU Particles</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>G. 마이크로 인터랙션 (UI 요소)</h3>
+        <div class="interaction-card">
+          <div class="interaction-icon">
+            <svg viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <path d="M9 12l2 2 4-4" />
+            </svg>
+          </div>
+          <div class="interaction-content">
+            <h4>UI Micro-interactions — Rive State Machine</h4>
+            <div class="where">전체 사이트 &mdash; 버튼, 카드, 네비게이션</div>
+            <p>
+              모든 인터랙티브 요소에 모션그래픽 수준의 마이크로 인터랙션 적용.
+              단순 CSS hover가 아닌 상태 기반 모션.<br /><br />
+              <strong>모션그래픽 접근:</strong><br />
+              &bull; <strong>CTA 버튼:</strong> Rive State Machine &mdash;
+              idle(골드 테두리 미세 펄스) &rarr; hover(테두리 확장 + 배경
+              fill-in + 텍스트 컬러 전환) &rarr; press(스케일 0.97 + 리플
+              이펙트) &rarr; release(바운스백)<br />
+              &bull; <strong>서비스 카드:</strong> hover 시 카드 내부 SVG
+              아이콘이 Lottie 애니메이션으로 재생 (1~2초 루프). 카드 그림자
+              depth 변화.<br />
+              &bull; <strong>네비게이션:</strong> 메뉴 호버 시 밑줄이 SVG
+              드로잉으로 좌&rarr;우 그려짐. 페이지 전환 시 골드 라인
+              프로그레스.<br />
+              &bull; <strong>스크롤 인디케이터:</strong> 커스텀 SVG 스크롤바.
+              진행도에 따라 골드 fill이 채워짐.
+            </p>
+            <div class="tech-stack">
+              <span class="tag tag-tech">Rive</span>
+              <span class="tag tag-tech">Lottie (아이콘)</span>
+              <span class="tag tag-tech">SVG inline</span>
+              <span class="tag tag-tech">GSAP</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>인터랙션 배치 요약 (스크롤 플로우)</h3>
+        <div class="card-full">
+          <table>
+            <thead>
+              <tr>
+                <th>스크롤 위치</th>
+                <th>인터랙션</th>
+                <th>모션 기법</th>
+                <th>서사</th>
+                <th>부하</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>0~100vh</td>
+                <td>카라꽃 블룸 + 골드 파티클</td>
+                <td>Lottie Scroll Sync + WebGL Particles</td>
+                <td>"새로운 시작, 꽃이 피다"</td>
+                <td><span class="tag tag-tech">중</span></td>
+              </tr>
+              <tr>
+                <td>100~200vh</td>
+                <td>숫자 카운트업 + 차트</td>
+                <td>GSAP TextPlugin + Lottie Chart + Stagger</td>
+                <td>"30년의 신뢰, 8000명의 행복"</td>
+                <td><span class="tag tag-tech">저</span></td>
+              </tr>
+              <tr>
+                <td>200~300vh</td>
+                <td>커튼 리빌 전환</td>
+                <td>Rive Fabric + GSAP clip-path</td>
+                <td>"커튼이 열리고 서비스가 드러나다"</td>
+                <td><span class="tag tag-tech">중</span></td>
+              </tr>
+              <tr>
+                <td>300~400vh</td>
+                <td>서예 텍스트 리빌</td>
+                <td>Lottie Trim Path + GSAP SplitText</td>
+                <td>"대표의 철학과 진심"</td>
+                <td><span class="tag tag-tech">저</span></td>
+              </tr>
+              <tr>
+                <td>400~500vh</td>
+                <td>골드 링 3D</td>
+                <td>Three.js PBR + UnrealBloom + ScrollTrigger</td>
+                <td>"인연의 고리"</td>
+                <td><span class="tag tag-tech">중</span></td>
+              </tr>
+              <tr>
+                <td>전체</td>
+                <td>마이크로 인터랙션</td>
+                <td>Rive State Machine + Lottie 아이콘</td>
+                <td>"모든 터치에 반응하는 품격"</td>
+                <td><span class="tag tag-tech">저</span></td>
+              </tr>
+              <tr>
+                <td>CTA 영역</td>
+                <td>골드 파티클 + CTA 모션</td>
+                <td>WebGL Shader + Rive 버튼</td>
+                <td>"지금 시작하세요"</td>
+                <td><span class="tag tag-tech">저</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="note">
+            &bull; "중" 부하 인터랙션은 동시에 2개 이상 활성화되지 않도록
+            IntersectionObserver로 제어. 뷰포트 밖 Lottie/Three.js는 pause.<br />
+            &bull; 모든 Lottie/Rive 에셋은 lazy-load. 히어로만 preload, 나머지는
+            뷰포트 진입 500px 전에 로드 시작.<br />
+            &bull; 총 에셋 예산: Lottie JSON 4~5건 (각 50~150KB), Rive 파일
+            2~3건 (각 30~80KB), Three.js scene 1건.
+          </p>
+        </div>
+      </section>
+
+      <!-- ===== SECTION 6: 비주얼 에셋 전략 ===== -->
+      <section class="section" id="s6">
+        <div class="section-num">Section 06</div>
+        <h2>비주얼 에셋 전략 — <span>이미지 & 오브제</span></h2>
+        <p class="section-desc">
+          기존 사진 재사용 불필요. 프리미엄 스톡/AI 생성 이미지 + 3D 오브제
+          전략.
+        </p>
+
+        <h3>이미지 카테고리별 가이드</h3>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-title">한국인 커플</div>
+            <div class="card-body">
+              <strong>톤:</strong> 자연광, 따뜻한 톤, 오버포즈 아닌 자연스러운
+              순간<br />
+              <strong>배경:</strong> 고급 호텔 로비, 정원, 카페 — 강남/청담
+              분위기<br />
+              <strong>연령대:</strong> 30대 메인, 40~50대 서브 (재혼 섹션)<br />
+              <strong>소스:</strong> Unsplash(Korean couple), Pexels, Adobe
+              Stock — 또는 AI 생성(Midjourney Korean wedding couple 프롬프트)<br />
+              <strong>처리:</strong> 다크 톤 오버레이 + 골드 그라데이션 마스크
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">웨딩 오브제</div>
+            <div class="card-body">
+              <strong>목록:</strong> 카라꽃(백합), 웨딩링, 부케, 청첩장, 샴페인
+              글라스, 리본<br />
+              <strong>톤:</strong> 초고화질 클로즈업, 다크 배경 위 단일
+              오브제<br />
+              <strong>용도:</strong> 섹션 배경, 구분선 장식, 로딩 인디케이터<br />
+              <strong>3D 전환 대상:</strong> 카라꽃(히어로), 웨딩링(About),
+              샴페인 글라스(파티 섹션)
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">CEO & 매스컴</div>
+            <div class="card-body">
+              <strong>홍유진 대표:</strong> 브로셔/사이트 기존 사진 활용 가능
+              (실존 인물)<br />
+              <strong>방송 캡처:</strong> 아침마당, 기분좋은 날, 와카남 등 출연
+              이미지<br />
+              <strong>처리:</strong> 흑백 + 골드 포인트 듀오톤 또는 시네마틱
+              컬러그레이딩<br />
+              <strong>주의:</strong> 방송사 로고 노출 시 저작권 확인 필요
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">텍스처 & 패턴</div>
+            <div class="card-body">
+              <strong>대리석:</strong> 다크 마블 텍스처 — 섹션 배경 오버레이<br />
+              <strong>패브릭:</strong> 실크/새틴 질감 — 커튼 리빌 효과 보강<br />
+              <strong>골드 포일:</strong> 미세한 골드 텍스처 — 장식적
+              라인/구분선<br />
+              <strong>보케:</strong> 아웃포커스 빛 입자 — 배경 앰비언트
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SECTION 7: 페이지별 와이어프레임 설계 방향 ===== -->
+      <section class="section" id="s7">
+        <div class="section-num">Section 07</div>
+        <h2>페이지별 <span>와이어프레임 설계 방향</span></h2>
+        <p class="section-desc">
+          각 페이지의 섹션 구성, 콘텐츠 배치, 인터랙션 포인트를 사전 정의.
+        </p>
+
+        <h3>HOME — 메인 랜딩</h3>
+        <ol class="step-list">
+          <li>
+            <strong>히어로 (100vh)</strong>
+            <p>
+              카라꽃 블룸 애니메이션 + 브랜드 카피 "행복한 연애와 결혼을
+              리드하는 노블홍" + 골드 파티클 배경. 스크롤 유도 화살표.
+            </p>
+          </li>
+          <li>
+            <strong>핵심 수치 (100vh)</strong>
+            <p>
+              "30년" "8,000+" "3년 연속 1위" — 카운트업 애니메이션. 연령대별
+              교제율, 자산분포도 차트. 다크 배경 + 골드 숫자.
+            </p>
+          </li>
+          <li>
+            <strong>서비스 하이라이트 (100vh)</strong>
+            <p>
+              명품결혼 / 자녀결혼 / 스페셜재혼 — 3개 카드. 호버 시 커튼 리빌로
+              상세 설명. 각 카드에서 맞춤컨설팅 페이지로 링크.
+            </p>
+          </li>
+          <li>
+            <strong>CEO 소개 (50vh)</strong>
+            <p>
+              홍유진 대표 사진 + 핵심 이력 3줄. 붓글씨 텍스트 리빌로 대표 철학
+              한 줄. 노블홍 페이지로 유도.
+            </p>
+          </li>
+          <li>
+            <strong>미디어 & 신뢰 (50vh)</strong>
+            <p>
+              방송 출연 로고/썸네일 롤링. 수상 배지. MOU 파트너 로고 스크롤.
+            </p>
+          </li>
+          <li>
+            <strong>CTA (50vh)</strong>
+            <p>
+              "지금 상담을 시작하세요" + 전화번호 1800-8194 + 상담 폼 바로가기.
+              골드 파티클 + 글로우 배경.
+            </p>
+          </li>
+        </ol>
+
+        <h3>노블홍 — 브랜드 & CEO</h3>
+        <ol class="step-list">
+          <li>
+            <strong>브랜드 철학</strong>
+            <p>
+              노블홍 이름의 의미 (월하노인의 붉은 실 + 대표 이름). 커플매니저
+              제1호 스토리.
+            </p>
+          </li>
+          <li>
+            <strong>CEO 홍유진</strong>
+            <p>
+              30년 경력 타임라인. 학력(연세대 석사, 자연치유학 박사). 현직 직함
+              10개+. 저서 2권 + 논문 2편.
+            </p>
+          </li>
+          <li>
+            <strong>수상 & 인증</strong>
+            <p>
+              브랜드만족지수 3년 연속 1위, 파워리더대상, 국회의원 표창 등 —
+              배지/카드 그리드.
+            </p>
+          </li>
+          <li>
+            <strong>미디어 출연</strong>
+            <p>
+              KBS 아침마당/기분좋은 날 고정출연. 방송 300회+ 타임라인. 유튜브
+              채널 연동.
+            </p>
+          </li>
+          <li>
+            <strong>사회공헌 & 파트너십</strong>
+            <p>
+              저출생 캠페인(지자체장 미팅 8건). MOU 파트너십 9건. 공익결혼장려
+              활동.
+            </p>
+          </li>
+        </ol>
+
+        <h3>노블매칭 — 매칭 시스템 & 프로세스</h3>
+        <ol class="step-list">
+          <li>
+            <strong>왜 노블홍인가</strong>
+            <p>10대 강점 (브로셔 p5 기반). 아이콘 + 짧은 설명 그리드.</p>
+          </li>
+          <li>
+            <strong>매칭 시스템</strong>
+            <p>
+              6단계 프로세스 인포그래픽 (가로 스텝 타임라인). 각 단계 클릭 시
+              상세 확장.
+            </p>
+          </li>
+          <li>
+            <strong>프리미엄 컨설팅</strong>
+            <p>
+              전문직/명문대, 대기업/공기업, 명문가/재력가 — 탭 또는 아코디언 UI.
+              각 타겟별 차별화 메시지.
+            </p>
+          </li>
+          <li>
+            <strong>자녀결혼 & 해외거주</strong>
+            <p>
+              부모 관점 메시지. 해외(미국 시애틀/LA/뉴욕, 호주
+              브리즈번/시드니/멜버른) 특화 안내.
+            </p>
+          </li>
+          <li>
+            <strong>스페셜 재혼</strong>
+            <p>
+              초혼과의 차이점 설명(브로셔 p9). 연령대별 재혼 특성. 1/10 만남
+              현실 인지 메시지.
+            </p>
+          </li>
+          <li>
+            <strong>3.3.3 프로모션</strong>
+            <p>
+              3명 이상 교제 + 3번 이상 만남 = 3명 추가 미팅. 교제율 데이터
+              시각화.
+            </p>
+          </li>
+        </ol>
+
+        <h3>매칭라운지 — 연구 & 콘텐츠</h3>
+        <ol class="step-list">
+          <li>
+            <strong>매칭전략 연구소</strong>
+            <p>데이터 기반 매칭 철학. 석·박사 논문 기반 전문성 강조.</p>
+          </li>
+          <li>
+            <strong>러브 칼럼</strong>
+            <p>
+              최신 칼럼 카드 리스트 (8건). 카테고리 필터. 더보기 페이지네이션.
+            </p>
+          </li>
+          <li>
+            <strong>노블레스 이벤트</strong>
+            <p>파티 & 스페셜 맞선 안내. 갤러리 형태 이미지 + 간략 설명.</p>
+          </li>
+        </ol>
+
+        <h3>상담문의 — 상담 & 위치</h3>
+        <ol class="step-list">
+          <li>
+            <strong>상담 문의 폼</strong>
+            <p>
+              이름, 연락처, 연령대, 관심 서비스, 메시지. 심플하고 격조 있는 폼
+              디자인.
+            </p>
+          </li>
+          <li>
+            <strong>찾아오시는 길</strong>
+            <p>
+              강남역 4번 출구 지도. 혜천빌딩 705, 706. 주말/공휴일 상담 가능
+              안내.
+            </p>
+          </li>
+          <li>
+            <strong>빠른 연결</strong>
+            <p>전화(1800-8194) + 카카오톡(있다면) + 유튜브 채널 링크.</p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- ===== SECTION 8: 기술 스택 & 로드맵 ===== -->
+      <section class="section" id="s8">
+        <div class="section-num">Section 08</div>
+        <h2>기술 스택 & <span>구현 로드맵</span></h2>
+        <p class="section-desc">로컬 HTML 와이어프레임 → 서비스 연결 순서.</p>
+
+        <h3>기술 스택 (와이어프레임 단계)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>구분</th>
+              <th>기술</th>
+              <th>용도</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>마크업</td>
+              <td>HTML5 + Tailwind CSS CDN</td>
+              <td>빠른 프로토타이핑, 유틸리티 기반 스타일링</td>
+            </tr>
+            <tr>
+              <td>타이포</td>
+              <td>Pretendard + Cormorant Garamond (Google Fonts)</td>
+              <td>한/영 조합</td>
+            </tr>
+            <tr>
+              <td>애니메이션</td>
+              <td>GSAP + ScrollTrigger (CDN)</td>
+              <td>스크롤 연동 모션, 커튼 리빌</td>
+            </tr>
+            <tr>
+              <td>3D</td>
+              <td>Three.js (CDN)</td>
+              <td>웨딩 링 3D 렌더링</td>
+            </tr>
+            <tr>
+              <td>차트</td>
+              <td>SVG 직접 구현</td>
+              <td>교제율/자산 도넛차트</td>
+            </tr>
+            <tr>
+              <td>이미지</td>
+              <td>Canvas 2D + Image Sequence</td>
+              <td>카라꽃 블룸 시퀀스</td>
+            </tr>
+            <tr>
+              <td>아이콘</td>
+              <td>Lucide Icons (CDN)</td>
+              <td>UI 아이콘</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>구현 로드맵</h3>
+        <div class="milestone-track">
+          <div class="milestone">
+            <div class="ms-phase">Phase 1</div>
+            <div class="ms-name">콘텐츠 정리</div>
+            <div class="ms-detail">텍스트 마이그레이션<br />에셋 수집</div>
+          </div>
+          <div class="milestone">
+            <div class="ms-phase">Phase 2</div>
+            <div class="ms-name">HOME 와이어프레임</div>
+            <div class="ms-detail">
+              레이아웃 + 인터랙션<br />히어로 프로토타입
+            </div>
+          </div>
+          <div class="milestone">
+            <div class="ms-phase">Phase 3</div>
+            <div class="ms-name">서브 페이지</div>
+            <div class="ms-detail">
+              노블홍, 노블매칭<br />맞춤컨설팅, 매칭라운지, 상담문의
+            </div>
+          </div>
+          <div class="milestone">
+            <div class="ms-phase">Phase 4</div>
+            <div class="ms-name">인터랙션 완성</div>
+            <div class="ms-detail">WebGL, 시퀀스<br />모바일 최적화</div>
+          </div>
+          <div class="milestone">
+            <div class="ms-phase">Phase 5</div>
+            <div class="ms-name">서비스 연결</div>
+            <div class="ms-detail">도메인 연결<br />배포 & QA</div>
+          </div>
+        </div>
+
+        <h3>Phase 1 — 콘텐츠 정리 (현재 단계)</h3>
+        <ol class="step-list">
+          <li>
+            <strong>텍스트 마이그레이션 파일 생성</strong>
+            <p>
+              기존 사이트 + 브로셔 텍스트를 페이지별로 정리한 마스터 콘텐츠 파일
+              작성. 리라이팅 필요 항목 표시.
+            </p>
+          </li>
+          <li>
+            <strong>에셋 목록 확정</strong>
+            <p>
+              필요한 이미지/3D/텍스처 리스트업. 소스(스톡/AI생성/기존) 결정.
+              카라꽃 이미지 시퀀스 확보 방안.
+            </p>
+          </li>
+          <li>
+            <strong>컬러/타이포 토큰 확정</strong>
+            <p>CSS 변수로 디자인 토큰 정의. 최종 팔레트 승인.</p>
+          </li>
+        </ol>
+
+        <h3>Phase 2 — HOME 와이어프레임</h3>
+        <ol class="step-list">
+          <li>
+            <strong>정적 레이아웃</strong>
+            <p>
+              Tailwind CDN으로 HOME 전체 섹션 배치. 텍스트/이미지 플레이스홀더.
+            </p>
+          </li>
+          <li>
+            <strong>히어로 인터랙션 프로토타입</strong>
+            <p>카라꽃 시퀀스 or 대체 효과 테스트. 스크롤 연동 검증.</p>
+          </li>
+          <li>
+            <strong>모션 톤 확정</strong>
+            <p>
+              GSAP 이징 커브, 전환 속도, 커튼 리빌 프로토타입으로 전체 모션 톤
+              결정.
+            </p>
+          </li>
+        </ol>
+
+        <h3>결정 사항 (확정 + 미결)</h3>
+        <div class="card-grid">
+          <div class="card" style="border-color: var(--accent-gold)">
+            <div class="card-title">
+              <span class="tag tag-tech">확정</span> 카라꽃 에셋
+            </div>
+            <div class="card-body">
+              <strong>AI 생성 3D 모델 &rarr; 렌더링 시퀀스.</strong><br />
+              AI(Midjourney/Sora/Runway)로 카라꽃 3D 모델 생성 &rarr;
+              Blender에서 개화 리깅 &rarr; 60~90프레임 시퀀스 렌더링 (4K, 투명
+              배경). 또는 AI 비디오 생성(Runway Gen-3)으로 카라꽃 개화 영상 생성
+              후 Lottie 변환. 초고화질 표현 가능.
+            </div>
+            <div class="card-footer">
+              AI 3D &rarr; Blender 리깅 &rarr; 시퀀스 렌더 &rarr; Lottie/Canvas
+            </div>
+          </div>
+          <div class="card" style="border-color: var(--accent-gold)">
+            <div class="card-title">
+              <span class="tag tag-tech">확정</span> 라이트 모드 기반
+            </div>
+            <div class="card-body">
+              <strong>밝고 따뜻한 라이트 배경.</strong><br />
+              Warm White(#faf9f7) 기반. 결혼이라는 밝고 행복한 주제에 맞게
+              가볍고 품격 있는 톤. 골드/퍼플 액센트로 프리미엄 유지. 다크 모드
+              토글 불필요.
+            </div>
+            <div class="card-footer">
+              라이트 모드 전용 &mdash; Warm White + Noble Gold
+            </div>
+          </div>
+          <div class="card" style="border-color: var(--accent-gold)">
+            <div class="card-title">
+              <span class="tag tag-tech">확정</span> SVG 아이콘 전용
+            </div>
+            <div class="card-body">
+              <strong>컬러 이모지 전면 금지.</strong><br />
+              모든 아이콘은 SVG 기반 (Lucide / 커스텀 라인아트). 애니메이션
+              아이콘은 Lottie JSON. 모노라인 골드 또는 아이보리 단색.
+            </div>
+            <div class="card-footer">
+              Lucide SVG + Lottie JSON &mdash; 컬러 이모지 금지
+            </div>
+          </div>
+          <div class="card" style="border-color: var(--accent-gold)">
+            <div class="card-title">
+              <span class="tag tag-tech">확정</span> 모션그래픽 애니메이션
+            </div>
+            <div class="card-body">
+              <strong>단순 CSS 트윈 금지. AE급 모션그래픽.</strong><br />
+              Lottie(사전 제작), Rive(인터랙티브), GSAP(오케스트레이션),
+              Three.js(3D). 모든 모션에 정교한 이징 커브, 스태거, 오버슈트 적용.
+            </div>
+            <div class="card-footer">
+              Lottie + Rive + GSAP + Three.js 4-layer 모션 스택
+            </div>
+          </div>
+        </div>
+
+        <div class="card-grid">
+          <div class="card" style="border-color: var(--accent-gold)">
+            <div class="card-title">
+              <span class="tag tag-tech">확정</span> 프리미엄 톤 리라이팅
+            </div>
+            <div class="card-body">
+              <strong>기존 사이트 텍스트를 프리미엄 톤으로 리라이팅.</strong
+              ><br />
+              브로셔 텍스트는 그대로 활용하되, 기존 사이트 텍스트는 격조 있는
+              어투와 간결한 문장으로 재작성. 정보량은 유지하되 품격 있는
+              표현으로 전환.
+            </div>
+            <div class="card-footer">
+              브로셔 텍스트 유지 + 사이트 텍스트 프리미엄 리라이팅
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              <span class="tag tag-tech">확정</span> 개별 페이지 방식 (MPA)
+            </div>
+            <div class="card-body">
+              <strong
+                >HOME / 노블홍 / 노블매칭 / 맞춤컨설팅 / 매칭라운지 /
+                상담문의</strong
+              >
+              각각 별도 HTML.<br />
+              메뉴 클릭 시 페이지 이동. 각 페이지 안에서 섹션별 스크롤 인터랙션.
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Footer -->
+    <footer
+      style="
+        text-align: center;
+        padding: 48px 32px;
+        border-top: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 13px;
+      "
+    >
+      Noble HoNG Migration Plan v1.0 — Prepared for 노블홍 결혼정보회사<br />
+      이 기획서는 구현 전 방향 합의용이며, 승인 후 Phase 1부터 순차 진행합니다.
+    </footer>
+  </body>
+</html>

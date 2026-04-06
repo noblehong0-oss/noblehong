@@ -1,0 +1,4573 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>노블홍 결혼정보회사 - 홈페이지 리모델링 기획서</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fafaf8;
+        --surface: #ffffff;
+        --border: #e8e4df;
+        --text-primary: #1a1714;
+        --text-secondary: #6b6560;
+        --text-muted: #9e9893;
+        --accent: #8b6914;
+        --accent-light: #f5f0e4;
+        --accent-dark: #6b5010;
+        --danger: #c2382a;
+        --danger-light: #fdf2f0;
+        --success: #2d7a3d;
+        --success-light: #f0f8f2;
+        --info: #2563eb;
+        --info-light: #eff6ff;
+        --warning: #b45309;
+        --warning-light: #fffbeb;
+        --navy: #1e293b;
+        --navy-light: #f1f5f9;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          "Pretendard Variable",
+          "Pretendard",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text-primary);
+        line-height: 1.7;
+        font-size: 15px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ===== COVER ===== */
+      .cover {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(
+          135deg,
+          #1a1714 0%,
+          #2c2418 50%,
+          #1a1714 100%
+        );
+        color: #ffffff;
+        text-align: center;
+        padding: 60px 24px;
+        position: relative;
+        overflow: hidden;
+      }
+      .cover::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(
+            ellipse at 30% 20%,
+            rgba(139, 105, 20, 0.15) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse at 70% 80%,
+            rgba(139, 105, 20, 0.1) 0%,
+            transparent 60%
+          );
+      }
+      .cover > * {
+        position: relative;
+        z-index: 1;
+      }
+      .cover-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        border: 1px solid rgba(139, 105, 20, 0.4);
+        border-radius: 100px;
+        font-size: 13px;
+        color: #c5a55a;
+        letter-spacing: 0.5px;
+        margin-bottom: 40px;
+      }
+      .cover h1 {
+        font-size: clamp(32px, 5vw, 52px);
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 16px;
+        letter-spacing: -0.02em;
+      }
+      .cover h1 span {
+        color: #c5a55a;
+      }
+      .cover-sub {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 48px;
+        font-weight: 300;
+      }
+      .cover-meta {
+        display: flex;
+        gap: 40px;
+        color: rgba(255, 255, 255, 0.4);
+        font-size: 13px;
+      }
+      .cover-meta strong {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      /* ===== TOC ===== */
+      .toc {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 80px 24px;
+      }
+      .toc h2 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 32px;
+      }
+      .toc-list {
+        list-style: none;
+        counter-reset: toc;
+      }
+      .toc-list li {
+        counter-increment: toc;
+        border-bottom: 1px solid var(--border);
+      }
+      .toc-list li a {
+        display: flex;
+        align-items: center;
+        padding: 16px 0;
+        text-decoration: none;
+        color: var(--text-primary);
+        font-size: 16px;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .toc-list li a:hover {
+        color: var(--accent);
+      }
+      .toc-list li a::before {
+        content: counter(toc, decimal-leading-zero);
+        font-size: 13px;
+        color: var(--text-muted);
+        width: 40px;
+        flex-shrink: 0;
+        font-weight: 400;
+      }
+
+      /* ===== LAYOUT ===== */
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      section {
+        padding: 80px 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .section-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+      }
+
+      h2 {
+        font-size: clamp(24px, 3vw, 32px);
+        font-weight: 700;
+        margin-bottom: 12px;
+        letter-spacing: -0.02em;
+        line-height: 1.3;
+      }
+
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        letter-spacing: -0.01em;
+      }
+
+      .section-desc {
+        font-size: 16px;
+        color: var(--text-secondary);
+        margin-bottom: 48px;
+        max-width: 640px;
+      }
+
+      /* ===== CARDS ===== */
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 28px;
+        margin-bottom: 16px;
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .card-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .card-icon.danger {
+        background: var(--danger-light);
+        color: var(--danger);
+      }
+      .card-icon.success {
+        background: var(--success-light);
+        color: var(--success);
+      }
+      .card-icon.info {
+        background: var(--info-light);
+        color: var(--info);
+      }
+      .card-icon.warning {
+        background: var(--warning-light);
+        color: var(--warning);
+      }
+      .card-icon.accent {
+        background: var(--accent-light);
+        color: var(--accent);
+      }
+
+      /* ===== GRID ===== */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 16px;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+      }
+
+      /* ===== SCORE TABLE ===== */
+      .score-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      .score-table th {
+        text-align: left;
+        padding: 12px 16px;
+        background: var(--navy);
+        color: #fff;
+        font-weight: 500;
+        font-size: 13px;
+      }
+      .score-table th:first-child {
+        border-radius: 8px 0 0 0;
+      }
+      .score-table th:last-child {
+        border-radius: 0 8px 0 0;
+      }
+      .score-table td {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      .score-table tr:last-child td {
+        border-bottom: none;
+      }
+      .score-bar {
+        height: 6px;
+        background: #e5e7eb;
+        border-radius: 3px;
+        overflow: hidden;
+        min-width: 120px;
+      }
+      .score-bar-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.8s ease;
+      }
+      .score-bar-fill.low {
+        background: var(--danger);
+      }
+      .score-bar-fill.mid {
+        background: var(--warning);
+      }
+      .score-bar-fill.high {
+        background: var(--success);
+      }
+
+      /* ===== TAGS ===== */
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .tag.danger {
+        background: var(--danger-light);
+        color: var(--danger);
+      }
+      .tag.success {
+        background: var(--success-light);
+        color: var(--success);
+      }
+      .tag.warning {
+        background: var(--warning-light);
+        color: var(--warning);
+      }
+      .tag.info {
+        background: var(--info-light);
+        color: var(--info);
+      }
+
+      /* ===== BENCHMARK ===== */
+      .benchmark-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 24px;
+      }
+      .benchmark-header {
+        padding: 24px 28px 16px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .benchmark-logo {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .benchmark-body {
+        padding: 0 28px 24px;
+      }
+      .benchmark-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .benchmark-url {
+        font-size: 13px;
+        color: var(--text-muted);
+        text-decoration: none;
+      }
+      .benchmark-url:hover {
+        color: var(--accent);
+      }
+
+      /* ===== WIREFRAME ===== */
+      .wireframe {
+        background: #f8f9fa;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        font-size: 13px;
+        margin: 24px 0;
+      }
+      .wf-browser-bar {
+        background: #e5e7eb;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .wf-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #d1d5db;
+      }
+      .wf-url {
+        flex: 1;
+        background: #fff;
+        border-radius: 4px;
+        padding: 4px 12px;
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-left: 8px;
+      }
+      .wf-content {
+        padding: 0;
+      }
+
+      .wf-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 24px;
+        border-bottom: 1px solid var(--border);
+        background: #fff;
+      }
+      .wf-nav-logo {
+        font-weight: 700;
+        font-size: 16px;
+        color: var(--accent-dark);
+        letter-spacing: -0.02em;
+      }
+      .wf-nav-links {
+        display: flex;
+        gap: 20px;
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      .wf-nav-cta {
+        padding: 6px 14px;
+        background: var(--accent);
+        color: #fff;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .wf-hero {
+        padding: 48px 24px;
+        text-align: center;
+        background: linear-gradient(135deg, #1a1714, #2c2418);
+        color: #fff;
+        position: relative;
+      }
+      .wf-hero h3 {
+        color: #c5a55a;
+        font-size: 11px;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        font-weight: 400;
+      }
+      .wf-hero h2 {
+        font-size: 22px;
+        color: #fff;
+        margin-bottom: 6px;
+      }
+      .wf-hero p {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 16px;
+      }
+      .wf-hero-cta {
+        display: inline-block;
+        padding: 8px 20px;
+        background: var(--accent);
+        color: #fff;
+        border-radius: 8px;
+        font-size: 12px;
+      }
+      .wf-hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 32px;
+        margin-top: 24px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .wf-hero-stat {
+        text-align: center;
+      }
+      .wf-hero-stat strong {
+        display: block;
+        font-size: 20px;
+        color: #c5a55a;
+      }
+      .wf-hero-stat span {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      .wf-section {
+        padding: 32px 24px;
+        border-bottom: 1px solid var(--border);
+      }
+      .wf-section-title {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 4px;
+      }
+      .wf-section h3 {
+        font-size: 16px;
+        margin-bottom: 16px;
+        color: var(--text-primary);
+      }
+
+      .wf-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .wf-card {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px;
+        text-align: center;
+        background: #fff;
+      }
+      .wf-card-icon {
+        width: 36px;
+        height: 36px;
+        background: var(--accent-light);
+        border-radius: 8px;
+        margin: 0 auto 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .wf-card strong {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+      .wf-card span {
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+
+      .wf-form-section {
+        padding: 32px 24px;
+        background: var(--accent-light);
+        text-align: center;
+      }
+      .wf-form-section h3 {
+        font-size: 16px;
+        margin-bottom: 16px;
+      }
+      .wf-form {
+        max-width: 400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .wf-input {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 11px;
+        color: var(--text-muted);
+        background: #fff;
+      }
+      .wf-input.full {
+        grid-column: 1 / -1;
+      }
+      .wf-submit {
+        grid-column: 1 / -1;
+        padding: 10px;
+        background: var(--accent);
+        color: #fff;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        border: none;
+        margin-top: 4px;
+      }
+
+      .wf-youtube {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .wf-video {
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .wf-video-thumb {
+        height: 64px;
+        background: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .wf-video-info {
+        padding: 8px;
+      }
+      .wf-video-info strong {
+        font-size: 11px;
+        display: block;
+      }
+      .wf-video-info span {
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+
+      .wf-footer {
+        padding: 24px;
+        background: var(--navy);
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 10px;
+        text-align: center;
+      }
+
+      /* ===== COMPARISON ===== */
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 24px;
+        align-items: start;
+        margin: 32px 0;
+      }
+      .comparison-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-top: 120px;
+        color: var(--accent);
+      }
+      .comparison-label {
+        text-align: center;
+        padding: 12px;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 8px 8px 0 0;
+      }
+      .comparison-label.before {
+        background: var(--danger-light);
+        color: var(--danger);
+      }
+      .comparison-label.after {
+        background: var(--success-light);
+        color: var(--success);
+      }
+
+      /* ===== COLOR PALETTE ===== */
+      .palette {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 16px 0;
+      }
+      .palette-swatch {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .palette-color {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+      }
+      .palette-name {
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .palette-hex {
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+
+      /* ===== PRICING ===== */
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 32px;
+      }
+      .pricing-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 32px;
+        position: relative;
+      }
+      .pricing-card.featured {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent);
+      }
+      .pricing-card.featured::after {
+        content: "RECOMMENDED";
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 12px;
+        border-radius: 4px;
+        letter-spacing: 1px;
+      }
+      .pricing-name {
+        font-size: 13px;
+        color: var(--text-muted);
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      .pricing-price {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .pricing-price span {
+        font-size: 16px;
+        font-weight: 400;
+        color: var(--text-muted);
+      }
+      .pricing-note {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 24px;
+      }
+      .pricing-features {
+        list-style: none;
+      }
+      .pricing-features li {
+        padding: 8px 0;
+        font-size: 14px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .pricing-features li:last-child {
+        border-bottom: none;
+      }
+
+      /* ===== SPEC TABLE ===== */
+      .spec-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        margin: 16px 0;
+      }
+      .spec-table td {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      .spec-table td:first-child {
+        font-weight: 600;
+        width: 180px;
+        color: var(--text-secondary);
+        font-size: 13px;
+      }
+
+      /* ===== TIMELINE ===== */
+      .timeline {
+        position: relative;
+        padding-left: 32px;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 7px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: var(--border);
+      }
+      .timeline-item {
+        position: relative;
+        padding-bottom: 24px;
+      }
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: -29px;
+        top: 4px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--accent);
+        border: 2px solid var(--bg);
+      }
+      .timeline-item h4 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .timeline-item p {
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+
+      /* ===== MISC ===== */
+      .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 48px 0;
+      }
+      .note {
+        padding: 16px 20px;
+        background: var(--accent-light);
+        border-radius: 8px;
+        font-size: 13px;
+        color: var(--accent-dark);
+        margin: 16px 0;
+        border-left: 3px solid var(--accent);
+      }
+
+      .svg-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      ul.checklist {
+        list-style: none;
+        padding: 0;
+      }
+      ul.checklist li {
+        padding: 6px 0;
+        font-size: 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .footer {
+        padding: 48px 24px;
+        text-align: center;
+        background: var(--navy);
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 13px;
+      }
+      .footer strong {
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          font-size: 14px;
+        }
+        .container {
+          padding: 0 16px;
+        }
+        section {
+          padding: 48px 0;
+        }
+        h2 {
+          font-size: 22px !important;
+        }
+        h3 {
+          font-size: 16px;
+        }
+        .section-desc {
+          font-size: 14px;
+          margin-bottom: 32px;
+        }
+        .section-label {
+          font-size: 11px;
+        }
+
+        .grid-2,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+        .wf-cards {
+          grid-template-columns: 1fr;
+        }
+        .wf-youtube {
+          grid-template-columns: 1fr;
+        }
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+        .comparison-arrow {
+          padding-top: 0;
+          transform: rotate(90deg);
+        }
+        .cover {
+          padding: 40px 16px;
+          min-height: 80vh;
+        }
+        .cover h1 {
+          font-size: 26px !important;
+        }
+        .cover-sub {
+          font-size: 14px;
+        }
+        .cover-meta {
+          flex-direction: column;
+          gap: 8px;
+          font-size: 12px;
+        }
+
+        .toc {
+          padding: 48px 16px;
+        }
+        .toc-list li a {
+          font-size: 14px;
+          padding: 12px 0;
+        }
+
+        .card {
+          padding: 20px;
+        }
+        .card-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+
+        .score-table thead {
+          display: none;
+        }
+        .score-table,
+        .score-table tbody {
+          display: block;
+        }
+        .score-table tr {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 4px 12px;
+          padding: 14px 16px;
+          border-bottom: 1px solid var(--border);
+          background: var(--surface);
+        }
+        .score-table tr:first-child {
+          border-radius: 8px 8px 0 0;
+        }
+        .score-table tr:last-child {
+          border-radius: 0 0 8px 8px;
+          border-bottom: none;
+        }
+        .score-table td {
+          padding: 0;
+          border-bottom: none;
+        }
+        .score-table td:nth-child(1) {
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--text-primary);
+          width: auto;
+          flex-basis: 100%;
+          margin-bottom: 2px;
+        }
+        .score-table td:nth-child(2) {
+          font-size: 13px;
+          font-weight: 700;
+          color: var(--accent);
+          order: 1;
+        }
+        .score-table td:nth-child(3) {
+          flex: 1;
+          order: 2;
+        }
+        .score-table td:nth-child(4) {
+          order: 3;
+        }
+        .score-bar {
+          min-width: 80px;
+        }
+
+        .benchmark-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .benchmark-body {
+          padding: 0 16px 16px;
+        }
+        .benchmark-features {
+          gap: 6px;
+        }
+
+        .wf-nav {
+          padding: 10px 12px;
+        }
+        .wf-nav-links {
+          display: none;
+        }
+        .wf-hero {
+          padding: 32px 16px !important;
+          min-height: 200px !important;
+        }
+        .wf-hero h2 {
+          font-size: 18px !important;
+        }
+        .wf-hero-cta {
+          font-size: 11px !important;
+          padding: 7px 16px !important;
+          max-width: 180px !important;
+          margin: 0 auto !important;
+          display: block !important;
+        }
+        .wf-hero-stats {
+          flex-direction: row;
+          flex-wrap: wrap;
+          gap: 16px;
+          justify-content: center;
+        }
+        .wf-hero-stat strong {
+          font-size: 18px !important;
+        }
+        .wf-section {
+          padding: 20px 16px;
+        }
+        .wf-section[style*="grid-template-columns: 1fr 1fr"] {
+          display: block !important;
+        }
+        .wf-form {
+          grid-template-columns: 1fr;
+        }
+
+        .palette {
+          gap: 8px;
+        }
+        .palette-color {
+          width: 48px;
+          height: 48px;
+        }
+        .palette-name {
+          font-size: 10px;
+        }
+
+        .pricing-grid {
+          grid-template-columns: 1fr;
+        }
+        .pricing-card {
+          padding: 24px;
+        }
+        .pricing-price {
+          font-size: 28px;
+        }
+
+        .spec-table td:first-child {
+          width: 120px;
+          font-size: 12px;
+        }
+        .spec-table td {
+          padding: 8px 10px;
+          font-size: 13px;
+        }
+
+        .timeline {
+          padding-left: 24px;
+        }
+
+        .divider {
+          margin: 32px 0;
+        }
+
+        /* 합산 결제 모바일 */
+        div[style*="grid-template-columns: 1fr auto 1fr auto 1fr"] {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 8px !important;
+          text-align: center !important;
+        }
+
+        /* 구독 카드 모바일 */
+        div[style*="grid-template-columns: repeat(2, 1fr)"] {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+        }
+
+        /* 폼 영역 모바일 */
+        div[style*="display:grid; grid-template-columns:1fr 1fr"] {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+        }
+
+        .footer {
+          padding: 32px 16px;
+          font-size: 12px;
+        }
+      }
+
+      @media print {
+        section {
+          page-break-inside: avoid;
+        }
+        .cover {
+          min-height: auto;
+          padding: 40px 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== COVER ===== -->
+    <div class="cover">
+      <div class="cover-badge">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+          />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+        </svg>
+        PROPOSAL DOCUMENT
+      </div>
+      <h1>노블홍 결혼정보회사<br /><span>홈페이지 리모델링 기획서</span></h1>
+      <p class="cover-sub">
+        현황 분석 / 경쟁사 벤치마킹 / 와이어프레임 / 구현 전략
+      </p>
+      <div class="cover-meta">
+        <span>제작 <strong>폴라애드 POLARAD</strong></span>
+        <span>일자 <strong>2026. 03. 30</strong></span>
+        <span>버전 <strong>v1.0</strong></span>
+      </div>
+    </div>
+
+    <!-- ===== TOC ===== -->
+    <div class="toc">
+      <h2>Table of Contents</h2>
+      <ol class="toc-list">
+        <li><a href="#diagnosis">현재 홈페이지 현황 진단</a></li>
+        <li><a href="#benchmark">동종업계 벤치마킹 분석</a></li>
+        <li><a href="#strategy">개선 전략 및 방향성</a></li>
+        <li><a href="#wireframe">와이어프레임 목업</a></li>
+        <li><a href="#color">컬러 컨셉 및 디자인 시스템</a></li>
+        <li><a href="#features">핵심 기능 구현 사양</a></li>
+        <li><a href="#spec">기술 스펙 및 인프라</a></li>
+        <li><a href="#viral">바이럴 마케팅 아이디어</a></li>
+        <li><a href="#subscription">폴라애드 구독 상품 안내</a></li>
+        <li><a href="#pricing">투자 비용 및 합산 결제 안내</a></li>
+        <li><a href="#schedule">프로젝트 일정</a></li>
+      </ol>
+    </div>
+
+    <!-- ===== 01. 현황 진단 ===== -->
+    <section id="diagnosis">
+      <div class="container">
+        <p class="section-label">01 / Diagnosis</p>
+        <h2>현재 홈페이지 현황 진단</h2>
+        <p class="section-desc">
+          noblehong.com의 기술, 디자인, 콘텐츠, 사용성 전반을 8개 항목으로
+          분석한 결과입니다. 대부분의 항목에서 2018~2019년 수준에 머물러 있으며,
+          전면 리모델링이 필요한 상태입니다.
+        </p>
+
+        <!-- Score Table -->
+        <div class="card" style="padding: 0; overflow: hidden">
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th>평가 항목</th>
+                <th>점수</th>
+                <th style="width: 160px">수준</th>
+                <th>판정</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>디자인 현대성</td>
+                <td>3 / 10</td>
+                <td>
+                  <div class="score-bar">
+                    <div class="score-bar-fill low" style="width: 30%"></div>
+                  </div>
+                </td>
+                <td>
+                  <span class="tag danger">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="15" y1="9" x2="9" y2="15" />
+                      <line x1="9" y1="9" x2="15" y2="15" />
+                    </svg>
+                    개선 시급
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>모바일 반응형</td>
+                <td>2 / 10</td>
+                <td>
+                  <div class="score-bar">
+                    <div class="score-bar-fill low" style="width: 20%"></div>
+                  </div>
+                </td>
+                <td>
+                  <span class="tag danger">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="15" y1="9" x2="9" y2="15" />
+                      <line x1="9" y1="9" x2="15" y2="15" />
+                    </svg>
+                    사실상 비반응형
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>SEO 최적화</td>
+                <td>1 / 10</td>
+                <td>
+                  <div class="score-bar">
+                    <div class="score-bar-fill low" style="width: 10%"></div>
+                  </div>
+                </td>
+                <td>
+                  <span class="tag danger">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="15" y1="9" x2="9" y2="15" />
+                      <line x1="9" y1="9" x2="15" y2="15" />
+                    </svg>
+                    H1~H6 태그 0개
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>콘텐츠 품질</td>
+                <td>6 / 10</td>
+                <td>
+                  <div class="score-bar">
+                    <div class="score-bar-fill mid" style="width: 60%"></div>
+                  </div>
+                </td>
+                <td>
+                  <span class="tag warning">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="8" x2="12" y2="12" />
+                      <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    구조화 필요
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>사용자 경험(UX)</td>
+                <td>4 / 10</td>
+                <td>
+                  <div class="score-bar">
+                    <div class="score-bar-fill mid" style="width: 40%"></div>
+                  </div>
+                </td>
+                <td>
+                  <span class="tag warning">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="12" y1="8" x2="12" y2="12" />
+                      <line x1="12" y1="16" x2="12.01" y2="16" />
+                    </svg>
+                    전환 동선 복잡
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>기술 기반</td>
+                <td>3 / 10</td>
+                <td>
+                  <div class="score-bar">
+                    <div class="score-bar-fill low" style="width: 30%"></div>
+                  </div>
+                </td>
+                <td>
+                  <span class="tag danger">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="15" y1="9" x2="9" y2="15" />
+                      <line x1="9" y1="9" x2="15" y2="15" />
+                    </svg>
+                    정적 HTML
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>접근성</td>
+                <td>1 / 10</td>
+                <td>
+                  <div class="score-bar">
+                    <div class="score-bar-fill low" style="width: 10%"></div>
+                  </div>
+                </td>
+                <td>
+                  <span class="tag danger">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="15" y1="9" x2="9" y2="15" />
+                      <line x1="9" y1="9" x2="15" y2="15" />
+                    </svg>
+                    alt 태그 전무
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td>전환율 최적화</td>
+                <td>3 / 10</td>
+                <td>
+                  <div class="score-bar">
+                    <div class="score-bar-fill low" style="width: 30%"></div>
+                  </div>
+                </td>
+                <td>
+                  <span class="tag danger">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <line x1="15" y1="9" x2="9" y2="15" />
+                      <line x1="9" y1="9" x2="15" y2="15" />
+                    </svg>
+                    메인에 폼 없음
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 핵심 문제점 카드 -->
+        <h3 style="margin-bottom: 20px">핵심 문제점 상세</h3>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon danger">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                  <line x1="12" y1="18" x2="12.01" y2="18" />
+                </svg>
+              </div>
+              <div>
+                <h3 style="margin: 0">모바일 대응 부재</h3>
+                <span class="tag danger" style="margin-top: 4px">Critical</span>
+              </div>
+            </div>
+            <p style="font-size: 14px; color: var(--text-secondary)">
+              미디어쿼리 1개(767px)만 존재하며 실제로는 데스크톱 레이아웃이
+              그대로 축소 표시됩니다. user-scalable=no로 핀치줌까지 차단된
+              상태입니다. 2026년 기준 모바일 트래픽이 70% 이상인 점을 감안하면
+              잠재 고객의 절반 이상을 잃고 있습니다.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon danger">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              </div>
+              <div>
+                <h3 style="margin: 0">SEO 구조적 결함</h3>
+                <span class="tag danger" style="margin-top: 4px">Critical</span>
+              </div>
+            </div>
+            <p style="font-size: 14px; color: var(--text-secondary)">
+              H1~H6 시맨틱 태그가 단 하나도 없습니다. 35개 이미지 중 alt 태그가
+              있는 이미지 0개. 검색엔진이 페이지의 주제와 구조를 전혀 파악할 수
+              없어 검색 노출이 극히 제한적입니다.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon warning">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"
+                  />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+              </div>
+              <div>
+                <h3 style="margin: 0">노후화된 디자인 트렌드</h3>
+                <span class="tag warning" style="margin-top: 4px">High</span>
+              </div>
+            </div>
+            <p style="font-size: 14px; color: var(--text-secondary)">
+              대리석 텍스처 배경, 골드 라인 애니메이션, 다이아몬드(마름모) 카드
+              UI 등 2018년 경 유행했던 디자인 요소가 그대로 유지되고 있습니다.
+              영문 제목(ABOUT NOBLE HONG, SPECIAL SERVICE)은 40~60대 타겟
+              고객층의 가독성을 떨어뜨립니다.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon warning">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </div>
+              <div>
+                <h3 style="margin: 0">전환 동선 비효율</h3>
+                <span class="tag warning" style="margin-top: 4px">High</span>
+              </div>
+            </div>
+            <p style="font-size: 14px; color: var(--text-secondary)">
+              메인 페이지에 상담 신청 폼이 없습니다(form 0개, input 0개). 상담을
+              하려면 반드시 서브페이지로 이동해야 하며, 이는 전환율을 크게
+              저하시킵니다. 경쟁사들은 모두 메인 페이지에 인라인 상담 폼을
+              배치하고 있습니다.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon info">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="16 18 22 12 16 6" />
+                  <polyline points="8 6 2 12 8 18" />
+                </svg>
+              </div>
+              <div>
+                <h3 style="margin: 0">정적 HTML 기술 스택</h3>
+                <span class="tag info" style="margin-top: 4px">Major</span>
+              </div>
+            </div>
+            <p style="font-size: 14px; color: var(--text-secondary)">
+              jQuery + 정적 HTML 구조로 CMS가 없어 콘텐츠 업데이트마다 개발자가
+              필요합니다. URL 패턴이 /sub01/sub01_01.html 형식으로 SEO에
+              불리하며, 유지보수 비용이 높습니다.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon info">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div>
+                <h3 style="margin: 0">유튜브 연동 미흡</h3>
+                <span class="tag info" style="margin-top: 4px">Major</span>
+              </div>
+            </div>
+            <p style="font-size: 14px; color: var(--text-secondary)">
+              결혼박사 홍유진TV(구독자 3.03만명, 영상 165개)의 콘텐츠 자산이
+              홈페이지에 제대로 노출되지 않습니다. 유튜브 클릭 시 새 탭으로
+              이탈되며, 동영상/쇼츠 구분 없이 단순 링크만 제공됩니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 02. 벤치마킹 ===== -->
+    <section id="benchmark">
+      <div class="container">
+        <p class="section-label">02 / Benchmark</p>
+        <h2>동종업계 벤치마킹 분석</h2>
+        <p class="section-desc">
+          국내 주요 결혼정보업체 6곳의 홈페이지를 분석하여 노블홍이 참고해야 할
+          핵심 요소를 도출했습니다.
+        </p>
+
+        <!-- 듀오 -->
+        <div class="benchmark-card">
+          <div class="benchmark-header">
+            <div class="benchmark-logo" style="background: #e31a20">DUO</div>
+            <div>
+              <h3 style="margin: 0">듀오 - 업계 1위, 숫자 기반 신뢰</h3>
+              <a
+                href="https://www.duo.co.kr/"
+                target="_blank"
+                class="benchmark-url"
+                >duo.co.kr</a
+              >
+            </div>
+          </div>
+          <div class="benchmark-body">
+            <p
+              style="
+                font-size: 14px;
+                color: var(--text-secondary);
+                margin-bottom: 12px;
+              "
+            >
+              성혼 53,730명 / 회원 36,050명을 히어로 섹션에 대형 표시. D-day
+              카운터로 긴급성 유발. 6개월 내 57.3% 성혼 통계, 90명 이상 전문
+              매니저 사진 공개. 13개 지점(LA, NY 포함) 글로벌 스케일.
+            </p>
+            <div class="benchmark-features">
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                실시간 성혼 카운터
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                간편 상담 폼 (메인)
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                16개 수상 내역 나열
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                러브테스트 인터랙션
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                네이버 예약 연동
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 가연 -->
+        <div class="benchmark-card">
+          <div class="benchmark-header">
+            <div
+              class="benchmark-logo"
+              style="background: #ffd700; color: #333"
+            >
+              GY
+            </div>
+            <div>
+              <h3 style="margin: 0">가연 - 대중적 프리미엄, 20주년</h3>
+              <a
+                href="https://www.gayeon.com/"
+                target="_blank"
+                class="benchmark-url"
+                >gayeon.com</a
+              >
+            </div>
+          </div>
+          <div class="benchmark-body">
+            <p
+              style="
+                font-size: 14px;
+                color: var(--text-secondary);
+                margin-bottom: 12px;
+              "
+            >
+              91.3% 매칭 성공률, 1,639건 성혼 실적. GMS 자체 매칭 시스템. 기업
+              제휴 약 6만명 임직원 서비스. 하단 고정 바에 이름/연락처 즉시 입력
+              가능한 간편 상담 폼 배치.
+            </p>
+            <div class="benchmark-features">
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                하단 고정 간편 상담
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                웨딩카 이벤트 등 참여 유도
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                러브테스트 전환 퍼널
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                회원 현황 투명 공개
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 노블레스수현 -->
+        <div class="benchmark-card">
+          <div class="benchmark-header">
+            <div class="benchmark-logo" style="background: #1a1714">NS</div>
+            <div>
+              <h3 style="margin: 0">노블레스수현 - 초프리미엄, 상위 1%</h3>
+              <a
+                href="https://isoohyun.co.kr/"
+                target="_blank"
+                class="benchmark-url"
+                >isoohyun.co.kr</a
+              >
+            </div>
+          </div>
+          <div class="benchmark-body">
+            <p
+              style="
+                font-size: 14px;
+                color: var(--text-secondary);
+                margin-bottom: 12px;
+              "
+            >
+              9회 연속 스티브 어워드 수상. 소비자 피해 0%. 5W1H 네비게이션
+              구조(WHAT/WHY/WHO/HOW/WHERE). 10단계 멤버십 티어링.
+              블랙+골드+명조체로 극도의 럭셔리 감성. 노블홍과 가장 유사한
+              포지셔닝.
+            </p>
+            <div class="benchmark-features">
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                5W1H 내비게이션
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                감성 카피라이팅
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                손해배상보험 명시
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                호텔 맞선 오프라인
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 바로연 -->
+        <div class="benchmark-card">
+          <div class="benchmark-header">
+            <div class="benchmark-logo" style="background: #2d7a3d">BY</div>
+            <div>
+              <h3 style="margin: 0">바로연 - VIP 포지셔닝, 마케팅 테크</h3>
+              <a
+                href="https://www.baroyeon.net/"
+                target="_blank"
+                class="benchmark-url"
+                >baroyeon.net</a
+              >
+            </div>
+          </div>
+          <div class="benchmark-body">
+            <p
+              style="
+                font-size: 14px;
+                color: var(--text-secondary);
+                margin-bottom: 12px;
+              "
+            >
+              한국브랜드선호도 1위 2년 연속 수상. GTM, GA, Facebook/Kakao/Naver
+              Pixel 등 정교한 마케팅 테크 스택. TV 프로그램(미운우리새끼) 방영
+              활용. 카카오톡+네이버+전화 다채널 상담 고정 바.
+            </p>
+            <div class="benchmark-features">
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                정교한 마케팅 픽셀
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                TV 방영 활용
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                다채널 상담 CTA
+              </span>
+              <span class="tag success">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                이상형 찾기 인터랙션
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 벤치마킹 핵심 인사이트 -->
+        <h3 style="margin-bottom: 20px">벤치마킹 핵심 인사이트</h3>
+        <div class="grid-3">
+          <div class="card" style="border-left: 3px solid var(--accent)">
+            <div class="card-header">
+              <div class="card-icon accent">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M12 20V10" />
+                  <path d="M18 20V4" />
+                  <path d="M6 20v-4" />
+                </svg>
+              </div>
+              <h3 style="margin: 0; font-size: 15px">숫자 기반 신뢰 구축</h3>
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary)">
+              모든 선두업체가 성혼 수, 회원 수, 성공률을 히어로 섹션에 대형으로
+              표시합니다. 노블홍의 "8,000명 이상 성혼" 실적을 전면에 배치해야
+              합니다.
+            </p>
+          </div>
+          <div class="card" style="border-left: 3px solid var(--accent)">
+            <div class="card-header">
+              <div class="card-icon accent">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+              </div>
+              <h3 style="margin: 0; font-size: 15px">메인 페이지 즉시 상담</h3>
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary)">
+              듀오, 가연, 바로연 모두 메인 페이지 하단 또는 히어로에 간편 상담
+              폼을 배치합니다. 이름 + 연락처만으로 즉시 상담 신청이 가능한
+              구조가 표준입니다.
+            </p>
+          </div>
+          <div class="card" style="border-left: 3px solid var(--accent)">
+            <div class="card-header">
+              <div class="card-icon accent">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                  />
+                </svg>
+              </div>
+              <h3 style="margin: 0; font-size: 15px">감성 카피 + 전문성</h3>
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary)">
+              노블레스수현의 "당신이 찾는 사람도 당신처럼 특별해야 합니다" 같은
+              감성 카피와 홍유진 대표의 30년 전문성을 결합한 스토리텔링이
+              필요합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 03. 개선 전략 ===== -->
+    <section id="strategy">
+      <div class="container">
+        <p class="section-label">03 / Strategy</p>
+        <h2>개선 전략 및 방향성</h2>
+        <p class="section-desc">
+          노블홍의 핵심 자산(30년 경력, 8,000명 성혼, 대표 유튜브 채널)을
+          극대화하면서 현대적이고 신뢰감 있는 프리미엄 사이트로 전환하는
+          전략입니다.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--accent)"
+                stroke-width="2"
+                style="vertical-align: -3px; margin-right: 6px"
+              >
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
+              포지셔닝 전환
+            </h3>
+            <p
+              style="
+                font-size: 14px;
+                color: var(--text-secondary);
+                margin-bottom: 12px;
+              "
+            >
+              "노블레스 결혼정보회사"에서
+              <strong>"성혼 전문 결혼정보회사"</strong>로 메시지 전환. 30년 경력
+              + 8,000명 성혼 실적을 전면에 배치하여 실적 기반 신뢰를 구축합니다.
+            </p>
+            <div class="note">
+              노블레스수현, 퍼플스 등 초프리미엄 업체와의 직접 경쟁 대신,
+              "검증된 경력 + 성혼 실적 + 유튜브 전문성"이라는 고유 포지셔닝을
+              확보합니다.
+            </div>
+          </div>
+          <div class="card">
+            <h3>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--accent)"
+                stroke-width="2"
+                style="vertical-align: -3px; margin-right: 6px"
+              >
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              타겟 명확화
+            </h3>
+            <p
+              style="
+                font-size: 14px;
+                color: var(--text-secondary);
+                margin-bottom: 12px;
+              "
+            >
+              40~60대 싱글/돌싱 타겟에 맞춘 UX 설계. 큰 폰트, 명확한 한글
+              네비게이션, 불필요한 영문 제목 제거. 전화 상담 CTA를 최우선
+              배치합니다.
+            </p>
+            <ul class="checklist" style="margin-top: 12px">
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                최소 16px 본문 폰트
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                한글 중심 네비게이션
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                전화번호 + 카카오톡 항시 노출
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                3단계 이내 상담 신청 완료
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="margin-top: 24px">
+          <h3>페이지 구조 재설계</h3>
+          <p
+            style="
+              font-size: 14px;
+              color: var(--text-secondary);
+              margin-bottom: 16px;
+            "
+          >
+            기존 6개 대메뉴 + 25개 서브페이지 구조를 3페이지 핵심 구조로
+            압축합니다.
+          </p>
+          <div class="grid-3">
+            <div
+              class="card"
+              style="text-align: center; border-top: 3px solid var(--accent)"
+            >
+              <div
+                style="
+                  font-size: 28px;
+                  font-weight: 700;
+                  color: var(--accent);
+                  margin-bottom: 4px;
+                "
+              >
+                01
+              </div>
+              <h3>메인 페이지</h3>
+              <p style="font-size: 13px; color: var(--text-secondary)">
+                히어로(성혼 실적) + 대표 소개 + 서비스 개요 + 유튜브 콘텐츠 +
+                상담 폼 + 미디어 노출
+              </p>
+            </div>
+            <div
+              class="card"
+              style="text-align: center; border-top: 3px solid var(--accent)"
+            >
+              <div
+                style="
+                  font-size: 28px;
+                  font-weight: 700;
+                  color: var(--accent);
+                  margin-bottom: 4px;
+                "
+              >
+                02
+              </div>
+              <h3>콘텐츠 페이지</h3>
+              <p style="font-size: 13px; color: var(--text-secondary)">
+                유튜브 동영상/쇼츠 탭 + 인스타/블로그 피드 + 러브칼럼 + 카테고리
+                필터
+              </p>
+            </div>
+            <div
+              class="card"
+              style="text-align: center; border-top: 3px solid var(--accent)"
+            >
+              <div
+                style="
+                  font-size: 28px;
+                  font-weight: 700;
+                  color: var(--accent);
+                  margin-bottom: 4px;
+                "
+              >
+                03
+              </div>
+              <h3>상담 신청</h3>
+              <p style="font-size: 13px; color: var(--text-secondary)">
+                위자드 폼(단계별) + 개인정보 동의 + 접수 확인 + 카카오 알림톡
+                연동
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 04. 와이어프레임 ===== -->
+    <section id="wireframe">
+      <div class="container">
+        <p class="section-label">04 / Wireframe</p>
+        <h2>와이어프레임 목업</h2>
+        <p class="section-desc">
+          리모델링 후 메인 페이지의 구조를 와이어프레임으로 표현한 것입니다.
+          실사 이미지 배경 + 고급 인터랙션 + 즉시 전환 가능한 상담 폼이
+          핵심입니다.
+        </p>
+
+        <!-- 인터랙션 전략 -->
+        <div
+          class="card"
+          style="margin-bottom: 24px; border-left: 3px solid var(--accent)"
+        >
+          <h3 style="margin-bottom: 12px">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--accent)"
+              stroke-width="2"
+              style="vertical-align: -3px; margin-right: 6px"
+            >
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg>
+            고급 인터랙션 표현 전략
+          </h3>
+          <div class="grid-3" style="gap: 12px">
+            <div style="font-size: 13px; color: var(--text-secondary)">
+              <strong
+                style="
+                  color: var(--text-primary);
+                  display: block;
+                  margin-bottom: 4px;
+                "
+                >실사 이미지 배경</strong
+              >
+              히어로 섹션에 웨딩 실사 사진을 풀스크린 배경으로 사용. Parallax
+              스크롤 효과로 깊이감 연출. 오버레이 그라디언트로 텍스트 가독성
+              확보.
+            </div>
+            <div style="font-size: 13px; color: var(--text-secondary)">
+              <strong
+                style="
+                  color: var(--text-primary);
+                  display: block;
+                  margin-bottom: 4px;
+                "
+                >Scroll Reveal 애니메이션</strong
+              >
+              각 섹션 진입 시 Fade-in + Slide-up 트랜지션. 숫자 카운터는 뷰포트
+              진입 시 0에서 목표값까지 카운트업. 카드 요소 순차 등장 효과.
+            </div>
+            <div style="font-size: 13px; color: var(--text-secondary)">
+              <strong
+                style="
+                  color: var(--text-primary);
+                  display: block;
+                  margin-bottom: 4px;
+                "
+                >Micro Interaction</strong
+              >
+              버튼 Hover 시 골드 글로우 효과. 서비스 카드 Hover 시 부드러운
+              확대(scale 1.02). 상담 폼 포커스 시 골드 보더 트랜지션. 스크롤
+              프로그레스 바.
+            </div>
+          </div>
+        </div>
+
+        <div class="wireframe">
+          <div class="wf-browser-bar">
+            <div class="wf-dot"></div>
+            <div class="wf-dot"></div>
+            <div class="wf-dot"></div>
+            <div class="wf-url">noblehong.com</div>
+          </div>
+          <div class="wf-content">
+            <!-- Nav -->
+            <div class="wf-nav">
+              <div class="wf-nav-logo">NOBLE HONG</div>
+              <div class="wf-nav-links">
+                <span>서비스 안내</span>
+                <span>콘텐츠</span>
+                <span>성혼 사례</span>
+                <span>상담 문의</span>
+              </div>
+              <div class="wf-nav-cta">무료 상담 신청</div>
+            </div>
+
+            <!-- Hero - 실사이미지 배경 -->
+            <div
+              class="wf-hero"
+              style="
+                background:
+                  linear-gradient(
+                    rgba(26, 23, 20, 0.65),
+                    rgba(26, 23, 20, 0.8)
+                  ),
+                  url(&quot;https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&quot;)
+                    center/cover;
+                min-height: 280px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+              "
+            >
+              <div
+                style="
+                  font-size: 9px;
+                  letter-spacing: 3px;
+                  color: rgba(197, 165, 90, 0.8);
+                  margin-bottom: 4px;
+                "
+              >
+                SCROLL REVEAL ANIMATION
+              </div>
+              <h3>SINCE 1996 / 30 YEARS OF MATCHING</h3>
+              <h2>당신의 인연,<br />30년의 경험이 찾아드립니다</h2>
+              <p>
+                대한민국 커플매니저 1호 홍유진 대표가 직접 관여하는 성혼 전문
+                결혼정보회사
+              </p>
+              <div
+                class="wf-hero-cta"
+                style="box-shadow: 0 0 20px rgba(197, 165, 90, 0.3)"
+              >
+                무료 상담 신청하기
+              </div>
+              <div class="wf-hero-stats">
+                <div class="wf-hero-stat">
+                  <strong style="font-size: 24px">8,000+</strong>
+                  <span>성혼 회원수</span>
+                  <span
+                    style="
+                      font-size: 8px;
+                      color: rgba(255, 255, 255, 0.25);
+                      display: block;
+                    "
+                    >Counter Animation</span
+                  >
+                </div>
+                <div class="wf-hero-stat">
+                  <strong style="font-size: 24px">30년</strong>
+                  <span>업력</span>
+                </div>
+                <div class="wf-hero-stat">
+                  <strong style="font-size: 24px">1호</strong>
+                  <span>커플매니저</span>
+                </div>
+                <div class="wf-hero-stat">
+                  <strong style="font-size: 24px">3만+</strong>
+                  <span>유튜브 구독</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 서비스 카드 -->
+            <div class="wf-section">
+              <div class="wf-section-title">서비스</div>
+              <h3>맞춤형 매칭 컨설팅</h3>
+              <div class="wf-cards">
+                <div class="wf-card">
+                  <div class="wf-card-icon">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="var(--accent)"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                      />
+                    </svg>
+                  </div>
+                  <strong>나의 명품결혼</strong>
+                  <span>초혼 전문 매칭</span>
+                </div>
+                <div class="wf-card">
+                  <div class="wf-card-icon">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="var(--accent)"
+                      stroke-width="2"
+                    >
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                  </div>
+                  <strong>자녀 행복결혼</strong>
+                  <span>부모님이 찾는 결혼</span>
+                </div>
+                <div class="wf-card">
+                  <div class="wf-card-icon">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="var(--accent)"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                      <line x1="9" y1="9" x2="9.01" y2="9" />
+                      <line x1="15" y1="9" x2="15.01" y2="9" />
+                    </svg>
+                  </div>
+                  <strong>스페셜 재혼</strong>
+                  <span>새로운 시작을 위한</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 대표 소개 -->
+            <div
+              class="wf-section"
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+                align-items: center;
+              "
+            >
+              <div>
+                <div class="wf-section-title">대표 소개</div>
+                <h3>대한민국 커플매니저 1호<br />홍유진 대표</h3>
+                <p
+                  style="
+                    font-size: 12px;
+                    color: var(--text-secondary);
+                    margin-bottom: 12px;
+                  "
+                >
+                  30년간 8,000명 이상의 성혼을 이끈 전문가.<br />
+                  직업사전 등록 기준 대한민국 커플매니저 1호.<br />
+                  결혼박사 홍유진TV 운영 (구독자 3만+)
+                </p>
+                <div style="display: flex; gap: 8px">
+                  <span class="tag info">글로벌사이버대 홍보대사</span>
+                  <span class="tag info">저출산위원회 위원</span>
+                </div>
+              </div>
+              <div
+                style="
+                  background: #e5e7eb;
+                  height: 160px;
+                  border-radius: 12px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  color: var(--text-muted);
+                  font-size: 12px;
+                "
+              >
+                [홍유진 대표 프로필 사진]
+              </div>
+            </div>
+
+            <!-- 유튜브 -->
+            <div class="wf-section">
+              <div class="wf-section-title">콘텐츠</div>
+              <h3>결혼박사 홍유진TV</h3>
+              <div style="display: flex; gap: 8px; margin-bottom: 16px">
+                <span
+                  style="
+                    padding: 4px 12px;
+                    background: var(--accent);
+                    color: #fff;
+                    border-radius: 4px;
+                    font-size: 11px;
+                    font-weight: 500;
+                  "
+                  >전체</span
+                >
+                <span
+                  style="
+                    padding: 4px 12px;
+                    background: var(--accent-light);
+                    color: var(--accent);
+                    border-radius: 4px;
+                    font-size: 11px;
+                  "
+                  >동영상</span
+                >
+                <span
+                  style="
+                    padding: 4px 12px;
+                    background: var(--accent-light);
+                    color: var(--accent);
+                    border-radius: 4px;
+                    font-size: 11px;
+                  "
+                  >쇼츠</span
+                >
+                <span
+                  style="
+                    padding: 4px 12px;
+                    background: var(--accent-light);
+                    color: var(--accent);
+                    border-radius: 4px;
+                    font-size: 11px;
+                  "
+                  >연애칼럼</span
+                >
+              </div>
+              <div class="wf-youtube">
+                <div class="wf-video">
+                  <div class="wf-video-thumb">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#9CA3AF"
+                      stroke-width="1.5"
+                    >
+                      <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                  </div>
+                  <div class="wf-video-info">
+                    <strong>연애에서 결혼까지 가는...</strong>
+                    <span>조회수 12,340</span>
+                  </div>
+                </div>
+                <div class="wf-video">
+                  <div class="wf-video-thumb">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#9CA3AF"
+                      stroke-width="1.5"
+                    >
+                      <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                  </div>
+                  <div class="wf-video-info">
+                    <strong>결혼정보회사 가입신청서...</strong>
+                    <span>조회수 8,720</span>
+                  </div>
+                </div>
+                <div class="wf-video">
+                  <div class="wf-video-thumb">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#9CA3AF"
+                      stroke-width="1.5"
+                    >
+                      <polygon points="5 3 19 12 5 21 5 3" />
+                    </svg>
+                  </div>
+                  <div class="wf-video-info">
+                    <strong>5060 신중년의 연애는...</strong>
+                    <span>조회수 5,190</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 상담 폼 - 고급 다크 스타일 -->
+            <div
+              style="
+                background: linear-gradient(135deg, #1a1714, #2c2418);
+                padding: 40px 24px;
+                text-align: center;
+              "
+            >
+              <div
+                style="
+                  color: #c5a55a;
+                  font-size: 10px;
+                  letter-spacing: 2px;
+                  margin-bottom: 8px;
+                "
+              >
+                CONSULTATION
+              </div>
+              <div
+                style="
+                  color: #fff;
+                  font-size: 18px;
+                  font-weight: 700;
+                  margin-bottom: 4px;
+                "
+              >
+                무료 상담 신청
+              </div>
+              <div
+                style="
+                  font-size: 11px;
+                  color: rgba(255, 255, 255, 0.4);
+                  margin-bottom: 20px;
+                "
+              >
+                30년 경력의 홍유진 대표가 직접 상담해드립니다
+              </div>
+              <div style="max-width: 480px; margin: 0 auto; text-align: left">
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 8px;
+                  "
+                >
+                  <div
+                    style="
+                      padding: 10px 14px;
+                      background: rgba(255, 255, 255, 0.08);
+                      border: 1px solid rgba(197, 165, 90, 0.25);
+                      border-radius: 8px;
+                      color: rgba(255, 255, 255, 0.4);
+                      font-size: 12px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 9px;
+                        color: #c5a55a;
+                        display: block;
+                        margin-bottom: 2px;
+                      "
+                      >성별</span
+                    >
+                    남성 / 여성 선택
+                  </div>
+                  <div
+                    style="
+                      padding: 10px 14px;
+                      background: rgba(255, 255, 255, 0.08);
+                      border: 1px solid rgba(197, 165, 90, 0.25);
+                      border-radius: 8px;
+                      color: rgba(255, 255, 255, 0.4);
+                      font-size: 12px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 9px;
+                        color: #c5a55a;
+                        display: block;
+                        margin-bottom: 2px;
+                      "
+                      >유형</span
+                    >
+                    초혼 / 재혼 선택
+                  </div>
+                </div>
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 8px;
+                    margin-top: 8px;
+                  "
+                >
+                  <div
+                    style="
+                      padding: 10px 14px;
+                      background: rgba(255, 255, 255, 0.08);
+                      border: 1px solid rgba(197, 165, 90, 0.25);
+                      border-radius: 8px;
+                      color: rgba(255, 255, 255, 0.4);
+                      font-size: 12px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 9px;
+                        color: #c5a55a;
+                        display: block;
+                        margin-bottom: 2px;
+                      "
+                      >성명</span
+                    >
+                    이름을 입력하세요
+                  </div>
+                  <div
+                    style="
+                      padding: 10px 14px;
+                      background: rgba(255, 255, 255, 0.08);
+                      border: 1px solid rgba(197, 165, 90, 0.25);
+                      border-radius: 8px;
+                      color: rgba(255, 255, 255, 0.4);
+                      font-size: 12px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 9px;
+                        color: #c5a55a;
+                        display: block;
+                        margin-bottom: 2px;
+                      "
+                      >출생년도</span
+                    >
+                    1970
+                  </div>
+                </div>
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 8px;
+                    margin-top: 8px;
+                  "
+                >
+                  <div
+                    style="
+                      padding: 10px 14px;
+                      background: rgba(255, 255, 255, 0.08);
+                      border: 1px solid rgba(197, 165, 90, 0.25);
+                      border-radius: 8px;
+                      color: rgba(255, 255, 255, 0.4);
+                      font-size: 12px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 9px;
+                        color: #c5a55a;
+                        display: block;
+                        margin-bottom: 2px;
+                      "
+                      >연락처</span
+                    >
+                    010-0000-0000
+                  </div>
+                  <div
+                    style="
+                      padding: 10px 14px;
+                      background: rgba(255, 255, 255, 0.08);
+                      border: 1px solid rgba(197, 165, 90, 0.25);
+                      border-radius: 8px;
+                      color: rgba(255, 255, 255, 0.4);
+                      font-size: 12px;
+                    "
+                  >
+                    <span
+                      style="
+                        font-size: 9px;
+                        color: #c5a55a;
+                        display: block;
+                        margin-bottom: 2px;
+                      "
+                      >직업</span
+                    >
+                    직업을 입력하세요
+                  </div>
+                </div>
+                <div
+                  style="
+                    padding: 10px 14px;
+                    background: rgba(255, 255, 255, 0.08);
+                    border: 1px solid rgba(197, 165, 90, 0.25);
+                    border-radius: 8px;
+                    color: rgba(255, 255, 255, 0.4);
+                    font-size: 12px;
+                    margin-top: 8px;
+                    min-height: 56px;
+                  "
+                >
+                  <span
+                    style="
+                      font-size: 9px;
+                      color: #c5a55a;
+                      display: block;
+                      margin-bottom: 2px;
+                    "
+                    >상담 내용 (선택)</span
+                  >
+                  궁금하신 점을 자유롭게 적어주세요
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    margin-top: 10px;
+                    font-size: 10px;
+                    color: rgba(255, 255, 255, 0.3);
+                  "
+                >
+                  <div
+                    style="
+                      width: 12px;
+                      height: 12px;
+                      border: 1px solid rgba(197, 165, 90, 0.4);
+                      border-radius: 2px;
+                      flex-shrink: 0;
+                    "
+                  ></div>
+                  개인정보 수집 및 이용에 동의합니다 (필수)
+                </div>
+                <div
+                  style="
+                    margin-top: 14px;
+                    padding: 13px;
+                    background: var(--accent);
+                    color: #fff;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    text-align: center;
+                    box-shadow: 0 4px 20px rgba(139, 105, 20, 0.4);
+                    cursor: pointer;
+                  "
+                >
+                  무료 상담 신청하기
+                </div>
+                <div
+                  style="
+                    text-align: center;
+                    margin-top: 10px;
+                    font-size: 10px;
+                    color: rgba(255, 255, 255, 0.3);
+                  "
+                >
+                  전화 상담:
+                  <span style="color: #c5a55a">1800-8194</span> (주말/공휴일에도
+                  상담 가능)
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="wf-footer">
+              노블홍 결혼정보회사 | 대표 홍유진 | 대표번호 1800-8194<br />
+              서울특별시 강남구 | 국내결혼중개업 신고번호 제
+              서울-강남-국내-22-0012호
+            </div>
+          </div>
+        </div>
+
+        <div class="note" style="margin-top: 24px">
+          <strong>와이어프레임 설계 원칙:</strong><br />
+          1) 스크롤 3회 이내에 상담 폼 도달 &nbsp; 2) 모든 섹션에 CTA 버튼 배치
+          &nbsp; 3) 숫자 실적을 히어로에서 즉시 노출 &nbsp; 4) 유튜브 콘텐츠를
+          홈페이지 내에서 재생
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 05. 컬러 컨셉 ===== -->
+    <section id="color">
+      <div class="container">
+        <p class="section-label">05 / Design System</p>
+        <h2>컬러 컨셉 및 디자인 시스템</h2>
+        <p class="section-desc">
+          고급스럽고 세련된 전문 결혼정보업체 분위기를 위해 딥 브라운 + 앤티크
+          골드 + 아이보리 화이트 조합을 제안합니다.
+        </p>
+
+        <h3>Primary Palette</h3>
+        <div class="palette">
+          <div class="palette-swatch">
+            <div class="palette-color" style="background: #1a1714"></div>
+            <span class="palette-name">Deep Brown</span>
+            <span class="palette-hex">#1A1714</span>
+          </div>
+          <div class="palette-swatch">
+            <div class="palette-color" style="background: #2c2418"></div>
+            <span class="palette-name">Warm Dark</span>
+            <span class="palette-hex">#2C2418</span>
+          </div>
+          <div class="palette-swatch">
+            <div class="palette-color" style="background: #8b6914"></div>
+            <span class="palette-name">Antique Gold</span>
+            <span class="palette-hex">#8B6914</span>
+          </div>
+          <div class="palette-swatch">
+            <div class="palette-color" style="background: #c5a55a"></div>
+            <span class="palette-name">Light Gold</span>
+            <span class="palette-hex">#C5A55A</span>
+          </div>
+          <div class="palette-swatch">
+            <div class="palette-color" style="background: #f5f0e4"></div>
+            <span class="palette-name">Ivory</span>
+            <span class="palette-hex">#F5F0E4</span>
+          </div>
+          <div class="palette-swatch">
+            <div class="palette-color" style="background: #fafaf8"></div>
+            <span class="palette-name">Off White</span>
+            <span class="palette-hex">#FAFAF8</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h3>타이포그래피</h3>
+        <div class="grid-2" style="margin-top: 16px">
+          <div class="card">
+            <table class="spec-table">
+              <tr>
+                <td>제목 폰트</td>
+                <td>Pretendard Bold (700)</td>
+              </tr>
+              <tr>
+                <td>본문 폰트</td>
+                <td>Pretendard Regular (400)</td>
+              </tr>
+              <tr>
+                <td>영문 강조</td>
+                <td>Cormorant Garamond (Serif)</td>
+              </tr>
+              <tr>
+                <td>최소 본문</td>
+                <td>16px (모바일 15px)</td>
+              </tr>
+            </table>
+          </div>
+          <div class="card">
+            <table class="spec-table">
+              <tr>
+                <td>디자인 원칙</td>
+                <td>미니멀 럭셔리</td>
+              </tr>
+              <tr>
+                <td>여백 규칙</td>
+                <td>넉넉한 화이트 스페이스</td>
+              </tr>
+              <tr>
+                <td>라운딩</td>
+                <td>12px (카드), 8px (버튼)</td>
+              </tr>
+              <tr>
+                <td>그림자</td>
+                <td>최소 사용, 보더 구분</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 06. 핵심 기능 ===== -->
+    <section id="features">
+      <div class="container">
+        <p class="section-label">06 / Features</p>
+        <h2>핵심 기능 구현 사양</h2>
+        <p class="section-desc">
+          홈페이지의 실질적인 비즈니스 가치를 높이는 기능들입니다.
+        </p>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon accent">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+              </div>
+              <h3 style="margin: 0">유튜브 자동 연동</h3>
+            </div>
+            <ul class="checklist">
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                YouTube Data API로 자동 동기화
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                동영상 / 쇼츠 자동 분류
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                카테고리 태그 설정 (연애, 결혼, 재혼 등)
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                기존 165개 영상 마이그레이션
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                홈페이지 내 임베드 재생
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon accent">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                  />
+                  <polyline points="14 2 14 8 20 8" />
+                </svg>
+              </div>
+              <h3 style="margin: 0">접수 관리 시스템</h3>
+            </div>
+            <ul class="checklist">
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                위자드 폼 (단계별 상담 신청)
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Airtable 기반 접수 관리
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                접수 통계 대시보드
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                텔레그램 접수 알림 자동 발송
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                접수 상태 관리 (신규/진행/완료)
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon accent">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M12 20V10" />
+                  <path d="M18 20V4" />
+                  <path d="M6 20v-4" />
+                </svg>
+              </div>
+              <h3 style="margin: 0">관리자 대시보드</h3>
+            </div>
+            <ul class="checklist">
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Google Analytics 4 설치 및 연동
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                네이버 서치어드바이저 등록
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                방문 통계 매일 텔레그램 자동 발송
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                유입 채널별 분석 (검색/SNS/직접)
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon accent">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                </svg>
+              </div>
+              <h3 style="margin: 0">콘텐츠 통합 노출</h3>
+            </div>
+            <ul class="checklist">
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                인스타그램 게시물 등록/노출
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                네이버 블로그 글 등록/노출
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                채널유형/썸네일/제목/URL 관리
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                콘텐츠 페이지 통합 피드
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="note" style="margin-top: 24px">
+          <strong>카카오 로그인 기능:</strong> 최초 제작에는 포함하지 않으며,
+          필요 시 33만원 별도 추가로 도입 가능합니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 07. 기술 스펙 ===== -->
+    <section id="spec">
+      <div class="container">
+        <p class="section-label">07 / Technical Spec</p>
+        <h2>기술 스펙 및 인프라</h2>
+        <p class="section-desc">
+          서버리스 아키텍처로 운영 비용을 최소화하면서 안정적인 성능을
+          보장합니다.
+        </p>
+
+        <div class="card" style="padding: 0; overflow: hidden">
+          <table class="spec-table">
+            <tr>
+              <td>프레임워크</td>
+              <td>Next.js 14+ (App Router) / React 18+</td>
+            </tr>
+            <tr>
+              <td>호스팅</td>
+              <td>Vercel (서버리스, 글로벌 CDN)</td>
+            </tr>
+            <tr>
+              <td>데이터베이스</td>
+              <td>Airtable (접수 관리, 콘텐츠 관리)</td>
+            </tr>
+            <tr>
+              <td>소스 관리</td>
+              <td>GitHub (버전 관리, 자동 배포)</td>
+            </tr>
+            <tr>
+              <td>도메인</td>
+              <td>기존 noblehong.com 연결 (DNS 관리 정보 필요)</td>
+            </tr>
+            <tr>
+              <td>SSL</td>
+              <td>Vercel 자동 SSL (Let's Encrypt)</td>
+            </tr>
+            <tr>
+              <td>분석</td>
+              <td>Google Analytics 4 + 네이버 서치어드바이저</td>
+            </tr>
+            <tr>
+              <td>알림</td>
+              <td>텔레그램 Bot API (접수 알림 + 방문 통계)</td>
+            </tr>
+            <tr>
+              <td>유튜브</td>
+              <td>YouTube Data API v3 (자동 동기화)</td>
+            </tr>
+            <tr>
+              <td>Node.js</td>
+              <td>20.x 이상 (18.x 비지원)</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="grid-2" style="margin-top: 24px">
+          <div class="card">
+            <h3>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--success)"
+                stroke-width="2"
+                style="vertical-align: -2px; margin-right: 4px"
+              >
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                <polyline points="22 4 12 14.01 9 11.01" />
+              </svg>
+              서버리스의 장점
+            </h3>
+            <ul class="checklist" style="margin-top: 12px">
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                월 서버 비용 0원 (Vercel 무료 티어)
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                글로벌 CDN으로 빠른 로딩 속도
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                자동 SSL 인증서 관리
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                GitHub 푸시만으로 자동 배포
+              </li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--info)"
+                stroke-width="2"
+                style="vertical-align: -2px; margin-right: 4px"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              도메인 연결 시 필요 사항
+            </h3>
+            <ul class="checklist" style="margin-top: 12px">
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--info)"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                현재 도메인 등록 업체 정보
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--info)"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                DNS 관리 패널 접속 정보
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--info)"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                기존 호스팅 서비스 정보
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--info)"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                이메일 연결 여부 확인
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 08. 투자 비용 ===== -->
+    <!-- ===== 08. 바이럴 아이디어 ===== -->
+    <section id="viral">
+      <div class="container">
+        <p class="section-label">08 / Viral Strategy</p>
+        <h2>바이럴 마케팅 아이디어</h2>
+        <p class="section-desc">
+          홈페이지 유입을 극대화하고 자연 바이럴을 유도하는 인터랙티브 콘텐츠
+          전략입니다. 듀오의 '내 가입비 테스트'가 바이럴에 성공한 사례를
+          참고합니다.
+        </p>
+
+        <div class="grid-2">
+          <div class="card" style="border-top: 3px solid var(--accent)">
+            <div class="card-header">
+              <div class="card-icon accent">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+              </div>
+              <div>
+                <h3 style="margin: 0">MBTI 연애/결혼 매칭 테스트</h3>
+                <span
+                  class="tag accent"
+                  style="
+                    background: var(--accent-light);
+                    color: var(--accent);
+                    margin-top: 4px;
+                  "
+                  >바이럴 핵심</span
+                >
+              </div>
+            </div>
+            <p
+              style="
+                font-size: 14px;
+                color: var(--text-secondary);
+                margin-bottom: 12px;
+              "
+            >
+              "나와 매칭 가능성이 높은 MBTI 이성은?" 테스트를 제작하여 SNS
+              공유를 유도합니다. 결과 페이지에서 노블홍 상담 연결.
+            </p>
+            <ul class="checklist">
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                10문항 이내 간편 테스트 (3분 소요)
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                결과: 나의 연애 유형 + 매칭 MBTI + 궁합 점수
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                카카오톡/인스타 공유 버튼 (바이럴 루프)
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                결과 페이지 하단: "전문가 상담으로 진짜 인연 찾기" CTA
+              </li>
+            </ul>
+          </div>
+
+          <div class="card" style="border-top: 3px solid var(--accent)">
+            <div class="card-header">
+              <div class="card-icon accent">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M12 20V10" />
+                  <path d="M18 20V4" />
+                  <path d="M6 20v-4" />
+                </svg>
+              </div>
+              <div>
+                <h3 style="margin: 0">듀오 사례 벤치마킹</h3>
+                <span class="tag info" style="margin-top: 4px">참고 전략</span>
+              </div>
+            </div>
+            <p
+              style="
+                font-size: 14px;
+                color: var(--text-secondary);
+                margin-bottom: 12px;
+              "
+            >
+              듀오의 "내 상황에 가입비가 얼마?" 테스트가 바이럴에 성공한 구조를
+              참고합니다. 간단한 정보 입력 후 맞춤 결과를 제공하여 상담 전환으로
+              연결하는 퍼널입니다.
+            </p>
+            <div class="note">
+              <strong>핵심 구조:</strong> 가벼운 테스트 진입 → 흥미로운 결과 →
+              SNS 공유 → 결과 페이지에서 상담 신청 CTA. 테스트 참여자 데이터는
+              잠재 고객 DB로 활용 가능.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 09. 구독 상품 안내 ===== -->
+    <section id="subscription">
+      <div class="container">
+        <p class="section-label">09 / Subscription</p>
+        <h2>폴라애드 마케팅 구독 상품</h2>
+        <p class="section-desc">
+          홈페이지 제작과 함께 마케팅 운영까지 일괄 관리하는 월 정기 구독
+          상품입니다. 6개월 약정 후 홈페이지를 영구 소유합니다.
+        </p>
+
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+          "
+        >
+          <!-- 운영형 (추천) -->
+          <div
+            class="card"
+            style="
+              text-align: center;
+              border: 2px solid var(--accent);
+              position: relative;
+            "
+          >
+            <div
+              style="
+                position: absolute;
+                top: -12px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--accent);
+                color: #fff;
+                font-size: 10px;
+                font-weight: 600;
+                padding: 3px 14px;
+                border-radius: 4px;
+                letter-spacing: 1px;
+              "
+            >
+              RECOMMENDED
+            </div>
+            <div
+              style="
+                font-size: 12px;
+                color: var(--accent);
+                font-weight: 600;
+                margin-bottom: 8px;
+              "
+            >
+              STANDARD
+            </div>
+            <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px">
+              운영형
+            </div>
+            <div
+              style="
+                font-size: 28px;
+                font-weight: 700;
+                color: var(--accent);
+                margin-bottom: 2px;
+              "
+            >
+              22<span
+                style="
+                  font-size: 14px;
+                  font-weight: 400;
+                  color: var(--text-muted);
+                "
+                >만원/월</span
+              >
+            </div>
+            <div
+              style="
+                font-size: 12px;
+                color: var(--text-muted);
+                margin-bottom: 16px;
+              "
+            >
+              광고까지 맡기고 싶은 분
+            </div>
+            <ul class="checklist" style="text-align: left; font-size: 13px">
+              <li>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                접수형 전체 포함
+              </li>
+              <li>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--accent)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <strong>Meta 광고 운영</strong> (CPR $20 목표)
+              </li>
+              <li>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--accent)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <strong>1캠페인 멀티소재 전략</strong>
+              </li>
+              <li>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--accent)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <strong>월간 성과 리포트</strong> 자동 발송
+              </li>
+              <li>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--accent)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <strong>GA4 채널별 유입 분석</strong>
+              </li>
+              <li>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--accent)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                <strong>CRM 상태 관리</strong>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 프리미엄 -->
+          <div class="card" style="text-align: center">
+            <div
+              style="
+                font-size: 12px;
+                color: var(--text-muted);
+                font-weight: 500;
+                margin-bottom: 8px;
+              "
+            >
+              PREMIUM
+            </div>
+            <div style="font-size: 13px; font-weight: 600; margin-bottom: 4px">
+              프리미엄
+            </div>
+            <div style="font-size: 28px; font-weight: 700; margin-bottom: 2px">
+              55<span
+                style="
+                  font-size: 14px;
+                  font-weight: 400;
+                  color: var(--text-muted);
+                "
+                >만원/월</span
+              >
+            </div>
+            <div
+              style="
+                font-size: 12px;
+                color: var(--text-muted);
+                margin-bottom: 16px;
+              "
+            >
+              콘텐츠 배포 + 멀티채널
+            </div>
+            <ul class="checklist" style="text-align: left; font-size: 13px">
+              <li>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                운영형 전체 포함
+              </li>
+              <li>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Meta + 당근 + 구글 멀티채널
+              </li>
+              <li>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                전담 매니저 1:1 배정
+              </li>
+              <li>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                매일 콘텐츠 배포
+              </li>
+              <li>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                광고 소재 월 4회 제작
+              </li>
+              <li>
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                주간 성과 브리핑
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="note" style="margin-top: 16px">
+          <strong>공통 정책:</strong> 6개월 약정 / 약정 후 홈페이지 영구 소유 /
+          약정 종료 후 월 단위 자동 연장, 언제든 해지 가능<br />
+          <strong>상세 안내:</strong>
+          <a
+            href="https://polarad.co.kr"
+            target="_blank"
+            style="color: var(--accent)"
+            >polarad.co.kr</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 10. 투자 비용 ===== -->
+    <section id="pricing">
+      <div class="container">
+        <p class="section-label">10 / Pricing</p>
+        <h2>투자 비용 안내</h2>
+        <p class="section-desc">
+          홈페이지 리모델링 비용을 두 가지 옵션으로 안내드립니다.
+        </p>
+
+        <div class="pricing-grid">
+          <!-- 구독 + 홈페이지 패키지 (강조) -->
+          <div
+            class="pricing-card featured"
+            style="
+              background: linear-gradient(135deg, #1a1714, #2c2418);
+              color: #fff;
+              border-color: var(--accent);
+            "
+          >
+            <div
+              style="
+                font-size: 11px;
+                color: #c5a55a;
+                font-weight: 600;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+              "
+            >
+              폴라애드 구독과 함께 제작 시
+            </div>
+            <div
+              style="
+                font-size: 13px;
+                color: rgba(255, 255, 255, 0.5);
+                margin-bottom: 4px;
+              "
+            >
+              홈페이지 리모델링
+            </div>
+            <div
+              style="
+                font-size: 48px;
+                font-weight: 700;
+                color: #c5a55a;
+                margin-bottom: 2px;
+              "
+            >
+              44<span
+                style="
+                  font-size: 18px;
+                  font-weight: 400;
+                  color: rgba(255, 255, 255, 0.5);
+                "
+                >만원</span
+              >
+            </div>
+            <div
+              style="
+                font-size: 12px;
+                color: rgba(255, 255, 255, 0.4);
+                margin-bottom: 20px;
+              "
+            >
+              VAT 포함 / 월 22만원 구독 가입 조건
+            </div>
+            <ul class="pricing-features">
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                3페이지 풀 리모델링 (메인/콘텐츠/상담)
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                유튜브 자동 연동 + 165개 영상 마이그레이션
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                접수 관리 시스템 + 텔레그램 알림
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                GA4 + 네이버 서치어드바이저
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                방문 통계 텔레그램 일간 리포트
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                작동 오류 및 콘텐츠 오류 무료 점검
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                폴라애드 구독 기간 중 수정 무료 지원
+              </li>
+            </ul>
+          </div>
+
+          <!-- 홈페이지만 단독 제작 -->
+          <div class="pricing-card" style="border: 1px solid var(--border)">
+            <div
+              style="
+                font-size: 11px;
+                color: var(--text-muted);
+                font-weight: 500;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+              "
+            >
+              홈페이지만 단독 제작 시
+            </div>
+            <div
+              style="
+                font-size: 13px;
+                color: var(--text-secondary);
+                margin-bottom: 4px;
+              "
+            >
+              마케팅 구독 없이 홈페이지만
+            </div>
+            <div class="pricing-price">88<span>만원 (VAT포함)</span></div>
+            <div class="pricing-note">
+              카카오 로그인 미포함 / 마케팅 운영 미포함
+            </div>
+            <ul class="pricing-features">
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                3페이지 풀 리모델링 (메인/콘텐츠/상담)
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                유튜브 자동 연동 + 165개 영상 마이그레이션
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                접수 관리 시스템 + 텔레그램 알림
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--success)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                GA4 + 네이버 서치어드바이저
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--text-muted)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+                <span style="color: var(--text-muted)"
+                  >Meta 광고 운영 미포함</span
+                >
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--text-muted)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+                <span style="color: var(--text-muted)"
+                  >구독 기간 중 무료 수정 미포함</span
+                >
+              </li>
+              <li>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--text-muted)"
+                  stroke-width="2"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+                <span style="color: var(--text-muted)"
+                  >제작 1개월 이후 수정 건당 33,000원</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 합산 결제 금액 안내 -->
+        <h3 style="margin-bottom: 20px">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--accent)"
+            stroke-width="2"
+            style="vertical-align: -3px; margin-right: 6px"
+          >
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+            <line x1="1" y1="10" x2="23" y2="10" />
+          </svg>
+          합산 결제 금액 안내
+        </h3>
+
+        <!-- 구독 + 홈페이지 합산 (강조) -->
+        <div
+          class="card"
+          style="
+            border: 2px solid var(--accent);
+            background: linear-gradient(
+              135deg,
+              rgba(139, 105, 20, 0.03),
+              rgba(245, 240, 228, 0.5)
+            );
+            margin-bottom: 16px;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              flex-wrap: wrap;
+              gap: 16px;
+            "
+          >
+            <div>
+              <div
+                style="
+                  font-size: 12px;
+                  color: var(--accent);
+                  font-weight: 600;
+                  letter-spacing: 1px;
+                  margin-bottom: 4px;
+                "
+              >
+                RECOMMENDED PACKAGE
+              </div>
+              <div style="font-size: 16px; font-weight: 700">
+                폴라애드 구독(6개월) + 홈페이지 리모델링
+              </div>
+            </div>
+            <div style="text-align: right">
+              <div
+                style="
+                  font-size: 12px;
+                  color: var(--text-muted);
+                  text-decoration: line-through;
+                "
+              >
+                정가 176만원
+              </div>
+              <div
+                style="font-size: 32px; font-weight: 700; color: var(--accent)"
+              >
+                176<span style="font-size: 14px; font-weight: 400">만원</span>
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted)">
+                VAT 포함
+              </div>
+            </div>
+          </div>
+          <div
+            style="
+              margin-top: 16px;
+              padding-top: 16px;
+              border-top: 1px solid var(--border);
+            "
+          >
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr auto 1fr auto 1fr;
+                gap: 8px;
+                align-items: center;
+                text-align: center;
+                font-size: 13px;
+              "
+            >
+              <div>
+                <div style="color: var(--text-muted); font-size: 11px">
+                  구독료 (6개월)
+                </div>
+                <div style="font-weight: 600">22만원 x 6 = 132만원</div>
+              </div>
+              <div style="color: var(--accent); font-size: 18px">+</div>
+              <div>
+                <div style="color: var(--text-muted); font-size: 11px">
+                  홈페이지 제작
+                </div>
+                <div style="font-weight: 600">44만원</div>
+              </div>
+              <div style="color: var(--accent); font-size: 18px">=</div>
+              <div>
+                <div
+                  style="
+                    color: var(--accent);
+                    font-size: 11px;
+                    font-weight: 600;
+                  "
+                >
+                  총 결제 금액
+                </div>
+                <div
+                  style="
+                    font-weight: 700;
+                    font-size: 18px;
+                    color: var(--accent);
+                  "
+                >
+                  176만원
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 단독 제작 합산 -->
+        <div class="card" style="margin-bottom: 16px">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              flex-wrap: wrap;
+              gap: 16px;
+            "
+          >
+            <div>
+              <div
+                style="
+                  font-size: 12px;
+                  color: var(--text-muted);
+                  font-weight: 500;
+                  letter-spacing: 1px;
+                  margin-bottom: 4px;
+                "
+              >
+                WEBSITE ONLY
+              </div>
+              <div style="font-size: 16px; font-weight: 700">
+                홈페이지만 단독 제작
+              </div>
+            </div>
+            <div style="text-align: right">
+              <div style="font-size: 32px; font-weight: 700">
+                88<span
+                  style="
+                    font-size: 14px;
+                    font-weight: 400;
+                    color: var(--text-muted);
+                  "
+                  >만원</span
+                >
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted)">
+                VAT 포함 / 카카오 로그인 미포함
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 추가 옵션 + 결제 -->
+        <div class="grid-2">
+          <div class="card">
+            <h3 style="font-size: 14px; margin-bottom: 12px">추가 옵션</h3>
+            <table class="spec-table">
+              <tr>
+                <td>카카오 로그인</td>
+                <td><strong>33만원</strong> (별도 추가)</td>
+              </tr>
+              <tr>
+                <td>개별 수정</td>
+                <td>33,000원/건 (VAT포함, 제작 1개월 후)</td>
+              </tr>
+              <tr>
+                <td>오류 점검</td>
+                <td>무료 (작동/콘텐츠 오류)</td>
+              </tr>
+              <tr>
+                <td>구독 중 수정</td>
+                <td>무료 (폴라애드 구독 기간 중)</td>
+              </tr>
+            </table>
+          </div>
+          <div class="card">
+            <h3 style="font-size: 14px; margin-bottom: 12px">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="var(--accent)"
+                stroke-width="2"
+                style="vertical-align: -2px; margin-right: 4px"
+              >
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                <line x1="1" y1="10" x2="23" y2="10" />
+              </svg>
+              결제 안내
+            </h3>
+            <div style="font-size: 13px; color: var(--text-secondary)">
+              <strong>계좌이체</strong><br />
+              우리은행 1005-302-954803<br />
+              폴라애드 이재호<br /><br />
+              <strong>카드 결제</strong> 가능<br /><br />
+              <strong>구독 상품 가입</strong><br />
+              <a
+                href="https://polarad.co.kr"
+                target="_blank"
+                style="color: var(--accent); font-weight: 600"
+                >polarad.co.kr</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 11. 일정 ===== -->
+    <section id="schedule" style="border-bottom: none">
+      <div class="container">
+        <p class="section-label">11 / Schedule</p>
+        <h2>프로젝트 일정</h2>
+        <p class="section-desc">
+          계약 완료 후 약 2~3주 내 홈페이지 오픈을 목표로 합니다.
+        </p>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <h4>계약 및 착수</h4>
+            <p>계약 체결, 도메인/호스팅 관리 정보 수령, 콘텐츠 자료 수집</p>
+          </div>
+          <div class="timeline-item">
+            <h4>디자인 및 개발 (1주차)</h4>
+            <p>메인 페이지 디자인 확정, 프론트엔드 개발, 유튜브 API 연동</p>
+          </div>
+          <div class="timeline-item">
+            <h4>기능 구현 (2주차)</h4>
+            <p>
+              접수 관리 시스템, 텔레그램 알림, GA4/서치어드바이저 설치, 콘텐츠
+              페이지
+            </p>
+          </div>
+          <div class="timeline-item">
+            <h4>검수 및 오픈 (3주차)</h4>
+            <p>내부 테스트, 도메인 연결, 최종 검수 후 라이브 오픈</p>
+          </div>
+          <div class="timeline-item">
+            <h4>안정화 (오픈 후 1주)</h4>
+            <p>오류 모니터링, 데이터 확인, 필요 시 즉시 수정</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+      <p>
+        <strong>POLARAD 폴라애드</strong><br />
+        본 기획서는 노블홍 결혼정보회사 홈페이지 리모델링을 위해
+        작성되었습니다.<br />
+        문의: <a href="https://polarad.co.kr">polarad.co.kr</a>
+      </p>
+    </div>
+  </body>
+</html>

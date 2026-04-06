@@ -1,0 +1,1258 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>노블홍 카피라이트 전략 기획서</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0d0b09;
+        --surface: #161310;
+        --surface-2: #1e1a16;
+        --border: #2a2520;
+        --border-light: #3a3530;
+        --text: #f5f0e8;
+        --text-secondary: #a89e90;
+        --text-muted: #6b6358;
+        --accent-gold: #c4a55a;
+        --accent-gold-light: #d4b86a;
+        --accent-purple: #7b2d8e;
+        --tag-green: #059669;
+        --tag-red: #dc2626;
+        --tag-blue: #2563eb;
+        --tag-orange: #d97706;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.8;
+        font-size: 15px;
+      }
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 60px 32px;
+      }
+      .doc-header {
+        text-align: center;
+        padding: 80px 32px 60px;
+        border-bottom: 1px solid var(--border);
+      }
+      .doc-header .brand {
+        font-size: 13px;
+        letter-spacing: 4px;
+        color: var(--accent-gold);
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      }
+      .doc-header h1 {
+        font-size: 36px;
+        font-weight: 300;
+        letter-spacing: -0.5px;
+        margin-bottom: 12px;
+      }
+      .doc-header h1 strong {
+        font-weight: 700;
+        color: var(--accent-gold);
+      }
+      .doc-header .subtitle {
+        color: var(--text-secondary);
+        font-size: 16px;
+      }
+      .doc-header .meta {
+        margin-top: 24px;
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+      .section {
+        padding: 64px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .section:last-child {
+        border-bottom: none;
+      }
+      .section-num {
+        font-size: 12px;
+        letter-spacing: 3px;
+        color: var(--accent-gold);
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .section h2 {
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .section h2 span {
+        color: var(--accent-gold);
+      }
+      .section .section-desc {
+        color: var(--text-secondary);
+        margin-bottom: 32px;
+        font-size: 15px;
+      }
+      .section h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 32px 0 12px;
+        padding-left: 16px;
+        border-left: 3px solid var(--accent-gold);
+      }
+      .section h4 {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 20px 0 8px;
+        color: var(--accent-gold-light);
+      }
+      p {
+        margin-bottom: 12px;
+      }
+      .tag {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-right: 4px;
+      }
+      .tag-strength {
+        background: rgba(5, 150, 105, 0.15);
+        color: #34d399;
+      }
+      .tag-minimize {
+        background: rgba(220, 38, 38, 0.15);
+        color: #f87171;
+      }
+      .tag-reframe {
+        background: rgba(217, 119, 6, 0.15);
+        color: #fbbf24;
+      }
+      .tag-source {
+        background: rgba(37, 99, 235, 0.15);
+        color: #60a5fa;
+      }
+      .tag-page {
+        background: rgba(124, 58, 237, 0.15);
+        color: #a78bfa;
+      }
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 16px;
+        margin: 16px 0;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 24px;
+      }
+      .card:hover {
+        border-color: var(--border-light);
+      }
+      .card .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .card .card-body {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .card-full {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 28px 32px;
+        margin: 16px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        font-size: 14px;
+      }
+      th {
+        text-align: left;
+        padding: 12px 16px;
+        background: var(--surface);
+        color: var(--accent-gold);
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--border);
+      }
+      td {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      ul.feature-list {
+        list-style: none;
+        margin: 12px 0;
+      }
+      ul.feature-list li {
+        padding: 8px 0 8px 24px;
+        position: relative;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      ul.feature-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 14px;
+        width: 8px;
+        height: 8px;
+        background: var(--accent-gold);
+        border-radius: 50%;
+      }
+      .callout {
+        background: var(--surface-2);
+        border-left: 3px solid var(--accent-gold);
+        padding: 16px 20px;
+        margin: 16px 0;
+        border-radius: 0 8px 8px 0;
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+      .callout strong {
+        color: var(--text);
+      }
+      .copy-block {
+        background: var(--surface);
+        border: 1px solid var(--accent-gold);
+        border-radius: 10px;
+        padding: 32px;
+        margin: 16px 0;
+        position: relative;
+      }
+      .copy-block::before {
+        content: attr(data-label);
+        position: absolute;
+        top: -10px;
+        left: 20px;
+        background: var(--accent-gold);
+        color: var(--bg);
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 12px;
+        border-radius: 4px;
+        letter-spacing: 1px;
+      }
+      .copy-block .copy-headline {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 32px;
+        font-weight: 300;
+        line-height: 1.4;
+        margin-bottom: 16px;
+        color: var(--text);
+      }
+      .copy-block .copy-sub {
+        font-size: 16px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        margin-bottom: 12px;
+      }
+      .copy-block .copy-body {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.8;
+      }
+      .copy-block .copy-cta {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 10px 28px;
+        border: 1px solid var(--accent-gold);
+        color: var(--accent-gold);
+        font-size: 13px;
+        letter-spacing: 1px;
+        border-radius: 2px;
+      }
+      .vs-table td:first-child {
+        width: 30%;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .note {
+        font-size: 13px;
+        color: var(--text-muted);
+        font-style: italic;
+        margin: 8px 0;
+      }
+      .highlight-num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 48px;
+        font-weight: 300;
+        color: var(--accent-gold);
+        line-height: 1;
+      }
+      .highlight-label {
+        font-size: 14px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .num-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        margin: 24px 0;
+        text-align: center;
+      }
+      .num-item {
+        padding: 24px 16px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="doc-header">
+      <div class="brand">Noble HoNG</div>
+      <h1>카피라이트 <strong>전략 기획서</strong></h1>
+      <p class="subtitle">
+        강점 극대화 / 취약점 리프레이밍 / 프리미엄 톤 카피 드래프트
+      </p>
+      <p class="meta">
+        v1.0 &mdash; 2026.04.02 | 소스: 브로셔(2025) 우선 + 사이트 크롤링
+      </p>
+    </header>
+
+    <div class="container">
+      <!-- ===== SECTION 1: 브랜드 포지셔닝 ===== -->
+      <section class="section">
+        <div class="section-num">Section 01</div>
+        <h2>브랜드 <span>포지셔닝 전략</span></h2>
+        <p class="section-desc">
+          노블홍의 핵심 자산을 정의하고, 경쟁사 대비 취약점을 리프레이밍하는
+          메시지 전략.
+        </p>
+
+        <h3>핵심 자산 (절대 강점)</h3>
+        <div class="num-grid">
+          <div class="num-item">
+            <div class="highlight-num">30</div>
+            <div class="highlight-label">년 경력 (1996~)</div>
+          </div>
+          <div class="num-item">
+            <div class="highlight-num">8,000+</div>
+            <div class="highlight-label">성혼 실적</div>
+          </div>
+          <div class="num-item">
+            <div class="highlight-num">300+</div>
+            <div class="highlight-label">방송 출연</div>
+          </div>
+          <div class="num-item">
+            <div class="highlight-num">No.1</div>
+            <div class="highlight-label">3년 연속 브랜드만족지수</div>
+          </div>
+        </div>
+
+        <h3>강점 부각 전략</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>강점</th>
+              <th>메시지 전략</th>
+              <th>근거 (브로셔)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag tag-strength">핵심</span> CEO 직접 매칭</td>
+              <td>
+                "대표가 직접 관여하는 매칭" &mdash; 대형사의 매니저 돌려막기와
+                차별화. 대표 이름을 건 책임 경영을 반복 강조
+              </td>
+              <td>브로셔 p2, p16</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="tag tag-strength">핵심</span> 커플매니저 제1호
+              </td>
+              <td>
+                "대한민국 최초" 타이틀의 권위감. 직업사전 등록이라는 공식 인증을
+                반복 노출
+              </td>
+              <td>브로셔 p3</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-strength">핵심</span> 30년 / 8,000명</td>
+              <td>
+                숫자 자체가 메시지. 모든 페이지에 반복 노출. "30년간 연구하고
+                분석한" 표현으로 학술적 깊이도 부각
+              </td>
+              <td>브로셔 p2, p5</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="tag tag-strength">신뢰</span> 브랜드만족지수 3년
+                연속 1위
+              </td>
+              <td>
+                제3자 인증의 객관성 강조. "소비자가 선정한"이라는 프레임. 수상
+                배지 시각화
+              </td>
+              <td>브로셔 p5, p13</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="tag tag-strength">신뢰</span> 방송 300회+ 고정 출연
+              </td>
+              <td>
+                "KBS &middot; MBC 고정 출연 전문가" &mdash; 방송사 권위를 브랜드
+                신뢰로 전환. 방송사 로고 나열 금지, "KBS 아침마당 고정 패널"
+                식으로 텍스트만
+              </td>
+              <td>브로셔 p4, p10~11</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="tag tag-strength">전문</span> 박사 학위 / 논문 /
+                저서
+              </td>
+              <td>
+                "연구 기반 매칭" 프레임. 감이 아닌 데이터와 학술적 근거로
+                매칭한다는 전문성
+              </td>
+              <td>브로셔 p2, p12</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="tag tag-strength">데이터</span> 연령대별 교제율 /
+                자산분포
+              </td>
+              <td>
+                브로셔 p7의 신규 데이터를 시각화. 회원 풀의 질적 수준을 간접
+                증명. "31억~100억 자산 회원 59%"
+              </td>
+              <td>브로셔 p7 (신규)</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-strength">차별</span> 3.3.3 프로모션</td>
+              <td>
+                성혼을 위한 독자 프로그램 보유. "3명 이상 교제, 3번 이상 만남,
+                3명 추가 미팅" &mdash; 구체적이고 기억하기 쉬운 시스템
+              </td>
+              <td>브로셔 p6~7</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="tag tag-strength">확장</span> 해외거주 자녀결혼
+              </td>
+              <td>
+                미국(시애틀/LA/뉴욕), 호주(브리즈번/시드니/멜버른) 거주 자녀
+                특화. 해외 고객 확보 근거
+              </td>
+              <td>브로셔 p8 (신규)</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-strength">사회</span> 저출생 캠페인</td>
+              <td>
+                단순 영리 기업이 아닌 사회적 사명감. 지자체장 협력, 국회의원
+                표창 &mdash; 공적 신뢰
+              </td>
+              <td>브로셔 p14</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>업계 소비자 불만 &mdash; 노블홍의 선제 대응</h3>
+        <div class="callout">
+          <strong>경쟁사 리서치 결과:</strong> 결혼정보회사 소비자 민원
+          1,188건(2021~2024, 한국소비자원). 매년 증가 추세. 이 불만들을 노블홍
+          카피에서 선제적으로 해소하면 신뢰를 크게 높일 수 있음.
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>업계 공통 불만</th>
+              <th>노블홍 선제 대응 카피</th>
+              <th>적용 위치</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>프로필 허위/과장</strong><br />소득, 학력, 사진 불일치
+              </td>
+              <td>
+                "가족, 혼인, 학력, 재직, 자산 등
+                <strong>철저한 서류 신원인증</strong> 완료 후에만 매칭을
+                시작합니다"
+              </td>
+              <td>노블매칭 프로세스</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>비용 대비 낮은 매칭 횟수</strong><br />높은 가입비 vs
+                적은 소개
+              </td>
+              <td>
+                "매주 2~3회 매칭 전략 회의. <strong>3.3.3 프로모션</strong>으로
+                교제와 성혼을 극대화합니다"
+              </td>
+              <td>노블매칭 3.3.3 섹션</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>기계적 알고리즘 매칭</strong><br />조건만 맞추는 표면적
+                매칭
+              </td>
+              <td>
+                "알고리즘이 아닌, <strong>30년의 직관</strong>이 매칭합니다.
+                10년 이상 경력 매니저의 감성 매칭"
+              </td>
+              <td>노블매칭 히어로</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>전담 매니저 소통 부재</strong><br />매니저 교체, 연락
+                두절
+              </td>
+              <td>
+                "<strong>대표가 직접 매칭에 관여</strong>합니다. 매주 목요일
+                교제 체크로 성혼까지 동행"
+              </td>
+              <td>HOME CEO 섹션</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>환불/약관 분쟁</strong><br />계약 해지 시 과도한 위약금
+              </td>
+              <td>
+                "<strong>공정거래위원회 표준약관</strong> 준수. 법무법인 고문
+                협약으로 회원의 권익을 보장합니다"
+              </td>
+              <td>노블매칭 왜노블홍</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>영업 전화 과잉</strong><br />번호 바꿔가며 반복 연락
+              </td>
+              <td>
+                카피에서 직접 언급하지 않음. 대신 상담 폼 UX로 해결 &mdash;
+                "원하실 때 연락드립니다"
+              </td>
+              <td>상담문의 폼 안내</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>취약점 리프레이밍 전략</h3>
+        <div class="callout">
+          <strong>원칙:</strong> 취약점을 숨기지 않되, 다른 프레임으로
+          재해석하여 오히려 강점으로 전환. 직접 비교/공격적 표현 금지.
+        </div>
+        <table class="vs-table">
+          <thead>
+            <tr>
+              <th>인식될 수 있는 약점</th>
+              <th>리프레이밍</th>
+              <th>카피 방향</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <span class="tag tag-minimize">규모</span> 대형사 대비 작은 규모
+              </td>
+              <td>
+                <span class="tag tag-reframe">전환</span> "부티크 프리미엄"
+              </td>
+              <td>
+                "소수 정예 회원제" "대표가 직접 관여하는 밀착 매칭" &mdash;
+                대형사는 수만 명을 돌려막고, 노블홍은 한 분 한 분에 집중한다는
+                프레임. 규모를 언급하지 않고 "밀착"을 반복
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="tag tag-minimize">기술</span> 앱/AI 매칭 없음
+              </td>
+              <td>
+                <span class="tag tag-reframe">전환</span> "사람의 눈, 30년의
+                직관"
+              </td>
+              <td>
+                "알고리즘이 아닌 30년 경력의 전문가가 직접 매칭합니다" &mdash;
+                기술 부재가 아닌 "휴먼 프리미엄". AI 매칭의 한계(표면적 조건만
+                매칭)를 암시하고, 인간적 통찰을 강조
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="tag tag-minimize">지점</span> 강남 1곳만 운영
+              </td>
+              <td><span class="tag tag-reframe">전환</span> "강남 플래그십"</td>
+              <td>
+                "강남역 4번 출구, 노블홍 본사" &mdash; '1곳'이 아닌 '본사'로
+                표현. 강남이라는 입지 자체가 프리미엄의 증거. 해외 상담도
+                가능함을 병기하여 지역 한계 상쇄
+              </td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-minimize">가격</span> 가격 비공개</td>
+              <td><span class="tag tag-reframe">전환</span> "맞춤 설계"</td>
+              <td>
+                "회원님의 상황에 맞는 프로그램을 설계합니다" &mdash; 가격이 없는
+                게 아니라 개인화된 설계가 필요하다는 프레임. 고급 서비스의
+                관례(명품 매장에 가격표 없음)와 동일 포지셔닝
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="tag tag-minimize">연령</span> 사이트가 올드해 보임
+              </td>
+              <td><span class="tag tag-reframe">전환</span> "리뉴얼로 해결"</td>
+              <td>
+                이번 마이그레이션으로 완전 해소. 프리미엄 인터랙티브 UI가 곧
+                답변
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="tag tag-minimize">후기</span> 성혼 후기/리뷰 부족
+              </td>
+              <td>
+                <span class="tag tag-reframe">전환</span> "프라이버시 보호"
+              </td>
+              <td>
+                "회원의 개인정보와 프라이버시를 최우선으로 보호합니다" &mdash;
+                후기 대신 방송 출연과 제3자 인증(브랜드만족지수)으로 신뢰 대체.
+                후기 부재를 직접 언급하지 않음
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ===== SECTION 2: 카피 톤 & 보이스 ===== -->
+      <section class="section">
+        <div class="section-num">Section 02</div>
+        <h2>카피 <span>톤 & 보이스</span></h2>
+        <p class="section-desc">
+          프리미엄 결혼정보회사에 걸맞은 문체와 어투 가이드.
+        </p>
+
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-title">톤 (Tone)</div>
+            <div class="card-body">
+              <strong>격조 있되 차갑지 않은.</strong><br />
+              고급 호텔 컨시어지가 말하듯 &mdash; 정중하고 따뜻하며, 과장 없이
+              자신감 있는 톤.<br /><br />
+              O: "30년간 8,000명의 행복한 결혼을 이끌었습니다"<br />
+              X: "업계 최고!! 8000명 성혼 달성!!!"<br />
+              X: "저희가 최선을 다하겠습니다~"
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">보이스 (Voice)</div>
+            <div class="card-body">
+              <strong>전문가의 확신.</strong><br />
+              "~해 드립니다" 보다 "~합니다"를 기본으로. 겸양이 아닌 확신.<br /><br />
+              O: "노블홍이 최적의 인연을 매칭합니다"<br />
+              X: "최적의 인연을 찾아드리도록 노력하겠습니다"<br />
+              O: "CEO가 직접 매칭에 관여합니다"<br />
+              X: "CEO가 직접 매칭에 관여하고 있어요~"
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">금지 표현</div>
+            <div class="card-body">
+              <strong>프리미엄 톤을 해치는 표현 차단.</strong><br /><br />
+              X: 느낌표 남발 (!!!), 물결표 (~), 이모티콘<br />
+              X: "최고", "최저가", "파격", "특가", "이벤트"<br />
+              X: "~해 드릴게요", "~인데요", "~거든요" (구어체)<br />
+              X: 경쟁사 직접 비교, 타사 비하 표현<br />
+              X: "결혼 못해서 오시는 곳이 아닌" (기존 사이트 표현 삭제)
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">권장 표현</div>
+            <div class="card-body">
+              <strong>격조와 신뢰를 전달하는 어휘.</strong><br /><br />
+              O: 성혼, 매칭, 인연, 격이 다른, 맞춤, 밀착, 설계<br />
+              O: 전문가, 연구, 분석, 전략, 컨설팅, 코칭<br />
+              O: 30년, 8000명, 제1호, 브랜드만족지수 1위<br />
+              O: 책임, 신뢰, 진심, 약속, 동행<br />
+              O: 합니다, 입니다 (확신의 종결어미)
+            </div>
+          </div>
+        </div>
+
+        <h3>문장 길이 가이드</h3>
+        <ul class="feature-list">
+          <li>
+            <strong>헤드라인:</strong> 10자 이내. 한 호흡에 읽히는 짧은 문장.
+            영문 병기 가능
+          </li>
+          <li><strong>서브헤드:</strong> 20~30자. 헤드라인을 보충하는 한 줄</li>
+          <li>
+            <strong>본문:</strong> 문장당 40자 이내. 한 문단 3~4문장 이내. 핵심
+            키워드 볼드
+          </li>
+          <li>
+            <strong>CTA:</strong> 8자 이내. "무료 상담 신청" "지금 시작하기"
+            "1800-8194"
+          </li>
+          <li>
+            <strong>숫자:</strong> 항상 아라비아 숫자 + 단위. "8,000명" "30년"
+            "75%". 서체 강조
+          </li>
+        </ul>
+      </section>
+
+      <!-- ===== SECTION 3: 페이지별 카피 드래프트 ===== -->
+      <section class="section">
+        <div class="section-num">Section 03</div>
+        <h2>페이지별 <span>카피 드래프트</span></h2>
+        <p class="section-desc">
+          6개 페이지 x 각 섹션별 헤드라인/서브카피/본문 초안. 브로셔 우선,
+          사이트 텍스트는 리라이팅.
+        </p>
+
+        <!-- === HOME === -->
+        <h3>HOME &mdash; 메인 랜딩</h3>
+
+        <div class="copy-block" data-label="HERO">
+          <div class="copy-headline">행복한 결혼을 설계합니다</div>
+          <div class="copy-sub">
+            30년간 8,000명의 인연을 이은 대한민국 성혼 전문가, 노블홍
+          </div>
+          <div class="copy-cta">상담 시작하기</div>
+        </div>
+
+        <div class="copy-block" data-label="핵심 수치">
+          <div class="num-grid">
+            <div class="num-item">
+              <div class="highlight-num">30</div>
+              <div class="highlight-label">
+                년의 매칭 노하우<br /><span
+                  style="font-size: 12px; color: var(--text-muted)"
+                  >1996년부터 현재까지</span
+                >
+              </div>
+            </div>
+            <div class="num-item">
+              <div class="highlight-num">8,000+</div>
+              <div class="highlight-label">
+                성혼 실적<br /><span
+                  style="font-size: 12px; color: var(--text-muted)"
+                  >대한민국 커플매니저 제1호</span
+                >
+              </div>
+            </div>
+            <div class="num-item">
+              <div class="highlight-num">75%</div>
+              <div class="highlight-label">
+                30대 교제율<br /><span
+                  style="font-size: 12px; color: var(--text-muted)"
+                  >3회 이상 만남 기준</span
+                >
+              </div>
+            </div>
+            <div class="num-item">
+              <div class="highlight-num">3년 연속</div>
+              <div class="highlight-label">
+                브랜드만족지수 1위<br /><span
+                  style="font-size: 12px; color: var(--text-muted)"
+                  >2022~2024 결혼정보 부문</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="copy-block" data-label="서비스 하이라이트">
+          <div class="copy-sub" style="margin-bottom: 24px">
+            격이 다른 매칭, 노블홍만의 방식
+          </div>
+          <div class="card-grid">
+            <div class="card">
+              <div class="card-title">명품결혼 컨설팅</div>
+              <div class="card-body">
+                전문직, 명문가, 재력가를 위한<br />맞춤형 프리미엄 매칭
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">자녀결혼 컨설팅</div>
+              <div class="card-body">
+                해외 거주 자녀까지, 부모님의<br />마음으로 매칭하는 전문 서비스
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">스페셜 재혼</div>
+              <div class="card-body">
+                재혼 전문가의 차별화된 접근으로<br />두 번째 행복을 설계합니다
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="copy-block" data-label="CEO 소개">
+          <div class="copy-headline" style="font-size: 24px">
+            "제 이름을 걸고 책임지는 매칭, 그것이 노블홍입니다"
+          </div>
+          <div class="copy-sub">
+            홍유진 대표 &middot; Ph.D &middot; 대한민국 커플매니저 제1호
+          </div>
+          <div class="copy-body">
+            30년간 5만 명 이상의 싱글과 부모님을 상담하고, 8,000명 이상의 성혼을
+            이끈 대한민국 대표 결혼 전문가. KBS 아침마당, MBC 기분좋은 날 고정
+            출연. 석&middot;박사 학위와 2권의 저서로 결혼과 연애를 학문적으로
+            연구합니다.
+          </div>
+        </div>
+
+        <div class="copy-block" data-label="CTA">
+          <div class="copy-headline" style="font-size: 24px">
+            지금, 노블홍과 시작하세요
+          </div>
+          <div class="copy-sub">주말 및 공휴일에도 상담이 가능합니다</div>
+          <div class="copy-cta">1800-8194 전화 상담</div>
+          <span style="display: inline-block; margin-left: 12px"
+            ><span class="copy-cta">온라인 상담 신청</span></span
+          >
+        </div>
+
+        <!-- === 노블홍 === -->
+        <h3>노블홍 &mdash; 브랜드 & CEO</h3>
+
+        <div class="copy-block" data-label="HERO">
+          <div class="copy-headline">
+            세계 최고의 명품 브랜드는<br />대표가 브랜드입니다
+          </div>
+          <div class="copy-sub">
+            대한민국 커플매니저 제1호 홍유진이 직접 이끄는 노블홍
+          </div>
+        </div>
+
+        <div class="copy-block" data-label="브랜드 철학">
+          <div class="copy-sub" style="font-weight: 600; color: var(--text)">
+            노블홍(Noble HoNG)의 의미
+          </div>
+          <div class="copy-body">
+            '노블(Noble)'은 품격과 격조를, '홍(HoNG)'은 대표 홍유진의 이름이자
+            동양 전통에서 월하노인이 남녀의 인연을 이어주는
+            <strong>붉은 실(紅)</strong>을 의미합니다. 대표의 이름을 건 책임
+            경영 &mdash; 그것이 노블홍의 약속입니다.
+          </div>
+          <p class="note">출처: 브로셔 p16</p>
+        </div>
+
+        <div class="copy-block" data-label="CEO 프로필">
+          <div class="copy-sub" style="font-weight: 600; color: var(--text)">
+            홍유진 대표이사 &middot; 결혼학 박사
+          </div>
+          <div class="copy-body">
+            <strong>30년 경력의 성혼 전문가.</strong> 1996년 듀오에서 커리어를
+            시작하여 닥스클럽, 바로연, 대명위드원(대명그룹 계열)을 거치며 업계
+            전반을 총괄한 유일한 전문가. 2020년 자신의 이름을 건 노블홍을 설립,
+            대표가 직접 매칭에 관여하는 밀착 서비스를 운영합니다.<br /><br />
+            <strong>학력 &middot; 연구</strong><br />
+            &middot; Ph.D 자연치유학 박사 (명상음악과 커플매니저 직무스트레스
+            연구)<br />
+            &middot; 연세대학교 행정대학원 석사 (초혼/재혼 결혼조건 차이 연구,
+            강남 4구 중심)<br /><br />
+            <strong>저서</strong><br />
+            &middot; &laquo;당신에게 연애가 어려운 이유&raquo; (2015)<br />
+            &middot; &laquo;국가 소멸 위기의 저출산문제 해결방안&raquo; 공동저서
+            (2024)
+          </div>
+          <p class="note">출처: 브로셔 p2, p12</p>
+        </div>
+
+        <div class="copy-block" data-label="수상/인증">
+          <div class="copy-sub" style="font-weight: 600; color: var(--text)">
+            공식 인증된 신뢰
+          </div>
+          <div class="copy-body">
+            &middot; 대한민국 브랜드만족지수
+            <strong>3년 연속 1위</strong> (2022~2024, 결혼정보 부문)<br />
+            &middot; 대한민국 파워리더 대상 (2021, 2023)<br />
+            &middot; 국회의원 이양수 표창 &mdash; 지역경제 기여 (2024)<br />
+            &middot; 연세를 빛낸 행정인상 2년 연속 수상 (2022, 2024)<br />
+            &middot; 도전한국인본부 "도전유망기업 100" 선정<br />
+            &middot; 법무법인(유) 원앤파트너스 고문 협약 &mdash; 회원 안전 보장
+          </div>
+          <p class="note">출처: 브로셔 p2, p5, p13</p>
+        </div>
+
+        <div class="copy-block" data-label="미디어">
+          <div class="copy-sub" style="font-weight: 600; color: var(--text)">
+            매스컴이 인정한 성혼 전문가
+          </div>
+          <div class="copy-body">
+            KBS 아침마당, MBC 기분좋은 날 고정 출연을 포함하여
+            지상파&middot;종편&middot;라디오 <strong>300회 이상</strong> 출연.
+            영국 파이낸셜 타임즈, 미국 VOA, 일본 KNTV 등 해외 매체 인터뷰.
+            유튜브 &laquo;결혼박사 홍유진TV&raquo; 운영.
+          </div>
+          <p class="note">출처: 브로셔 p4, p10~11 / 사이트 CEO인사말</p>
+        </div>
+
+        <!-- === 노블매칭 === -->
+        <h3>노블매칭 &mdash; 매칭 시스템 & 프로세스</h3>
+
+        <div class="copy-block" data-label="HERO">
+          <div class="copy-headline">
+            알고리즘이 아닌,<br />30년의 직관이 매칭합니다
+          </div>
+          <div class="copy-sub">
+            성혼 중심 원스톱 매칭 시스템. 상담에서 성혼까지 노블홍이 동행합니다.
+          </div>
+        </div>
+
+        <div class="copy-block" data-label="왜 노블홍인가">
+          <div class="copy-sub" style="font-weight: 600; color: var(--text)">
+            노블홍만을 선택해야 하는 이유
+          </div>
+          <div class="copy-body">
+            &middot; <strong>대표 직접 매칭 관여</strong> &mdash; 홍유진 대표가
+            모든 회원의 매칭 전략에 직접 참여합니다<br />
+            &middot; <strong>8,000명 이상 성혼 노하우</strong> &mdash; 매칭에도
+            성공 전략이 있습니다<br />
+            &middot; <strong>매주 2~3회 매칭 전략 회의</strong> &mdash; 10년
+            이상 경력 매니저들의 브리핑과 분석<br />
+            &middot; <strong>공정거래위원회 표준약관 준수</strong> &mdash;
+            투명하고 안전한 계약<br />
+            &middot; <strong>철저한 신원인증</strong> &mdash; 가족, 혼인, 학력,
+            재직, 자산 등 서류 검증<br />
+            &middot; <strong>법무법인 고문 협약</strong> &mdash; 회원 안전을
+            법적으로 보장합니다
+          </div>
+          <p class="note">출처: 브로셔 p5 / 사이트 왜노블홍인가</p>
+        </div>
+
+        <div class="copy-block" data-label="매칭 프로세스">
+          <div class="copy-sub" style="font-weight: 600; color: var(--text)">
+            상담에서 성혼까지, 6단계 원스톱 매칭
+          </div>
+          <div class="copy-body">
+            <strong>01 상담</strong> &mdash; 전화 또는 방문. 현실에 맞는
+            이상형을 함께 조율합니다<br />
+            <strong>02 가입 & 인증</strong> &mdash; 매칭폼 작성, 신원인증 서류
+            제출. 노블홍 보안 시스템에 등록<br />
+            <strong>03 매칭 전략 회의</strong> &mdash;
+            상담&middot;매칭&middot;총괄 3:1 전략 회의. 매주 2~3회 진행<br />
+            <strong>04 매칭 & 미팅</strong> &mdash; 객관적 데이터 + 감성 매칭.
+            1:1 만남과 소규모 모임 주선<br />
+            <strong>05 교제 코칭</strong> &mdash; 미팅 전 연애 코칭, 미팅 후
+            피드백. 좋은 만남이 교제로 이어지도록<br />
+            <strong>06 성혼</strong> &mdash; 양가 인사, 상견례까지 결혼 준비
+            과정 전반을 체크합니다
+          </div>
+          <p class="note">출처: 브로셔 p6 / 사이트 회원가입안내(리라이팅)</p>
+        </div>
+
+        <div class="copy-block" data-label="3.3.3 프로모션">
+          <div class="copy-sub" style="font-weight: 600; color: var(--text)">
+            3.3.3 프로모션 &mdash; 교제가 많을수록 성혼이 쉽습니다
+          </div>
+          <div class="copy-body">
+            <strong>3</strong>명 이상과 교제하고, <strong>3</strong>번 이상
+            만나면, <strong>3</strong>명 추가 미팅을 제공합니다.<br />
+            달달한 연애를 도와주고, 행복한 성혼을 가능하게 하는 노블홍만의
+            스마트한 프로모션입니다.
+          </div>
+          <p class="note">출처: 브로셔 p6~7</p>
+        </div>
+
+        <!-- === 맞춤컨설팅 === -->
+        <h3>맞춤컨설팅 &mdash; 타겟별 솔루션</h3>
+
+        <div class="copy-block" data-label="HERO">
+          <div class="copy-headline">당신만을 위한<br />맞춤 매칭 전략</div>
+          <div class="copy-sub">
+            전문직, 명문가, 재력가부터 자녀결혼, 재혼까지. 상황에 맞는 전문
+            컨설팅.
+          </div>
+        </div>
+
+        <div class="copy-block" data-label="전문직/명문가/재력가">
+          <div class="copy-sub" style="font-weight: 600; color: var(--text)">
+            전문직 &middot; 명문가 &middot; 재력가 매칭
+          </div>
+          <div class="copy-body">
+            법조계, 의료계, 금융업, 고위 공무원, 대기업 CEO &mdash; 가정환경과
+            경제력을 세심하게 고려한 매칭.
+            <strong>비공개 회원 관리</strong>로 철저한 보안 속에 전담 매니저가
+            관리합니다. 전문직 전용 미팅 파티를 통해 다양한 만남과 네트워크
+            형성도 지원합니다.
+          </div>
+          <p class="note">출처: 사이트 전문직/명문대(리라이팅) + 브로셔 p5</p>
+        </div>
+
+        <div class="copy-block" data-label="자녀결혼 & 해외거주">
+          <div class="copy-sub" style="font-weight: 600; color: var(--text)">
+            자녀결혼 컨설팅 &middot; 해외 거주 자녀 전문
+          </div>
+          <div class="copy-body">
+            결혼 적령기에도 결혼을 미루는 자녀, 바쁜 업무로 만남이 없는 자녀
+            &mdash; 부모님의 마음으로 전문 컨설팅을 진행합니다.<br /><br />
+            <strong>미국</strong>(시애틀, LA, 뉴욕),
+            <strong>호주</strong>(브리즈번, 시드니, 멜버른) 거주 자녀의 결혼
+            상담 문의가 폭주하고 있습니다. 명문가, 재벌가, 전문직, 영어권
+            유학파, 해외 체류 자녀 등 국내뿐 아니라 해외에서도 노블홍이
+            함께합니다.
+          </div>
+          <p class="note">출처: 브로셔 p8 (신규 콘텐츠)</p>
+        </div>
+
+        <div class="copy-block" data-label="스페셜 재혼">
+          <div class="copy-sub" style="font-weight: 600; color: var(--text)">
+            스페셜 재혼 &mdash; 재혼의 접근 방식은 달라야 합니다
+          </div>
+          <div class="copy-body">
+            재혼은 초혼보다 만남 대상이 <strong>1/10</strong>로 줄어들 수
+            있습니다. 이혼 사유, 자녀 양육 상황, 경제적 여건이 모두 다르기에
+            체계적인 전문가의 개입이 필수적입니다.<br /><br />
+            30~40대의 출산 희망 재혼, 50대의 취미 공유 동반자, 60대 이상의 황혼
+            재혼 &mdash; 각 연령대와 상황에 맞는 차별화된 매칭 전략을
+            제시합니다. 노블홍의 재혼 매칭은 확연히 다릅니다.
+          </div>
+          <p class="note">출처: 브로셔 p9 (리라이팅)</p>
+        </div>
+
+        <!-- === 매칭라운지 === -->
+        <h3>매칭라운지 &mdash; 연구 & 콘텐츠</h3>
+
+        <div class="copy-block" data-label="HERO">
+          <div class="copy-headline">매칭 전략,<br />연구에서 시작합니다</div>
+          <div class="copy-sub">
+            30년 데이터와 학술 연구를 기반으로 한 매칭 인사이트
+          </div>
+        </div>
+
+        <div class="copy-block" data-label="매칭전략 연구소">
+          <div class="copy-sub" style="font-weight: 600; color: var(--text)">
+            매칭전략연구소
+          </div>
+          <div class="copy-body">
+            연애, 결혼, 인문학 &mdash; 세 가지 축으로 매칭 과정의 모든 변수를
+            연구합니다. 30년 노하우와 석&middot;박사 학위 연구를 기반으로 회원의
+            성혼을 향한 최적의 전략을 설계합니다. 커플매니저의 전문성 향상을
+            위한 지속적인 교육과 연구도 병행합니다.
+          </div>
+          <p class="note">출처: 사이트 매칭전략연구소(리라이팅)</p>
+        </div>
+
+        <!-- === 상담문의 === -->
+        <h3>상담문의 &mdash; 전환 페이지</h3>
+
+        <div class="copy-block" data-label="HERO">
+          <div class="copy-headline">당신의 인연,<br />지금 시작됩니다</div>
+          <div class="copy-sub">
+            주말 및 공휴일에도 상담 가능합니다 &middot; 1800-8194
+          </div>
+        </div>
+
+        <div class="copy-block" data-label="상담 폼 안내">
+          <div class="copy-body">
+            간단한 정보를 남겨주시면, 담당 커플매니저가
+            <strong>24시간 이내</strong> 연락드립니다.<br />
+            모든 상담 내용은 철저히 비밀이 보장되며, 상담만으로도 비용이
+            발생하지 않습니다.
+          </div>
+        </div>
+
+        <div class="copy-block" data-label="오시는 길">
+          <div class="copy-body">
+            <strong>서울시 강남구 강남대로 354 혜천빌딩 705, 706</strong><br />
+            강남역 4번 출구 도보 3분<br />
+            대표전화 1800-8194<br /><br />
+            (주)노블홍 결혼정보회사 &middot; 대표 홍유진<br />
+            사업자등록번호 321-81-03029<br />
+            국내결혼중개업 신고번호 서울-강남-국내-22-0012호
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SECTION 4: 키 메시지 반복 전략 ===== -->
+      <section class="section">
+        <div class="section-num">Section 04</div>
+        <h2>키 메시지 <span>반복 전략</span></h2>
+        <p class="section-desc">
+          핵심 메시지를 페이지별로 어떻게 반복 노출할지 매트릭스.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>키 메시지</th>
+              <th>HOME</th>
+              <th>노블홍</th>
+              <th>노블매칭</th>
+              <th>맞춤컨설팅</th>
+              <th>매칭라운지</th>
+              <th>상담문의</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>30년 / 8,000명</strong></td>
+              <td>수치 대형</td>
+              <td>CEO 프로필</td>
+              <td>히어로 서브</td>
+              <td>신뢰 뱃지</td>
+              <td>연구소 소개</td>
+              <td>폼 상단</td>
+            </tr>
+            <tr>
+              <td><strong>CEO 직접 매칭</strong></td>
+              <td>CEO 섹션</td>
+              <td>메인 스토리</td>
+              <td>프로세스 내</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+            </tr>
+            <tr>
+              <td><strong>커플매니저 제1호</strong></td>
+              <td>수치 하단</td>
+              <td>브랜드 철학</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+              <td>Footer</td>
+            </tr>
+            <tr>
+              <td><strong>브랜드만족지수 1위</strong></td>
+              <td>수치 대형</td>
+              <td>수상 섹션</td>
+              <td>서브 뱃지</td>
+              <td>서브 뱃지</td>
+              <td>&mdash;</td>
+              <td>폼 하단</td>
+            </tr>
+            <tr>
+              <td><strong>방송 300회+</strong></td>
+              <td>미디어 롤링</td>
+              <td>미디어 상세</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+            </tr>
+            <tr>
+              <td><strong>1800-8194</strong></td>
+              <td>CTA 섹션</td>
+              <td>Footer</td>
+              <td>CTA 고정바</td>
+              <td>CTA 고정바</td>
+              <td>CTA 고정바</td>
+              <td>메인 CTA</td>
+            </tr>
+            <tr>
+              <td><strong>주말/공휴일 상담가능</strong></td>
+              <td>CTA 서브</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+              <td>&mdash;</td>
+              <td>폼 상단</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <strong>CTA 고정바:</strong> 노블매칭, 맞춤컨설팅, 매칭라운지
+          페이지에는 하단에 고정 CTA 바를 배치. "상담 시작하기 &middot;
+          1800-8194" &mdash; 스크롤해도 항상 보이는 전환 유도 요소.
+        </div>
+      </section>
+
+      <!-- ===== SECTION 5: SEO 키워드 전략 ===== -->
+      <section class="section">
+        <div class="section-num">Section 05</div>
+        <h2>SEO <span>키워드 전략</span></h2>
+        <p class="section-desc">
+          검색 유입을 위한 키워드 매핑. 각 페이지의 title, description, h1에
+          반영.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>페이지</th>
+              <th>Primary 키워드</th>
+              <th>Secondary 키워드</th>
+              <th>Title 태그</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>HOME</strong></td>
+              <td>결혼정보회사, 노블홍</td>
+              <td>강남 결혼정보, 프리미엄 결혼, 성혼</td>
+              <td>노블홍 결혼정보회사 | 30년 8,000명 성혼 전문</td>
+            </tr>
+            <tr>
+              <td><strong>노블홍</strong></td>
+              <td>홍유진, 커플매니저</td>
+              <td>결혼박사, 결혼정보회사 대표</td>
+              <td>노블홍 소개 | 홍유진 대표 &middot; 커플매니저 제1호</td>
+            </tr>
+            <tr>
+              <td><strong>노블매칭</strong></td>
+              <td>결혼정보회사 매칭, 결혼 상담</td>
+              <td>매칭 시스템, 성혼율, 결혼정보 가입</td>
+              <td>노블매칭 | 성혼 중심 원스톱 매칭 시스템</td>
+            </tr>
+            <tr>
+              <td><strong>맞춤컨설팅</strong></td>
+              <td>명품결혼, 자녀결혼, 재혼</td>
+              <td>전문직 결혼, 재혼 상담, 해외 결혼</td>
+              <td>맞춤컨설팅 | 전문직 &middot; 자녀결혼 &middot; 재혼 전문</td>
+            </tr>
+            <tr>
+              <td><strong>매칭라운지</strong></td>
+              <td>매칭전략, 연애 칼럼</td>
+              <td>결혼 가이드, 노블레스 파티</td>
+              <td>매칭라운지 | 매칭전략 연구소 &middot; 러브 칼럼</td>
+            </tr>
+            <tr>
+              <td><strong>상담문의</strong></td>
+              <td>결혼정보회사 상담, 결혼 상담</td>
+              <td>무료 상담, 강남 결혼정보</td>
+              <td>상담문의 | 노블홍 결혼정보회사 &middot; 1800-8194</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <footer
+      style="
+        text-align: center;
+        padding: 48px 32px;
+        border-top: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 13px;
+      "
+    >
+      Noble HoNG Copywriting Strategy v1.0 &mdash; 브로셔(2025) 우선 / 사이트
+      텍스트 프리미엄 리라이팅
+    </footer>
+  </body>
+</html>

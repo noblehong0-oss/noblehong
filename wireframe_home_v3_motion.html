@@ -1,0 +1,4441 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>노블홍 HOME 와이어프레임 v2</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Serif+Display&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <style>
+      :root {
+        --bg: #faf9f6;
+        --surface: #ffffff;
+        --surface-warm: #f6f3ee;
+        --surface-cream: #f0ece4;
+        --border: #e0d9ce;
+        --border-gold: rgba(160, 128, 48, 0.25);
+        --text: #1a1714;
+        --text-secondary: #5c564e;
+        --text-muted: #9e9893;
+        --gold: #a08030;
+        --gold-light: #c4a55a;
+        --gold-lighter: #d9c577;
+        --gold-dark: #7a6020;
+        --gold-bg: rgba(160, 128, 48, 0.04);
+        --purple: #7b2d8e;
+        --purple-light: #9b4dae;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* ===== ORNAMENTAL ELEMENTS ===== */
+      .ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 40px 0;
+      }
+      .ornament-line {
+        width: 80px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+      }
+      .ornament-diamond {
+        width: 8px;
+        height: 8px;
+        border: 1px solid var(--gold-light);
+        transform: rotate(45deg);
+      }
+      .ornament-lg .ornament-line {
+        width: 120px;
+      }
+
+      .section-ornament {
+        text-align: center;
+        padding: 0 32px;
+      }
+      .section-ornament svg {
+        width: 200px;
+        height: 20px;
+      }
+
+      /* Gold decorative borders */
+      .gold-frame {
+        position: relative;
+      }
+      .gold-frame::before,
+      .gold-frame::after {
+        content: "";
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        border-color: var(--gold-light);
+        border-style: solid;
+        opacity: 0.4;
+      }
+      .gold-frame::before {
+        top: -1px;
+        left: -1px;
+        border-width: 1px 0 0 1px;
+      }
+      .gold-frame::after {
+        bottom: -1px;
+        right: -1px;
+        border-width: 0 1px 1px 0;
+      }
+
+      /* ===== GNB ===== */
+      .gnb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: #ffffff;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+        transition: all 0.4s ease;
+      }
+      .gnb-border {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 10%,
+          var(--gold-light) 50%,
+          transparent 90%
+        );
+        opacity: 0.5;
+      }
+      .gnb-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        height: 88px;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-inner {
+        height: 64px;
+      }
+      .gnb-logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+      .gnb-logo img {
+        height: 56px;
+        width: auto;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-logo img {
+        height: 40px;
+      }
+
+      .gnb-menu {
+        display: flex;
+        gap: 40px;
+        list-style: none;
+      }
+      .gnb-menu a {
+        text-decoration: none;
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        padding: 8px 0;
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          var(--gold-dark),
+          var(--gold),
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        transition: all 0.3s;
+      }
+      .gnb-menu a::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -12px;
+        width: 1px;
+        height: 100%;
+        background: linear-gradient(
+          180deg,
+          transparent,
+          var(--border-gold),
+          transparent
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .gnb-menu li:first-child a::before {
+        display: none;
+      }
+      .gnb-menu a::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light),
+          var(--gold)
+        );
+        transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .gnb-menu a:hover {
+        filter: brightness(1.3);
+      }
+      .gnb-menu a:hover::after {
+        width: 100%;
+      }
+
+      .gnb-cta {
+        padding: 8px 20px;
+        border: 1px solid var(--gold-light);
+        background: linear-gradient(
+          135deg,
+          transparent,
+          rgba(196, 165, 90, 0.05)
+        );
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        border-radius: 1px;
+        text-decoration: none;
+        color: var(--gold);
+        transition: all 0.4s;
+      }
+      .gnb-cta:hover {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        border-color: var(--gold);
+        box-shadow: 0 4px 20px rgba(160, 128, 48, 0.2);
+      }
+
+      /* ===== HERO ===== */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        padding-top: 88px;
+        background: var(--bg);
+      }
+      .hero-bg-image {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .hero-bg-image img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 30%;
+        z-index: 1;
+        transition: opacity 1.2s ease;
+      }
+      .hero-bg-image video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 30%;
+        z-index: 0;
+        opacity: 0;
+        transition: opacity 1.2s ease;
+      }
+      .hero-bg-image.playing img {
+        opacity: 0;
+      }
+      .hero-bg-image.playing video {
+        opacity: 1;
+      }
+      .hero-bg-overlay {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(
+            180deg,
+            rgba(20, 16, 6, 0.92) 0%,
+            rgba(36, 28, 10, 0.82) 20%,
+            rgba(50, 40, 15, 0.65) 38%,
+            rgba(50, 40, 15, 0.65) 52%,
+            rgba(36, 28, 10, 0.85) 68%,
+            rgba(20, 16, 6, 0.96) 82%,
+            rgba(20, 16, 6, 0.99) 100%
+          ),
+          radial-gradient(
+            ellipse at 50% 35%,
+            rgba(196, 165, 90, 0.12) 0%,
+            transparent 55%
+          );
+        z-index: 1;
+      }
+      /* AI 이미지 사용 워터마크 */
+      .ai-image-badge {
+        position: absolute;
+        bottom: 16px;
+        right: 16px;
+        z-index: 6;
+        font-size: 11px;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+        color: rgba(255, 255, 255, 0.18);
+        background: rgba(0, 0, 0, 0.08);
+        backdrop-filter: blur(4px);
+        padding: 4px 10px;
+        border-radius: 2px;
+        pointer-events: none;
+      }
+      /* Decorative corner frames */
+      .hero-frame {
+        position: absolute;
+        inset: 40px;
+        pointer-events: none;
+        z-index: 3;
+      }
+      .hero-frame::before,
+      .hero-frame::after {
+        content: "";
+        position: absolute;
+        border-color: var(--gold-light);
+        border-style: solid;
+        opacity: 0.2;
+      }
+      .hero-frame::before {
+        top: 0;
+        left: 0;
+        width: 80px;
+        height: 80px;
+        border-width: 1px 0 0 1px;
+      }
+      .hero-frame::after {
+        bottom: 0;
+        right: 0;
+        width: 80px;
+        height: 80px;
+        border-width: 0 1px 1px 0;
+      }
+      .hero-frame-tr,
+      .hero-frame-bl {
+        position: absolute;
+        border-color: var(--gold-lighter);
+        border-style: solid;
+        opacity: 0.3;
+        width: 80px;
+        height: 80px;
+        z-index: 3;
+      }
+      .hero-frame-tr {
+        top: 40px;
+        right: 40px;
+        border-width: 1px 1px 0 0;
+      }
+      .hero-frame-bl {
+        bottom: 40px;
+        left: 40px;
+        border-width: 0 0 1px 1px;
+      }
+
+      /* Subtle pattern overlay */
+      .hero-pattern {
+        position: absolute;
+        inset: 0;
+        opacity: 0.015;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 40px,
+          var(--gold) 40px,
+          var(--gold) 41px
+        );
+      }
+
+      .hero-content {
+        text-align: center;
+        position: relative;
+        z-index: 5;
+        padding: 0 32px;
+      }
+      .hero-eyebrow {
+        position: relative;
+        margin-bottom: 32px;
+        opacity: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 16px 40px;
+      }
+      .hero-eyebrow-text {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 15px;
+        font-weight: 400;
+        font-style: italic;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        position: relative;
+        z-index: 2;
+        background: linear-gradient(
+          90deg,
+          #c4a55a 0%,
+          #e8d090 18%,
+          #f0dda0 32%,
+          #fff8e0 50%,
+          #f0dda0 68%,
+          #e8d090 82%,
+          #c4a55a 100%
+        );
+        background-size: 280% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: eyebrowShimmer 5s ease-in-out infinite;
+      }
+      @keyframes eyebrowShimmer {
+        0% {
+          background-position: 100% 50%;
+        }
+        50% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+      .hero-eyebrow-line {
+        width: 40px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #c4a55a, transparent);
+        z-index: 2;
+      }
+      .hero-eyebrow-canvas {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .hero-title {
+        font-size: clamp(40px, 5.5vw, 64px);
+        font-weight: 300;
+        letter-spacing: -1px;
+        line-height: 1.25;
+        margin-bottom: 24px;
+        opacity: 0;
+        color: rgba(255, 255, 255, 0.95);
+        text-shadow: 0 2px 30px rgba(0, 0, 0, 0.3);
+      }
+      .hero-title strong {
+        font-weight: 700;
+        background: linear-gradient(
+          90deg,
+          #c4a55a 0%,
+          #e8d090 18%,
+          #f0dda0 32%,
+          #fff8e0 50%,
+          #f0dda0 68%,
+          #e8d090 82%,
+          #c4a55a 100%
+        );
+        background-size: 280% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: eyebrowShimmer 4s ease-in-out infinite;
+        filter: drop-shadow(0 1px 8px rgba(160, 128, 48, 0.3));
+      }
+      .hero-title em {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-weight: 300;
+        color: #f0dda0;
+        -webkit-text-fill-color: #f0dda0;
+      }
+      .hero-sub {
+        font-size: 17px;
+        color: rgba(255, 255, 255, 0.7);
+        max-width: 480px;
+        margin: 0 auto 48px;
+        line-height: 1.8;
+        opacity: 0;
+        font-weight: 300;
+        text-shadow: 0 1px 16px rgba(0, 0, 0, 0.25);
+      }
+      .hero-cta-group {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        opacity: 0;
+      }
+
+      /* Buttons - luxury */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 36px;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 1.5px;
+        border-radius: 1px;
+        text-decoration: none;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        font-family: inherit;
+        cursor: pointer;
+        position: relative;
+      }
+      .btn-filled {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        border: none;
+        color: #fff;
+        box-shadow: 0 4px 20px rgba(160, 128, 48, 0.15);
+      }
+      .btn-filled:hover {
+        box-shadow: 0 8px 32px rgba(160, 128, 48, 0.25);
+        transform: translateY(-2px);
+      }
+      .btn-outlined {
+        background: transparent;
+        border: 1px solid var(--gold-light);
+        color: var(--gold);
+      }
+      .btn-outlined:hover {
+        background: var(--gold-bg);
+        border-color: var(--gold);
+      }
+      /* Hero context — bright buttons on dark bg */
+      .hero .btn-filled {
+        box-shadow: 0 4px 24px rgba(160, 128, 48, 0.35);
+      }
+      .hero .btn-outlined {
+        border-color: rgba(240, 221, 160, 0.5);
+        color: #f0dda0;
+      }
+      .hero .btn-outlined:hover {
+        background: rgba(240, 221, 160, 0.1);
+        border-color: #f0dda0;
+      }
+
+      .scroll-cue {
+        position: absolute;
+        bottom: 48px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        opacity: 0;
+        z-index: 5;
+      }
+      .scroll-cue span {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+      }
+      .scroll-cue-line {
+        width: 1px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+      .scroll-cue-line::after {
+        content: "";
+        position: absolute;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(180deg, transparent, var(--gold));
+        animation: scrollPulse 2.5s ease-in-out infinite;
+      }
+      @keyframes scrollPulse {
+        0% {
+          top: -100%;
+        }
+        50% {
+          top: 100%;
+        }
+        100% {
+          top: 100%;
+        }
+      }
+
+      /* ===== STATS ===== */
+      .stats {
+        padding: 120px 32px;
+        position: relative;
+        overflow: hidden;
+      }
+      .stats-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .stats-bg img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        transition: opacity 1.2s ease;
+      }
+      .stats-bg video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        opacity: 0;
+        transition: opacity 1.2s ease;
+      }
+      .stats-bg.playing img {
+        opacity: 0;
+      }
+      .stats-bg.playing video {
+        opacity: 1;
+      }
+      .stats::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(26, 23, 20, 0.88) 0%,
+          rgba(36, 30, 18, 0.75) 30%,
+          rgba(36, 30, 18, 0.72) 60%,
+          rgba(26, 23, 20, 0.9) 100%
+        );
+        z-index: 2;
+      }
+      .stats > *:not(.stats-bg) {
+        position: relative;
+        z-index: 3;
+      }
+      .stats-bg {
+        z-index: 0;
+      }
+      .stats-inner {
+        max-width: 1000px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .stats-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold-light);
+        margin-bottom: 16px;
+      }
+      .stats-title {
+        font-size: 30px;
+        font-weight: 300;
+        margin-bottom: 12px;
+        color: #fff;
+      }
+      .stats-title strong {
+        font-weight: 600;
+        color: var(--gold-lighter);
+      }
+      .stats-subtitle {
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 64px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+      }
+      .stat-item {
+        padding: 40px 24px;
+        opacity: 0;
+        transform: translateY(30px);
+        border-right: 1px solid rgba(255, 255, 255, 0.12);
+        position: relative;
+      }
+      .stat-item:last-child {
+        border-right: none;
+      }
+      .stat-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 1px;
+        background: var(--gold-light);
+        opacity: 0.4;
+      }
+      .stat-num {
+        font-family: "Pretendard Variable", "Pretendard", sans-serif;
+        font-size: clamp(42px, 5vw, 64px);
+        font-weight: 700;
+        line-height: 1;
+        background: linear-gradient(
+          180deg,
+          #f0e0a0,
+          #e8d090,
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 12px;
+        white-space: nowrap;
+        position: relative;
+      }
+      .stat-num-glow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        font-family: "Pretendard Variable", "Pretendard", sans-serif;
+        font-size: clamp(42px, 5vw, 64px);
+        font-weight: 700;
+        line-height: 1.1;
+        color: var(--gold-lighter);
+        opacity: 0;
+        filter: blur(18px);
+        animation: statGlow 2.5s ease-in-out infinite;
+        pointer-events: none;
+      }
+      .stat-label {
+        font-size: 15px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 4px;
+      }
+      .stat-sub {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      /* Charts */
+      .chart-section {
+        margin-top: 80px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        text-align: left;
+      }
+      .chart-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 4px;
+        padding: 36px;
+        position: relative;
+        opacity: 0;
+        transform: translateY(20px);
+        box-shadow: 0 2px 16px rgba(26, 23, 20, 0.05);
+        overflow: hidden;
+      }
+      .chart-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-lighter));
+      }
+      .chart-card h4 {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: #fff;
+      }
+      .chart-card .card-subtitle {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 28px;
+      }
+      .bar-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .bar-item {
+        display: grid;
+        grid-template-columns: 80px 1fr 44px;
+        align-items: center;
+        gap: 14px;
+      }
+      .bar-label {
+        font-size: 13px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.7);
+        text-align: right;
+        white-space: nowrap;
+      }
+      .bar-track {
+        height: 28px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 2px;
+        overflow: hidden;
+        position: relative;
+      }
+      .bar-fill {
+        height: 100%;
+        width: 0%;
+        border-radius: 2px;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .bar-fill.gold-primary {
+        background: linear-gradient(90deg, var(--gold), var(--gold-lighter));
+      }
+      .bar-fill.gold-secondary {
+        background: linear-gradient(90deg, var(--gold-light), #d4b870);
+      }
+      .bar-fill.gold-muted {
+        background: var(--border);
+      }
+      .bar-pct {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--gold);
+        text-align: left;
+      }
+      .bar-item[data-tier="secondary"] .bar-pct {
+        color: var(--gold-light);
+      }
+      .bar-item[data-tier="muted"] .bar-pct {
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .bar-fill.gold-muted {
+        background: rgba(255, 255, 255, 0.25);
+      }
+
+      /* ===== SERVICE TYPO EFFECTS ===== */
+      .svc-eyebrow {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      .svc-title {
+        overflow: hidden;
+      }
+      .svc-title .char {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(100%);
+        transition: none;
+      }
+      .svc-gold-line {
+        width: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light),
+          var(--gold)
+        );
+        margin: 20px 0 24px;
+        border-radius: 1px;
+      }
+      .svc-desc {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      /* ===== SERVICES ===== */
+      .services {
+        padding: 120px 32px;
+        position: relative;
+        background: url("bg_wedding_hall.png") center center / cover no-repeat;
+      }
+      .services::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(250, 249, 246, 0.88);
+        z-index: 0;
+      }
+      .services > * {
+        position: relative;
+        z-index: 1;
+      }
+      .services-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .section-header {
+        margin-bottom: 60px;
+      }
+      .section-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 16px;
+      }
+      .section-title {
+        font-size: 34px;
+        font-weight: 200;
+        line-height: 1.4;
+        margin-bottom: 16px;
+      }
+      .section-title strong {
+        font-weight: 600;
+      }
+      .section-desc {
+        font-size: 16px;
+        color: var(--text-secondary);
+        max-width: 520px;
+        line-height: 1.8;
+      }
+
+      .service-grid {
+        display: flex;
+        gap: 2px;
+        height: 420px;
+      }
+      .service-card {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+        border-radius: 2px;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: flex 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .service-grid:hover .service-card {
+        flex: 0.8;
+      }
+      .service-grid .service-card:hover {
+        flex: 2;
+      }
+      .service-card-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+      }
+      .service-card-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(26, 23, 20, 0.55) 0%,
+          rgba(26, 23, 20, 0.82) 100%
+        );
+        transition: background 0.5s ease;
+      }
+      .service-card:hover .service-card-bg::after {
+        background: linear-gradient(
+          180deg,
+          rgba(26, 23, 20, 0.45) 0%,
+          rgba(26, 23, 20, 0.75) 100%
+        );
+      }
+      .service-card:nth-child(1) .service-card-bg {
+        background-image: url("card_premium.png");
+      }
+      .service-card:nth-child(2) .service-card-bg {
+        background-image: url("card_career.png");
+      }
+      .service-card:nth-child(3) .service-card-bg {
+        background-image: url("card_remarriage.png");
+      }
+      .service-card-content {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 36px 32px;
+      }
+      .service-card .card-num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 16px;
+        color: var(--gold-lighter);
+        letter-spacing: 2px;
+        margin-bottom: 12px;
+      }
+      .service-card h3 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 12px;
+        transition: transform 0.4s ease;
+      }
+      .service-card:hover h3 {
+        transform: translateY(-8px);
+      }
+      .service-card p {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.55);
+        line-height: 1.7;
+        transition: color 0.4s ease;
+      }
+      .service-card:hover p {
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .service-card .card-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 16px;
+        font-size: 14px;
+        color: rgba(196, 165, 90, 0.5);
+        letter-spacing: 1px;
+        font-weight: 500;
+        transition: color 0.4s ease;
+      }
+      .service-card:hover .card-link {
+        color: var(--gold-lighter);
+      }
+      .service-card .card-link svg {
+        width: 14px;
+        height: 14px;
+        stroke: var(--gold-lighter);
+        stroke-width: 2;
+        fill: none;
+        transition: transform 0.3s;
+      }
+      .service-card:hover .card-link svg {
+        transform: translateX(6px);
+      }
+      /* Gold top border on hover */
+      .service-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        z-index: 3;
+        background: linear-gradient(90deg, var(--gold), var(--gold-lighter));
+        transform: scaleX(0);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        transform-origin: left;
+      }
+      .service-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      /* ===== CEO — Dark Style ===== */
+      .ceo {
+        position: relative;
+        padding: 100px 24px 0;
+        overflow: hidden;
+      }
+      .ceo-bg-grid {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        gap: 2px;
+      }
+      .ceo-bg-cell {
+        position: relative;
+        overflow: hidden;
+      }
+      .ceo-bg-cell video,
+      .ceo-bg-cell img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 30%;
+        display: block;
+      }
+      .ceo-bg-cell video {
+        opacity: 0;
+        position: absolute;
+        inset: 0;
+        transition: opacity 1.5s ease-in-out;
+      }
+      .ceo-bg-cell video.playing {
+        opacity: 1;
+      }
+      .ceo-bg-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(30, 26, 20, 0.97) 0%,
+          rgba(42, 35, 24, 0.95) 100%
+        );
+        z-index: 1;
+      }
+      .ceo-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 48% 52%;
+        gap: 40px;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+      }
+      .ceo-image-wrap {
+        position: relative;
+        opacity: 0;
+        transform: translateX(-60px);
+      }
+      .ceo-image-clip {
+        overflow: hidden;
+        border-radius: 4px;
+        margin: 0 64px;
+      }
+      .ceo-image {
+        position: relative;
+        margin: 0;
+        overflow: hidden;
+      }
+      .ceo-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: contain;
+        z-index: 1;
+        transition: opacity 1.2s ease;
+      }
+      .ceo-image video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center top;
+        z-index: 0;
+        opacity: 0;
+        transition: opacity 1.2s ease;
+      }
+      .ceo-image.playing img {
+        opacity: 0;
+      }
+      .ceo-image.playing video {
+        opacity: 1;
+      }
+      .ceo-image::before {
+        content: "";
+        position: absolute;
+        inset: -12px;
+        border: 1px solid var(--gold-light);
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 2;
+      }
+      .ceo-image-badge {
+        position: absolute;
+        bottom: -1px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 4;
+        background: linear-gradient(
+          135deg,
+          var(--gold-dark),
+          var(--gold),
+          var(--gold-light)
+        );
+        color: #fff;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.28em;
+        padding: 7px 24px 8px;
+        white-space: nowrap;
+        text-transform: uppercase;
+      }
+      .ceo-content {
+        padding-top: 16px;
+        opacity: 0;
+        transform: translateX(60px);
+      }
+      .ceo-title-badge {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 24px;
+        padding: 16px 40px;
+      }
+      .ceo-title-badge-text {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 20px;
+        font-weight: 600;
+        font-style: italic;
+        letter-spacing: 0.1em;
+        position: relative;
+        z-index: 2;
+        background: linear-gradient(
+          90deg,
+          #e8d090 0%,
+          #f0dda0 18%,
+          #fff8e0 32%,
+          #ffffff 50%,
+          #fff8e0 68%,
+          #f0dda0 82%,
+          #e8d090 100%
+        );
+        background-size: 280% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: eyebrowShimmer 5s ease-in-out infinite;
+      }
+      .ceo-title-badge-line {
+        width: 40px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(196, 165, 90, 0.5),
+          transparent
+        );
+        z-index: 2;
+      }
+      .ceo-title-badge svg {
+        display: none;
+      }
+      .ceo-title-canvas {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+      }
+      .ceo-quote {
+        font-size: 26px;
+        font-weight: 400;
+        line-height: 1.55;
+        color: #fff;
+        position: relative;
+        padding-left: 20px;
+        margin-bottom: 28px;
+        word-break: keep-all;
+      }
+      .ceo-quote strong {
+        font-weight: 700;
+        background: linear-gradient(90deg, var(--gold), var(--gold-lighter));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .ceo-quote::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 4px;
+        bottom: 4px;
+        width: 3px;
+        background: linear-gradient(180deg, var(--gold), var(--gold-light));
+        border-radius: 2px;
+      }
+      .ceo-name {
+        font-size: 22px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 5px;
+      }
+      .ceo-role {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 0.04em;
+        margin-bottom: 22px;
+      }
+      .ceo-bio {
+        font-size: 15px;
+        line-height: 1.85;
+        color: rgba(255, 255, 255, 0.68);
+        word-break: keep-all;
+        margin-bottom: 32px;
+      }
+      .ceo-stats-bar {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border-top: 1px solid var(--gold);
+        background: rgba(255, 255, 255, 0.04);
+        margin-bottom: 24px;
+      }
+      .ceo-stat-item {
+        padding: 20px 16px 18px;
+        text-align: center;
+        border-right: 1px solid rgba(196, 165, 90, 0.2);
+      }
+      .ceo-stat-item:last-child {
+        border-right: none;
+      }
+      .ceo-stat-num {
+        font-size: 28px;
+        font-weight: 700;
+        background: linear-gradient(90deg, var(--gold), var(--gold-lighter));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        display: block;
+        line-height: 1.1;
+        margin-bottom: 5px;
+      }
+      .ceo-stat-label {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.48);
+        letter-spacing: 0.06em;
+        display: block;
+      }
+      .ceo-awards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+      }
+      .award-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid rgba(196, 165, 90, 0.45);
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        padding: 5px 13px;
+        border-radius: 999px;
+        background: rgba(196, 165, 90, 0.06);
+      }
+      .award-badge svg {
+        width: 11px;
+        height: 11px;
+        fill: var(--gold-light);
+        stroke: none;
+      }
+      .ceo-broadcast {
+        position: relative;
+        z-index: 2;
+        margin-top: 60px;
+        padding: 48px 0;
+        text-align: center;
+        border-top: 1px solid rgba(196, 165, 90, 0.2);
+      }
+      .ceo-broadcast-label {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 32px;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        color: rgba(196, 165, 90, 0.9);
+        text-transform: uppercase;
+      }
+      .ceo-broadcast-channels {
+        margin-top: 16px;
+        font-size: 15px;
+        letter-spacing: 0.25em;
+        color: rgba(255, 255, 255, 0.45);
+        font-weight: 500;
+      }
+
+      /* ===== MEDIA ===== */
+      .media {
+        padding: 80px 32px;
+        overflow: hidden;
+      }
+      .media-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .media-title {
+        font-size: 22px;
+        font-weight: 200;
+        margin-bottom: 4px;
+        letter-spacing: -0.3px;
+      }
+      .media-title strong {
+        font-weight: 400;
+      }
+      .media-sub {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 48px;
+        letter-spacing: 1px;
+      }
+      .media-track {
+        overflow: hidden;
+        position: relative;
+      }
+      .media-track::before,
+      .media-track::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 80px;
+        z-index: 2;
+      }
+      .media-track::before {
+        left: 0;
+        background: linear-gradient(90deg, var(--bg), transparent);
+      }
+      .media-track::after {
+        right: 0;
+        background: linear-gradient(90deg, transparent, var(--bg));
+      }
+      .media-scroll {
+        display: flex;
+        gap: 32px;
+        align-items: center;
+        animation: mediaScroll 40s linear infinite;
+      }
+      .media-item {
+        flex-shrink: 0;
+        width: 120px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.5;
+        transition: opacity 0.3s;
+        filter: grayscale(1);
+      }
+      .media-item:hover {
+        opacity: 1;
+        filter: grayscale(0);
+      }
+      .media-item img {
+        max-width: 80px;
+        max-height: 36px;
+        width: auto;
+        height: auto;
+      }
+      @keyframes mediaScroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* ===== 가입 자격 요약 ===== */
+      .qualify {
+        padding: 100px 0;
+        background: #1a1714;
+        position: relative;
+        overflow: hidden;
+      }
+      .qualify-bg-curves {
+        position: absolute;
+        inset: 0;
+        opacity: 0.18;
+        pointer-events: none;
+      }
+      .qualify-bg-curves svg {
+        width: 100%;
+        height: 100%;
+      }
+      .qualify-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 40px;
+        position: relative;
+        z-index: 2;
+      }
+      .qualify-label {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        font-weight: 400;
+        font-style: italic;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold-light);
+        margin-bottom: 12px;
+        text-align: center;
+      }
+      .qualify-title {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        letter-spacing: -0.5px;
+        color: #fff;
+        text-align: center;
+      }
+      .qualify-title span {
+        color: var(--gold);
+      }
+      .qualify-desc {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.55);
+        margin-bottom: 56px;
+        max-width: 520px;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .qualify-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .qualify-card {
+        background: linear-gradient(165deg, #1e1b16, #141210);
+        border: 1px solid rgba(160, 128, 48, 0.3);
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+        transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow:
+          inset 0 1px 0 rgba(196, 165, 90, 0.15),
+          0 4px 24px rgba(0, 0, 0, 0.3);
+      }
+      .qualify-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          var(--gold),
+          var(--gold-light),
+          transparent
+        );
+        z-index: 3;
+      }
+      .qualify-card:hover {
+        box-shadow:
+          inset 0 1px 0 rgba(196, 165, 90, 0.25),
+          0 12px 48px rgba(160, 128, 48, 0.2);
+        border-color: var(--gold);
+        transform: translateY(-4px);
+      }
+      .qualify-card-media {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/10;
+        overflow: hidden;
+        background: #0d0b08;
+      }
+      .qualify-card-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.8s ease;
+      }
+      .qualify-card-media video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+      }
+      .qualify-card-media.playing video {
+        opacity: 1;
+      }
+      .qualify-card-media.playing img {
+        opacity: 0;
+      }
+      .qualify-card-media .ai-badge {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        font-size: 10px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.35);
+        background: none;
+        padding: 0;
+        letter-spacing: 0.3px;
+        z-index: 3;
+      }
+      .qualify-card-body {
+        padding: 28px 24px;
+      }
+      .qualify-card-type {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: var(--gold-light);
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+      .qualify-card h4 {
+        font-size: 19px;
+        font-weight: 700;
+        margin-bottom: 14px;
+        color: #fff;
+      }
+      .qualify-card ul {
+        list-style: none;
+      }
+      .qualify-card li {
+        padding: 5px 0;
+        font-size: 13.5px;
+        color: rgba(255, 255, 255, 0.75);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .qualify-card li:last-child {
+        border-bottom: none;
+      }
+      .qualify-card li::before {
+        content: "";
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--gold-light);
+        flex-shrink: 0;
+      }
+      .qualify-more {
+        text-align: center;
+        margin-top: 40px;
+      }
+      .qualify-more a {
+        color: var(--gold-light);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(160, 128, 48, 0.3);
+        padding-bottom: 2px;
+        transition: all 0.3s;
+      }
+      .qualify-more a:hover {
+        border-color: var(--gold-light);
+        color: #fff;
+      }
+
+      /* ===== 가입 절차 미리보기 ===== */
+      .steps-preview {
+        padding: 100px 0;
+        position: relative;
+        background: url("images/qualify/unnamed (4).jpg") center/cover no-repeat;
+      }
+      .steps-preview::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(250, 249, 246, 0.95);
+        pointer-events: none;
+      }
+      .steps-preview-inner {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+      .steps-preview .qualify-title {
+        color: #2a2520;
+      }
+      .steps-preview .qualify-title span {
+        color: var(--gold);
+      }
+      .steps-preview .qualify-desc {
+        color: #6b6058;
+      }
+      .steps-preview .qualify-label {
+        color: var(--gold-dark);
+      }
+      .steps-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        position: relative;
+        margin-top: 48px;
+      }
+      .steps-row::before {
+        display: none;
+      }
+      .step-item {
+        text-align: center;
+        position: relative;
+      }
+      .step-media {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/9;
+        overflow: hidden;
+        border-radius: 12px;
+        margin: 0 auto 16px;
+        background: #0d0b08;
+        z-index: 2;
+      }
+      .step-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.8s ease;
+      }
+      .step-media video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+      }
+      .step-media.playing video {
+        opacity: 1;
+      }
+      .step-media.playing img {
+        opacity: 0;
+      }
+      .step-num {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--gold-dark);
+        letter-spacing: 2px;
+        margin-bottom: 6px;
+      }
+      .step-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2a2520;
+        margin-bottom: 6px;
+      }
+      .step-desc {
+        font-size: 13px;
+        color: #6b6058;
+        line-height: 1.5;
+      }
+      .steps-cta {
+        text-align: center;
+        margin-top: 40px;
+      }
+      .steps-cta a {
+        display: inline-block;
+        padding: 12px 32px;
+        border: 1px solid var(--gold-light);
+        color: var(--gold);
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 2px;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .steps-cta a:hover {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        border-color: var(--gold);
+      }
+
+      /* ===== 파티/이벤트 미리보기 ===== */
+      .events-preview {
+        padding: 120px 0;
+        border-top: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+      }
+      .events-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .events-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.8s ease;
+      }
+      .events-bg video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+      }
+      .events-bg.playing video {
+        opacity: 1;
+      }
+      .events-bg.playing img {
+        opacity: 0;
+      }
+      .events-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(20, 18, 14, 0.88);
+        pointer-events: none;
+      }
+      .events-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 40px;
+        position: relative;
+        z-index: 1;
+      }
+      .events-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 32px;
+      }
+      .events-header-right a {
+        color: var(--gold);
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        letter-spacing: 0.5px;
+      }
+      .events-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+      .event-card {
+        background: linear-gradient(165deg, #1e1b16, #141210);
+        border-radius: 16px;
+        padding: 48px 36px;
+        color: #fff;
+        text-align: center;
+        transition: all 0.4s;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+        position: relative;
+        box-shadow:
+          inset 0 1px 0 rgba(196, 165, 90, 0.15),
+          0 4px 24px rgba(0, 0, 0, 0.3);
+      }
+      .event-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          var(--gold),
+          var(--gold-light),
+          transparent
+        );
+      }
+      .event-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--gold);
+        box-shadow:
+          inset 0 1px 0 rgba(196, 165, 90, 0.25),
+          0 12px 48px rgba(160, 128, 48, 0.2);
+      }
+      .event-icon {
+        margin-bottom: 20px;
+        opacity: 1;
+      }
+      .event-icon svg,
+      .event-icon img {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+      }
+      .event-name {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: var(--gold);
+      }
+      .event-desc {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.7;
+      }
+
+      .events-title-wrap {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 40px;
+      }
+      .events-dust-canvas {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+      }
+      .events-title-wrap .qualify-title {
+        position: relative;
+        z-index: 2;
+      }
+      @keyframes shimmerEvents {
+        0% {
+          background-position: 100% 50%;
+        }
+        50% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+
+      .gold-particles {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .gold-particle {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(196, 165, 90, 0.9),
+          rgba(160, 128, 48, 0.3)
+        );
+        animation: floatParticle linear infinite;
+      }
+      @keyframes floatParticle {
+        0% {
+          transform: translateY(100%) translateX(0) scale(0);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+          transform: translateY(80%) translateX(10px) scale(1);
+        }
+        50% {
+          transform: translateY(40%) translateX(-15px) scale(0.8);
+          opacity: 0.7;
+        }
+        90% {
+          opacity: 0.3;
+        }
+        100% {
+          transform: translateY(-20%) translateX(20px) scale(0.2);
+          opacity: 0;
+        }
+      }
+
+      /* ===== CTA ===== */
+      .cta-section {
+        padding: 140px 32px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-bg-wrap {
+        position: absolute;
+        inset: 0;
+      }
+      .cta-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .cta-bg img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        filter: contrast(0.7) brightness(0.85);
+        transition: opacity 1.2s ease;
+      }
+      .cta-bg video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        opacity: 0;
+        filter: contrast(0.7) brightness(0.85);
+        transition: opacity 1.2s ease;
+      }
+      .cta-bg.playing img {
+        opacity: 0;
+      }
+      .cta-bg.playing video {
+        opacity: 1;
+      }
+      .cta-bg-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(30, 24, 10, 0.85);
+        z-index: 1;
+      }
+      .cta-frame {
+        position: absolute;
+        inset: 60px;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+        pointer-events: none;
+        border-radius: 2px;
+      }
+      .cta-content {
+        position: relative;
+        z-index: 2;
+      }
+      .cta-title {
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 200;
+        margin-bottom: 12px;
+        opacity: 0;
+        color: rgba(255, 255, 255, 0.95);
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+      }
+      .cta-title strong {
+        font-weight: 600;
+        background: linear-gradient(135deg, #f0dda0, var(--gold-lighter));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-sub {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 8px;
+        opacity: 0;
+      }
+      .cta-phone {
+        font-family: "Pretendard Variable", "Pretendard", sans-serif;
+        font-size: 42px;
+        margin: 28px 0;
+        opacity: 0;
+        background: linear-gradient(135deg, #f0dda0, #fff8e0, #f0dda0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-note {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 36px;
+        opacity: 0;
+      }
+      .cta-buttons {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        opacity: 0;
+      }
+      .cta-section .btn-outlined {
+        border-color: rgba(240, 221, 160, 0.5);
+        color: #f0dda0;
+      }
+      .cta-section .btn-outlined:hover {
+        background: rgba(240, 221, 160, 0.1);
+        border-color: #f0dda0;
+      }
+
+      /* ===== FOOTER ===== */
+      .footer {
+        padding: 56px 40px 40px;
+        background: linear-gradient(135deg, #2a2318 0%, #1e1a14 100%);
+        border-top: 2px solid var(--gold);
+      }
+      .footer-gold-line {
+        height: 1px;
+        margin-bottom: 56px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        opacity: 0.3;
+      }
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-logo {
+        margin-bottom: 16px;
+      }
+      .footer-logo img {
+        height: 36px;
+        width: auto;
+        opacity: 0.8;
+        filter: brightness(0) invert(1);
+      }
+      .footer-info {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.45);
+        line-height: 1.9;
+      }
+      .footer-links {
+        display: flex;
+        gap: 28px;
+      }
+      .footer-links a {
+        font-size: 13px;
+        color: rgba(196, 165, 90, 0.6);
+        text-decoration: none;
+        letter-spacing: 0.3px;
+        transition: color 0.3s;
+      }
+      .footer-links a:hover {
+        color: var(--gold-lighter);
+      }
+
+      /* ===== FIXED CTA ===== */
+      .fixed-cta {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        border-top: 1px solid var(--border);
+        padding: 14px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        transform: translateY(100%);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .fixed-cta.visible {
+        transform: translateY(0);
+      }
+      .fixed-cta::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        opacity: 0.5;
+      }
+      .fixed-cta span {
+        font-size: 14px;
+        color: var(--text-secondary);
+      }
+
+      /* Badge */
+      .wf-badge {
+        position: fixed;
+        top: 96px;
+        right: 20px;
+        z-index: 101;
+        background: var(--surface);
+        border: 1px solid var(--gold-light);
+        padding: 6px 14px;
+        border-radius: 1px;
+        font-size: 10px;
+        color: var(--gold);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 768px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .stat-item {
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+        .service-grid {
+          grid-template-columns: 1fr;
+        }
+        .ceo-inner {
+          grid-template-columns: 1fr;
+        }
+        .chart-section {
+          grid-template-columns: 1fr;
+        }
+        .gnb-menu {
+          display: none;
+        }
+        .hero-frame,
+        .hero-frame-tr,
+        .hero-frame-bl {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wf-badge">Wireframe v2.0</div>
+
+    <!-- GNB -->
+    <nav class="gnb" id="gnb">
+      <div class="gnb-inner">
+        <a href="#" class="gnb-logo"><img src="logo.png" alt="Noble HoNG" /></a>
+        <ul class="gnb-menu">
+          <li><a href="#">노블홍</a></li>
+          <li><a href="wireframe_noblematching.html">노블매칭</a></li>
+          <li><a href="wireframe_consulting.html">맞춤컨설팅</a></li>
+          <li><a href="wireframe_matchinglounge.html">매칭라운지</a></li>
+          <li><a href="wireframe_contact.html">상담문의</a></li>
+        </ul>
+        <a href="#cta" class="gnb-cta">상담 시작</a>
+      </div>
+      <div class="gnb-border"></div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero-bg-image" id="heroBg">
+        <img src="images/qualify/hero1.png" alt="커플 데이트" />
+        <video src="images/qualify/히어로1.mp4" muted playsinline loop></video>
+      </div>
+      <div class="hero-bg-overlay"></div>
+      <span class="ai-image-badge">AI 이미지 사용</span>
+      <div class="hero-frame"></div>
+      <div class="hero-frame-tr"></div>
+      <div class="hero-frame-bl"></div>
+      <div class="hero-pattern"></div>
+      <div class="hero-content">
+        <div class="hero-eyebrow" id="heroEyebrow">
+          <canvas class="hero-eyebrow-canvas" id="eyebrowCanvas"></canvas>
+          <span class="hero-eyebrow-line"></span>
+          <span class="hero-eyebrow-text" id="eyebrowText"
+            >Since 1996 &middot; Premium Matchmaking</span
+          >
+          <span class="hero-eyebrow-line"></span>
+        </div>
+        <h1 class="hero-title">
+          당신에게도<br /><strong>그 사람</strong>이 있습니다
+        </h1>
+        <p class="hero-sub">
+          30년간 쉬지 않고, 매일 소중한 인연을 이어온<br />4,000쌍의 인연 —
+          노블홍
+        </p>
+        <div class="hero-cta-group">
+          <a href="#cta" class="btn btn-filled">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+              />
+            </svg>
+            1800-8194
+          </a>
+          <a href="#cta" class="btn btn-outlined">온라인 상담 신청</a>
+        </div>
+      </div>
+      <div class="scroll-cue">
+        <span>Scroll</span>
+        <div class="scroll-cue-line"></div>
+      </div>
+    </section>
+
+    <!-- Ornament divider -->
+    <!-- STATS -->
+    <section class="stats" id="stats">
+      <div class="stats-bg" id="statsBg">
+        <img src="images/qualify/버진로드.png" alt="버진로드" />
+        <video src="images/qualify/버진로드.mp4" muted playsinline loop></video>
+      </div>
+      <div class="stats-inner">
+        <div class="stats-eyebrow">Noble HoNG in Numbers</div>
+        <h2 class="stats-title">숫자로 보는 <strong>노블홍</strong></h2>
+        <p class="stats-subtitle">
+          대한민국 커플매니저 제1호가 만들어 온 성혼의 역사
+        </p>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-num" data-target="30">0</div>
+            <div class="stat-label">년의 매칭 노하우</div>
+            <div class="stat-sub">1996년부터 현재까지</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" data-target="4000" data-suffix="+">0</div>
+            <div class="stat-label">성혼 실적</div>
+            <div class="stat-sub">대한민국 커플매니저 제1호</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num" data-target="75" data-suffix="%">0</div>
+            <div class="stat-label">30대 교제율</div>
+            <div class="stat-sub">3회 이상 만남 기준</div>
+          </div>
+          <div class="stat-item">
+            <div
+              class="stat-num"
+              data-target="3"
+              data-suffix="년 연속"
+              style="white-space: nowrap"
+            >
+              0
+            </div>
+            <div class="stat-label">브랜드만족지수 1위</div>
+            <div class="stat-sub">2022~2024 결혼정보 부문</div>
+          </div>
+        </div>
+
+        <div class="chart-section">
+          <div class="chart-card">
+            <h4>연령대별 교제율</h4>
+            <div class="card-subtitle">3회 이상 만남 기준 (2024년 12월)</div>
+            <div class="bar-list">
+              <div class="bar-item" data-tier="primary">
+                <span class="bar-label">30대</span>
+                <div class="bar-track">
+                  <div class="bar-fill gold-primary" data-width="75"></div>
+                </div>
+                <span class="bar-pct">75%</span>
+              </div>
+              <div class="bar-item" data-tier="secondary">
+                <span class="bar-label">40대</span>
+                <div class="bar-track">
+                  <div class="bar-fill gold-secondary" data-width="65"></div>
+                </div>
+                <span class="bar-pct">65%</span>
+              </div>
+              <div class="bar-item" data-tier="muted">
+                <span class="bar-label">50대</span>
+                <div class="bar-track">
+                  <div class="bar-fill gold-muted" data-width="55"></div>
+                </div>
+                <span class="bar-pct">55%</span>
+              </div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h4>회원 자산 분포</h4>
+            <div class="card-subtitle">노블홍 회원 평균 자산 현황</div>
+            <div class="bar-list">
+              <div class="bar-item" data-tier="primary">
+                <span class="bar-label">31억~100억</span>
+                <div class="bar-track">
+                  <div class="bar-fill gold-primary" data-width="59"></div>
+                </div>
+                <span class="bar-pct">59%</span>
+              </div>
+              <div class="bar-item" data-tier="secondary">
+                <span class="bar-label">10억~30억</span>
+                <div class="bar-track">
+                  <div class="bar-fill gold-secondary" data-width="25"></div>
+                </div>
+                <span class="bar-pct">25%</span>
+              </div>
+              <div class="bar-item" data-tier="muted">
+                <span class="bar-label">100억 이상</span>
+                <div class="bar-track">
+                  <div class="bar-fill gold-muted" data-width="16"></div>
+                </div>
+                <span class="bar-pct">16%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span
+        class="ai-image-badge"
+        style="position: absolute; bottom: 16px; right: 16px; z-index: 6"
+        >AI 이미지 사용</span
+      >
+    </section>
+
+    <!-- Ornament -->
+    <!-- SERVICES -->
+    <section class="services" id="services">
+      <div class="services-inner">
+        <div class="section-header" id="svcHeader">
+          <div class="section-eyebrow svc-eyebrow">Consulting</div>
+          <h2 class="section-title svc-title">
+            <span class="svc-line1"></span>
+            <br />
+            <strong class="svc-line2"></strong>
+          </h2>
+          <div class="svc-gold-line"></div>
+          <p class="section-desc svc-desc">
+            전문직, 명문가, 재력가부터 자녀결혼, 재혼까지. 상황에 맞는 전문
+            컨설팅을 제공합니다.
+          </p>
+        </div>
+        <div class="service-grid">
+          <div class="service-card">
+            <div class="service-card-bg"></div>
+            <div class="service-card-content">
+              <span class="card-num">01</span>
+              <h3>명품결혼 컨설팅</h3>
+              <p>
+                전문직, 명문가, 재력가를 위한 맞춤형 프리미엄 매칭. 비공개 회원
+                관리로 철저한 보안.
+              </p>
+              <span class="card-link"
+                >자세히 보기
+                <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg
+              ></span>
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-card-bg"></div>
+            <div class="service-card-content">
+              <span class="card-num">02</span>
+              <h3>자녀결혼 컨설팅</h3>
+              <p>
+                해외 거주 자녀까지, 부모님의 마음으로 매칭하는 전문 서비스.
+                미국, 호주 거주 자녀 전문.
+              </p>
+              <span class="card-link"
+                >자세히 보기
+                <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg
+              ></span>
+            </div>
+          </div>
+          <div class="service-card">
+            <div class="service-card-bg"></div>
+            <div class="service-card-content">
+              <span class="card-num">03</span>
+              <h3>스페셜 재혼</h3>
+              <p>
+                재혼 전문가의 차별화된 접근으로 두 번째 행복을 설계합니다.
+                연령대별 맞춤 전략.
+              </p>
+              <span class="card-link"
+                >자세히 보기
+                <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" /></svg
+              ></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span
+        class="ai-image-badge"
+        style="position: absolute; bottom: 16px; right: 16px; z-index: 6"
+        >AI 이미지 사용</span
+      >
+    </section>
+
+    <!-- 가입 자격 요약 -->
+    <section class="qualify" id="qualify">
+      <!-- 금장 곡선 기하학 배경 -->
+      <div class="qualify-bg-curves">
+        <svg
+          viewBox="0 0 1440 800"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <linearGradient id="goldCurve1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#a08030" stop-opacity="0" />
+              <stop offset="30%" stop-color="#c4a55a" stop-opacity="0.6" />
+              <stop offset="70%" stop-color="#a08030" stop-opacity="0.4" />
+              <stop offset="100%" stop-color="#d9c577" stop-opacity="0" />
+            </linearGradient>
+            <linearGradient id="goldCurve2" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#d9c577" stop-opacity="0" />
+              <stop offset="40%" stop-color="#a08030" stop-opacity="0.3" />
+              <stop offset="60%" stop-color="#c4a55a" stop-opacity="0.5" />
+              <stop offset="100%" stop-color="#a08030" stop-opacity="0" />
+            </linearGradient>
+            <linearGradient id="goldCurve3" x1="0%" y1="50%" x2="100%" y2="50%">
+              <stop offset="0%" stop-color="#c4a55a" stop-opacity="0" />
+              <stop offset="50%" stop-color="#a08030" stop-opacity="0.35" />
+              <stop offset="100%" stop-color="#c4a55a" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+          <!-- 주요 곡선 흐름 - 부드러운 S커브 -->
+          <path
+            d="M-100,150 C200,50 400,350 720,200 S1100,400 1540,180"
+            stroke="url(#goldCurve1)"
+            stroke-width="1"
+            fill="none"
+          />
+          <path
+            d="M-50,300 C250,180 500,500 800,320 S1200,550 1500,350"
+            stroke="url(#goldCurve2)"
+            stroke-width="0.8"
+            fill="none"
+          />
+          <path
+            d="M0,550 C300,400 600,700 900,480 S1250,650 1440,520"
+            stroke="url(#goldCurve1)"
+            stroke-width="0.6"
+            fill="none"
+          />
+          <!-- 보조 곡선 - 더 가는 라인 -->
+          <path
+            d="M-80,80 C180,200 450,30 750,250 S1150,100 1500,280"
+            stroke="url(#goldCurve3)"
+            stroke-width="0.5"
+            fill="none"
+          />
+          <path
+            d="M100,680 C400,550 650,750 950,600 S1300,720 1440,640"
+            stroke="url(#goldCurve3)"
+            stroke-width="0.4"
+            fill="none"
+          />
+          <!-- 은은한 원형 악센트 -->
+          <circle
+            cx="360"
+            cy="200"
+            r="120"
+            stroke="url(#goldCurve2)"
+            stroke-width="0.3"
+            fill="none"
+          />
+          <circle
+            cx="1050"
+            cy="500"
+            r="90"
+            stroke="url(#goldCurve1)"
+            stroke-width="0.3"
+            fill="none"
+          />
+        </svg>
+      </div>
+      <div class="qualify-inner">
+        <div class="qualify-label reveal">Who We Serve</div>
+        <h2 class="qualify-title reveal">
+          이런 분이 <span>오시는 곳</span>입니다
+        </h2>
+        <p class="qualify-desc reveal">
+          노블홍은 진지한 결혼을 원하는 분들을 위한 프리미엄 결혼정보회사입니다
+        </p>
+
+        <div class="qualify-grid" id="qualifyGrid">
+          <div class="qualify-card reveal">
+            <div class="qualify-card-media">
+              <img src="images/qualify/초혼.png" alt="손잡고 데이트하는 커플" />
+              <video
+                src="images/qualify/초혼.mp4"
+                muted
+                playsinline
+                loop
+              ></video>
+              <span class="ai-badge">AI생성</span>
+            </div>
+            <div class="qualify-card-body">
+              <div class="qualify-card-type">초혼</div>
+              <h4>처음 결혼을 준비하는 분</h4>
+              <ul>
+                <li>남성 28세 이상 · 대졸 이상</li>
+                <li>여성 25세 이상 · 초대졸 이상</li>
+                <li>안정된 직업을 가진 미혼 남녀</li>
+                <li>진지한 결혼을 원하는 분</li>
+              </ul>
+            </div>
+          </div>
+          <div class="qualify-card reveal">
+            <div class="qualify-card-media">
+              <img src="images/qualify/재혼.png" alt="카페에서 대화하는 장면" />
+              <video
+                src="images/qualify/재혼.mp4"
+                muted
+                playsinline
+                loop
+              ></video>
+              <span class="ai-badge">AI생성</span>
+            </div>
+            <div class="qualify-card-body">
+              <div class="qualify-card-type">재혼</div>
+              <h4>새 출발을 준비하는 분</h4>
+              <ul>
+                <li>남성 28세 이상 · 대졸 이상</li>
+                <li>여성 25세 이상 · 초대졸 이상</li>
+                <li>사별 · 이혼 · 사실혼 경험자</li>
+                <li>스페셜 재혼 전문 매칭</li>
+              </ul>
+            </div>
+          </div>
+          <div class="qualify-card reveal">
+            <div class="qualify-card-media">
+              <img src="images/qualify/전문가.png" alt="프리미엄 전문직" />
+              <video
+                src="images/qualify/전문가.mp4"
+                muted
+                playsinline
+                loop
+              ></video>
+              <span class="ai-badge">AI생성</span>
+            </div>
+            <div class="qualify-card-body">
+              <div class="qualify-card-type">Premium</div>
+              <h4>프리미엄 매칭을 원하는 분</h4>
+              <ul>
+                <li>전문직 (법조계 · 의료계 · 금융)</li>
+                <li>대기업 · 공기업 임직원</li>
+                <li>명문가 · 재력가 VVIP</li>
+                <li>노블레스 회원 기준 충족</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="qualify-more reveal">
+          <a href="wireframe_noblematching.html">서비스별 상세 자격 보기 →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 가입 절차 미리보기 -->
+    <section class="steps-preview" id="steps">
+      <div class="steps-preview-inner">
+        <div class="qualify-label reveal" style="text-align: center">
+          How It Works
+        </div>
+        <h2 class="qualify-title reveal" style="text-align: center">
+          상담부터 성혼까지, <span>이렇게</span> 진행됩니다
+        </h2>
+        <p
+          class="qualify-desc reveal"
+          style="text-align: center; margin-left: auto; margin-right: auto"
+        >
+          복잡한 절차 없이, 전담 커플매니저가 처음부터 끝까지 함께합니다
+        </p>
+
+        <div class="steps-row">
+          <div class="step-item reveal">
+            <div class="step-media">
+              <img src="images/qualify/1상담.png" alt="무료 상담" />
+              <video
+                src="images/qualify/1상담.mp4"
+                muted
+                playsinline
+                loop
+              ></video>
+            </div>
+            <div class="step-num">STEP 01</div>
+            <div class="step-name">무료 상담</div>
+            <div class="step-desc">
+              전화 · 온라인 · 방문<br />편한 방법으로 문의
+            </div>
+          </div>
+          <div class="step-item reveal">
+            <div class="step-media">
+              <img src="images/qualify/인증.png" alt="가입 · 인증" />
+              <video
+                src="images/qualify/인증.mp4"
+                muted
+                playsinline
+                loop
+              ></video>
+            </div>
+            <div class="step-num">STEP 02</div>
+            <div class="step-name">가입 · 인증</div>
+            <div class="step-desc">서류 검증 후<br />정회원 등록</div>
+          </div>
+          <div class="step-item reveal">
+            <div class="step-media">
+              <img src="images/qualify/매칭.png" alt="맞춤 매칭" />
+              <video
+                src="images/qualify/매칭.mp4"
+                muted
+                playsinline
+                loop
+              ></video>
+            </div>
+            <div class="step-num">STEP 03</div>
+            <div class="step-name">맞춤 매칭</div>
+            <div class="step-desc">매주 2~3회 전략회의<br />최적 상대 선정</div>
+          </div>
+          <div class="step-item reveal">
+            <div class="step-media">
+              <img src="images/qualify/성혼.png" alt="만남 · 성혼" />
+              <video
+                src="images/qualify/성혼.mp4"
+                muted
+                playsinline
+                loop
+              ></video>
+            </div>
+            <div class="step-num">STEP 04</div>
+            <div class="step-name">만남 · 성혼</div>
+            <div class="step-desc">연애 코칭부터<br />결혼까지 동행</div>
+          </div>
+        </div>
+
+        <div class="steps-cta reveal">
+          <a href="wireframe_noblematching.html">전체 매칭 프로세스 보기 →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CEO -->
+    <section class="ceo" id="ceo">
+      <div class="ceo-bg-grid" id="ceoBgGrid">
+        <div class="ceo-bg-cell">
+          <img src="ceo_thumb_01.jpg" alt="" /><video
+            src="ceo_clip_01.mp4"
+            muted
+            playsinline
+            loop
+          ></video>
+        </div>
+        <div class="ceo-bg-cell">
+          <img src="ceo_thumb_02.jpg" alt="" /><video
+            src="ceo_clip_02.mp4"
+            muted
+            playsinline
+            loop
+          ></video>
+        </div>
+        <div class="ceo-bg-cell">
+          <img src="ceo_thumb_03.jpg" alt="" /><video
+            src="ceo_clip_03.mp4"
+            muted
+            playsinline
+            loop
+          ></video>
+        </div>
+        <div class="ceo-bg-cell">
+          <img src="ceo_thumb_04.jpg" alt="" /><video
+            src="ceo_clip_04.mp4"
+            muted
+            playsinline
+            loop
+          ></video>
+        </div>
+        <div class="ceo-bg-cell">
+          <img src="ceo_thumb_05.jpg" alt="" /><video
+            src="ceo_clip_05.mp4"
+            muted
+            playsinline
+            loop
+          ></video>
+        </div>
+        <div class="ceo-bg-cell">
+          <img src="ceo_thumb_01.jpg" alt="" /><video
+            src="ceo_clip_01.mp4"
+            muted
+            playsinline
+            loop
+          ></video>
+        </div>
+        <div class="ceo-bg-cell">
+          <img src="ceo_thumb_02.jpg" alt="" /><video
+            src="ceo_clip_02.mp4"
+            muted
+            playsinline
+            loop
+          ></video>
+        </div>
+        <div class="ceo-bg-cell">
+          <img src="ceo_thumb_06.jpg" alt="" /><video
+            src="ceo_clip_06.mp4"
+            muted
+            playsinline
+            loop
+          ></video>
+        </div>
+      </div>
+      <div class="ceo-bg-overlay"></div>
+      <div class="ceo-inner">
+        <div class="ceo-image-wrap" id="ceoImageCol">
+          <div class="ceo-image-clip">
+            <div class="ceo-image" id="ceoImage">
+              <img src="images/qualify/인사.png" alt="대표 인사" />
+              <video
+                src="images/qualify/인사.mp4"
+                muted
+                playsinline
+                loop
+              ></video>
+            </div>
+          </div>
+        </div>
+        <div class="ceo-content" id="ceoContentCol">
+          <div class="ceo-title-badge" id="ceoTitleBadge">
+            <canvas class="ceo-title-canvas" id="ceoDustCanvas"></canvas>
+            <span class="ceo-title-badge-line"></span>
+            <span class="ceo-title-badge-text" id="ceoBadgeText"
+              >대한민국 커플매니저 제<span
+                style="
+                  font-family: &quot;Pretendard Variable&quot;, sans-serif;
+                  font-size: 1.1em;
+                  font-weight: 700;
+                "
+                >1</span
+              >호</span
+            >
+            <span class="ceo-title-badge-line"></span>
+          </div>
+          <div
+            class="section-eyebrow"
+            style="color: var(--gold-lighter); font-style: italic"
+          >
+            CEO &middot; 홍유진
+          </div>
+          <div class="ceo-quote">
+            제 이름을 걸고<br /><strong>책임지는 매칭,</strong><br />그것이
+            노블홍입니다
+          </div>
+          <div class="ceo-name">홍유진</div>
+          <div class="ceo-role">
+            대표이사 &middot; Ph.D &middot; 성혼 전문가
+          </div>
+          <p class="ceo-bio">
+            1996년 대한민국 최초 커플매니저로 출발해 30년간 오직 한 길만
+            걸어왔습니다. 5만 건 이상의 상담과 4,000쌍 이상의 성혼 실적이
+            말해주듯, 노블홍의 매칭은 데이터와 경험, 그리고 진심이 만나는
+            곳입니다.
+          </p>
+          <div class="ceo-stats-bar" id="ceoStatsBar">
+            <div class="ceo-stat-item">
+              <span class="ceo-stat-num" data-target="30" data-suffix="년"
+                >0</span
+              >
+              <span class="ceo-stat-label">매칭 노하우</span>
+            </div>
+            <div class="ceo-stat-item">
+              <span
+                class="ceo-stat-num"
+                data-target="50000"
+                data-suffix="+"
+                data-comma="true"
+                >0</span
+              >
+              <span class="ceo-stat-label">상담 실적</span>
+            </div>
+            <div class="ceo-stat-item">
+              <span
+                class="ceo-stat-num"
+                data-target="4000"
+                data-suffix="+"
+                data-comma="true"
+                >0</span
+              >
+              <span class="ceo-stat-label">성혼 실적</span>
+            </div>
+            <div class="ceo-stat-item">
+              <span class="ceo-stat-num" data-target="300" data-suffix="회+"
+                >0</span
+              >
+              <span class="ceo-stat-label">방송 출연</span>
+            </div>
+          </div>
+          <div class="ceo-awards" id="ceoAwards">
+            <span class="award-badge"
+              ><svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <path
+                  d="M5.5 0.5L6.796 4.21H10.71L7.557 6.495L8.853 10.205L5.5 7.92L2.147 10.205L3.443 6.495L0.29 4.21H4.204L5.5 0.5Z"
+                  fill="#c4a55a"
+                /></svg
+              >브랜드만족지수 1위</span
+            >
+            <span class="award-badge"
+              ><svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <path
+                  d="M5.5 0.5L6.796 4.21H10.71L7.557 6.495L8.853 10.205L5.5 7.92L2.147 10.205L3.443 6.495L0.29 4.21H4.204L5.5 0.5Z"
+                  fill="#c4a55a"
+                /></svg
+              >파워리더 대상</span
+            >
+            <span class="award-badge"
+              ><svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                <path
+                  d="M5.5 0.5L6.796 4.21H10.71L7.557 6.495L8.853 10.205L5.5 7.92L2.147 10.205L3.443 6.495L0.29 4.21H4.204L5.5 0.5Z"
+                  fill="#c4a55a"
+                /></svg
+              >방송 300회+</span
+            >
+          </div>
+        </div>
+      </div>
+      <div class="ceo-broadcast" id="ceoBroadcast">
+        <p class="ceo-broadcast-label">방송 출연 300회+</p>
+        <p class="ceo-broadcast-channels">
+          KBS &middot; MBC &middot; SBS &middot; JTBC &middot; tvN
+        </p>
+      </div>
+    </section>
+
+    <!-- MEDIA -->
+    <section class="media" id="media">
+      <div class="media-inner">
+        <div class="ornament" style="padding: 24px 0">
+          <span class="ornament-line"></span>
+          <span class="ornament-diamond"></span>
+          <span class="ornament-line"></span>
+        </div>
+        <h3 class="media-title">
+          매스컴이 인정한 <strong>성혼 전문가</strong>
+        </h3>
+        <p class="media-sub">
+          지상파 &middot; 종편 &middot; 라디오 300회 이상 출연
+        </p>
+        <div class="media-track">
+          <div class="media-scroll">
+            <div class="media-item">
+              <img src="assets/media-logos/kbs.svg" alt="KBS" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/mbc.svg" alt="MBC" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/sbs.svg" alt="SBS" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/jtbc.svg" alt="JTBC" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/tvchosun.svg" alt="TV조선" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/mbn.svg" alt="MBN" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/channela.svg" alt="채널A" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/ebs.svg" alt="EBS" />
+            </div>
+            <!-- Duplicate for infinite loop -->
+            <div class="media-item">
+              <img src="assets/media-logos/kbs.svg" alt="KBS" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/mbc.svg" alt="MBC" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/sbs.svg" alt="SBS" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/jtbc.svg" alt="JTBC" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/tvchosun.svg" alt="TV조선" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/mbn.svg" alt="MBN" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/channela.svg" alt="채널A" />
+            </div>
+            <div class="media-item">
+              <img src="assets/media-logos/ebs.svg" alt="EBS" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 파티/이벤트 미리보기 -->
+    <section class="events-preview" id="events">
+      <div class="events-bg" id="eventsBg">
+        <img src="images/qualify/호텔.png" alt="호텔 로비" />
+        <video src="images/qualify/호텔.mp4" muted playsinline loop></video>
+      </div>
+      <span
+        class="ai-image-badge"
+        style="position: absolute; bottom: 16px; right: 16px; z-index: 6"
+        >AI 이미지 사용</span
+      >
+      <div class="gold-particles" id="goldParticles"></div>
+      <div class="events-inner">
+        <div class="events-header">
+          <div>
+            <div class="qualify-label reveal">Noble Events</div>
+            <div class="events-title-wrap" id="eventsTitleWrap">
+              <canvas class="events-dust-canvas" id="eventsDustCanvas"></canvas>
+              <span class="ceo-title-badge-line"></span>
+              <h2
+                class="qualify-title reveal"
+                id="eventsTitle"
+                style="
+                  margin-bottom: 0;
+                  background: linear-gradient(
+                    90deg,
+                    #e8d090 0%,
+                    #fff8e0 40%,
+                    #e8d090 70%,
+                    #c4a55a 100%
+                  );
+                  background-size: 280% 100%;
+                  -webkit-background-clip: text;
+                  -webkit-text-fill-color: transparent;
+                  background-clip: text;
+                  animation: shimmerEvents 5s ease-in-out infinite;
+                "
+              >
+                매칭 그 이상의
+                <span style="-webkit-text-fill-color: transparent">만남</span>
+              </h2>
+              <span class="ceo-title-badge-line"></span>
+            </div>
+          </div>
+          <div class="events-header-right reveal">
+            <a href="#">매칭라운지 더보기 →</a>
+          </div>
+        </div>
+        <div class="events-grid">
+          <div class="event-card reveal">
+            <div class="event-icon">
+              <img
+                src="images/qualify/icon_stethoscope.png"
+                alt="Doctor Party"
+              />
+            </div>
+            <div class="event-name">Doctor Party</div>
+            <div class="event-desc">의료계 엘리트<br />프리미엄 모임</div>
+          </div>
+          <div class="event-card reveal">
+            <div class="event-icon">
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#c4a55a"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="7" width="20" height="14" rx="2" />
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+              </svg>
+            </div>
+            <div class="event-name">Professional Party</div>
+            <div class="event-desc">
+              법조계 · 금융 · 대기업<br />전문직 모임
+            </div>
+          </div>
+          <div class="event-card reveal">
+            <div class="event-icon">
+              <img src="images/qualify/icon_diamond.png" alt="Premium Party" />
+            </div>
+            <div class="event-name">Premium Party</div>
+            <div class="event-desc">상위 0.1% VVIP<br />비공개 파티</div>
+          </div>
+          <div class="event-card reveal">
+            <div class="event-icon">
+              <svg
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#c4a55a"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <div class="event-name">Thema Party</div>
+            <div class="event-desc">
+              골프 · 요트 · 와인<br />테마별 소셜 모임
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" id="cta">
+      <div class="cta-bg-wrap">
+        <div class="cta-bg" id="ctaBg">
+          <img src="images/qualify/cta.png" alt="웨딩" />
+          <video src="images/qualify/cta.mp4" muted playsinline loop></video>
+        </div>
+        <div class="cta-bg-overlay"></div>
+      </div>
+      <span
+        class="ai-image-badge"
+        style="position: absolute; bottom: 16px; right: 16px; z-index: 6"
+        >AI 이미지 사용</span
+      >
+      <div class="cta-frame"></div>
+      <div class="cta-content">
+        <div class="ornament" style="padding: 0 0 32px">
+          <span class="ornament-line"></span>
+          <span class="ornament-diamond"></span>
+          <span class="ornament-line"></span>
+        </div>
+        <h2 class="cta-title">
+          당신의 인연,<br /><strong>지금 시작됩니다</strong>
+        </h2>
+        <p class="cta-sub">주말 및 공휴일에도 상담 가능합니다</p>
+        <div class="cta-phone">1800-8194</div>
+        <p class="cta-note">
+          간단한 정보를 남겨주시면, 담당 커플매니저가 24시간 이내 연락드립니다
+        </p>
+        <div class="cta-buttons">
+          <a href="#" class="btn btn-filled">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+              />
+            </svg>
+            전화 상담
+          </a>
+          <a href="#" class="btn btn-outlined">온라인 상담 신청</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-gold-line"></div>
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo"><img src="logo.png" alt="Noble HoNG" /></div>
+          <div class="footer-info">
+            (주)노블홍 결혼정보회사 &middot; 대표 홍유진<br />
+            서울시 강남구 강남대로 354 혜천빌딩 705, 706<br />
+            사업자등록번호 321-81-03029 &middot; 국내결혼중개업
+            서울-강남-국내-22-0012호<br />
+            대표전화 1800-8194
+          </div>
+          <div
+            style="
+              margin-top: 16px;
+              padding-top: 12px;
+              border-top: 1px solid rgba(255, 255, 255, 0.06);
+              font-size: 12px;
+              color: rgba(255, 255, 255, 0.25);
+            "
+          >
+            <span>&copy; 2026 Noble Hong. All rights reserved.</span>
+            <span style="margin-left: 16px"
+              >Designed by
+              <a
+                href="https://polarad.co.kr"
+                target="_blank"
+                rel="noopener"
+                style="color: rgba(196, 165, 90, 0.5); text-decoration: none"
+                >POLA</a
+              ></span
+            >
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="privacy.html">개인정보처리방침</a>
+          <a href="terms.html">이용약관</a>
+          <a href="damages.html">손해배상절차</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Fixed CTA -->
+    <div class="fixed-cta" id="fixedCta">
+      <span>상담이 필요하신가요?</span>
+      <a
+        href="#cta"
+        class="btn btn-filled"
+        style="padding: 10px 24px; font-size: 13px"
+        >1800-8194</a
+      >
+      <a
+        href="#cta"
+        class="btn btn-outlined"
+        style="padding: 10px 24px; font-size: 13px"
+        >온라인 상담</a
+      >
+    </div>
+
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
+
+      /* ── GNB scroll ───────────────────────── */
+      window.addEventListener("scroll", () => {
+        document
+          .getElementById("gnb")
+          .classList.toggle("scrolled", window.scrollY > 60);
+      });
+
+      /* ── HERO — cinematic entrance ────────── */
+      const heroTl = gsap.timeline({ delay: 0.6 });
+      heroTl
+        .to(
+          ".hero-eyebrow",
+          { opacity: 1, duration: 1.2, ease: "power4.out" },
+          0.3,
+        )
+        .fromTo(
+          ".hero-title",
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 1.4, ease: "expo.out" },
+          0.6,
+        )
+        .fromTo(
+          ".hero-sub",
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
+          1.0,
+        )
+        .fromTo(
+          ".hero-cta-group",
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
+          1.3,
+        )
+        .to(".scroll-cue", { opacity: 1, duration: 0.8 }, 1.6);
+
+      /* ── HERO BG — 이미지 2초 후 영상 전환 ── */
+      (() => {
+        const heroBg = document.getElementById("heroBg");
+        if (!heroBg) return;
+        const video = heroBg.querySelector("video");
+        if (!video) return;
+        setTimeout(() => {
+          heroBg.classList.add("playing");
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        }, 2000);
+      })();
+
+      /* ── STATS BG — 스크롤 3초 정지 후 영상 전환 ── */
+      (() => {
+        const statsBg = document.getElementById("statsBg");
+        if (!statsBg) return;
+        const video = statsBg.querySelector("video");
+        if (!video) return;
+        let timer = null;
+        let inView = false;
+        ScrollTrigger.create({
+          trigger: "#stats",
+          start: "top 80%",
+          end: "bottom 20%",
+          onEnter: () => {
+            inView = true;
+          },
+          onLeave: () => {
+            inView = false;
+            statsBg.classList.remove("playing");
+            video.pause();
+          },
+          onEnterBack: () => {
+            inView = true;
+          },
+          onLeaveBack: () => {
+            inView = false;
+            statsBg.classList.remove("playing");
+            video.pause();
+          },
+        });
+        window.addEventListener(
+          "scroll",
+          () => {
+            clearTimeout(timer);
+            if (inView) {
+              statsBg.classList.remove("playing");
+              video.pause();
+              timer = setTimeout(() => {
+                if (inView) {
+                  statsBg.classList.add("playing");
+                  video.currentTime = 0;
+                  video.play().catch(() => {});
+                }
+              }, 3000);
+            }
+          },
+          { passive: true },
+        );
+      })();
+
+      /* ── STATS — staggered reveal + counting ── */
+      document.querySelectorAll(".stat-item").forEach((item, i) => {
+        gsap.fromTo(
+          item,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: i * 0.12,
+            ease: "expo.out",
+            scrollTrigger: { trigger: ".stats-grid", start: "top 82%" },
+          },
+        );
+      });
+
+      // Count up — with refined easing
+      document.querySelectorAll(".stat-num").forEach((el) => {
+        const target = parseInt(el.dataset.target);
+        const suffix = el.dataset.suffix || "";
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 85%",
+          onEnter: () => {
+            gsap.to(
+              { val: 0 },
+              {
+                val: target,
+                duration: 2.8,
+                ease: "expo.out",
+                onUpdate: function () {
+                  el.textContent =
+                    Math.round(this.targets()[0].val).toLocaleString() + suffix;
+                },
+              },
+            );
+          },
+          once: true,
+        });
+      });
+
+      // Chart cards — fade up
+      document.querySelectorAll(".chart-card").forEach((card, i) => {
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: i * 0.2,
+            ease: "expo.out",
+            scrollTrigger: { trigger: ".chart-section", start: "top 80%" },
+          },
+        );
+      });
+      // Bar fills — animate width
+      document.querySelectorAll(".bar-fill").forEach((bar, i) => {
+        const w = bar.dataset.width;
+        ScrollTrigger.create({
+          trigger: bar.closest(".chart-card"),
+          start: "top 80%",
+          onEnter: () =>
+            gsap.to(bar, {
+              width: w + "%",
+              duration: 1.2,
+              delay: i * 0.12,
+              ease: "expo.out",
+            }),
+          once: true,
+        });
+      });
+
+      /* ── SERVICES — typography reveal ──────── */
+      // Split text into chars
+      function splitToChars(el, text) {
+        el.innerHTML = "";
+        text.split("").forEach((ch) => {
+          const span = document.createElement("span");
+          span.className = "char";
+          span.textContent = ch === " " ? "\u00A0" : ch;
+          el.appendChild(span);
+        });
+      }
+
+      const line1El = document.querySelector(".svc-line1");
+      const line2El = document.querySelector(".svc-line2");
+      splitToChars(line1El, "격이 다른 매칭,");
+      splitToChars(line2El, "노블홍만의 방식");
+
+      const svcTl = gsap.timeline({
+        scrollTrigger: { trigger: "#svcHeader", start: "top 75%" },
+      });
+
+      svcTl
+        // Eyebrow fade up
+        .to(".svc-eyebrow", {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out",
+        })
+        // Line 1 chars stagger up
+        .to(
+          ".svc-line1 .char",
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            stagger: 0.04,
+            ease: "back.out(1.4)",
+          },
+          0.3,
+        )
+        // Line 2 chars stagger up (stronger, gold)
+        .to(
+          ".svc-line2 .char",
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            stagger: 0.05,
+            ease: "back.out(1.6)",
+          },
+          0.7,
+        )
+        // Gold sweep line
+        .to(
+          ".svc-gold-line",
+          { width: 120, duration: 0.8, ease: "expo.out" },
+          1.0,
+        )
+        // Description fade up
+        .to(
+          ".svc-desc",
+          { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+          1.2,
+        );
+
+      // Service cards — staggered with slight rotation
+      document.querySelectorAll(".service-card").forEach((card, i) => {
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 40, rotateX: 4 },
+          {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            duration: 1,
+            delay: i * 0.15,
+            ease: "expo.out",
+            scrollTrigger: { trigger: ".service-grid", start: "top 78%" },
+          },
+        );
+      });
+
+      /* ── CEO — dark section entrance ────────── */
+      gsap.fromTo(
+        "#ceoImageCol",
+        { opacity: 0, x: -60 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 1.1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: ".ceo", start: "top 75%" },
+        },
+      );
+      gsap.fromTo(
+        "#ceoContentCol",
+        { opacity: 0, x: 60 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 1.1,
+          delay: 0.15,
+          ease: "power3.out",
+          scrollTrigger: { trigger: ".ceo", start: "top 75%" },
+        },
+      );
+      gsap.fromTo(
+        "#ceoAwards .award-badge",
+        { opacity: 0, y: 12 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.55,
+          ease: "power2.out",
+          stagger: 0.12,
+          delay: 0.7,
+          scrollTrigger: { trigger: ".ceo", start: "top 75%" },
+        },
+      );
+      gsap.fromTo(
+        "#ceoBroadcast",
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power2.out",
+          scrollTrigger: { trigger: "#ceoBroadcast", start: "top 90%" },
+        },
+      );
+
+      /* ── CEO Background Grid Video Playback ── */
+      (() => {
+        const cells = document.querySelectorAll(".ceo-bg-cell");
+        if (!cells.length) return;
+        let started = false;
+
+        ScrollTrigger.create({
+          trigger: ".ceo",
+          start: "top 80%",
+          onEnter: () => {
+            if (started) return;
+            started = true;
+            cells.forEach((cell) => {
+              const video = cell.querySelector("video");
+              if (!video) return;
+              video.classList.add("playing");
+              video.currentTime = 0;
+              video.play().catch(() => {});
+            });
+          },
+        });
+      })();
+
+      // Qualify cards — PC: 3초 정지 후 영상 재생 / Mobile: 스크롤 진입 시 재생
+      (function () {
+        const qualifyCards = document.querySelectorAll(
+          "#qualifyGrid .qualify-card-media",
+        );
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+        let scrollTimer = null;
+        let visibleCards = new Set();
+
+        function playCard(card) {
+          const video = card.querySelector("video");
+          if (!video) return;
+          card.classList.add("playing");
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        }
+
+        function pauseCard(card) {
+          const video = card.querySelector("video");
+          if (!video) return;
+          card.classList.remove("playing");
+          video.pause();
+        }
+
+        if (isMobile) {
+          // 모바일: 기존 방식 (스크롤 진입 시 바로 재생)
+          qualifyCards.forEach((card) => {
+            ScrollTrigger.create({
+              trigger: card,
+              start: "top 60%",
+              onEnter: () => playCard(card),
+              onLeaveBack: () => pauseCard(card),
+            });
+          });
+        } else {
+          // PC: 뷰포트 내 카드 추적 + 3초 정지 시 재생
+          qualifyCards.forEach((card) => {
+            ScrollTrigger.create({
+              trigger: card,
+              start: "top 80%",
+              end: "bottom 20%",
+              onEnter: () => visibleCards.add(card),
+              onLeave: () => {
+                visibleCards.delete(card);
+                pauseCard(card);
+              },
+              onEnterBack: () => visibleCards.add(card),
+              onLeaveBack: () => {
+                visibleCards.delete(card);
+                pauseCard(card);
+              },
+            });
+          });
+
+          window.addEventListener(
+            "scroll",
+            () => {
+              // 스크롤 중에는 타이머 리셋, 영상 일시정지
+              clearTimeout(scrollTimer);
+              visibleCards.forEach((card) => pauseCard(card));
+
+              // 스크롤 멈추고 3초 후 뷰포트 내 카드 재생
+              scrollTimer = setTimeout(() => {
+                visibleCards.forEach((card) => playCard(card));
+              }, 3000);
+            },
+            { passive: true },
+          );
+        }
+      })();
+
+      // Step cards — PC: 뷰포트 진입 1초 후 재생, 벗어나면 정지 / Mobile: 스크롤 진입 시 재생
+      (function () {
+        const stepMedias = document.querySelectorAll(".step-media");
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+        let playTimer = null;
+        let visibleSteps = new Set();
+
+        function playStep(el) {
+          const video = el.querySelector("video");
+          if (!video) return;
+          el.classList.add("playing");
+          video.currentTime = 0;
+          video.play().catch(() => {});
+        }
+
+        function pauseStep(el) {
+          const video = el.querySelector("video");
+          if (!video) return;
+          el.classList.remove("playing");
+          video.pause();
+        }
+
+        function pauseAll() {
+          stepMedias.forEach((el) => pauseStep(el));
+        }
+
+        if (isMobile) {
+          stepMedias.forEach((el) => {
+            ScrollTrigger.create({
+              trigger: el,
+              start: "top 70%",
+              end: "bottom 20%",
+              onEnter: () => playStep(el),
+              onLeave: () => pauseStep(el),
+              onEnterBack: () => playStep(el),
+              onLeaveBack: () => pauseStep(el),
+            });
+          });
+        } else {
+          stepMedias.forEach((el) => {
+            ScrollTrigger.create({
+              trigger: el,
+              start: "top 80%",
+              end: "bottom 20%",
+              onEnter: () => visibleSteps.add(el),
+              onLeave: () => {
+                visibleSteps.delete(el);
+                pauseStep(el);
+              },
+              onEnterBack: () => visibleSteps.add(el),
+              onLeaveBack: () => {
+                visibleSteps.delete(el);
+                pauseStep(el);
+              },
+            });
+          });
+
+          window.addEventListener(
+            "scroll",
+            () => {
+              clearTimeout(playTimer);
+              pauseAll();
+              playTimer = setTimeout(() => {
+                visibleSteps.forEach((el) => playStep(el));
+              }, 1000);
+            },
+            { passive: true },
+          );
+        }
+      })();
+
+      // Events background video — 2초 정지 후 영상 재생
+      (() => {
+        const bg = document.getElementById("eventsBg");
+        if (!bg) return;
+        const video = bg.querySelector("video");
+        if (!video) return;
+        let timer = null;
+        let inView = false;
+        ScrollTrigger.create({
+          trigger: bg,
+          start: "top 80%",
+          end: "bottom 20%",
+          onEnter: () => {
+            inView = true;
+            timer = setTimeout(() => {
+              bg.classList.add("playing");
+              video.play().catch(() => {});
+            }, 2000);
+          },
+          onLeave: () => {
+            inView = false;
+            clearTimeout(timer);
+            bg.classList.remove("playing");
+            video.pause();
+          },
+          onEnterBack: () => {
+            inView = true;
+            timer = setTimeout(() => {
+              bg.classList.add("playing");
+              video.play().catch(() => {});
+            }, 2000);
+          },
+          onLeaveBack: () => {
+            inView = false;
+            clearTimeout(timer);
+            bg.classList.remove("playing");
+            video.pause();
+          },
+        });
+      })();
+
+      // Gold dust text wipe — events title
+      (function () {
+        const canvas = document.getElementById("eventsDustCanvas");
+        const wrap = document.getElementById("eventsTitleWrap");
+        const textEl = document.getElementById("eventsTitle");
+        if (!canvas || !wrap || !textEl) return;
+        const ctx = canvas.getContext("2d");
+
+        function resize() {
+          const r = wrap.getBoundingClientRect();
+          canvas.width = r.width;
+          canvas.height = r.height;
+        }
+        resize();
+        window.addEventListener("resize", resize);
+
+        function getTextBounds() {
+          const wr = wrap.getBoundingClientRect();
+          const tr = textEl.getBoundingClientRect();
+          return {
+            left: tr.left - wr.left,
+            top: tr.top - wr.top,
+            width: tr.width,
+            height: tr.height,
+          };
+        }
+
+        const GOLDS = [
+          [255, 248, 224],
+          [240, 221, 160],
+          [217, 197, 119],
+          [196, 165, 90],
+          [160, 128, 48],
+        ];
+        let trailHead = 0;
+        const TRAIL_SPEED = 0.003;
+        const grains = [];
+        const MAX_GRAINS = 500;
+
+        class Grain {
+          constructor(x, y) {
+            this.x = x + (Math.random() - 0.5) * 0.8;
+            this.y = y + (Math.random() - 0.5) * 2.5;
+            this.size = Math.random() * 1.0 + 0.3;
+            this.life = 1.0;
+            this.fadeSpeed = Math.random() * 0.005 + 0.002;
+            const c = GOLDS[Math.floor(Math.random() * GOLDS.length)];
+            this.r = c[0];
+            this.g = c[1];
+            this.b = c[2];
+            this.shape = Math.random() > 0.3 ? "rect" : "shard";
+            this.rotation = Math.random() * Math.PI;
+            this.vy = Math.random() * 0.08;
+            this.vx = (Math.random() - 0.5) * 0.04;
+            this.twinkle = Math.random() * Math.PI * 2;
+            this.twinkleSpeed = Math.random() * 0.08 + 0.03;
+            this.bornTimer = Math.random() * 8 + 3;
+          }
+          update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.twinkle += this.twinkleSpeed;
+            if (this.bornTimer > 0) this.bornTimer--;
+            else this.life -= this.fadeSpeed;
+          }
+          draw() {
+            if (this.life <= 0) return;
+            let alpha = this.life;
+            alpha *= 0.4 + 0.6 * Math.pow(Math.abs(Math.sin(this.twinkle)), 3);
+            if (this.bornTimer > 0) alpha = Math.min(alpha * 2, 1.0);
+            else alpha = Math.min(alpha, 0.8);
+            if (alpha < 0.01) return;
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rotation);
+            ctx.fillStyle = `rgb(${this.r},${this.g},${this.b})`;
+            if (this.shape === "rect") {
+              const s = this.size;
+              ctx.fillRect(-s * 0.6, -s * 0.3, s * 1.2, s * 0.6);
+            } else {
+              const s = this.size;
+              ctx.beginPath();
+              ctx.moveTo(0, -s * 1.2);
+              ctx.lineTo(s * 0.5, s * 0.4);
+              ctx.lineTo(-s * 0.4, s * 0.6);
+              ctx.closePath();
+              ctx.fill();
+            }
+            ctx.restore();
+          }
+          get dead() {
+            return this.life <= 0;
+          }
+        }
+
+        const glowOrbs = [];
+        class GlowOrb {
+          constructor() {
+            this.reset();
+          }
+          reset() {
+            const tb = getTextBounds();
+            const tailPos = trailHead - 0.3 - Math.random() * 0.15;
+            const cp = ((tailPos % 1) + 1) % 1;
+            this.x = tb.left + cp * tb.width + (Math.random() - 0.5) * 20;
+            this.y =
+              tb.top +
+              tb.height * 0.5 +
+              (Math.random() - 0.5) * tb.height * 0.3;
+            this.radius = Math.random() * 2.5 + 1;
+            this.vx = (Math.random() - 0.5) * 0.06;
+            this.vy = (Math.random() - 0.5) * 0.04;
+            this.phase = 0;
+            this.maxPhase = Math.PI;
+            this.speed = Math.random() * 0.02 + 0.01;
+            const c = GOLDS[Math.floor(Math.random() * GOLDS.length)];
+            this.r = c[0];
+            this.g = c[1];
+            this.b = c[2];
+          }
+          update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.phase += this.speed;
+            if (this.phase >= this.maxPhase) this.reset();
+          }
+          draw() {
+            const p = this.phase / this.maxPhase;
+            let alpha;
+            if (p < 0.3) alpha = (p / 0.3) * 0.2;
+            else if (p < 0.6) alpha = 0.2;
+            else alpha = ((1 - p) / 0.4) * 0.2;
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            const grad = ctx.createRadialGradient(
+              this.x,
+              this.y,
+              0,
+              this.x,
+              this.y,
+              this.radius,
+            );
+            grad.addColorStop(0, `rgba(${this.r},${this.g},${this.b},1)`);
+            grad.addColorStop(1, `rgba(${this.r},${this.g},${this.b},0)`);
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+        for (let i = 0; i < 6; i++) glowOrbs.push(new GlowOrb());
+
+        function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          const tb = getTextBounds();
+          const baseY = tb.top + tb.height + 4;
+          trailHead += TRAIL_SPEED;
+          if (trailHead >= 1.15) trailHead = -0.15;
+          const headX = tb.left + trailHead * tb.width;
+          for (let i = 0; i < 2; i++) {
+            if (grains.length < MAX_GRAINS)
+              grains.push(new Grain(headX, baseY));
+          }
+          for (let i = grains.length - 1; i >= 0; i--) {
+            grains[i].update();
+            grains[i].draw();
+            if (grains[i].dead) grains.splice(i, 1);
+          }
+          glowOrbs.forEach((o) => {
+            o.update();
+            o.draw();
+          });
+          requestAnimationFrame(animate);
+        }
+        animate();
+      })();
+
+      // Gold particles
+      (function () {
+        const container = document.getElementById("goldParticles");
+        if (!container) return;
+        for (let i = 0; i < 30; i++) {
+          const p = document.createElement("div");
+          p.className = "gold-particle";
+          const size = Math.random() * 3 + 2;
+          p.style.width = size + "px";
+          p.style.height = size + "px";
+          p.style.left = Math.random() * 100 + "%";
+          p.style.animationDuration = Math.random() * 6 + 6 + "s";
+          p.style.animationDelay = Math.random() * 8 + "s";
+          container.appendChild(p);
+        }
+      })();
+
+      // CEO image — 3초 정지 후 영상 전환
+      (() => {
+        const ceoImg = document.getElementById("ceoImage");
+        if (!ceoImg) return;
+        const video = ceoImg.querySelector("video");
+        if (!video) return;
+        let timer = null;
+        let inView = false;
+        ScrollTrigger.create({
+          trigger: ceoImg,
+          start: "top 80%",
+          end: "bottom 20%",
+          onEnter: () => {
+            inView = true;
+          },
+          onLeave: () => {
+            inView = false;
+            ceoImg.classList.remove("playing");
+            video.pause();
+          },
+          onEnterBack: () => {
+            inView = true;
+          },
+          onLeaveBack: () => {
+            inView = false;
+            ceoImg.classList.remove("playing");
+            video.pause();
+          },
+        });
+        window.addEventListener(
+          "scroll",
+          () => {
+            clearTimeout(timer);
+            if (inView) {
+              ceoImg.classList.remove("playing");
+              video.pause();
+              timer = setTimeout(() => {
+                if (inView) {
+                  ceoImg.classList.add("playing");
+                  video.currentTime = 0;
+                  video.play().catch(() => {});
+                }
+              }, 3000);
+            }
+          },
+          { passive: true },
+        );
+      })();
+
+      // CEO stats count-up
+      ScrollTrigger.create({
+        trigger: "#ceoStatsBar",
+        start: "top 80%",
+        onEnter: () => {
+          document.querySelectorAll(".ceo-stat-num").forEach((el) => {
+            const target = parseFloat(el.dataset.target);
+            const suffix = el.dataset.suffix || "";
+            const comma = el.hasAttribute("data-comma");
+            gsap.to(
+              { val: 0 },
+              {
+                val: target,
+                duration: 1.8,
+                ease: "power2.out",
+                delay: 0.3,
+                onUpdate: function () {
+                  const v = Math.round(this.targets()[0].val);
+                  el.textContent =
+                    (comma ? v.toLocaleString("ko-KR") : v) + suffix;
+                },
+              },
+            );
+          });
+        },
+        once: true,
+      });
+
+      /* ── CTA — dramatic sequence ──────────── */
+      const ctaTl = gsap.timeline({
+        scrollTrigger: { trigger: ".cta-section", start: "top 72%" },
+      });
+      ctaTl
+        .fromTo(
+          ".cta-title",
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 1, ease: "expo.out" },
+        )
+        .fromTo(
+          ".cta-sub",
+          { opacity: 0 },
+          { opacity: 1, duration: 0.7, ease: "power3.out" },
+          "-=0.6",
+        )
+        .fromTo(
+          ".cta-phone",
+          { opacity: 0, scale: 0.9 },
+          { opacity: 1, scale: 1, duration: 1.2, ease: "back.out(2)" },
+          "-=0.4",
+        )
+        .fromTo(
+          ".cta-note",
+          { opacity: 0 },
+          { opacity: 1, duration: 0.7 },
+          "-=0.5",
+        )
+        .fromTo(
+          ".cta-buttons",
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.7 },
+          "-=0.3",
+        );
+
+      /* ── CTA BG — 3초 정지 후 영상 전환 ── */
+      (() => {
+        const ctaBg = document.getElementById("ctaBg");
+        if (!ctaBg) return;
+        const video = ctaBg.querySelector("video");
+        if (!video) return;
+        let timer = null;
+        let inView = false;
+        ScrollTrigger.create({
+          trigger: "#cta",
+          start: "top 80%",
+          end: "bottom 20%",
+          onEnter: () => {
+            inView = true;
+          },
+          onLeave: () => {
+            inView = false;
+            ctaBg.classList.remove("playing");
+            video.pause();
+          },
+          onEnterBack: () => {
+            inView = true;
+          },
+          onLeaveBack: () => {
+            inView = false;
+            ctaBg.classList.remove("playing");
+            video.pause();
+          },
+        });
+        window.addEventListener(
+          "scroll",
+          () => {
+            clearTimeout(timer);
+            if (inView) {
+              ctaBg.classList.remove("playing");
+              video.pause();
+              timer = setTimeout(() => {
+                if (inView) {
+                  ctaBg.classList.add("playing");
+                  video.currentTime = 0;
+                  video.play().catch(() => {});
+                }
+              }, 3000);
+            }
+          },
+          { passive: true },
+        );
+      })();
+
+      /* ── Fixed CTA bar ────────────────────── */
+      ScrollTrigger.create({
+        trigger: ".stats",
+        start: "top 50%",
+        onEnter: () =>
+          document.getElementById("fixedCta").classList.add("visible"),
+        onLeaveBack: () =>
+          document.getElementById("fixedCta").classList.remove("visible"),
+      });
+      ScrollTrigger.create({
+        trigger: ".cta-section",
+        start: "top 80%",
+        onEnter: () =>
+          document.getElementById("fixedCta").classList.remove("visible"),
+        onLeaveBack: () =>
+          document.getElementById("fixedCta").classList.add("visible"),
+      });
+
+      /* ── GOLD DUST — eyebrow particle wipe ─── */
+      (function () {
+        const cvs = document.getElementById("eyebrowCanvas");
+        const ctx2 = cvs.getContext("2d");
+        const eyeWrap = document.getElementById("heroEyebrow");
+        const eyeText = document.getElementById("eyebrowText");
+
+        function resizeCvs() {
+          const r = eyeWrap.getBoundingClientRect();
+          cvs.width = r.width;
+          cvs.height = r.height;
+        }
+        resizeCvs();
+        window.addEventListener("resize", resizeCvs);
+
+        function getTextBounds() {
+          const wr = eyeWrap.getBoundingClientRect();
+          const tr = eyeText.getBoundingClientRect();
+          return {
+            left: tr.left - wr.left,
+            top: tr.top - wr.top,
+            width: tr.width,
+            height: tr.height,
+          };
+        }
+
+        const GOLDS = [
+          [255, 248, 224],
+          [240, 221, 160],
+          [217, 197, 119],
+          [196, 165, 90],
+          [160, 128, 48],
+        ];
+
+        let trailHead = 0;
+        const TRAIL_SPEED = 0.003;
+        const grains = [];
+        const MAX_GRAINS = 500;
+
+        class Grain {
+          constructor(x, y) {
+            this.x = x + (Math.random() - 0.5) * 0.8;
+            this.y = y + (Math.random() - 0.5) * 2.5;
+            this.size = Math.random() * 1.0 + 0.3;
+            this.life = 1.0;
+            this.fadeSpeed = Math.random() * 0.005 + 0.002;
+            const c = GOLDS[Math.floor(Math.random() * GOLDS.length)];
+            this.r = c[0];
+            this.g = c[1];
+            this.b = c[2];
+            this.shape = Math.random() > 0.3 ? "rect" : "shard";
+            this.rotation = Math.random() * Math.PI;
+            this.vy = Math.random() * 0.08;
+            this.vx = (Math.random() - 0.5) * 0.04;
+            this.twinkle = Math.random() * Math.PI * 2;
+            this.twinkleSpeed = Math.random() * 0.08 + 0.03;
+            this.bornTimer = Math.random() * 8 + 3;
+          }
+          update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.twinkle += this.twinkleSpeed;
+            if (this.bornTimer > 0) this.bornTimer--;
+            else this.life -= this.fadeSpeed;
+          }
+          draw() {
+            if (this.life <= 0) return;
+            let alpha = this.life;
+            alpha *= 0.4 + 0.6 * Math.pow(Math.abs(Math.sin(this.twinkle)), 3);
+            if (this.bornTimer > 0) alpha = Math.min(alpha * 2, 1.0);
+            else alpha = Math.min(alpha, 0.8);
+            if (alpha < 0.01) return;
+            ctx2.save();
+            ctx2.globalAlpha = alpha;
+            ctx2.translate(this.x, this.y);
+            ctx2.rotate(this.rotation);
+            ctx2.fillStyle =
+              "rgb(" + this.r + "," + this.g + "," + this.b + ")";
+            if (this.shape === "rect") {
+              const s = this.size;
+              ctx2.fillRect(-s * 0.6, -s * 0.3, s * 1.2, s * 0.6);
+            } else {
+              const s = this.size;
+              ctx2.beginPath();
+              ctx2.moveTo(0, -s * 1.2);
+              ctx2.lineTo(s * 0.5, s * 0.4);
+              ctx2.lineTo(-s * 0.4, s * 0.6);
+              ctx2.closePath();
+              ctx2.fill();
+            }
+            ctx2.restore();
+          }
+          get dead() {
+            return this.life <= 0;
+          }
+        }
+
+        // Glow orbs — spawn near trail tail
+        const glowOrbs = [];
+        const GLOW_COUNT = 6;
+
+        class GlowOrb {
+          constructor() {
+            this.reset();
+          }
+          reset() {
+            const tb = getTextBounds();
+            const tailPos = trailHead - 0.3 - Math.random() * 0.15;
+            const cp = ((tailPos % 1) + 1) % 1;
+            this.x = tb.left + cp * tb.width + (Math.random() - 0.5) * 20;
+            this.y =
+              tb.top +
+              tb.height * 0.5 +
+              (Math.random() - 0.5) * tb.height * 0.3;
+            this.radius = Math.random() * 2.5 + 1;
+            this.vx = (Math.random() - 0.5) * 0.06;
+            this.vy = (Math.random() - 0.5) * 0.04;
+            this.phase = 0;
+            this.maxPhase = Math.PI;
+            this.speed = Math.random() * 0.02 + 0.01;
+            const c = GOLDS[Math.floor(Math.random() * GOLDS.length)];
+            this.r = c[0];
+            this.g = c[1];
+            this.b = c[2];
+          }
+          update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.phase += this.speed;
+            if (this.phase >= this.maxPhase) this.reset();
+          }
+          draw() {
+            const p = this.phase / this.maxPhase;
+            let alpha;
+            if (p < 0.3) alpha = (p / 0.3) * 0.2;
+            else if (p < 0.6) alpha = 0.2;
+            else alpha = ((1 - p) / 0.4) * 0.2;
+            ctx2.save();
+            ctx2.globalAlpha = alpha;
+            const grad = ctx2.createRadialGradient(
+              this.x,
+              this.y,
+              0,
+              this.x,
+              this.y,
+              this.radius,
+            );
+            grad.addColorStop(
+              0,
+              "rgba(" + this.r + "," + this.g + "," + this.b + ",1)",
+            );
+            grad.addColorStop(
+              1,
+              "rgba(" + this.r + "," + this.g + "," + this.b + ",0)",
+            );
+            ctx2.fillStyle = grad;
+            ctx2.beginPath();
+            ctx2.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx2.fill();
+            ctx2.restore();
+          }
+        }
+
+        for (let i = 0; i < GLOW_COUNT; i++) glowOrbs.push(new GlowOrb());
+
+        function animateDust() {
+          ctx2.clearRect(0, 0, cvs.width, cvs.height);
+          const tb = getTextBounds();
+          const baseY = tb.top + tb.height + 4;
+
+          trailHead += TRAIL_SPEED;
+          if (trailHead >= 1.15) trailHead = -0.15;
+
+          const headX = tb.left + trailHead * tb.width;
+          for (let i = 0; i < 2; i++) {
+            if (grains.length < MAX_GRAINS)
+              grains.push(new Grain(headX, baseY));
+          }
+
+          for (let i = grains.length - 1; i >= 0; i--) {
+            grains[i].update();
+            grains[i].draw();
+            if (grains[i].dead) grains.splice(i, 1);
+          }
+
+          glowOrbs.forEach(function (orb) {
+            orb.update();
+            orb.draw();
+          });
+          requestAnimationFrame(animateDust);
+        }
+        animateDust();
+      })();
+
+      /* ── GOLD DUST — CEO title badge particle wipe ─── */
+      (function () {
+        const cvs = document.getElementById("ceoDustCanvas");
+        if (!cvs) return;
+        const ct = cvs.getContext("2d");
+        const wrap = document.getElementById("ceoTitleBadge");
+        const txt = document.getElementById("ceoBadgeText");
+
+        function rs() {
+          const r = wrap.getBoundingClientRect();
+          cvs.width = r.width;
+          cvs.height = r.height;
+        }
+        rs();
+        window.addEventListener("resize", rs);
+
+        function tb() {
+          const wr = wrap.getBoundingClientRect();
+          const tr = txt.getBoundingClientRect();
+          return {
+            left: tr.left - wr.left,
+            top: tr.top - wr.top,
+            width: tr.width,
+            height: tr.height,
+          };
+        }
+
+        const GC = [
+          [255, 248, 224],
+          [240, 221, 160],
+          [217, 197, 119],
+          [196, 165, 90],
+          [160, 128, 48],
+        ];
+        let head = 0;
+        const grains = [];
+        const MAX = 400;
+
+        class G {
+          constructor(x, y) {
+            this.x = x + (Math.random() - 0.5) * 0.8;
+            this.y = y + (Math.random() - 0.5) * 2.5;
+            this.sz = Math.random() * 1 + 0.3;
+            this.life = 1;
+            this.fs = Math.random() * 0.005 + 0.002;
+            const c = GC[Math.floor(Math.random() * GC.length)];
+            this.r = c[0];
+            this.g = c[1];
+            this.b = c[2];
+            this.sh = Math.random() > 0.3 ? "r" : "s";
+            this.rot = Math.random() * Math.PI;
+            this.vy = Math.random() * 0.08;
+            this.vx = (Math.random() - 0.5) * 0.04;
+            this.tw = Math.random() * Math.PI * 2;
+            this.ts = Math.random() * 0.08 + 0.03;
+            this.bt = Math.random() * 8 + 3;
+          }
+          update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            this.tw += this.ts;
+            if (this.bt > 0) this.bt--;
+            else this.life -= this.fs;
+          }
+          draw() {
+            if (this.life <= 0) return;
+            let a =
+              this.life *
+              (0.4 + 0.6 * Math.pow(Math.abs(Math.sin(this.tw)), 3));
+            a = this.bt > 0 ? Math.min(a * 2, 1) : Math.min(a, 0.8);
+            if (a < 0.01) return;
+            ct.save();
+            ct.globalAlpha = a;
+            ct.translate(this.x, this.y);
+            ct.rotate(this.rot);
+            ct.fillStyle = `rgb(${this.r},${this.g},${this.b})`;
+            if (this.sh === "r") {
+              const s = this.sz;
+              ct.fillRect(-s * 0.6, -s * 0.3, s * 1.2, s * 0.6);
+            } else {
+              const s = this.sz;
+              ct.beginPath();
+              ct.moveTo(0, -s * 1.2);
+              ct.lineTo(s * 0.5, s * 0.4);
+              ct.lineTo(-s * 0.4, s * 0.6);
+              ct.closePath();
+              ct.fill();
+            }
+            ct.restore();
+          }
+          get dead() {
+            return this.life <= 0;
+          }
+        }
+
+        const glows = [];
+        for (let i = 0; i < 5; i++)
+          glows.push({
+            x: 0,
+            y: 0,
+            radius: Math.random() * 2.5 + 1,
+            phase: 0,
+            maxPhase: Math.PI,
+            speed: Math.random() * 0.02 + 0.01,
+            r: GC[i % 5][0],
+            g: GC[i % 5][1],
+            b: GC[i % 5][2],
+            vx: (Math.random() - 0.5) * 0.06,
+            vy: (Math.random() - 0.5) * 0.04,
+          });
+
+        function resetGlow(g) {
+          const t = tb();
+          const tp = (((head - 0.3 - Math.random() * 0.15) % 1) + 1) % 1;
+          g.x = t.left + tp * t.width + (Math.random() - 0.5) * 20;
+          g.y = t.top + t.height * 0.5 + (Math.random() - 0.5) * t.height * 0.3;
+          g.phase = 0;
+        }
+        glows.forEach(resetGlow);
+
+        function anim() {
+          ct.clearRect(0, 0, cvs.width, cvs.height);
+          const t = tb();
+          const baseY = t.top + t.height + 4;
+          head += 0.003;
+          if (head >= 1.15) head = -0.15;
+          const hx = t.left + head * t.width;
+          for (let i = 0; i < 2; i++)
+            if (grains.length < MAX) grains.push(new G(hx, baseY));
+          for (let i = grains.length - 1; i >= 0; i--) {
+            grains[i].update();
+            grains[i].draw();
+            if (grains[i].dead) grains.splice(i, 1);
+          }
+          glows.forEach((g) => {
+            g.x += g.vx;
+            g.y += g.vy;
+            g.phase += g.speed;
+            if (g.phase >= g.maxPhase) resetGlow(g);
+            const p = g.phase / g.maxPhase;
+            let a;
+            if (p < 0.3) a = (p / 0.3) * 0.2;
+            else if (p < 0.6) a = 0.2;
+            else a = ((1 - p) / 0.4) * 0.2;
+            ct.save();
+            ct.globalAlpha = a;
+            const gr = ct.createRadialGradient(g.x, g.y, 0, g.x, g.y, g.radius);
+            gr.addColorStop(0, `rgba(${g.r},${g.g},${g.b},1)`);
+            gr.addColorStop(1, `rgba(${g.r},${g.g},${g.b},0)`);
+            ct.fillStyle = gr;
+            ct.beginPath();
+            ct.arc(g.x, g.y, g.radius, 0, Math.PI * 2);
+            ct.fill();
+            ct.restore();
+          });
+          requestAnimationFrame(anim);
+        }
+        anim();
+      })();
+    </script>
+  </body>
+</html>

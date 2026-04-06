@@ -1,0 +1,2442 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>맞춤컨설팅 와이어프레임</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <style>
+      :root {
+        --bg: #faf9f6;
+        --surface: #ffffff;
+        --surface-warm: #f6f3ee;
+        --surface-cream: #f0ece4;
+        --border: #e0d9ce;
+        --border-gold: rgba(160, 128, 48, 0.25);
+        --text: #1a1714;
+        --text-secondary: #5c564e;
+        --text-muted: #9e9893;
+        --gold: #a08030;
+        --gold-light: #c4a55a;
+        --gold-lighter: #d9c577;
+        --gold-dark: #7a6020;
+        --gold-bg: rgba(160, 128, 48, 0.04);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* ===== GNB ===== */
+      .gnb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: #ffffff;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+        transition: all 0.4s ease;
+      }
+      .gnb-border {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 10%,
+          var(--gold-light) 50%,
+          transparent 90%
+        );
+        opacity: 0.5;
+      }
+      .gnb-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        height: 88px;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-inner {
+        height: 64px;
+      }
+      .gnb-logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+      .gnb-logo img {
+        height: 56px;
+        width: auto;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-logo img {
+        height: 40px;
+      }
+      .gnb-menu {
+        display: flex;
+        gap: 40px;
+        list-style: none;
+      }
+      .gnb-menu a {
+        text-decoration: none;
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        padding: 8px 0;
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          var(--gold-dark),
+          var(--gold),
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        transition: all 0.3s;
+      }
+      .gnb-menu a.active {
+        filter: brightness(1.3);
+      }
+      .gnb-menu a.active::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light),
+          var(--gold)
+        );
+      }
+      .gnb-menu a::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light),
+          var(--gold)
+        );
+        transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .gnb-menu a:hover::after {
+        width: 100%;
+      }
+      .gnb-cta {
+        padding: 8px 20px;
+        border: 1px solid var(--gold-light);
+        background: linear-gradient(
+          135deg,
+          transparent,
+          rgba(196, 165, 90, 0.05)
+        );
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        border-radius: 1px;
+        text-decoration: none;
+        color: var(--gold);
+        transition: all 0.4s;
+      }
+      .gnb-cta:hover {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        border-color: var(--gold);
+      }
+
+      /* ===== PAGE HERO ===== */
+      .page-hero {
+        padding-top: 88px;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        background: #1a1714;
+      }
+      .page-hero-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .page-hero-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.8s ease;
+      }
+      .page-hero-bg video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+      }
+      .page-hero-bg.playing video {
+        opacity: 1;
+      }
+      .page-hero-bg.playing img {
+        opacity: 0;
+      }
+      .page-hero-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(20, 18, 14, 0.8);
+        pointer-events: none;
+      }
+      .page-hero-pattern {
+        position: absolute;
+        inset: 0;
+        opacity: 0.02;
+        background-image: repeating-linear-gradient(
+          0deg,
+          var(--gold) 0px,
+          transparent 1px,
+          transparent 40px,
+          var(--gold) 41px
+        );
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(160, 128, 48, 0.08),
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .page-hero-content {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+      .page-hero-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        color: var(--gold-light);
+        margin-bottom: 24px;
+        display: inline-block;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        -webkit-background-clip: text;
+        animation: shimmer 3s ease-in-out infinite;
+        background-size: 200% 100%;
+      }
+      @keyframes shimmer {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+      .page-hero h1 {
+        font-size: 48px;
+        font-weight: 300;
+        color: #fff;
+        letter-spacing: -1px;
+        margin-bottom: 16px;
+      }
+      .page-hero h1 strong {
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          #f0dda0,
+          var(--gold-lighter),
+          #fff8e0
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .page-hero-sub {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.55);
+        font-weight: 300;
+        letter-spacing: -0.3px;
+        line-height: 1.6;
+        margin-bottom: 40px;
+      }
+      .page-hero-cta {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+      }
+      .btn-hero-filled {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .btn-hero-filled:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(160, 128, 48, 0.3);
+      }
+      .btn-hero-outlined {
+        display: inline-flex;
+        align-items: center;
+        padding: 14px 28px;
+        border: 1px solid rgba(196, 165, 90, 0.4);
+        color: var(--gold-light);
+        font-size: 15px;
+        font-weight: 500;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .btn-hero-outlined:hover {
+        background: rgba(196, 165, 90, 0.1);
+        transform: translateY(-2px);
+      }
+      .page-hero-scroll {
+        position: absolute;
+        bottom: 32px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        z-index: 3;
+      }
+      .page-hero-scroll span {
+        font-size: 11px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+      }
+      .page-hero-scroll-line {
+        width: 1px;
+        height: 40px;
+        background: linear-gradient(180deg, var(--gold-light), transparent);
+        animation: scrollPulse 2s ease-in-out infinite;
+      }
+      @keyframes scrollPulse {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: scaleY(0.8);
+        }
+        50% {
+          opacity: 1;
+          transform: scaleY(1);
+        }
+      }
+      .page-hero-frame {
+        position: absolute;
+        inset: 30px;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .page-hero-frame::before,
+      .page-hero-frame::after {
+        content: "";
+        position: absolute;
+        border-color: var(--gold-light);
+        border-style: solid;
+        opacity: 0.2;
+        width: 60px;
+        height: 60px;
+      }
+      .page-hero-frame::before {
+        top: 0;
+        left: 0;
+        border-width: 1px 0 0 1px;
+      }
+      .page-hero-frame::after {
+        bottom: 0;
+        right: 0;
+        border-width: 0 1px 1px 0;
+      }
+
+      /* ===== SECTION COMMON ===== */
+      .section {
+        padding: 120px 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .section-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        font-weight: 400;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 12px;
+        text-align: center;
+      }
+      .section-title {
+        font-size: clamp(28px, 3.5vw, 40px);
+        font-weight: 300;
+        letter-spacing: -0.5px;
+        margin-bottom: 16px;
+        text-align: center;
+      }
+      .section-title strong {
+        font-weight: 700;
+        color: var(--gold-dark);
+      }
+      .section-sub {
+        font-size: 16px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        text-align: center;
+        max-width: 600px;
+        margin: 0 auto 56px;
+      }
+      .ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 40px 0;
+      }
+      .ornament-line {
+        width: 80px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+      }
+      .ornament-diamond {
+        width: 8px;
+        height: 8px;
+        border: 1px solid var(--gold-light);
+        transform: rotate(45deg);
+      }
+
+      /* ===== SECTION 1: 도입부 — 다크 프리미엄 ===== */
+      .intro-section {
+        background: url("images/qualify/unnamed (23).jpg") center/cover
+          no-repeat;
+        position: relative;
+        overflow: hidden;
+      }
+      .intro-section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(10, 10, 10, 0.8);
+        pointer-events: none;
+      }
+      .intro-section .section-eyebrow {
+        color: #d9c577;
+      }
+      .intro-section .section-title {
+        color: rgba(255, 255, 255, 0.95);
+      }
+      .intro-section .section-title strong {
+        background: linear-gradient(
+          135deg,
+          #cb9b51,
+          #f6e27a,
+          #f6f2c0,
+          #f6e27a,
+          #cb9b51
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+      }
+      .intro-section .section-sub {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .intro-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 120px 32px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* 뱃지 컨트롤 */
+      .consult-badges {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+      }
+      .consult-badge {
+        padding: 9px 22px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 1px solid rgba(160, 128, 48, 0.25);
+        background: transparent;
+        color: var(--text-secondary);
+        letter-spacing: 0.5px;
+      }
+      .consult-badge:hover {
+        border-color: var(--gold-light);
+        color: var(--gold);
+      }
+      .consult-badge.active {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold));
+        color: #fff;
+        border-color: var(--gold);
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(160, 128, 48, 0.2);
+      }
+
+      /* 카드 슬라이더 */
+      .consult-slider-wrap {
+        position: relative;
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .consult-card-viewport {
+        position: relative;
+        overflow: hidden;
+        border-radius: 20px;
+      }
+
+      /* 대형 카드 */
+      .consult-card {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        border-radius: 20px;
+        padding: 48px 56px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .consult-card.active {
+        position: relative;
+        opacity: 1;
+        pointer-events: auto;
+      }
+      /* 골드 보더 */
+      .consult-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 20px;
+        padding: 1px;
+        background: linear-gradient(
+          160deg,
+          rgba(203, 155, 81, 0.4),
+          rgba(203, 155, 81, 0.08),
+          rgba(203, 155, 81, 0.25)
+        );
+        -webkit-mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+      /* 빛 반사 */
+      .consult-card::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -100%;
+        width: 60%;
+        height: 200%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.12),
+          transparent
+        );
+        transform: skewX(-20deg);
+        opacity: 0;
+        transition: none;
+        pointer-events: none;
+        z-index: 2;
+      }
+      .consult-card:hover::after {
+        animation: cardReflect 0.7s ease-out forwards;
+      }
+      @keyframes cardReflect {
+        0% {
+          left: -60%;
+          opacity: 1;
+        }
+        100% {
+          left: 120%;
+          opacity: 0;
+        }
+      }
+
+      /* 카드 배경 — 세그먼트별 */
+      .consult-card[data-seg="elite"] {
+        background: linear-gradient(150deg, #f8f5ef, #f2ece0, #ebe4d4);
+        color: #3d3526;
+      }
+      .consult-card[data-seg="corporate"] {
+        background: linear-gradient(150deg, #8b6b3d, #a8834a, #c4a060);
+        color: #fff;
+      }
+      .consult-card[data-seg="vvip"] {
+        background: linear-gradient(150deg, #5c3d6e, #432d52, #2e1d3a);
+        color: #fff;
+      }
+      .consult-card[data-seg="premium"] {
+        background: linear-gradient(150deg, #5a2a2a, #3e1a1a, #2a1010);
+        color: #fff;
+      }
+      .consult-card[data-seg="parents"] {
+        background: linear-gradient(150deg, #2a3d4e, #1e2d3a, #152028);
+        color: #fff;
+      }
+      .consult-card[data-seg="remarriage"] {
+        background: #0a0a0a;
+        color: #fff;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+      }
+
+      /* 좌측: 세그먼트 정보 */
+      .cc-left {
+        position: relative;
+        z-index: 1;
+      }
+      .cc-brand {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        opacity: 0.45;
+        margin-bottom: 20px;
+      }
+      .cc-tier-en {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        opacity: 0.55;
+        margin-bottom: 4px;
+      }
+      .cc-tier-ko {
+        font-size: 36px;
+        font-weight: 800;
+        margin-bottom: 24px;
+        line-height: 1.2;
+        text-shadow:
+          -1px -1px 1px rgba(255, 255, 255, 0.1),
+          1px 1px 2px rgba(0, 0, 0, 0.3);
+      }
+      [data-seg="elite"] .cc-tier-ko {
+        color: #3d3526;
+        text-shadow: none;
+      }
+      .cc-divider {
+        width: 48px;
+        height: 1px;
+        margin-bottom: 24px;
+        background: linear-gradient(
+          90deg,
+          rgba(203, 155, 81, 0.6),
+          rgba(203, 155, 81, 0.1)
+        );
+      }
+      [data-seg="elite"] .cc-divider {
+        background: linear-gradient(90deg, rgba(61, 53, 38, 0.3), transparent);
+      }
+      .cc-desc {
+        font-size: 15px;
+        line-height: 1.8;
+        opacity: 0.75;
+        margin-bottom: 24px;
+      }
+      .cc-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        transition: all 0.3s;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+      }
+      .cc-cta:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(160, 128, 48, 0.3);
+      }
+
+      /* 우측: 대상 조건 + 특징 */
+      .cc-right {
+        position: relative;
+        z-index: 1;
+      }
+      .cc-features-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        opacity: 0.4;
+        margin-bottom: 16px;
+      }
+      .cc-features {
+        list-style: none;
+      }
+      .cc-features li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        font-size: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      [data-seg="elite"] .cc-features li {
+        border-color: rgba(61, 53, 38, 0.08);
+      }
+      .cc-features li .ck {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        flex-shrink: 0;
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.7);
+      }
+      [data-seg="elite"] .cc-features li .ck {
+        background: rgba(61, 53, 38, 0.08);
+        color: var(--gold);
+      }
+      /* 재혼(블랙) 골드 스타일 */
+      [data-seg="remarriage"] .cc-tier-ko {
+        background: linear-gradient(
+          135deg,
+          #cb9b51,
+          #f6e27a,
+          #f6f2c0,
+          #f6e27a,
+          #cb9b51
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+      }
+      [data-seg="remarriage"] .cc-brand {
+        color: #e8d090;
+      }
+      [data-seg="remarriage"] .cc-tier-en {
+        color: #d9c577;
+      }
+      [data-seg="remarriage"] .cc-divider {
+        background: linear-gradient(90deg, #cb9b51, transparent);
+      }
+      [data-seg="remarriage"] .cc-features-title {
+        color: #d9c577;
+      }
+      [data-seg="remarriage"] .cc-features li {
+        border-color: rgba(196, 165, 90, 0.08);
+        color: #d9c577;
+      }
+      [data-seg="remarriage"] .cc-features li .ck {
+        background: rgba(196, 165, 90, 0.12);
+        color: #d9c577;
+      }
+
+      /* 좌우 화살표 */
+      .consult-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid var(--border-gold);
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(8px);
+        color: var(--gold);
+        font-size: 24px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+      }
+      .consult-nav:hover {
+        background: var(--gold);
+        color: #fff;
+        border-color: var(--gold);
+      }
+      .consult-nav-prev {
+        left: -56px;
+      }
+      .consult-nav-next {
+        right: -56px;
+      }
+      @media (max-width: 960px) {
+        .consult-card {
+          grid-template-columns: 1fr;
+          padding: 32px 24px;
+        }
+        .consult-nav-prev {
+          left: 8px;
+        }
+        .consult-nav-next {
+          right: 8px;
+        }
+        .consult-nav {
+          background: rgba(255, 255, 255, 0.95);
+        }
+      }
+
+      /* ===== SECTION 2: 세그먼트 탭 네비게이션 ===== */
+      .segment-nav-wrap {
+        position: sticky;
+        top: 64px;
+        z-index: 50;
+        background: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(196, 165, 90, 0.15);
+        transition: top 0.4s ease;
+      }
+      .segment-nav {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .segment-nav::-webkit-scrollbar {
+        display: none;
+      }
+      .segment-tab {
+        flex: 1;
+        padding: 20px 16px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.35);
+        letter-spacing: -0.2px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s;
+        white-space: nowrap;
+        border: none;
+        background: none;
+      }
+      .segment-tab:hover {
+        color: #d9c577;
+      }
+      .segment-tab.active {
+        color: var(--gold);
+        font-weight: 700;
+      }
+      .segment-tab.active::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 20%;
+        right: 20%;
+        height: 2px;
+        background: var(--gold);
+        border-radius: 1px;
+      }
+      .segment-tab .tab-en {
+        display: block;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 11px;
+        font-weight: 400;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-top: 2px;
+        opacity: 0.5;
+      }
+
+      /* ===== SECTION 3: 세그먼트 콘텐츠 ===== */
+      .segment-panel {
+        display: none;
+        background: #0a0a0a;
+      }
+      .segment-panel.active {
+        display: block;
+      }
+
+      /* 세그먼트 히어로 (가로 분할) */
+      .seg-hero {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 600px;
+      }
+      .seg-hero-visual {
+        position: relative;
+        overflow: hidden;
+      }
+      .seg-hero-visual img,
+      .seg-hero-visual video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .seg-hero-visual .seg-poster {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        transition: opacity 0.6s ease;
+      }
+      .seg-hero-visual .seg-poster.fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .seg-hero-visual video {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+      }
+      .seg-hero-visual .ai-badge {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        z-index: 4;
+        padding: 0;
+        font-size: 10px;
+        font-weight: 400;
+        letter-spacing: 0.3px;
+        color: rgba(255, 255, 255, 0.35);
+        background: none;
+      }
+      .seg-hero-visual::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(10, 10, 10, 0.6);
+        z-index: 3;
+        pointer-events: none;
+      }
+      .seg-hero-text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 80px 64px;
+        background: #0a0a0a;
+      }
+      .seg-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--gold);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 24px;
+      }
+      .seg-hero-badge::before {
+        content: "";
+        width: 32px;
+        height: 1px;
+        background: var(--gold);
+      }
+      .seg-hero-text h2 {
+        font-size: 36px;
+        font-weight: 300;
+        line-height: 1.35;
+        margin-bottom: 20px;
+        letter-spacing: -0.5px;
+        color: rgba(255, 255, 255, 0.95);
+      }
+      .seg-hero-text h2 strong {
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          #cb9b51,
+          #f6e27a,
+          #f6f2c0,
+          #f6e27a,
+          #cb9b51
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+      }
+      .seg-hero-text .desc {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.5);
+        line-height: 1.8;
+        margin-bottom: 40px;
+      }
+
+      /* 대상 조건 태그 */
+      .seg-qualify {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 40px;
+      }
+      .seg-qualify-tag {
+        padding: 6px 16px;
+        border: 1px solid rgba(196, 165, 90, 0.25);
+        border-radius: 20px;
+        font-size: 13px;
+        color: #d9c577;
+        font-weight: 500;
+        letter-spacing: -0.2px;
+        background: rgba(196, 165, 90, 0.08);
+      }
+
+      /* 서비스 특징 3개 */
+      .seg-features {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 100px 32px;
+      }
+      .seg-features-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+      }
+      .seg-feature-card {
+        padding: 40px 32px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(196, 165, 90, 0.12);
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+      .seg-feature-card:hover {
+        border-color: rgba(196, 165, 90, 0.35);
+        box-shadow: 0 8px 32px rgba(160, 128, 48, 0.06);
+        transform: translateY(-4px);
+      }
+      .seg-feature-icon {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: rgba(196, 165, 90, 0.08);
+        border: 1px solid rgba(196, 165, 90, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .seg-feature-icon svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--gold);
+        fill: none;
+        stroke-width: 1.5;
+      }
+      .seg-feature-card h4 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        letter-spacing: -0.3px;
+        color: #d9c577;
+      }
+      .seg-feature-card p {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.5);
+        line-height: 1.7;
+      }
+
+      /* 세그먼트별 추가 정보 (해외, 연령대별 등) */
+      .seg-extra {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 32px 100px;
+      }
+      .seg-extra-box {
+        background: linear-gradient(135deg, #2a2318, #1e1a14);
+        border-radius: 16px;
+        padding: 60px;
+        color: #fff;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: center;
+      }
+      .seg-extra-text h3 {
+        font-size: 28px;
+        font-weight: 300;
+        margin-bottom: 16px;
+        line-height: 1.4;
+      }
+      .seg-extra-text h3 strong {
+        font-weight: 700;
+        background: linear-gradient(135deg, #f0dda0, var(--gold-lighter));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .seg-extra-text p {
+        font-size: 15px;
+        color: rgba(255, 255, 255, 0.6);
+        line-height: 1.8;
+      }
+      .seg-extra-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .seg-extra-item {
+        padding: 20px;
+        border: 1px solid rgba(196, 165, 90, 0.2);
+        border-radius: 8px;
+        text-align: center;
+      }
+      .seg-extra-item .city {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--gold-light);
+        margin-bottom: 4px;
+      }
+      .seg-extra-item .detail {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      /* 재혼 연령대별 */
+      .age-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .age-card {
+        padding: 40px 28px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(196, 165, 90, 0.12);
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.3s;
+      }
+      .age-card:hover {
+        border-color: rgba(196, 165, 90, 0.35);
+        box-shadow: 0 4px 20px rgba(196, 165, 90, 0.06);
+      }
+      .age-card .age {
+        font-size: 32px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #cb9b51, #f6e27a);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+      }
+      .age-card h4 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #d9c577;
+      }
+      .age-card p {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.5);
+        line-height: 1.7;
+      }
+
+      /* ===== CTA SECTION ===== */
+      .cta-section {
+        padding: 140px 32px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-bg-wrap {
+        position: absolute;
+        inset: 0;
+      }
+      .cta-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .cta-bg img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        filter: contrast(0.7) brightness(0.85);
+      }
+      .cta-bg-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(30, 24, 10, 0.85);
+        z-index: 1;
+      }
+      .cta-frame {
+        position: absolute;
+        inset: 60px;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+        pointer-events: none;
+        border-radius: 2px;
+        z-index: 2;
+      }
+      .cta-content {
+        position: relative;
+        z-index: 3;
+      }
+      .cta-title {
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 200;
+        margin-bottom: 12px;
+        color: rgba(255, 255, 255, 0.95);
+      }
+      .cta-title strong {
+        font-weight: 600;
+        background: linear-gradient(135deg, #f0dda0, var(--gold-lighter));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-sub {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 8px;
+      }
+      .cta-phone {
+        font-family: "Pretendard Variable", sans-serif;
+        font-size: 42px;
+        margin: 28px 0;
+        background: linear-gradient(135deg, #f0dda0, #fff8e0, #f0dda0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-note {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.4);
+        margin-bottom: 32px;
+      }
+      .cta-buttons {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+      }
+      .cta-section .btn-filled {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 28px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .cta-section .btn-filled:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(160, 128, 48, 0.3);
+      }
+      .cta-section .btn-outlined {
+        display: inline-flex;
+        align-items: center;
+        padding: 14px 28px;
+        border: 1px solid var(--gold-light);
+        color: var(--gold-light);
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .cta-section .btn-outlined:hover {
+        background: rgba(196, 165, 90, 0.1);
+        transform: translateY(-2px);
+      }
+
+      /* ===== FOOTER ===== */
+      .footer {
+        padding: 56px 40px 40px;
+        background: linear-gradient(135deg, #2a2318 0%, #1e1a14 100%);
+        border-top: 2px solid var(--gold);
+      }
+      .footer-gold-line {
+        height: 1px;
+        margin-bottom: 56px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        opacity: 0.3;
+      }
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-logo {
+        margin-bottom: 16px;
+      }
+      .footer-logo img {
+        height: 36px;
+        width: auto;
+        opacity: 0.8;
+        filter: brightness(0) invert(1);
+      }
+      .footer-info {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.45);
+        line-height: 1.9;
+      }
+      .footer-links {
+        display: flex;
+        gap: 28px;
+      }
+      .footer-links a {
+        font-size: 13px;
+        color: rgba(196, 165, 90, 0.6);
+        text-decoration: none;
+        letter-spacing: 0.3px;
+        transition: color 0.3s;
+      }
+      .footer-links a:hover {
+        color: var(--gold-lighter);
+      }
+
+      /* ===== RESPONSIVE ===== */
+      @media (max-width: 960px) {
+        .intro-grid {
+          grid-template-columns: 1fr;
+          gap: 48px;
+        }
+        .seg-hero {
+          grid-template-columns: 1fr;
+        }
+        .seg-hero-visual {
+          height: 300px;
+        }
+        .seg-hero-text {
+          padding: 48px 32px;
+        }
+        .seg-features-grid {
+          grid-template-columns: 1fr;
+        }
+        .seg-extra-box {
+          grid-template-columns: 1fr;
+          padding: 40px 24px;
+        }
+        .seg-extra-list {
+          grid-template-columns: 1fr 1fr;
+        }
+        .age-cards {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ===== WIREFRAME BADGE ===== */
+      .ai-image-badge {
+        font-size: 11px;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+        color: rgba(255, 255, 255, 0.18);
+        background: rgba(0, 0, 0, 0.08);
+        backdrop-filter: blur(4px);
+        padding: 4px 10px;
+        border-radius: 2px;
+        pointer-events: none;
+      }
+      .wf-badge {
+        position: fixed;
+        top: 96px;
+        right: 16px;
+        z-index: 200;
+        background: var(--gold);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        padding: 4px 10px;
+        border-radius: 2px;
+      }
+
+      /* ===== ANIMATIONS ===== */
+      .reveal {
+        opacity: 0;
+        transform: translateY(32px);
+      }
+
+      /* placeholder image */
+      .img-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          #d4c5a0 0%,
+          #b8a880 50%,
+          #9e9070 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wf-badge">WIREFRAME v1.0</div>
+
+    <!-- GNB -->
+    <nav class="gnb" id="gnb">
+      <div class="gnb-border"></div>
+      <div class="gnb-inner">
+        <a href="wireframe_home_v3_motion.html" class="gnb-logo">
+          <img src="logo.png" alt="노블홍" />
+        </a>
+        <ul class="gnb-menu">
+          <li><a href="wireframe_home_v3_motion.html">노블홍</a></li>
+          <li><a href="wireframe_noblematching.html">노블매칭</a></li>
+          <li>
+            <a href="wireframe_consulting.html" class="active">맞춤컨설팅</a>
+          </li>
+          <li><a href="wireframe_matchinglounge.html">매칭라운지</a></li>
+          <li><a href="wireframe_contact.html">상담문의</a></li>
+        </ul>
+        <a href="#" class="gnb-cta">상담 시작</a>
+      </div>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <section class="page-hero">
+      <div class="page-hero-bg" id="heroBgConsult">
+        <img src="images/qualify/consulting_hero.png" alt="맞춤컨설팅" />
+        <video
+          src="images/qualify/제목 없는 동영상 (8)_1.mp4"
+          muted
+          playsinline
+          loop
+        ></video>
+      </div>
+      <div class="page-hero-pattern"></div>
+      <div class="page-hero-glow"></div>
+      <div class="page-hero-frame"></div>
+      <span
+        class="ai-image-badge"
+        style="position: absolute; bottom: 16px; right: 16px; z-index: 6"
+        >AI 생성 이미지</span
+      >
+      <div class="page-hero-content">
+        <div class="page-hero-eyebrow">Tailored Consulting</div>
+        <h1>당신만을 위한<br /><strong>맞춤 매칭 전략</strong></h1>
+        <p class="page-hero-sub">
+          전문직, 명문가, 재력가부터 자녀결혼, 재혼까지<br />
+          상황에 맞는 전문 컨설팅을 제공합니다
+        </p>
+        <div class="page-hero-cta">
+          <a href="tel:1800-8194" class="btn-hero-filled">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+              />
+            </svg>
+            무료 상담
+          </a>
+          <a href="#segments" class="btn-hero-outlined">서비스 살펴보기</a>
+        </div>
+      </div>
+      <div class="page-hero-scroll">
+        <span>Scroll</span>
+        <div class="page-hero-scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: 도입부 — 다크 프리미엄 -->
+    <section class="intro-section" id="intro">
+      <div class="intro-inner">
+        <div style="text-align: center">
+          <div class="section-eyebrow reveal">Why Tailored</div>
+          <h2 class="section-title reveal">
+            6가지 상황, <strong>6가지 전략</strong>
+          </h2>
+          <p class="section-sub reveal">
+            같은 결혼이라도 상황이 다르면 접근이 달라야 합니다.<br />
+            노블홍은 30년 경험으로 각 상황에 최적화된 매칭 전략을 제시합니다.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEGMENT TAB NAVIGATION -->
+    <div class="segment-nav-wrap" id="segments">
+      <div class="segment-nav">
+        <button class="segment-tab active" data-target="elite">
+          전문직·엘리트
+          <span class="tab-en">Elite</span>
+        </button>
+        <button class="segment-tab" data-target="corporate">
+          대기업·명문대
+          <span class="tab-en">Corporate</span>
+        </button>
+        <button class="segment-tab" data-target="vvip">
+          명문가·재력가
+          <span class="tab-en">VVIP</span>
+        </button>
+        <button class="segment-tab" data-target="premium">
+          명품결혼
+          <span class="tab-en">Premium</span>
+        </button>
+        <button class="segment-tab" data-target="parents">
+          자녀결혼
+          <span class="tab-en">Parents</span>
+        </button>
+        <button class="segment-tab" data-target="remarriage">
+          스페셜 재혼
+          <span class="tab-en">Remarriage</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ========== SEGMENT 1: 전문직·엘리트 ========== -->
+    <div class="segment-panel active" id="panel-elite">
+      <div class="seg-hero">
+        <div class="seg-hero-visual">
+          <img
+            class="seg-poster"
+            src="output/thumbnails/전문직엘리트.jpg"
+            alt="전문직·엘리트"
+          />
+          <video
+            src="output/전문직엘리트.mp4"
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+          <span class="ai-badge">AI생성</span>
+        </div>
+        <div class="seg-hero-text">
+          <div class="seg-hero-badge">Elite Matching</div>
+          <h2>
+            전문직의 시간은<br />
+            <strong>다르게 흐릅니다</strong>
+          </h2>
+          <p class="desc">
+            판사, 검사, 변호사, 의사, 회계사, 교수 등<br />
+            최고 수준의 전문직 종사자를 위한 프리미엄 매칭 서비스입니다.<br />
+            비공개 회원 관리로 철저한 보안 속에 전담 매니저가 관리합니다.
+          </p>
+          <div class="seg-qualify">
+            <span class="seg-qualify-tag">판사 · 검사 · 변호사</span>
+            <span class="seg-qualify-tag">의사 · 약사 · 치과의사</span>
+            <span class="seg-qualify-tag">회계사 · 세무사</span>
+            <span class="seg-qualify-tag">교수 · 연구원</span>
+            <span class="seg-qualify-tag">고위공무원</span>
+            <span class="seg-qualify-tag">연수입 1억 이상</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="seg-features">
+        <div class="seg-features-grid">
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h4>비공개 회원 관리</h4>
+            <p>
+              신원 정보의 철저한 보안 관리.<br />
+              사회적 지위에 맞는 프라이버시를 보장합니다.
+            </p>
+          </div>
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <h4>전담 매니저 배정</h4>
+            <p>
+              가정환경과 경제력을 세심하게 고려한<br />
+              1:1 맞춤형 매칭 컨설팅을 진행합니다.
+            </p>
+          </div>
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                <path d="M16 3.13a4 4 0 010 7.75" />
+              </svg>
+            </div>
+            <h4>전문직 전용 파티</h4>
+            <p>
+              Doctor Party, Professional Party 등<br />
+              같은 수준의 회원들만 참석하는 미팅 이벤트를 제공합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SEGMENT 2: 대기업·명문대 ========== -->
+    <div class="segment-panel" id="panel-corporate">
+      <div class="seg-hero">
+        <div class="seg-hero-visual">
+          <img
+            class="seg-poster"
+            src="output/thumbnails/대기업명문대.jpg"
+            alt="대기업·명문대"
+          />
+          <video
+            src="output/대기업명문대.mp4"
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+          <span class="ai-badge">AI생성</span>
+        </div>
+        <div class="seg-hero-text">
+          <div class="seg-hero-badge">Corporate Matching</div>
+          <h2>
+            검증된 배경,<br />
+            <strong>신뢰할 수 있는 만남</strong>
+          </h2>
+          <p class="desc">
+            100대 기업, 공기업, 금융사, 외국계 정규직 종사자와<br />
+            명문대 총동창회 협력 네트워크를 통한 매칭 서비스입니다.<br />
+            학연과 직업적 안정성을 기반으로 최적의 파트너를 연결합니다.
+          </p>
+          <div class="seg-qualify">
+            <span class="seg-qualify-tag">100대 기업 정규직</span>
+            <span class="seg-qualify-tag">공기업 종사자</span>
+            <span class="seg-qualify-tag">금융사 정규직</span>
+            <span class="seg-qualify-tag">외국계 기업</span>
+            <span class="seg-qualify-tag">명문대 총동창회 협력</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="seg-features">
+        <div class="seg-features-grid">
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
+              </svg>
+            </div>
+            <h4>기업 검증 시스템</h4>
+            <p>
+              재직증명과 직급을 철저히 확인합니다.<br />
+              검증된 회원만이 매칭에 참여합니다.
+            </p>
+          </div>
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                <path d="M6 12v5c6 3 12 0 12 0v-5" />
+              </svg>
+            </div>
+            <h4>동창회 네트워크</h4>
+            <p>
+              명문대 총동창회와의 협력으로<br />
+              학연 기반의 신뢰도 높은 매칭을 제공합니다.
+            </p>
+          </div>
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <path
+                  d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"
+                />
+              </svg>
+            </div>
+            <h4>엘리트 커뮤니티</h4>
+            <p>
+              같은 수준의 배경을 가진 회원들로 구성된<br />
+              프리미엄 매칭 풀에서 파트너를 만납니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SEGMENT 3: 명문가·재력가 (VVIP) ========== -->
+    <div class="segment-panel" id="panel-vvip">
+      <div class="seg-hero">
+        <div class="seg-hero-visual">
+          <img
+            class="seg-poster"
+            src="output/thumbnails/명문가재력가.jpg"
+            alt="명문가·재력가"
+          />
+          <video
+            src="output/명문가재력가.mp4"
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+          <span class="ai-badge">AI생성</span>
+        </div>
+        <div class="seg-hero-text">
+          <div class="seg-hero-badge">VVIP Matching</div>
+          <h2>
+            최상위 가문을 위한<br />
+            <strong>프라이빗 매칭</strong>
+          </h2>
+          <p class="desc">
+            국회의원, 고위공무원, 100대그룹 CEO 자제 등<br />
+            대한민국 최상위 가문을 위한 극비 매칭 서비스입니다.<br />
+            자산 500억 이상 VVIP 회원을 위한 선별된 만남을 제공합니다.
+          </p>
+          <div class="seg-qualify">
+            <span class="seg-qualify-tag">국회의원 · 고위공무원</span>
+            <span class="seg-qualify-tag">100대그룹 CEO 자제</span>
+            <span class="seg-qualify-tag">자산 500억 이상</span>
+            <span class="seg-qualify-tag">재벌가 · 명문가</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="seg-features">
+        <div class="seg-features-grid">
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h4>극비 보안 시스템</h4>
+            <p>
+              신원 정보의 이중 암호화와 접근 제한.<br />
+              사회적 지위에 걸맞은 보안을 약속합니다.
+            </p>
+          </div>
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+            </div>
+            <h4>선별된 VVIP 매칭</h4>
+            <p>
+              동등한 수준의 가문과 자산을 갖춘<br />
+              엄선된 회원만을 소개합니다.
+            </p>
+          </div>
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <h4>전담 수석 매니저</h4>
+            <p>
+              경력 20년 이상의 수석 커플매니저가<br />
+              처음부터 끝까지 직접 관리합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SEGMENT 4: 명품결혼 ========== -->
+    <div class="segment-panel" id="panel-premium">
+      <div class="seg-hero">
+        <div class="seg-hero-visual">
+          <img
+            class="seg-poster"
+            src="output/thumbnails/명품결혼.jpg"
+            alt="명품결혼"
+          />
+          <video
+            src="output/명품결혼.mp4"
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+          <span class="ai-badge">AI생성</span>
+        </div>
+        <div class="seg-hero-text">
+          <div class="seg-hero-badge">Premium Wedding</div>
+          <h2>
+            잘 하기 위해<br />
+            <strong>오는 곳</strong>
+          </h2>
+          <p class="desc">
+            초혼이든 재혼이든, 최고의 결혼을 원하는 분을 위한<br />
+            통합 프리미엄 컨설팅 서비스입니다.<br />
+            매칭부터 예식, 신혼집, 인사 관계까지 결혼의 모든 것을 설계합니다.
+          </p>
+          <div class="seg-qualify">
+            <span class="seg-qualify-tag">초혼 · 재혼 통합</span>
+            <span class="seg-qualify-tag">프리미엄 서비스 희망</span>
+            <span class="seg-qualify-tag">결혼 전반 컨설팅</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="seg-features">
+        <div class="seg-features-grid">
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"
+                />
+              </svg>
+            </div>
+            <h4>토탈 웨딩 컨설팅</h4>
+            <p>
+              매칭을 넘어 예식, 신혼집, 혼수까지<br />
+              결혼의 A to Z를 함께 설계합니다.
+            </p>
+          </div>
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                />
+              </svg>
+            </div>
+            <h4>명품 브랜드 서비스</h4>
+            <p>
+              30년간 쌓아온 노블홍만의 품격.<br />
+              최고 수준의 서비스 퀄리티를 보장합니다.
+            </p>
+          </div>
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                <path d="M16 3.13a4 4 0 010 7.75" />
+              </svg>
+            </div>
+            <h4>인사 관계 컨설팅</h4>
+            <p>
+              양가 상견례부터 관계 조율까지<br />
+              결혼 후에도 이어지는 관리 서비스.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SEGMENT 5: 자녀결혼 ========== -->
+    <div class="segment-panel" id="panel-parents">
+      <div class="seg-hero">
+        <div class="seg-hero-visual">
+          <img
+            class="seg-poster"
+            src="output/thumbnails/자녀결혼.jpg"
+            alt="자녀결혼"
+          />
+          <video
+            src="output/자녀결혼.mp4"
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+          <span class="ai-badge">AI생성</span>
+        </div>
+        <div class="seg-hero-text">
+          <div class="seg-hero-badge">Parents Consulting</div>
+          <h2>
+            부모님의 마음으로<br />
+            <strong>자녀의 인연</strong>을 찾습니다
+          </h2>
+          <p class="desc">
+            결혼 적령기인데도 결혼을 미루는 자녀,<br />
+            바쁜 업무로 만남의 기회가 없는 자녀.<br />
+            부모님의 마음을 헤아리는 전문 컨설팅을 진행합니다.
+          </p>
+          <div class="seg-qualify">
+            <span class="seg-qualify-tag">결혼 미루는 자녀 부모</span>
+            <span class="seg-qualify-tag">바쁜 자녀 부모</span>
+            <span class="seg-qualify-tag">해외 거주 자녀 부모</span>
+            <span class="seg-qualify-tag">명문가 · 전문직 가정</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="seg-features">
+        <div class="seg-features-grid">
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"
+                />
+              </svg>
+            </div>
+            <h4>자녀 설득 전문 상담</h4>
+            <p>
+              결혼에 소극적인 자녀를 이해하고<br />
+              자연스럽게 매칭으로 이끄는 전문 노하우.
+            </p>
+          </div>
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 00-3-3.87" />
+                <path d="M16 3.13a4 4 0 010 7.75" />
+              </svg>
+            </div>
+            <h4>부모-자녀 동시 상담</h4>
+            <p>
+              부모님의 기대와 자녀의 가치관을<br />
+              모두 반영한 균형 잡힌 매칭을 진행합니다.
+            </p>
+          </div>
+          <div class="seg-feature-card reveal">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <path
+                  d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"
+                />
+              </svg>
+            </div>
+            <h4>해외 거주 자녀 전문</h4>
+            <p>
+              미국, 호주 등 해외에서 생활하는 자녀를 위한<br />
+              글로벌 매칭 네트워크를 운영합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 해외 거주 자녀 상세 -->
+      <div class="seg-extra">
+        <div class="seg-extra-box">
+          <div class="seg-extra-text">
+            <h3>
+              해외에서도<br />
+              <strong>노블홍이 함께합니다</strong>
+            </h3>
+            <p>
+              명문가, 재벌가, 전문직, 영어권 유학파 등<br />
+              해외 체류 자녀의 매칭을 전문적으로 진행합니다.<br />
+              국내뿐 아니라 현지 네트워크를 활용합니다.
+            </p>
+          </div>
+          <div class="seg-extra-list">
+            <div class="seg-extra-item">
+              <div class="city">시애틀</div>
+              <div class="detail">Seattle, USA</div>
+            </div>
+            <div class="seg-extra-item">
+              <div class="city">LA</div>
+              <div class="detail">Los Angeles, USA</div>
+            </div>
+            <div class="seg-extra-item">
+              <div class="city">뉴욕</div>
+              <div class="detail">New York, USA</div>
+            </div>
+            <div class="seg-extra-item">
+              <div class="city">브리즈번</div>
+              <div class="detail">Brisbane, AUS</div>
+            </div>
+            <div class="seg-extra-item">
+              <div class="city">시드니</div>
+              <div class="detail">Sydney, AUS</div>
+            </div>
+            <div class="seg-extra-item">
+              <div class="city">멜버른</div>
+              <div class="detail">Melbourne, AUS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SEGMENT 6: 스페셜 재혼 ========== -->
+    <div class="segment-panel" id="panel-remarriage">
+      <div class="seg-hero">
+        <div class="seg-hero-visual">
+          <img
+            class="seg-poster"
+            src="output/thumbnails/스페셜재혼.jpg"
+            alt="스페셜 재혼"
+          />
+          <video
+            src="output/스페셜재혼.mp4"
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+          <span class="ai-badge">AI생성</span>
+        </div>
+        <div class="seg-hero-text">
+          <div class="seg-hero-badge">Special Remarriage</div>
+          <h2>
+            재혼의 접근 방식은<br />
+            <strong>달라야 합니다</strong>
+          </h2>
+          <p class="desc">
+            재혼은 초혼보다 만남의 대상이 1/10로 줄어들 수 있습니다.<br />
+            이혼 사유, 자녀 양육, 경제적 여건 — 모두 다른 상황에<br />
+            노블홍만의 차별화된 재혼 전략을 제시합니다.
+          </p>
+          <div class="seg-qualify">
+            <span class="seg-qualify-tag">이혼 · 사별</span>
+            <span class="seg-qualify-tag">사실혼 경험</span>
+            <span class="seg-qualify-tag">재혼 희망자</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="seg-features">
+        <div class="seg-features-grid reveal">
+          <div class="seg-feature-card">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+            </div>
+            <h4>상황별 맞춤 전략</h4>
+            <p>
+              이혼 사유, 자녀 유무, 경제 상황을<br />
+              면밀히 분석한 개인화된 매칭 전략.
+            </p>
+          </div>
+          <div class="seg-feature-card">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            </div>
+            <h4>프라이버시 강화</h4>
+            <p>
+              재혼이라는 민감한 상황을 고려한<br />
+              철저한 비밀 유지와 보안 관리.
+            </p>
+          </div>
+          <div class="seg-feature-card">
+            <div class="seg-feature-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"
+                />
+              </svg>
+            </div>
+            <h4>전문 재혼 컨설턴트</h4>
+            <p>
+              재혼 전문 경력의 매니저가<br />
+              두 번째 행복을 설계합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 연령대별 재혼 전략 -->
+      <div class="seg-extra" style="padding-top: 0">
+        <div style="text-align: center; margin-bottom: 48px">
+          <div class="section-eyebrow">Age Strategy</div>
+          <h3 class="section-title" style="font-size: 28px">
+            연령대별 <strong>차별화 전략</strong>
+          </h3>
+        </div>
+        <div class="age-cards">
+          <div class="age-card reveal">
+            <div class="age">30~40대</div>
+            <h4>출산 희망 재혼</h4>
+            <p>
+              아이를 원하는 재혼 희망자를 위해<br />
+              시간적 요소를 고려한 빠른 매칭 전략.<br />
+              건강한 가정 설계를 함께 합니다.
+            </p>
+          </div>
+          <div class="age-card reveal">
+            <div class="age">50대</div>
+            <h4>동반자 매칭</h4>
+            <p>
+              취미와 가치관을 공유하는<br />
+              인생 후반부의 동반자를 찾아드립니다.<br />
+              편안한 교류 중심의 매칭.
+            </p>
+          </div>
+          <div class="age-card reveal">
+            <div class="age">60대+</div>
+            <h4>황혼 재혼</h4>
+            <p>
+              인생의 경험과 지혜를 나눌<br />
+              특별한 파트너를 연결합니다.<br />
+              가족 관계까지 고려한 섬세한 매칭.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <section class="cta-section" id="cta">
+      <div class="cta-bg-wrap">
+        <div class="cta-bg" id="ctaBgConsult">
+          <img src="images/qualify/cta.png" alt="웨딩" />
+          <video src="images/qualify/cta.mp4" muted playsinline loop></video>
+        </div>
+        <div class="cta-bg-overlay"></div>
+      </div>
+      <span
+        class="ai-image-badge"
+        style="position: absolute; bottom: 16px; right: 16px; z-index: 6"
+        >AI 이미지 사용</span
+      >
+      <div class="cta-frame"></div>
+      <div class="cta-content">
+        <h2 class="cta-title">
+          나에게 맞는 <strong>맞춤 컨설팅</strong>, 지금 시작하세요
+        </h2>
+        <p class="cta-sub">
+          어떤 상황이든 노블홍의 30년 경험이 최적의 전략을 제시합니다
+        </p>
+        <div class="cta-phone">1800-8194</div>
+        <p class="cta-note">
+          간단한 정보를 남겨주시면, 담당 커플매니저가 24시간 이내 연락드립니다
+        </p>
+        <div class="cta-buttons">
+          <a href="tel:1800-8194" class="btn-filled">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+              />
+            </svg>
+            전화 상담
+          </a>
+          <a href="#" class="btn-outlined">온라인 상담 신청</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-gold-line"></div>
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo"><img src="logo.png" alt="Noble HoNG" /></div>
+          <div class="footer-info">
+            (주)노블홍 결혼정보회사 &middot; 대표 홍유진<br />
+            서울시 강남구 강남대로 354 혜천빌딩 705, 706<br />
+            사업자등록번호 321-81-03029 &middot; 국내결혼중개업
+            서울-강남-국내-22-0012호<br />
+            대표전화 1800-8194
+          </div>
+          <div
+            style="
+              margin-top: 16px;
+              padding-top: 12px;
+              border-top: 1px solid rgba(255, 255, 255, 0.06);
+              font-size: 12px;
+              color: rgba(255, 255, 255, 0.25);
+            "
+          >
+            <span>&copy; 2026 Noble Hong. All rights reserved.</span>
+            <span style="margin-left: 16px"
+              >Designed by
+              <a
+                href="https://polarad.co.kr"
+                target="_blank"
+                rel="noopener"
+                style="color: rgba(196, 165, 90, 0.5); text-decoration: none"
+                >POLA</a
+              ></span
+            >
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="privacy.html">개인정보처리방침</a>
+          <a href="terms.html">이용약관</a>
+          <a href="damages.html">손해배상절차</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Hero background video — 2초 후 재생
+      (() => {
+        const bg = document.getElementById("heroBgConsult");
+        if (!bg) return;
+        const video = bg.querySelector("video");
+        if (!video) return;
+        setTimeout(() => {
+          bg.classList.add("playing");
+          video.play().catch(() => {});
+        }, 2000);
+      })();
+
+      // GNB scroll
+      const gnb = document.getElementById("gnb");
+      window.addEventListener("scroll", () => {
+        gnb.classList.toggle("scrolled", window.scrollY > 50);
+      });
+
+      // Tab navigation
+      const tabs = document.querySelectorAll(".segment-tab");
+      const panels = document.querySelectorAll(".segment-panel");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const target = tab.dataset.target;
+
+          tabs.forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+
+          panels.forEach((p) => p.classList.remove("active"));
+          document.getElementById("panel-" + target).classList.add("active");
+
+          // re-trigger reveal animations
+          initRevealAnimations();
+        });
+      });
+
+      // GSAP reveal animations
+      function initRevealAnimations() {
+        gsap.utils.toArray(".reveal").forEach((el) => {
+          if (
+            el.closest(".segment-panel") &&
+            !el.closest(".segment-panel.active")
+          )
+            return;
+
+          gsap.fromTo(
+            el,
+            { opacity: 0, y: 32 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: el,
+                start: "top 85%",
+                once: true,
+              },
+            },
+          );
+        });
+      }
+
+      // Init
+      gsap.registerPlugin(ScrollTrigger);
+      initRevealAnimations();
+
+      // Intersection observer for sticky nav highlight
+      const segNavWrap = document.querySelector(".segment-nav-wrap");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id.replace("panel-", "");
+              tabs.forEach((t) => {
+                t.classList.toggle("active", t.dataset.target === id);
+              });
+            }
+          });
+        },
+        { rootMargin: "-200px 0px -60% 0px" },
+      );
+
+      // Only observe active panels when in scroll mode
+      // (tab click mode uses direct switching)
+
+      // Segment hero video — 썸네일 1초 후 페이드아웃 + 재생
+      const videoMaxDuration = { "panel-parents": 3 };
+      function playSegVideo(panel) {
+        const poster = panel.querySelector(".seg-poster");
+        const video = panel.querySelector("video");
+        if (!video || !poster) return;
+        video.currentTime = 0;
+        poster.classList.remove("fade-out");
+        const maxDur = videoMaxDuration[panel.id];
+        if (maxDur) {
+          video.removeAttribute("loop");
+          video.ontimeupdate = () => {
+            if (video.currentTime >= maxDur) {
+              video.currentTime = 0;
+              video.play();
+            }
+          };
+        } else {
+          video.setAttribute("loop", "");
+          video.ontimeupdate = null;
+        }
+        setTimeout(() => {
+          video
+            .play()
+            .then(() => {
+              poster.classList.add("fade-out");
+            })
+            .catch(() => {});
+        }, 1000);
+      }
+      // 활성 패널 자동 재생
+      playSegVideo(document.querySelector(".segment-panel.active"));
+      // 탭 전환 시 재생
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          panels.forEach((p) => {
+            const v = p.querySelector("video");
+            if (v) {
+              v.pause();
+              v.currentTime = 0;
+            }
+            const poster = p.querySelector(".seg-poster");
+            if (poster) poster.classList.remove("fade-out");
+          });
+          const activePanel = document.getElementById(
+            "panel-" + tab.dataset.target,
+          );
+          if (activePanel) playSegVideo(activePanel);
+        });
+      });
+
+      // CTA background video — 2초 후 재생
+      (() => {
+        const bg = document.getElementById("ctaBgConsult");
+        if (!bg) return;
+        const video = bg.querySelector("video");
+        if (!video) return;
+        let timer = null;
+        ScrollTrigger.create({
+          trigger: bg,
+          start: "top 80%",
+          end: "bottom 20%",
+          onEnter: () => {
+            timer = setTimeout(() => {
+              bg.classList.add("playing");
+              video.play().catch(() => {});
+            }, 2000);
+          },
+          onLeave: () => {
+            clearTimeout(timer);
+            bg.classList.remove("playing");
+            video.pause();
+          },
+          onEnterBack: () => {
+            timer = setTimeout(() => {
+              bg.classList.add("playing");
+              video.play().catch(() => {});
+            }, 2000);
+          },
+          onLeaveBack: () => {
+            clearTimeout(timer);
+            bg.classList.remove("playing");
+            video.pause();
+          },
+        });
+      })();
+    </script>
+  </body>
+</html>

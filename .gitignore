@@ -1,0 +1,41 @@
+# Environment variables
+.env
+.env.*
+
+# Dependencies
+node_modules/
+
+# Large media files (not for git)
+*.safetensors
+*.psd
+*.pdf
+*.mp4
+*.png
+*.jpg
+*.jpeg
+
+# Keep specific tracked images via git add -f if needed
+# assets/ directory images will be managed separately
+
+# AI generation scripts & outputs
+gen_*.py
+workflow_*.json
+output/
+=0.7
+
+# IDE
+.github/instructions/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Next.js
+.next/
+out/
+
+# Vercel
+.vercel/
+
+# Claude
+.claude/
