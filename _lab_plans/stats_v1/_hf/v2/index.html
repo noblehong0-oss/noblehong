@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=400" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 400px;
+        overflow: hidden;
+        background: #1a1206;
+      }
+      #root {
+        width: 1920px;
+        height: 400px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(180deg, #2a1d0a 0%, #1a1206 100%);
+      }
+
+      .vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 70% 90% at center,
+          transparent 30%,
+          rgba(0, 0, 0, 0.5) 100%
+        );
+        z-index: 5;
+        pointer-events: none;
+      }
+      .col {
+        position: absolute;
+        top: 0;
+        width: 480px;
+        height: 400px;
+        overflow: hidden;
+      }
+      .col1 {
+        left: 0;
+      }
+      .col2 {
+        left: 480px;
+      }
+      .col3 {
+        left: 960px;
+      }
+      .col4 {
+        left: 1440px;
+      }
+
+      .divider {
+        position: absolute;
+        top: 50%;
+        width: 1px;
+        height: 80%;
+        transform: translateY(-50%);
+        background: linear-gradient(
+          180deg,
+          transparent,
+          rgba(244, 221, 150, 0.55),
+          transparent
+        );
+        z-index: 6;
+        box-shadow: 0 0 8px rgba(244, 221, 150, 0.3);
+      }
+      .div1 {
+        left: 480px;
+      }
+      .div2 {
+        left: 960px;
+      }
+      .div3 {
+        left: 1440px;
+      }
+
+      .particle {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: radial-gradient(
+          circle,
+          #f4dd96 0%,
+          rgba(244, 221, 150, 0.4) 40%,
+          transparent 75%
+        );
+        border-radius: 50%;
+        opacity: 0;
+        z-index: 2;
+      }
+
+      .glow {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(244, 221, 150, 0.18) 0%,
+          transparent 60%
+        );
+        opacity: 0;
+        z-index: 1;
+      }
+
+      .shimmer {
+        position: absolute;
+        top: -300px;
+        width: 1000px;
+        height: 1000px;
+        left: -1000px;
+        background: radial-gradient(
+          ellipse 50% 35% at center,
+          rgba(244, 221, 150, 0.55) 0%,
+          rgba(244, 221, 150, 0.28) 22%,
+          rgba(244, 221, 150, 0.1) 45%,
+          rgba(244, 221, 150, 0.03) 65%,
+          transparent 80%
+        );
+        filter: blur(50px);
+        border-radius: 50%;
+        z-index: 7;
+        mix-blend-mode: screen;
+        opacity: 0.85;
+      }
+
+      .border-outer {
+        position: absolute;
+        inset: -5px;
+        border: 1px solid rgba(184, 154, 90, 0.35);
+        z-index: 8;
+        pointer-events: none;
+      }
+      .border-inner {
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(184, 154, 90, 0.55);
+        z-index: 8;
+        pointer-events: none;
+      }
+
+      /* 부드러운 가로 라이트 라인 (위/아래) */
+      .hline {
+        position: absolute;
+        left: 5%;
+        right: 5%;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(244, 221, 150, 0.5),
+          transparent
+        );
+        z-index: 6;
+      }
+      .hline-top {
+        top: 30px;
+      }
+      .hline-bot {
+        bottom: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="8"
+      data-width="1920"
+      data-height="400"
+    >
+      <div
+        class="vignette clip"
+        data-start="0"
+        data-duration="8"
+        data-track-index="0"
+      ></div>
+
+      <!-- 4 columns particle containers -->
+      <div class="col col1" id="c1"></div>
+      <div class="col col2" id="c2"></div>
+      <div class="col col3" id="c3"></div>
+      <div class="col col4" id="c4"></div>
+
+      <!-- 4 center glows -->
+      <div
+        class="glow clip"
+        id="g1"
+        data-start="0"
+        data-duration="8"
+        data-track-index="1"
+        style="
+          left: 240px;
+          top: 200px;
+          width: 300px;
+          height: 300px;
+          transform: translate(-50%, -50%);
+        "
+      ></div>
+      <div
+        class="glow clip"
+        id="g2"
+        data-start="0"
+        data-duration="8"
+        data-track-index="11"
+        style="
+          left: 720px;
+          top: 200px;
+          width: 300px;
+          height: 300px;
+          transform: translate(-50%, -50%);
+        "
+      ></div>
+      <div
+        class="glow clip"
+        id="g3"
+        data-start="0"
+        data-duration="8"
+        data-track-index="12"
+        style="
+          left: 1200px;
+          top: 200px;
+          width: 300px;
+          height: 300px;
+          transform: translate(-50%, -50%);
+        "
+      ></div>
+      <div
+        class="glow clip"
+        id="g4"
+        data-start="0"
+        data-duration="8"
+        data-track-index="13"
+        style="
+          left: 1680px;
+          top: 200px;
+          width: 300px;
+          height: 300px;
+          transform: translate(-50%, -50%);
+        "
+      ></div>
+
+      <!-- horizontal accent lines -->
+      <div
+        class="hline hline-top clip"
+        id="hltop"
+        data-start="0"
+        data-duration="8"
+        data-track-index="3"
+      ></div>
+      <div
+        class="hline hline-bot clip"
+        id="hlbot"
+        data-start="0"
+        data-duration="8"
+        data-track-index="14"
+      ></div>
+
+      <!-- vertical dividers -->
+      <div
+        class="divider div1 clip"
+        data-start="0"
+        data-duration="8"
+        data-track-index="4"
+      ></div>
+      <div
+        class="divider div2 clip"
+        id="div2"
+        data-start="0"
+        data-duration="8"
+        data-track-index="5"
+      ></div>
+      <div
+        class="divider div3 clip"
+        id="div3"
+        data-start="0"
+        data-duration="8"
+        data-track-index="6"
+      ></div>
+
+      <!-- shimmer light sweep -->
+      <div
+        class="shimmer clip"
+        id="shimmer"
+        data-start="0"
+        data-duration="8"
+        data-track-index="7"
+      ></div>
+
+      <!-- frames -->
+      <div
+        class="border-outer clip"
+        data-start="0"
+        data-duration="8"
+        data-track-index="9"
+      ></div>
+      <div
+        class="border-inner clip"
+        id="border-inner"
+        data-start="0"
+        data-duration="8"
+        data-track-index="10"
+      ></div>
+    </div>
+
+    <script>
+      function seeded(seed) {
+        let s = seed;
+        return () => {
+          s = (s * 9301 + 49297) % 233280;
+          return s / 233280;
+        };
+      }
+
+      // 각 컬럼에 입자 생성
+      const cols = ["c1", "c2", "c3", "c4"];
+      const allParticles = [];
+      cols.forEach((id, ci) => {
+        const col = document.getElementById(id);
+        const rand = seeded(ci * 100 + 17);
+        for (let i = 0; i < 22; i++) {
+          const p = document.createElement("div");
+          p.className = "particle clip";
+          const x = rand() * 480;
+          const startY = -20 - rand() * 200;
+          const dur = 5 + rand() * 3;
+          const delay = rand() * 8;
+          const size = 2 + rand() * 3;
+          p.style.left = x + "px";
+          p.style.top = startY + "px";
+          p.style.width = size + "px";
+          p.style.height = size + "px";
+          p.dataset.start = "0";
+          p.dataset.duration = "8";
+          p.dataset.trackIndex = "2";
+          col.appendChild(p);
+          allParticles.push({ el: p, startY, dur, delay });
+        }
+      });
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // 입자 위→아래 흐름 (8초 안에 한 사이클씩, delay로 stagger)
+      allParticles.forEach((p) => {
+        const total = 8;
+        const cycle = p.dur;
+        // 0~delay : 안 보임, delay~delay+cycle : 흐름, 이후 다시 위에서 시작
+        const fadeIn = 0.3;
+        const fadeOut = 0.3;
+        const startTime = p.delay % total;
+        tl.fromTo(
+          p.el,
+          { y: 0, opacity: 0 },
+          { y: 420 - p.startY, duration: cycle, ease: "none" },
+          startTime,
+        );
+        tl.to(p.el, { opacity: 0.85, duration: fadeIn }, startTime);
+        tl.to(
+          p.el,
+          { opacity: 0, duration: fadeOut },
+          startTime + cycle - fadeOut,
+        );
+      });
+
+      // 4 glow 펄스 (각 영역 중앙)
+      ["#g1", "#g2", "#g3", "#g4"].forEach((g, i) => {
+        tl.to(g, { opacity: 0.7, duration: 1.2, ease: "sine.inOut" }, i * 0.4);
+        tl.to(
+          g,
+          { opacity: 0.3, duration: 1.5, ease: "sine.inOut" },
+          1.2 + i * 0.4,
+        );
+        tl.to(
+          g,
+          { opacity: 0.65, duration: 1.5, ease: "sine.inOut" },
+          2.7 + i * 0.4,
+        );
+        tl.to(
+          g,
+          { opacity: 0.4, duration: 1.5, ease: "sine.inOut" },
+          4.2 + i * 0.4,
+        );
+        tl.to(
+          g,
+          { opacity: 0.6, duration: 1.5, ease: "sine.inOut" },
+          5.7 + i * 0.4,
+        );
+      });
+
+      // 디바이더 펄스 (희미하게 깜빡임 동기)
+      tl.fromTo(
+        [".div1", ".div2", ".div3"],
+        { opacity: 0.5 },
+        { opacity: 1, duration: 2, ease: "sine.inOut", yoyo: true, repeat: 3 },
+        0,
+      );
+
+      // 가로 라인 양쪽 살짝 펄스
+      tl.fromTo(
+        ["#hltop", "#hlbot"],
+        { opacity: 0.4 },
+        {
+          opacity: 0.9,
+          duration: 1.5,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: 4,
+        },
+        0,
+      );
+
+      // 부드러운 빛 덩어리 좌→우 통과 (8초 1회 슬로우)
+      tl.fromTo(
+        "#shimmer",
+        { x: 0, opacity: 0 },
+        { x: 2920, opacity: 0.9, duration: 8, ease: "sine.inOut" },
+        0,
+      );
+      tl.to("#shimmer", { opacity: 0.95, duration: 4, ease: "sine.inOut" }, 2);
+      tl.to("#shimmer", { opacity: 0, duration: 1.5, ease: "sine.in" }, 6.5);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

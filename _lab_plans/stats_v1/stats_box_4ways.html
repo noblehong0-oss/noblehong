@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>STATS 박스 4안 비교 — 노블홍</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Serif+KR:wght@400;500;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ivory: #f6f1e6;
+        --ivory-2: #efe7d4;
+        --paper: #ffffff;
+        --espresso: #2a1d0a;
+        --espresso-2: #1a1206;
+        --espresso-3: #3a2814;
+        --gold-1: #c4a55a;
+        --gold-2: #e8c572;
+        --gold-3: #f4dd96;
+        --gold-dark: #8a6d2f;
+        --gold-line: #b89a5a;
+        --ink: #0d0b08;
+        --ink-2: #5c5040;
+        --ink-3: #8a7e6a;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: var(--ivory);
+        color: var(--ink);
+        font-family: "Inter", "Noto Serif KR", sans-serif;
+      }
+      body {
+        padding: 64px 32px 120px;
+      }
+
+      .page-head {
+        max-width: 1280px;
+        margin: 0 auto 56px;
+        text-align: center;
+      }
+      .page-head .eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        color: var(--gold-dark);
+        letter-spacing: 6px;
+        font-size: 14px;
+        text-transform: uppercase;
+      }
+      .page-head h1 {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 700;
+        font-size: 42px;
+        letter-spacing: -1px;
+        margin: 14px 0 10px;
+        color: var(--ink);
+      }
+      .page-head p {
+        color: var(--ink-2);
+        font-size: 15px;
+      }
+
+      .variant {
+        max-width: 1280px;
+        margin: 0 auto 96px;
+      }
+      .variant-head {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        margin-bottom: 22px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(138, 109, 47, 0.25);
+      }
+      .variant-head .tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 48px;
+        height: 30px;
+        padding: 0 12px;
+        background: var(--espresso);
+        color: var(--gold-3);
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-weight: 600;
+        font-size: 16px;
+        letter-spacing: 1px;
+        border: 1px solid var(--gold-line);
+      }
+      .variant-head h2 {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 700;
+        font-size: 22px;
+        color: var(--ink);
+      }
+      .variant-head .desc {
+        margin-left: auto;
+        color: var(--ink-3);
+        font-size: 13px;
+        letter-spacing: 0.5px;
+      }
+
+      /* ============ COMMON STATS GRID (4 in a row) ============ */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+      }
+      .stat-num {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+      .stat-num .suffix {
+        font-size: 0.45em;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        margin-left: 4px;
+      }
+      .stat-label {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 600;
+        font-size: 15px;
+        letter-spacing: -0.3px;
+      }
+      .stat-sub {
+        font-size: 11px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .stat-note {
+        font-size: 9.5px;
+        font-style: italic;
+        letter-spacing: 0.3px;
+        opacity: 0.65;
+        margin-top: 6px;
+      }
+
+      /* ============ A안 — 에스프레소 카드 ============ */
+      .a-grid .stat-item {
+        position: relative;
+        background: linear-gradient(180deg, #2a1d0a 0%, #1a1206 100%);
+        border: 1px solid var(--gold-line);
+        outline: 1px solid rgba(184, 154, 90, 0.45);
+        outline-offset: 4px;
+        padding: 38px 22px 28px;
+        text-align: center;
+        overflow: hidden;
+        color: #f4e9c8;
+      }
+      .a-grid .stat-item::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at center top,
+          rgba(244, 221, 150, 0.12) 0%,
+          transparent 60%
+        );
+        pointer-events: none;
+      }
+      .a-grid .stat-num {
+        font-size: 64px;
+        background: linear-gradient(
+          90deg,
+          #c4a55a 0%,
+          #e8c572 25%,
+          #f4dd96 50%,
+          #e8c572 75%,
+          #c4a55a 100%
+        );
+        background-size: 220% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+        line-height: 1.1;
+      }
+      .a-grid .stat-label {
+        color: #f4e9c8;
+        margin-bottom: 4px;
+      }
+      .a-grid .stat-sub {
+        color: rgba(244, 221, 150, 0.55);
+      }
+      .a-grid .stat-note {
+        color: rgba(244, 221, 150, 0.4);
+      }
+      .a-grid .corner {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border: 1px solid var(--gold-2);
+      }
+      .a-grid .corner.tl {
+        top: 8px;
+        left: 8px;
+        border-right: 0;
+        border-bottom: 0;
+      }
+      .a-grid .corner.tr {
+        top: 8px;
+        right: 8px;
+        border-left: 0;
+        border-bottom: 0;
+      }
+      .a-grid .corner.bl {
+        bottom: 8px;
+        left: 8px;
+        border-right: 0;
+        border-top: 0;
+      }
+      .a-grid .corner.br {
+        bottom: 8px;
+        right: 8px;
+        border-left: 0;
+        border-top: 0;
+      }
+
+      /* ============ B안 — 아이보리 매트 (인쇄물 클래식) ============ */
+      .b-grid .stat-item {
+        position: relative;
+        background: #fffdf8;
+        border: 1px solid rgba(184, 154, 90, 0.35);
+        padding: 36px 22px 26px;
+        text-align: center;
+        box-shadow: 0 4px 24px rgba(42, 29, 10, 0.06);
+      }
+      .b-grid .stat-item::before {
+        content: "";
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        border: 1px solid rgba(184, 154, 90, 0.25);
+        pointer-events: none;
+      }
+      .b-grid .stat-num {
+        font-size: 62px;
+        color: var(--gold-dark);
+        margin-bottom: 6px;
+        line-height: 1.1;
+      }
+      .b-grid .stat-divider {
+        width: 42px;
+        height: 1px;
+        background: var(--gold-line);
+        margin: 10px auto 14px;
+      }
+      .b-grid .stat-label {
+        color: var(--ink);
+        margin-bottom: 4px;
+      }
+      .b-grid .stat-sub {
+        color: var(--ink-3);
+      }
+      .b-grid .stat-note {
+        color: var(--ink-3);
+      }
+      .b-grid .stat-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 11px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--gold-dark);
+        margin-bottom: 8px;
+      }
+
+      /* ============ C안 — 글래스 + 골드 언더라인 ============ */
+      .c-bg {
+        background:
+          linear-gradient(
+            180deg,
+            rgba(42, 29, 10, 0.92) 0%,
+            rgba(26, 18, 6, 0.95) 100%
+          ),
+          url("https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/virgin_road.webp")
+            center/cover;
+        padding: 36px 24px;
+        border: 1px solid rgba(184, 154, 90, 0.3);
+      }
+      .c-grid .stat-item {
+        position: relative;
+        background: rgba(255, 253, 248, 0.06);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(244, 221, 150, 0.18);
+        padding: 32px 22px 26px;
+        text-align: center;
+        overflow: hidden;
+      }
+      .c-grid .stat-item::after {
+        content: "";
+        position: absolute;
+        left: 20%;
+        right: 20%;
+        bottom: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          var(--gold-2) 50%,
+          transparent 100%
+        );
+      }
+      .c-grid .stat-num {
+        font-size: 62px;
+        background: linear-gradient(
+          90deg,
+          #c4a55a,
+          #e8c572,
+          #f4dd96,
+          #e8c572,
+          #c4a55a
+        );
+        background-size: 220% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+        line-height: 1.1;
+      }
+      .c-grid .stat-label {
+        color: #f4e9c8;
+        margin-bottom: 4px;
+      }
+      .c-grid .stat-sub {
+        color: rgba(244, 221, 150, 0.55);
+      }
+      .c-grid .stat-note {
+        color: rgba(244, 221, 150, 0.4);
+      }
+
+      /* ============ D안 — 가로 분할 스트립 (가로바 1줄) ============ */
+      .d-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        background: linear-gradient(180deg, #2a1d0a 0%, #1a1206 100%);
+        border: 1px solid var(--gold-line);
+        outline: 1px solid rgba(184, 154, 90, 0.4);
+        outline-offset: 4px;
+        overflow: hidden;
+        position: relative;
+      }
+      .d-strip::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 60% 80% at center,
+          rgba(244, 221, 150, 0.08) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .d-strip .stat-item {
+        position: relative;
+        padding: 36px 20px 30px;
+        text-align: center;
+        color: #f4e9c8;
+        border-right: 1px solid rgba(184, 154, 90, 0.35);
+      }
+      .d-strip .stat-item:last-child {
+        border-right: 0;
+      }
+      .d-strip .stat-item::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 60%;
+        background: linear-gradient(
+          180deg,
+          transparent 0%,
+          rgba(244, 221, 150, 0.5) 50%,
+          transparent 100%
+        );
+      }
+      .d-strip .stat-item:last-child::before {
+        display: none;
+      }
+      .d-strip .stat-num {
+        font-size: 58px;
+        background: linear-gradient(
+          90deg,
+          #c4a55a,
+          #e8c572,
+          #f4dd96,
+          #e8c572,
+          #c4a55a
+        );
+        background-size: 220% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1.05;
+        margin-bottom: 8px;
+      }
+      .d-strip .stat-label {
+        color: #f4e9c8;
+        margin-bottom: 4px;
+        font-size: 14px;
+      }
+      .d-strip .stat-sub {
+        color: rgba(244, 221, 150, 0.5);
+        font-size: 10.5px;
+      }
+      .d-strip .stat-note {
+        color: rgba(244, 221, 150, 0.35);
+      }
+
+      /* video placeholder badge */
+      .video-slot {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-size: 10px;
+        letter-spacing: 1.2px;
+        color: rgba(244, 221, 150, 0.55);
+        border: 1px dashed rgba(184, 154, 90, 0.5);
+        padding: 3px 8px;
+        border-radius: 2px;
+        background: rgba(0, 0, 0, 0.25);
+        text-transform: uppercase;
+      }
+      .b-grid .video-slot {
+        color: var(--gold-dark);
+        background: rgba(255, 253, 248, 0.8);
+        border-color: rgba(184, 154, 90, 0.5);
+      }
+
+      /* notes box */
+      .notes {
+        margin: 16px 0 0;
+        padding: 14px 18px;
+        background: #fffdf8;
+        border: 1px solid rgba(184, 154, 90, 0.25);
+        color: var(--ink-2);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+      .notes b {
+        color: var(--ink);
+      }
+      .pros {
+        color: #2a6f3c;
+      }
+      .cons {
+        color: #9c3a2f;
+      }
+
+      /* responsive */
+      @media (max-width: 980px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .d-strip {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .d-strip .stat-item:nth-child(2)::before {
+          display: none;
+        }
+        .d-strip .stat-item {
+          border-right: 0;
+          border-bottom: 1px solid rgba(184, 154, 90, 0.35);
+        }
+        .d-strip .stat-item:nth-child(odd) {
+          border-right: 1px solid rgba(184, 154, 90, 0.35);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-head">
+      <div class="eyebrow">Numbers Box · 4 Variants</div>
+      <h1>숫자로 보는 노블홍 — 박스 디자인 4안</h1>
+      <p>30년 · 8,000명+ · 75% · 3년 연속 — 동일한 데이터, 4가지 박스 톤</p>
+    </div>
+
+    <!-- ============ A안 ============ -->
+    <div class="variant">
+      <div class="variant-head">
+        <span class="tag">A</span>
+        <h2>에스프레소 카드 (이중 골드 프레임)</h2>
+        <span class="desc">Hero Strong과 톤 일치 · 가장 강한 강조</span>
+      </div>
+      <div class="stats-grid a-grid">
+        <div class="stat-item">
+          <span class="corner tl"></span><span class="corner tr"></span
+          ><span class="corner bl"></span><span class="corner br"></span>
+          <span class="video-slot">Video Slot</span>
+          <div class="stat-num">30<span class="suffix">년</span></div>
+          <div class="stat-label">매칭 노하우</div>
+          <div class="stat-sub">Since 1996</div>
+        </div>
+        <div class="stat-item">
+          <span class="corner tl"></span><span class="corner tr"></span
+          ><span class="corner bl"></span><span class="corner br"></span>
+          <span class="video-slot">Video Slot</span>
+          <div class="stat-num">8,000<span class="suffix">명+</span></div>
+          <div class="stat-label">성혼 실적</div>
+          <div class="stat-sub">커플매니저 제1호</div>
+          <div class="stat-note">* 직업사전 등록 기준</div>
+        </div>
+        <div class="stat-item">
+          <span class="corner tl"></span><span class="corner tr"></span
+          ><span class="corner bl"></span><span class="corner br"></span>
+          <span class="video-slot">Video Slot</span>
+          <div class="stat-num">75<span class="suffix">%</span></div>
+          <div class="stat-label">30대 교제율</div>
+          <div class="stat-sub">3회 이상 만남 기준</div>
+        </div>
+        <div class="stat-item">
+          <span class="corner tl"></span><span class="corner tr"></span
+          ><span class="corner bl"></span><span class="corner br"></span>
+          <span class="video-slot">Video Slot</span>
+          <div class="stat-num">3<span class="suffix">년 연속</span></div>
+          <div class="stat-label">브랜드만족지수 1위</div>
+          <div class="stat-sub">2022~2024 결혼정보</div>
+        </div>
+      </div>
+      <div class="notes">
+        <b>특징:</b> 다크 플레이트 + 이중 골드 프레임 + 코너 마크.
+        <span class="pros">럭셔리감 최상, Hero strong과 통일성</span> ·
+        <span class="cons">아이보리 배경에선 시각 단절감 있을 수 있음</span
+        ><br />
+        <b>영상 슬롯:</b> 박스 내부 전체를 비디오로 채우고 카운트업 텍스트는
+        위에 오버레이.
+      </div>
+    </div>
+
+    <!-- ============ B안 ============ -->
+    <div class="variant">
+      <div class="variant-head">
+        <span class="tag">B</span>
+        <h2>아이보리 매트 (인쇄물 클래식)</h2>
+        <span class="desc">현재 톤과 가장 자연스럽게 융화</span>
+      </div>
+      <div class="stats-grid b-grid">
+        <div class="stat-item">
+          <span class="video-slot">Video Slot</span>
+          <div class="stat-eyebrow">Heritage</div>
+          <div class="stat-num">30<span class="suffix">년</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat-label">매칭 노하우</div>
+          <div class="stat-sub">Since 1996</div>
+        </div>
+        <div class="stat-item">
+          <span class="video-slot">Video Slot</span>
+          <div class="stat-eyebrow">Records</div>
+          <div class="stat-num">8,000<span class="suffix">명+</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat-label">성혼 실적</div>
+          <div class="stat-sub">커플매니저 제1호</div>
+          <div class="stat-note">* 직업사전 등록 기준</div>
+        </div>
+        <div class="stat-item">
+          <span class="video-slot">Video Slot</span>
+          <div class="stat-eyebrow">Match</div>
+          <div class="stat-num">75<span class="suffix">%</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat-label">30대 교제율</div>
+          <div class="stat-sub">3회 이상 만남 기준</div>
+        </div>
+        <div class="stat-item">
+          <span class="video-slot">Video Slot</span>
+          <div class="stat-eyebrow">Awards</div>
+          <div class="stat-num">3<span class="suffix">년 연속</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat-label">브랜드만족지수 1위</div>
+          <div class="stat-sub">2022~2024 결혼정보</div>
+        </div>
+      </div>
+      <div class="notes">
+        <b>특징:</b> 흰 카드 + 더블 보더 + 골드 디바이더 + 영문 카테고리.
+        <span class="pros"
+          >청첩장/브로슈어 인쇄물 같은 클래식, 현재 페이지 톤과 100% 융화</span
+        >
+        · <span class="cons">강조 약함 — 영상이 들어가야 임팩트 살아남</span
+        ><br />
+        <b>영상 슬롯:</b> 박스 내부 더블보더 안쪽만 영상 → 영상 끝나면
+        골드라인+숫자 페이드인.
+      </div>
+    </div>
+
+    <!-- ============ C안 ============ -->
+    <div class="variant">
+      <div class="variant-head">
+        <span class="tag">C</span>
+        <h2>시네마틱 글래스 (배경 이미지 + 골드 언더라인)</h2>
+        <span class="desc">버진로드 배경 위 글래스 카드</span>
+      </div>
+      <div class="c-bg">
+        <div class="stats-grid c-grid">
+          <div class="stat-item">
+            <span class="video-slot">Video Slot</span>
+            <div class="stat-num">30<span class="suffix">년</span></div>
+            <div class="stat-label">매칭 노하우</div>
+            <div class="stat-sub">Since 1996</div>
+          </div>
+          <div class="stat-item">
+            <span class="video-slot">Video Slot</span>
+            <div class="stat-num">8,000<span class="suffix">명+</span></div>
+            <div class="stat-label">성혼 실적</div>
+            <div class="stat-sub">커플매니저 제1호</div>
+            <div class="stat-note">* 직업사전 등록 기준</div>
+          </div>
+          <div class="stat-item">
+            <span class="video-slot">Video Slot</span>
+            <div class="stat-num">75<span class="suffix">%</span></div>
+            <div class="stat-label">30대 교제율</div>
+            <div class="stat-sub">3회 이상 만남 기준</div>
+          </div>
+          <div class="stat-item">
+            <span class="video-slot">Video Slot</span>
+            <div class="stat-num">3<span class="suffix">년 연속</span></div>
+            <div class="stat-label">브랜드만족지수 1위</div>
+            <div class="stat-sub">2022~2024 결혼정보</div>
+          </div>
+        </div>
+      </div>
+      <div class="notes">
+        <b>특징:</b> 어두운 시네마틱 배경 위 반투명 글래스 + 하단 골드 언더라인.
+        <span class="pros"
+          >현재 stats 섹션의 virgin_road 배경 활용, 영상이 박스 바깥에 깔리는
+          형태도 가능</span
+        >
+        ·
+        <span class="cons"
+          >배경이 어두워 페이지 흐름이 끊김 — 별도 섹션처럼 느껴짐</span
+        ><br />
+        <b>영상 슬롯:</b> 박스 내부 + 박스 바깥 배경 둘 다 영상으로 가능. 각
+        박스에 다른 영상 또는 통일 영상.
+      </div>
+    </div>
+
+    <!-- ============ D안 ============ -->
+    <div class="variant">
+      <div class="variant-head">
+        <span class="tag">D</span>
+        <h2>가로 분할 스트립 (1줄 가로바 통합)</h2>
+        <span class="desc">사용자 요청 핵심 — 가로바 1줄 형태</span>
+      </div>
+      <div class="d-strip">
+        <div class="stat-item">
+          <span class="video-slot">Video Slot</span>
+          <div class="stat-num">30<span class="suffix">년</span></div>
+          <div class="stat-label">매칭 노하우</div>
+          <div class="stat-sub">Since 1996</div>
+        </div>
+        <div class="stat-item">
+          <span class="video-slot">Video Slot</span>
+          <div class="stat-num">8,000<span class="suffix">명+</span></div>
+          <div class="stat-label">성혼 실적</div>
+          <div class="stat-sub">커플매니저 제1호</div>
+          <div class="stat-note">* 직업사전 등록 기준</div>
+        </div>
+        <div class="stat-item">
+          <span class="video-slot">Video Slot</span>
+          <div class="stat-num">75<span class="suffix">%</span></div>
+          <div class="stat-label">30대 교제율</div>
+          <div class="stat-sub">3회 이상 만남 기준</div>
+        </div>
+        <div class="stat-item">
+          <span class="video-slot">Video Slot</span>
+          <div class="stat-num">3<span class="suffix">년 연속</span></div>
+          <div class="stat-label">브랜드만족지수 1위</div>
+          <div class="stat-sub">2022~2024 결혼정보</div>
+        </div>
+      </div>
+      <div class="notes">
+        <b>특징:</b> 4개 박스를 하나로 이어붙인 가로 스트립 + 골드 세로
+        디바이더.
+        <span class="pros"
+          >"가로바" 요청에 가장 부합, 영상 1편을 4분할로 매핑하면 통일감
+          최고</span
+        >
+        · <span class="cons">개별 박스 강조는 약함</span><br />
+        <b>영상 슬롯:</b> 1920×400 가로 영상 1편을 스트립 전체 배경으로 깔고,
+        4분할 위치마다 카운트 오버레이.
+      </div>
+    </div>
+
+    <div
+      style="
+        max-width: 1280px;
+        margin: 80px auto 0;
+        padding: 24px;
+        background: #fffdf8;
+        border: 1px solid rgba(184, 154, 90, 0.3);
+        font-family: &quot;Inter&quot;, sans-serif;
+      "
+    >
+      <h3
+        style="
+          font-family: &quot;Noto Serif KR&quot;, serif;
+          font-size: 18px;
+          color: var(--ink);
+          margin-bottom: 14px;
+        "
+      >
+        다음 단계 — 영상 4안 매핑 계획
+      </h3>
+      <ul
+        style="
+          color: var(--ink-2);
+          font-size: 13.5px;
+          line-height: 1.9;
+          padding-left: 20px;
+        "
+      >
+        <li>
+          <b>V-1 인트로 풀화면 영상</b> → 영상 끝 → 박스 디자인 트랜지션 (사용자
+          요청 핵심)
+        </li>
+        <li>
+          <b>V-2 박스 안 영상 (4박스 각각 다른 영상)</b> — 30년/성혼/매칭/수상
+          컨셉별
+        </li>
+        <li><b>V-3 박스 안 영상 (4박스 통일 영상 4분할)</b> — 1편을 4등분</li>
+        <li>
+          <b>V-4 영상 없는 GSAP 모션</b> — 골드 시머 + 카운트업 + 파티클 (가장
+          가벼움)
+        </li>
+      </ul>
+      <p
+        style="
+          color: var(--ink-3);
+          font-size: 12px;
+          margin-top: 14px;
+          font-style: italic;
+        "
+      >
+        박스 안 확정 후 → 4안 모두 HyperFrames로 실제 렌더 영상까지 만들어 비교
+        페이지로 제공.
+      </p>
+    </div>
+  </body>
+</html>

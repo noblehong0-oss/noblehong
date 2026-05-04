@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=400" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 400px;
+        overflow: hidden;
+        background: #0a0703;
+      }
+      #root {
+        width: 1920px;
+        height: 400px;
+        position: relative;
+        overflow: hidden;
+        background: radial-gradient(
+          ellipse at center,
+          #3a2814 0%,
+          #1a1206 60%,
+          #0a0703 100%
+        );
+      }
+
+      .bokeh {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(244, 221, 150, 0.55) 0%,
+          rgba(232, 197, 114, 0.25) 35%,
+          transparent 70%
+        );
+        filter: blur(25px);
+        opacity: 0;
+        mix-blend-mode: screen;
+      }
+      .bokeh-lg {
+        width: 280px;
+        height: 280px;
+      }
+      .bokeh-md {
+        width: 180px;
+        height: 180px;
+      }
+      .bokeh-sm {
+        width: 100px;
+        height: 100px;
+      }
+
+      .dust {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: radial-gradient(circle, #f4dd96 0%, transparent 70%);
+        border-radius: 50%;
+        opacity: 0;
+        z-index: 3;
+      }
+
+      /* 별 모양 sparkle (4방향 빛줄기 + halo) */
+      .sparkle {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        opacity: 0;
+        z-index: 4;
+        pointer-events: none;
+      }
+      .sparkle .halo {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle,
+          rgba(244, 221, 150, 0.6) 0%,
+          rgba(244, 221, 150, 0.2) 25%,
+          transparent 65%
+        );
+        border-radius: 50%;
+        filter: blur(8px);
+      }
+      .sparkle .core {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 5px;
+        height: 5px;
+        margin: -2.5px;
+        background: #fffaea;
+        border-radius: 50%;
+        box-shadow:
+          0 0 14px rgba(255, 250, 234, 0.95),
+          0 0 28px rgba(244, 221, 150, 0.7);
+      }
+      .sparkle .ray-h {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 80px;
+        height: 1.5px;
+        margin: -0.75px 0 0 -40px;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(244, 221, 150, 0.4) 35%,
+          #fffaea 50%,
+          rgba(244, 221, 150, 0.4) 65%,
+          transparent 100%
+        );
+        box-shadow: 0 0 6px rgba(244, 221, 150, 0.7);
+      }
+      .sparkle .ray-v {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 1.5px;
+        height: 80px;
+        margin: -40px 0 0 -0.75px;
+        background: linear-gradient(
+          180deg,
+          transparent 0%,
+          rgba(244, 221, 150, 0.4) 35%,
+          #fffaea 50%,
+          rgba(244, 221, 150, 0.4) 65%,
+          transparent 100%
+        );
+        box-shadow: 0 0 6px rgba(244, 221, 150, 0.7);
+      }
+      .sparkle .ray-d1 {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 60px;
+        height: 1px;
+        margin: -0.5px 0 0 -30px;
+        transform: rotate(45deg);
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(244, 221, 150, 0.3) 40%,
+          rgba(255, 250, 234, 0.7) 50%,
+          rgba(244, 221, 150, 0.3) 60%,
+          transparent 100%
+        );
+      }
+      .sparkle .ray-d2 {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 60px;
+        height: 1px;
+        margin: -0.5px 0 0 -30px;
+        transform: rotate(-45deg);
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(244, 221, 150, 0.3) 40%,
+          rgba(255, 250, 234, 0.7) 50%,
+          rgba(244, 221, 150, 0.3) 60%,
+          transparent 100%
+        );
+      }
+
+      .light-ray {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 160px;
+        background: linear-gradient(
+          180deg,
+          transparent,
+          rgba(244, 221, 150, 0.08),
+          transparent
+        );
+        opacity: 0;
+        z-index: 2;
+        pointer-events: none;
+      }
+      .light-top {
+        top: -80px;
+      }
+      .light-bot {
+        bottom: -80px;
+      }
+
+      .vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at center,
+          transparent 30%,
+          rgba(0, 0, 0, 0.65) 100%
+        );
+        z-index: 7;
+        pointer-events: none;
+      }
+      .letterbox-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 24px;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.4), transparent);
+        z-index: 8;
+        pointer-events: none;
+      }
+      .letterbox-bot {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 24px;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), transparent);
+        z-index: 8;
+        pointer-events: none;
+      }
+
+      .center-glow {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 1500px;
+        height: 240px;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(244, 221, 150, 0.22) 0%,
+          rgba(232, 197, 114, 0.1) 40%,
+          transparent 75%
+        );
+        filter: blur(35px);
+        opacity: 0;
+        z-index: 1;
+        mix-blend-mode: screen;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="8"
+      data-width="1920"
+      data-height="400"
+    >
+      <div
+        class="center-glow clip"
+        id="cglow"
+        data-start="0"
+        data-duration="8"
+        data-track-index="0"
+      ></div>
+
+      <!-- 큰 보케들 (400px 높이에 맞게 재배치) -->
+      <div
+        class="bokeh bokeh-lg clip"
+        id="bk1"
+        data-start="0"
+        data-duration="8"
+        data-track-index="1"
+        style="left: -80px; top: -30px"
+      ></div>
+      <div
+        class="bokeh bokeh-lg clip"
+        id="bk2"
+        data-start="0"
+        data-duration="8"
+        data-track-index="11"
+        style="left: 1500px; top: 160px"
+      ></div>
+      <div
+        class="bokeh bokeh-md clip"
+        id="bk3"
+        data-start="0"
+        data-duration="8"
+        data-track-index="12"
+        style="left: 600px; top: -50px"
+      ></div>
+      <div
+        class="bokeh bokeh-md clip"
+        id="bk4"
+        data-start="0"
+        data-duration="8"
+        data-track-index="13"
+        style="left: 1100px; top: 240px"
+      ></div>
+      <div
+        class="bokeh bokeh-md clip"
+        id="bk5"
+        data-start="0"
+        data-duration="8"
+        data-track-index="14"
+        style="left: 300px; top: 200px"
+      ></div>
+      <div
+        class="bokeh bokeh-sm clip"
+        id="bk6"
+        data-start="0"
+        data-duration="8"
+        data-track-index="15"
+        style="left: 850px; top: 80px"
+      ></div>
+      <div
+        class="bokeh bokeh-sm clip"
+        id="bk7"
+        data-start="0"
+        data-duration="8"
+        data-track-index="16"
+        style="left: 1700px; top: 30px"
+      ></div>
+      <div
+        class="bokeh bokeh-sm clip"
+        id="bk8"
+        data-start="0"
+        data-duration="8"
+        data-track-index="17"
+        style="left: 50px; top: 280px"
+      ></div>
+
+      <div
+        id="dust-container"
+        class="clip"
+        data-start="0"
+        data-duration="8"
+        data-track-index="2"
+      ></div>
+
+      <div
+        id="sparkle-container"
+        class="clip"
+        data-start="0"
+        data-duration="8"
+        data-track-index="3"
+      ></div>
+
+      <div
+        class="light-ray light-top clip"
+        id="lt"
+        data-start="0"
+        data-duration="8"
+        data-track-index="5"
+      ></div>
+      <div
+        class="light-ray light-bot clip"
+        id="lb"
+        data-start="0"
+        data-duration="8"
+        data-track-index="6"
+      ></div>
+
+      <div
+        class="letterbox-top clip"
+        id="letterbox-top"
+        data-start="0"
+        data-duration="8"
+        data-track-index="8"
+      ></div>
+      <div
+        class="letterbox-bot clip"
+        id="letterbox-bot"
+        data-start="0"
+        data-duration="8"
+        data-track-index="9"
+      ></div>
+      <div
+        class="vignette clip"
+        id="vignette"
+        data-start="0"
+        data-duration="8"
+        data-track-index="10"
+      ></div>
+    </div>
+
+    <script>
+      function seeded(seed) {
+        let s = seed;
+        return () => {
+          s = (s * 9301 + 49297) % 233280;
+          return s / 233280;
+        };
+      }
+
+      // gold dust (40개, 400px 높이에 맞게)
+      const dustC = document.getElementById("dust-container");
+      const dustEls = [];
+      let r = seeded(11);
+      for (let i = 0; i < 40; i++) {
+        const d = document.createElement("div");
+        d.className = "dust clip";
+        const x = r() * 1920;
+        const y = r() * 400;
+        const sz = 1.5 + r() * 2;
+        d.style.left = x + "px";
+        d.style.top = y + "px";
+        d.style.width = sz + "px";
+        d.style.height = sz + "px";
+        d.dataset.start = "0";
+        d.dataset.duration = "8";
+        d.dataset.trackIndex = "2";
+        dustC.appendChild(d);
+        dustEls.push({
+          el: d,
+          x,
+          y,
+          delay: r() * 8,
+          dur: 5 + r() * 3,
+          drift: -40 + r() * 80,
+        });
+      }
+
+      // 별 모양 sparkles (8개)
+      const spC = document.getElementById("sparkle-container");
+      const sparkles = [];
+      let r2 = seeded(33);
+      for (let i = 0; i < 8; i++) {
+        const s = document.createElement("div");
+        s.className = "sparkle clip";
+        s.innerHTML =
+          '<div class="halo"></div><div class="ray-d1"></div><div class="ray-d2"></div><div class="ray-h"></div><div class="ray-v"></div><div class="core"></div>';
+        const x = 100 + r2() * 1720;
+        const y = 50 + r2() * 300;
+        s.style.left = x - 40 + "px";
+        s.style.top = y - 40 + "px";
+        s.dataset.start = "0";
+        s.dataset.duration = "8";
+        s.dataset.trackIndex = "3";
+        spC.appendChild(s);
+        sparkles.push({ el: s, t: 0.4 + r2() * 6.5 });
+      }
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // 중앙 글로우 슬로우 펄스
+      tl.to("#cglow", { opacity: 0.95, duration: 2, ease: "sine.inOut" }, 0);
+      tl.to("#cglow", { opacity: 0.55, duration: 3, ease: "sine.inOut" }, 2);
+      tl.to("#cglow", { opacity: 0.85, duration: 3, ease: "sine.inOut" }, 5);
+
+      // 보케 슬로우 떠다님
+      const bokehs = [
+        { id: "#bk1", toX: 200, toY: -30, peak: 0.85 },
+        { id: "#bk2", toX: -150, toY: -40, peak: 0.75 },
+        { id: "#bk3", toX: 80, toY: 60, peak: 0.7 },
+        { id: "#bk4", toX: -100, toY: -50, peak: 0.65 },
+        { id: "#bk5", toX: 120, toY: -30, peak: 0.8 },
+        { id: "#bk6", toX: -50, toY: 80, peak: 0.6 },
+        { id: "#bk7", toX: -150, toY: 50, peak: 0.55 },
+        { id: "#bk8", toX: 100, toY: -40, peak: 0.7 },
+      ];
+      bokehs.forEach((b, i) => {
+        tl.to(
+          b.id,
+          { opacity: b.peak, duration: 1.5 + i * 0.1, ease: "sine.out" },
+          0,
+        );
+        tl.to(b.id, { x: b.toX, y: b.toY, duration: 8, ease: "sine.inOut" }, 0);
+        tl.to(
+          b.id,
+          {
+            opacity: b.peak * 0.5,
+            duration: 2.5,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: 1,
+          },
+          1.5,
+        );
+      });
+
+      // gold dust drift
+      dustEls.forEach((d) => {
+        const startTime = d.delay % 8;
+        const cycleDur = d.dur;
+        tl.fromTo(
+          d.el,
+          { x: 0, y: 0, opacity: 0 },
+          { x: d.drift, y: -180, duration: cycleDur, ease: "none" },
+          startTime,
+        );
+        tl.to(d.el, { opacity: 0.8, duration: 0.6 }, startTime);
+        tl.to(d.el, { opacity: 0, duration: 0.8 }, startTime + cycleDur - 0.8);
+      });
+
+      // 별 sparkles - 부드러운 페이드 + 회전 (1.5초 사이클)
+      sparkles.forEach((s) => {
+        // 등장 (0.5초)
+        tl.fromTo(
+          s.el,
+          { opacity: 0, scale: 0.2, rotation: 0 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.5,
+            ease: "power2.out",
+            transformOrigin: "center",
+          },
+          s.t,
+        );
+        // hold (0.4초) - 미세 회전
+        tl.to(s.el, { rotation: 25, duration: 1.4, ease: "sine.inOut" }, s.t);
+        // 사라짐 (1초)
+        tl.to(
+          s.el,
+          { opacity: 0, scale: 1.4, duration: 1, ease: "power2.in" },
+          s.t + 0.5,
+        );
+        // 별 ray 한번 깜빡 (펄스)
+        const halo = s.el.querySelector(".halo");
+        tl.fromTo(
+          halo,
+          { scale: 0.7 },
+          { scale: 1.5, duration: 1.5, ease: "sine.out" },
+          s.t,
+        );
+      });
+
+      // light rays slow pulse
+      tl.fromTo(
+        ["#lt", "#lb"],
+        { opacity: 0.4 },
+        { opacity: 1, duration: 3, ease: "sine.inOut", yoyo: true, repeat: 1 },
+        0,
+      );
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

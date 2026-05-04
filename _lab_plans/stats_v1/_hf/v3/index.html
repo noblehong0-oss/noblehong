@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=400" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 400px;
+        overflow: hidden;
+        background: #1a1206;
+      }
+      #root {
+        width: 1920px;
+        height: 400px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(180deg, #2a1d0a 0%, #1a1206 100%);
+      }
+
+      .col {
+        position: absolute;
+        top: 0;
+        width: 480px;
+        height: 400px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .col1 {
+        left: 0;
+      }
+      .col2 {
+        left: 480px;
+      }
+      .col3 {
+        left: 960px;
+      }
+      .col4 {
+        left: 1440px;
+      }
+
+      .divider {
+        position: absolute;
+        top: 50%;
+        width: 1px;
+        height: 75%;
+        transform: translateY(-50%);
+        background: linear-gradient(
+          180deg,
+          transparent,
+          rgba(244, 221, 150, 0.5),
+          transparent
+        );
+        z-index: 6;
+      }
+      .div1 {
+        left: 480px;
+      }
+      .div2 {
+        left: 960px;
+      }
+      .div3 {
+        left: 1440px;
+      }
+
+      .vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 70% 90% at center,
+          transparent 30%,
+          rgba(0, 0, 0, 0.55) 100%
+        );
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      .border-outer {
+        position: absolute;
+        inset: -5px;
+        border: 1px solid rgba(184, 154, 90, 0.35);
+        z-index: 8;
+        pointer-events: none;
+      }
+      .border-inner {
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(184, 154, 90, 0.55);
+        z-index: 8;
+        pointer-events: none;
+      }
+
+      /* ============ 1. CLOCK (30년) ============ */
+      .clock {
+        position: relative;
+        width: 200px;
+        height: 200px;
+      }
+      .clock-ring {
+        position: absolute;
+        inset: 0;
+        border: 2px solid rgba(244, 221, 150, 0.5);
+        border-radius: 50%;
+        box-shadow: 0 0 30px rgba(244, 221, 150, 0.2);
+      }
+      .clock-inner-ring {
+        position: absolute;
+        inset: 18px;
+        border: 1px solid rgba(244, 221, 150, 0.3);
+        border-radius: 50%;
+      }
+      .tick {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 2px;
+        height: 14px;
+        background: rgba(244, 221, 150, 0.7);
+        transform-origin: 1px 100px;
+      }
+      .clock-center {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 10px;
+        height: 10px;
+        background: #f4dd96;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 12px #f4dd96;
+        z-index: 3;
+      }
+      .hand {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        background: #f4dd96;
+        transform-origin: 1px 100%;
+        border-radius: 2px;
+      }
+      .hand-h {
+        width: 3px;
+        height: 60px;
+        margin-left: -1.5px;
+        margin-top: -60px;
+        box-shadow: 0 0 8px rgba(244, 221, 150, 0.6);
+      }
+      .hand-m {
+        width: 2px;
+        height: 80px;
+        margin-left: -1px;
+        margin-top: -80px;
+        background: #e8c572;
+        box-shadow: 0 0 6px rgba(232, 197, 114, 0.5);
+      }
+
+      /* ============ 2. PEOPLE DOTS (8000명) ============ */
+      .people-grid {
+        position: relative;
+        width: 280px;
+        height: 200px;
+      }
+      .person {
+        position: absolute;
+        width: 14px;
+        height: 24px;
+        opacity: 0;
+        background: linear-gradient(180deg, #f4dd96 0%, #c4a55a 100%);
+        clip-path: polygon(
+          50% 0%,
+          80% 25%,
+          80% 60%,
+          100% 100%,
+          0% 100%,
+          20% 60%,
+          20% 25%
+        );
+        box-shadow: 0 0 6px rgba(244, 221, 150, 0.4);
+      }
+
+      /* ============ 3. CIRCULAR GAUGE (75%) ============ */
+      .gauge {
+        position: relative;
+        width: 200px;
+        height: 200px;
+      }
+      .gauge svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .gauge-bg-ring {
+        fill: none;
+        stroke: rgba(244, 221, 150, 0.15);
+        stroke-width: 8;
+      }
+      .gauge-fg-ring {
+        fill: none;
+        stroke: url(#goldGrad);
+        stroke-width: 10;
+        stroke-linecap: round;
+        filter: drop-shadow(0 0 8px rgba(244, 221, 150, 0.5));
+      }
+
+      /* ============ 4. TROPHY (3년 연속) ============ */
+      .trophy-wrap {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .trophy {
+        width: 120px;
+        height: 160px;
+        position: relative;
+      }
+      .trophy-cup {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90px;
+        height: 90px;
+        background: linear-gradient(180deg, #f4dd96 0%, #c4a55a 100%);
+        border-radius: 50% 50% 30% 30% / 70% 70% 30% 30%;
+        box-shadow:
+          0 0 30px rgba(244, 221, 150, 0.5),
+          inset 0 -10px 20px rgba(138, 109, 47, 0.4);
+      }
+      .trophy-handle-l {
+        position: absolute;
+        top: 18px;
+        left: -6px;
+        width: 30px;
+        height: 50px;
+        border: 6px solid #c4a55a;
+        border-right: 0;
+        border-radius: 30px 0 0 30px;
+      }
+      .trophy-handle-r {
+        position: absolute;
+        top: 18px;
+        right: -6px;
+        width: 30px;
+        height: 50px;
+        border: 6px solid #c4a55a;
+        border-left: 0;
+        border-radius: 0 30px 30px 0;
+      }
+      .trophy-stem {
+        position: absolute;
+        top: 88px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 14px;
+        height: 25px;
+        background: linear-gradient(180deg, #c4a55a, #8a6d2f);
+      }
+      .trophy-base {
+        position: absolute;
+        top: 113px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 22px;
+        background: linear-gradient(180deg, #c4a55a 0%, #8a6d2f 100%);
+        border-radius: 4px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+      }
+      .trophy-glow {
+        position: absolute;
+        inset: -30px;
+        background: radial-gradient(
+          circle,
+          rgba(244, 221, 150, 0.35) 0%,
+          transparent 60%
+        );
+        opacity: 0;
+        pointer-events: none;
+      }
+      .trophy-star {
+        position: absolute;
+        font-size: 24px;
+        color: #f4dd96;
+        opacity: 0;
+        text-shadow: 0 0 12px #f4dd96;
+      }
+
+      .ray {
+        position: absolute;
+        width: 2px;
+        height: 200px;
+        background: linear-gradient(
+          180deg,
+          transparent,
+          rgba(244, 221, 150, 0.6),
+          transparent
+        );
+        transform-origin: 1px 200px;
+        left: 50%;
+        top: 50%;
+        margin-left: -1px;
+        margin-top: -200px;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="8"
+      data-width="1920"
+      data-height="400"
+    >
+      <div
+        class="vignette clip"
+        data-start="0"
+        data-duration="8"
+        data-track-index="0"
+      ></div>
+
+      <!-- ===== 1. CLOCK ===== -->
+      <div class="col col1">
+        <div
+          class="clock clip"
+          id="clock"
+          data-start="0"
+          data-duration="8"
+          data-track-index="1"
+        >
+          <div class="clock-ring"></div>
+          <div class="clock-inner-ring"></div>
+          <div class="tick" style="transform: rotate(0deg)"></div>
+          <div class="tick" style="transform: rotate(30deg)"></div>
+          <div class="tick" style="transform: rotate(60deg)"></div>
+          <div class="tick" style="transform: rotate(90deg)"></div>
+          <div class="tick" style="transform: rotate(120deg)"></div>
+          <div class="tick" style="transform: rotate(150deg)"></div>
+          <div class="tick" style="transform: rotate(180deg)"></div>
+          <div class="tick" style="transform: rotate(210deg)"></div>
+          <div class="tick" style="transform: rotate(240deg)"></div>
+          <div class="tick" style="transform: rotate(270deg)"></div>
+          <div class="tick" style="transform: rotate(300deg)"></div>
+          <div class="tick" style="transform: rotate(330deg)"></div>
+          <div class="hand hand-h" id="hand-h"></div>
+          <div class="hand hand-m" id="hand-m"></div>
+          <div class="clock-center"></div>
+        </div>
+      </div>
+
+      <!-- ===== 2. PEOPLE DOTS ===== -->
+      <div class="col col2">
+        <div
+          class="people-grid clip"
+          id="people"
+          data-start="0"
+          data-duration="8"
+          data-track-index="2"
+        ></div>
+      </div>
+
+      <!-- ===== 3. GAUGE ===== -->
+      <div class="col col3">
+        <div
+          class="gauge clip"
+          data-start="0"
+          data-duration="8"
+          data-track-index="3"
+        >
+          <svg viewBox="0 0 200 200">
+            <defs>
+              <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#c4a55a" />
+                <stop offset="50%" stop-color="#f4dd96" />
+                <stop offset="100%" stop-color="#c4a55a" />
+              </linearGradient>
+            </defs>
+            <circle class="gauge-bg-ring" cx="100" cy="100" r="85" />
+            <circle
+              class="gauge-fg-ring"
+              id="gauge-arc"
+              cx="100"
+              cy="100"
+              r="85"
+              stroke-dasharray="534.07"
+              stroke-dashoffset="534.07"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <!-- ===== 4. TROPHY ===== -->
+      <div class="col col4">
+        <div
+          class="trophy-wrap clip"
+          id="trophy-wrap"
+          data-start="0"
+          data-duration="8"
+          data-track-index="4"
+        >
+          <div class="trophy-glow" id="trophy-glow"></div>
+          <div class="trophy" id="trophy">
+            <div class="trophy-handle-l"></div>
+            <div class="trophy-handle-r"></div>
+            <div class="trophy-cup"></div>
+            <div class="trophy-stem"></div>
+            <div class="trophy-base"></div>
+          </div>
+          <div class="ray" id="ray1" style="transform: rotate(0deg)"></div>
+          <div class="ray" id="ray2" style="transform: rotate(45deg)"></div>
+          <div class="ray" id="ray3" style="transform: rotate(90deg)"></div>
+          <div class="ray" id="ray4" style="transform: rotate(135deg)"></div>
+          <div class="ray" id="ray5" style="transform: rotate(180deg)"></div>
+          <div class="ray" id="ray6" style="transform: rotate(225deg)"></div>
+          <div class="ray" id="ray7" style="transform: rotate(270deg)"></div>
+          <div class="ray" id="ray8" style="transform: rotate(315deg)"></div>
+        </div>
+      </div>
+
+      <!-- dividers -->
+      <div
+        class="divider div1 clip"
+        id="div1"
+        data-start="0"
+        data-duration="8"
+        data-track-index="6"
+      ></div>
+      <div
+        class="divider div2 clip"
+        id="div2"
+        data-start="0"
+        data-duration="8"
+        data-track-index="7"
+      ></div>
+      <div
+        class="divider div3 clip"
+        id="div3"
+        data-start="0"
+        data-duration="8"
+        data-track-index="8"
+      ></div>
+
+      <!-- frames -->
+      <div
+        class="border-outer clip"
+        id="border-outer"
+        data-start="0"
+        data-duration="8"
+        data-track-index="9"
+      ></div>
+      <div
+        class="border-inner clip"
+        id="border-inner"
+        data-start="0"
+        data-duration="8"
+        data-track-index="10"
+      ></div>
+    </div>
+
+    <script>
+      // 사람 점 8x4 그리드 생성 (32개, 스태거)
+      const people = document.getElementById("people");
+      const personEls = [];
+      for (let row = 0; row < 5; row++) {
+        for (let col = 0; col < 10; col++) {
+          const p = document.createElement("div");
+          p.className = "person clip";
+          p.style.left = col * 28 + "px";
+          p.style.top = row * 36 + "px";
+          p.dataset.start = "0";
+          p.dataset.duration = "8";
+          p.dataset.trackIndex = "2";
+          people.appendChild(p);
+          personEls.push(p);
+        }
+      }
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ===== 1. CLOCK: 시침/분침 회전 =====
+      // 8초 동안 분침 1바퀴, 시침 1/12바퀴 (30년 상징 → 빠르게 흘러가는 시간)
+      tl.fromTo(
+        "#hand-m",
+        { rotation: 0 },
+        {
+          rotation: 720,
+          duration: 8,
+          ease: "none",
+          transformOrigin: "1px 100%",
+        },
+        0,
+      );
+      tl.fromTo(
+        "#hand-h",
+        { rotation: 0 },
+        {
+          rotation: 60,
+          duration: 8,
+          ease: "none",
+          transformOrigin: "1px 100%",
+        },
+        0,
+      );
+      // 클락 자체 부드러운 펄스
+      tl.fromTo(
+        "#clock",
+        { scale: 0.95 },
+        { scale: 1.02, duration: 4, ease: "sine.inOut", yoyo: true, repeat: 1 },
+        0,
+      );
+
+      // ===== 2. PEOPLE: 점 stagger 등장 (8000명 누적 느낌) =====
+      // 0~5초: stagger로 등장, 5~6초: 모두 빛남, 6~8초: 다음 사이클 페이드
+      tl.fromTo(
+        personEls,
+        { opacity: 0, scale: 0.5, y: 10 },
+        {
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          duration: 0.4,
+          ease: "back.out(2)",
+          stagger: 0.08,
+        },
+        0,
+      );
+      tl.to(
+        personEls,
+        {
+          filter: "brightness(1.4) drop-shadow(0 0 8px #f4dd96)",
+          duration: 0.5,
+          stagger: 0.02,
+        },
+        4.5,
+      );
+      tl.to(
+        personEls,
+        { filter: "brightness(1)", duration: 1, stagger: 0.01 },
+        5.5,
+      );
+      // seamless loop을 위해 마지막 살짝 페이드
+      tl.to(personEls, { opacity: 0.3, duration: 1.2, stagger: 0.01 }, 7);
+
+      // ===== 3. GAUGE: 0 → 75% (원주의 75%) =====
+      // 둘레 = 2π*85 = 534.07. 75% = 133.52 (75% 채움 = 원주의 1/4은 비어있음)
+      // dashoffset 0 = 100% 채움. 75% 채움 = dashoffset = 534.07 * 0.25 = 133.52
+      tl.fromTo(
+        "#gauge-arc",
+        { strokeDashoffset: 534.07 },
+        { strokeDashoffset: 133.52, duration: 2.5, ease: "power2.out" },
+        0.5,
+      );
+      // pulse + 다시 사이클을 위한 부드러운 풀-페이드
+      tl.fromTo(
+        "#gauge-arc",
+        { filter: "drop-shadow(0 0 8px rgba(244,221,150,0.5))" },
+        {
+          filter: "drop-shadow(0 0 18px rgba(244,221,150,0.9))",
+          duration: 1.5,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: 1,
+        },
+        3,
+      );
+      // seamless loop - 마지막에 한 바퀴 더
+      tl.to(
+        "#gauge-arc",
+        { strokeDashoffset: 534.07, duration: 1.2, ease: "power2.in" },
+        6.8,
+      );
+
+      // ===== 4. TROPHY: 광휘 + 별 + 광선 =====
+      tl.fromTo(
+        "#trophy",
+        { scale: 0.85, opacity: 0.8 },
+        { scale: 1, opacity: 1, duration: 1, ease: "back.out(1.5)" },
+        0,
+      );
+      tl.fromTo(
+        "#trophy-glow",
+        { opacity: 0, scale: 0.5 },
+        { opacity: 0.9, scale: 1, duration: 1.5, ease: "sine.out" },
+        0.5,
+      );
+      tl.to(
+        "#trophy-glow",
+        {
+          opacity: 0.4,
+          duration: 1.5,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: 1,
+        },
+        2,
+      );
+      // 광선 stagger
+      [
+        "#ray1",
+        "#ray2",
+        "#ray3",
+        "#ray4",
+        "#ray5",
+        "#ray6",
+        "#ray7",
+        "#ray8",
+      ].forEach((r, i) => {
+        tl.to(
+          r,
+          { opacity: 0.7, duration: 0.5, ease: "sine.out" },
+          1.2 + i * 0.08,
+        );
+        tl.to(
+          r,
+          { opacity: 0.2, duration: 1.2, ease: "sine.inOut" },
+          2 + i * 0.05,
+        );
+        tl.to(
+          r,
+          { opacity: 0.6, duration: 1, ease: "sine.inOut" },
+          4 + i * 0.05,
+        );
+        tl.to(r, { opacity: 0, duration: 1, ease: "sine.in" }, 6.5);
+      });
+      // 트로피 부드러운 회전 + 다음 사이클 위해 페이드
+      tl.to(
+        "#trophy",
+        { rotation: 5, duration: 4, ease: "sine.inOut", yoyo: true, repeat: 1 },
+        0,
+      );
+
+      // 디바이더 부드러운 펄스
+      tl.fromTo(
+        [".div1", ".div2", ".div3"],
+        { opacity: 0.5 },
+        { opacity: 1, duration: 2, ease: "sine.inOut", yoyo: true, repeat: 3 },
+        0,
+      );
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

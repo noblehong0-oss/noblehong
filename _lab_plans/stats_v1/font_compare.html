@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>숫자 폰트 비교 — 노블홍</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Bodoni+Moda:opsz,wght@6..96,700;6..96,800;6..96,900&family=DM+Serif+Display&family=Marcellus&family=Cinzel:wght@600;700;800;900&family=Italiana&family=Tenor+Sans&family=Inter:wght@600;700;800;900&family=Manrope:wght@600;700;800&family=Noto+Serif+KR:wght@600;700;900&family=Cormorant+Garamond:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ivory: #f6f1e6;
+        --espresso: #2a1d0a;
+        --espresso-2: #1a1206;
+        --gold-1: #c4a55a;
+        --gold-2: #e8c572;
+        --gold-3: #f4dd96;
+        --gold-dark: #8a6d2f;
+        --gold-line: #b89a5a;
+        --ink: #0d0b08;
+        --ink-2: #5c5040;
+        --ink-3: #8a7e6a;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: var(--ivory);
+        color: var(--ink);
+        font-family: "Inter", "Noto Serif KR", sans-serif;
+      }
+      body {
+        padding: 64px 32px 120px;
+      }
+
+      .page-head {
+        max-width: 1320px;
+        margin: 0 auto 48px;
+        text-align: center;
+      }
+      .page-head .eyebrow {
+        font-family: "Inter", sans-serif;
+        color: var(--gold-dark);
+        letter-spacing: 6px;
+        font-size: 13px;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .page-head h1 {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 700;
+        font-size: 42px;
+        letter-spacing: -1px;
+        margin: 14px 0 10px;
+        color: var(--ink);
+      }
+      .page-head p {
+        color: var(--ink-2);
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      .row {
+        max-width: 1320px;
+        margin: 0 auto 56px;
+      }
+      .row-head {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(138, 109, 47, 0.25);
+      }
+      .row-head .tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 48px;
+        height: 30px;
+        padding: 0 12px;
+        background: var(--espresso);
+        color: var(--gold-3);
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 1px;
+        border: 1px solid var(--gold-line);
+      }
+      .row-head h2 {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 700;
+        font-size: 20px;
+        color: var(--ink);
+      }
+      .row-head .css {
+        margin-left: auto;
+        font-family: Consolas, monospace;
+        font-size: 12px;
+        color: var(--ink-3);
+        background: #fffdf8;
+        padding: 5px 10px;
+        border: 1px solid rgba(184, 154, 90, 0.25);
+      }
+
+      /* 가로 스트립 */
+      .strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        background: linear-gradient(180deg, #2a1d0a 0%, #1a1206 100%);
+        border: 1px solid var(--gold-line);
+        outline: 1px solid rgba(184, 154, 90, 0.4);
+        outline-offset: 4px;
+        overflow: hidden;
+        position: relative;
+      }
+      .strip::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse 60% 80% at center,
+          rgba(244, 221, 150, 0.08) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .stat {
+        position: relative;
+        padding: 50px 22px 38px;
+        text-align: center;
+        color: #f4e9c8;
+        border-right: 1px solid rgba(184, 154, 90, 0.35);
+      }
+      .stat:last-child {
+        border-right: 0;
+      }
+
+      .num {
+        background: linear-gradient(
+          90deg,
+          #c4a55a 0%,
+          #e8c572 25%,
+          #f4dd96 50%,
+          #e8c572 75%,
+          #c4a55a 100%
+        );
+        background-size: 220% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1.05;
+        margin-bottom: 10px;
+        animation: shimmer 5s ease-in-out infinite;
+      }
+      .num .suf {
+        font-size: 0.42em;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        margin-left: 4px;
+        opacity: 0.92;
+      }
+      @keyframes shimmer {
+        0%,
+        100% {
+          background-position: 100% 50%;
+        }
+        50% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .label {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 600;
+        font-size: 14px;
+        color: #f4e9c8;
+        margin-bottom: 4px;
+        letter-spacing: -0.3px;
+      }
+      .sub {
+        font-size: 10.5px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: rgba(244, 221, 150, 0.55);
+      }
+
+      /* ==== Font variants ==== */
+
+      /* F-A : Playfair Display 800 */
+      .fa .num {
+        font-family: "Playfair Display", serif;
+        font-weight: 800;
+        font-size: 74px;
+        letter-spacing: -1px;
+      }
+
+      /* F-B : Bodoni Moda 900 */
+      .fb .num {
+        font-family: "Bodoni Moda", serif;
+        font-weight: 900;
+        font-size: 74px;
+        letter-spacing: -1.5px;
+      }
+
+      /* F-C : DM Serif Display */
+      .fc .num {
+        font-family: "DM Serif Display", serif;
+        font-weight: 400;
+        font-size: 74px;
+        letter-spacing: -1.5px;
+      }
+
+      /* F-D : Cinzel 800 (로마 캐피털) */
+      .fd .num {
+        font-family: "Cinzel", serif;
+        font-weight: 800;
+        font-size: 60px;
+        letter-spacing: 0px;
+      }
+
+      /* F-E : Marcellus */
+      .fe .num {
+        font-family: "Marcellus", serif;
+        font-weight: 400;
+        font-size: 72px;
+        letter-spacing: -0.5px;
+      }
+
+      /* F-F : Italiana (얇고 우아) */
+      .ff .num {
+        font-family: "Italiana", serif;
+        font-weight: 400;
+        font-size: 78px;
+        letter-spacing: -0.5px;
+      }
+
+      /* F-G : Inter 800 (모던 산세리프) */
+      .fg .num {
+        font-family: "Inter", sans-serif;
+        font-weight: 800;
+        font-size: 66px;
+        letter-spacing: -2px;
+      }
+
+      /* F-H : Manrope 800 (부드러운 산세리프) */
+      .fh .num {
+        font-family: "Manrope", sans-serif;
+        font-weight: 800;
+        font-size: 66px;
+        letter-spacing: -2px;
+      }
+
+      /* F-X : 기존 Cormorant 700 (비교용) */
+      .fx .num {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 700;
+        font-size: 74px;
+        letter-spacing: -0.5px;
+      }
+
+      /* notes */
+      .note {
+        margin-top: 8px;
+        color: var(--ink-3);
+        font-size: 12px;
+        line-height: 1.6;
+      }
+      .pros {
+        color: #2a6f3c;
+      }
+      .cons {
+        color: #9c3a2f;
+      }
+
+      .pick-info {
+        max-width: 1320px;
+        margin: 80px auto 0;
+        padding: 24px;
+        background: #fffdf8;
+        border: 1px solid rgba(184, 154, 90, 0.3);
+        font-family: "Inter", sans-serif;
+      }
+      .pick-info h3 {
+        font-family: "Noto Serif KR", serif;
+        font-size: 18px;
+        color: var(--ink);
+        margin-bottom: 14px;
+      }
+      .pick-info ul {
+        padding-left: 20px;
+        font-size: 13.5px;
+        line-height: 1.95;
+        color: var(--ink-2);
+      }
+      .pick-info code {
+        background: rgba(184, 154, 90, 0.12);
+        padding: 2px 7px;
+        color: var(--gold-dark);
+        font-family: Consolas, monospace;
+        font-size: 12px;
+      }
+      .pick-info b {
+        color: var(--ink);
+      }
+
+      @media (max-width: 980px) {
+        .strip {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .stat:nth-child(2) {
+          border-right: 0;
+        }
+        .stat {
+          border-bottom: 1px solid rgba(184, 154, 90, 0.35);
+        }
+        .stat:nth-child(odd) {
+          border-right: 1px solid rgba(184, 154, 90, 0.35);
+        }
+        .num {
+          font-size: 54px !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-head">
+      <div class="eyebrow">Number Font Compare · 9 Variants</div>
+      <h1>숫자 폰트 비교 — 9가지</h1>
+      <p>
+        같은 박스(D안 가로 스트립)에 9개 폰트를 적용해서 비교합니다.<br />
+        <small style="color: var(--ink-3)"
+          >맨 아래 F-X는 현재 적용된 Cormorant Garamond (비교 기준)</small
+        >
+      </p>
+    </div>
+
+    <!-- F-A -->
+    <div class="row">
+      <div class="row-head">
+        <span class="tag">F-A</span>
+        <h2>Playfair Display 800 — 굵은 헤드라인 세리프</h2>
+        <span class="css">font: 800 'Playfair Display'</span>
+      </div>
+      <div class="strip fa">
+        <div class="stat">
+          <div class="num">30<span class="suf">년</span></div>
+          <div class="label">매칭 노하우</div>
+          <div class="sub">Since 1996</div>
+        </div>
+        <div class="stat">
+          <div class="num">8,000<span class="suf">명+</span></div>
+          <div class="label">성혼 실적</div>
+          <div class="sub">커플매니저 제1호</div>
+        </div>
+        <div class="stat">
+          <div class="num">75<span class="suf">%</span></div>
+          <div class="label">30대 교제율</div>
+          <div class="sub">3회 이상 만남</div>
+        </div>
+        <div class="stat">
+          <div class="num">3<span class="suf">년 연속</span></div>
+          <div class="label">브랜드만족지수 1위</div>
+          <div class="sub">2022~2024</div>
+        </div>
+      </div>
+      <div class="note">
+        <span class="pros">✓ 굵고 또렷, 매거진/명품 느낌</span> ·
+        <span class="cons">획 대비가 강해 시각적 강조 큼</span>
+      </div>
+    </div>
+
+    <!-- F-B -->
+    <div class="row">
+      <div class="row-head">
+        <span class="tag">F-B</span>
+        <h2>Bodoni Moda 900 — 럭셔리 디스플레이 세리프</h2>
+        <span class="css">font: 900 'Bodoni Moda'</span>
+      </div>
+      <div class="strip fb">
+        <div class="stat">
+          <div class="num">30<span class="suf">년</span></div>
+          <div class="label">매칭 노하우</div>
+          <div class="sub">Since 1996</div>
+        </div>
+        <div class="stat">
+          <div class="num">8,000<span class="suf">명+</span></div>
+          <div class="label">성혼 실적</div>
+          <div class="sub">커플매니저 제1호</div>
+        </div>
+        <div class="stat">
+          <div class="num">75<span class="suf">%</span></div>
+          <div class="label">30대 교제율</div>
+          <div class="sub">3회 이상 만남</div>
+        </div>
+        <div class="stat">
+          <div class="num">3<span class="suf">년 연속</span></div>
+          <div class="label">브랜드만족지수 1위</div>
+          <div class="sub">2022~2024</div>
+        </div>
+      </div>
+      <div class="note">
+        <span class="pros">✓ Vogue/Dior 느낌, 가장 럭셔리</span> ·
+        <span class="cons">획 대비 매우 큼 — 작은 화면 가독성 주의</span>
+      </div>
+    </div>
+
+    <!-- F-C -->
+    <div class="row">
+      <div class="row-head">
+        <span class="tag">F-C</span>
+        <h2>DM Serif Display — 드라마틱 굵은 세리프</h2>
+        <span class="css">font: 400 'DM Serif Display'</span>
+      </div>
+      <div class="strip fc">
+        <div class="stat">
+          <div class="num">30<span class="suf">년</span></div>
+          <div class="label">매칭 노하우</div>
+          <div class="sub">Since 1996</div>
+        </div>
+        <div class="stat">
+          <div class="num">8,000<span class="suf">명+</span></div>
+          <div class="label">성혼 실적</div>
+          <div class="sub">커플매니저 제1호</div>
+        </div>
+        <div class="stat">
+          <div class="num">75<span class="suf">%</span></div>
+          <div class="label">30대 교제율</div>
+          <div class="sub">3회 이상 만남</div>
+        </div>
+        <div class="stat">
+          <div class="num">3<span class="suf">년 연속</span></div>
+          <div class="label">브랜드만족지수 1위</div>
+          <div class="sub">2022~2024</div>
+        </div>
+      </div>
+      <div class="note">
+        <span class="pros">✓ 매우 굵고 단단, 강한 임팩트</span> ·
+        <span class="cons">에디토리얼 느낌, 약간 무거움</span>
+      </div>
+    </div>
+
+    <!-- F-D -->
+    <div class="row">
+      <div class="row-head">
+        <span class="tag">F-D</span>
+        <h2>Cinzel 800 — 로마 캐피털 (대문자 전용)</h2>
+        <span class="css">font: 800 'Cinzel'</span>
+      </div>
+      <div class="strip fd">
+        <div class="stat">
+          <div class="num">30<span class="suf">년</span></div>
+          <div class="label">매칭 노하우</div>
+          <div class="sub">Since 1996</div>
+        </div>
+        <div class="stat">
+          <div class="num">8,000<span class="suf">명+</span></div>
+          <div class="label">성혼 실적</div>
+          <div class="sub">커플매니저 제1호</div>
+        </div>
+        <div class="stat">
+          <div class="num">75<span class="suf">%</span></div>
+          <div class="label">30대 교제율</div>
+          <div class="sub">3회 이상 만남</div>
+        </div>
+        <div class="stat">
+          <div class="num">3<span class="suf">년 연속</span></div>
+          <div class="label">브랜드만족지수 1위</div>
+          <div class="sub">2022~2024</div>
+        </div>
+      </div>
+      <div class="note">
+        <span class="pros">✓ 비석/기념패 느낌, 헤리티지 강조</span> ·
+        <span class="cons">숫자보다 알파벳에 더 어울림</span>
+      </div>
+    </div>
+
+    <!-- F-E -->
+    <div class="row">
+      <div class="row-head">
+        <span class="tag">F-E</span>
+        <h2>Marcellus — 클래식 또렷 세리프</h2>
+        <span class="css">font: 400 'Marcellus'</span>
+      </div>
+      <div class="strip fe">
+        <div class="stat">
+          <div class="num">30<span class="suf">년</span></div>
+          <div class="label">매칭 노하우</div>
+          <div class="sub">Since 1996</div>
+        </div>
+        <div class="stat">
+          <div class="num">8,000<span class="suf">명+</span></div>
+          <div class="label">성혼 실적</div>
+          <div class="sub">커플매니저 제1호</div>
+        </div>
+        <div class="stat">
+          <div class="num">75<span class="suf">%</span></div>
+          <div class="label">30대 교제율</div>
+          <div class="sub">3회 이상 만남</div>
+        </div>
+        <div class="stat">
+          <div class="num">3<span class="suf">년 연속</span></div>
+          <div class="label">브랜드만족지수 1위</div>
+          <div class="sub">2022~2024</div>
+        </div>
+      </div>
+      <div class="note">
+        <span class="pros">✓ 청첩장 느낌, 우아하면서 또렷</span> ·
+        <span class="cons">획 두께 일정 — 강조보다 클래식</span>
+      </div>
+    </div>
+
+    <!-- F-F -->
+    <div class="row">
+      <div class="row-head">
+        <span class="tag">F-F</span>
+        <h2>Italiana — 우아한 가는 세리프 (참고용)</h2>
+        <span class="css">font: 400 'Italiana'</span>
+      </div>
+      <div class="strip ff">
+        <div class="stat">
+          <div class="num">30<span class="suf">년</span></div>
+          <div class="label">매칭 노하우</div>
+          <div class="sub">Since 1996</div>
+        </div>
+        <div class="stat">
+          <div class="num">8,000<span class="suf">명+</span></div>
+          <div class="label">성혼 실적</div>
+          <div class="sub">커플매니저 제1호</div>
+        </div>
+        <div class="stat">
+          <div class="num">75<span class="suf">%</span></div>
+          <div class="label">30대 교제율</div>
+          <div class="sub">3회 이상 만남</div>
+        </div>
+        <div class="stat">
+          <div class="num">3<span class="suf">년 연속</span></div>
+          <div class="label">브랜드만족지수 1위</div>
+          <div class="sub">2022~2024</div>
+        </div>
+      </div>
+      <div class="note">
+        <span class="pros">✓ 매우 우아, 명품 느낌</span> ·
+        <span class="cons">현재 Cormorant와 비슷하게 가늘어 보일 수 있음</span>
+      </div>
+    </div>
+
+    <!-- F-G -->
+    <div class="row">
+      <div class="row-head">
+        <span class="tag">F-G</span>
+        <h2>Inter 800 — 모던 산세리프 (또렷)</h2>
+        <span class="css">font: 800 'Inter'</span>
+      </div>
+      <div class="strip fg">
+        <div class="stat">
+          <div class="num">30<span class="suf">년</span></div>
+          <div class="label">매칭 노하우</div>
+          <div class="sub">Since 1996</div>
+        </div>
+        <div class="stat">
+          <div class="num">8,000<span class="suf">명+</span></div>
+          <div class="label">성혼 실적</div>
+          <div class="sub">커플매니저 제1호</div>
+        </div>
+        <div class="stat">
+          <div class="num">75<span class="suf">%</span></div>
+          <div class="label">30대 교제율</div>
+          <div class="sub">3회 이상 만남</div>
+        </div>
+        <div class="stat">
+          <div class="num">3<span class="suf">년 연속</span></div>
+          <div class="label">브랜드만족지수 1위</div>
+          <div class="sub">2022~2024</div>
+        </div>
+      </div>
+      <div class="note">
+        <span class="pros">✓ 가장 또렷, 데이터/숫자에 강함</span> ·
+        <span class="cons">럭셔리감은 약함, 모던/테크 느낌</span>
+      </div>
+    </div>
+
+    <!-- F-H -->
+    <div class="row">
+      <div class="row-head">
+        <span class="tag">F-H</span>
+        <h2>Manrope 800 — 부드러운 산세리프</h2>
+        <span class="css">font: 800 'Manrope'</span>
+      </div>
+      <div class="strip fh">
+        <div class="stat">
+          <div class="num">30<span class="suf">년</span></div>
+          <div class="label">매칭 노하우</div>
+          <div class="sub">Since 1996</div>
+        </div>
+        <div class="stat">
+          <div class="num">8,000<span class="suf">명+</span></div>
+          <div class="label">성혼 실적</div>
+          <div class="sub">커플매니저 제1호</div>
+        </div>
+        <div class="stat">
+          <div class="num">75<span class="suf">%</span></div>
+          <div class="label">30대 교제율</div>
+          <div class="sub">3회 이상 만남</div>
+        </div>
+        <div class="stat">
+          <div class="num">3<span class="suf">년 연속</span></div>
+          <div class="label">브랜드만족지수 1위</div>
+          <div class="sub">2022~2024</div>
+        </div>
+      </div>
+      <div class="note">
+        <span class="pros">✓ 또렷하면서 부드러움 (geometric)</span> ·
+        <span class="cons">럭셔리 세리프보다 캐주얼</span>
+      </div>
+    </div>
+
+    <!-- F-X 비교 기준 -->
+    <div class="row">
+      <div class="row-head">
+        <span class="tag" style="background: #9c3a2f">F-X</span>
+        <h2>(현재) Cormorant Garamond 700 — 비교 기준</h2>
+        <span class="css">font: 700 'Cormorant Garamond' ← 현재</span>
+      </div>
+      <div class="strip fx">
+        <div class="stat">
+          <div class="num">30<span class="suf">년</span></div>
+          <div class="label">매칭 노하우</div>
+          <div class="sub">Since 1996</div>
+        </div>
+        <div class="stat">
+          <div class="num">8,000<span class="suf">명+</span></div>
+          <div class="label">성혼 실적</div>
+          <div class="sub">커플매니저 제1호</div>
+        </div>
+        <div class="stat">
+          <div class="num">75<span class="suf">%</span></div>
+          <div class="label">30대 교제율</div>
+          <div class="sub">3회 이상 만남</div>
+        </div>
+        <div class="stat">
+          <div class="num">3<span class="suf">년 연속</span></div>
+          <div class="label">브랜드만족지수 1위</div>
+          <div class="sub">2022~2024</div>
+        </div>
+      </div>
+      <div class="note">
+        <span class="cons"
+          >✗ 사용자 피드백: "다 안 그려진 듯한 폰트" — 획이 가늘고 우아하나 강조
+          약함</span
+        >
+      </div>
+    </div>
+
+    <div class="pick-info">
+      <h3>📌 추천 우선순위</h3>
+      <ul>
+        <li>
+          <b>1순위 — F-B Bodoni Moda 900</b>: 노블홍 럭셔리 톤에 가장 부합
+          (Vogue/Dior 매거진 느낌). 골드 그라디언트와 궁합 최상
+        </li>
+        <li>
+          <b>2순위 — F-A Playfair Display 800</b>: Bodoni보다 안정적, 굵고 또렷
+          + 클래식 균형
+        </li>
+        <li>
+          <b>3순위 — F-C DM Serif Display</b>: 강한 임팩트 원할 때, 단 약간
+          무거움
+        </li>
+        <li>
+          <b>참고 — F-G Inter 800</b>: 럭셔리감 포기하고 데이터 강조만 원할 때
+          (산세리프 대안)
+        </li>
+      </ul>
+      <p
+        style="
+          color: var(--ink-3);
+          font-size: 12px;
+          margin-top: 14px;
+          font-style: italic;
+        "
+      >
+        선택해주시면 → ① 통합 영상 4안 HTML(<code>index.html</code>)에 즉시 반영
+        ② HyperFrames 영상 컴포지션 작성 시 동일 폰트 사용 ③ 본 홈페이지
+        <code>index.html</code>의 stats 섹션도 함께 업데이트
+      </p>
+    </div>
+  </body>
+</html>

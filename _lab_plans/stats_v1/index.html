@@ -1,0 +1,1297 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>STATS 영상 V-1 — 노블홍 (Pre-roll Intro)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ivory: #f6f1e6;
+        --ivory-2: #efe7d4;
+        --espresso: #2a1d0a;
+        --espresso-2: #1a1206;
+        --gold-1: #c4a55a;
+        --gold-2: #e8c572;
+        --gold-3: #f4dd96;
+        --gold-dark: #8a6d2f;
+        --gold-line: #b89a5a;
+        --ink: #0d0b08;
+        --ink-2: #5c5040;
+        --ink-3: #8a7e6a;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: var(--ivory);
+        color: var(--ink);
+        font-family: "Inter", sans-serif;
+      }
+      body {
+        padding: 64px 32px 120px;
+      }
+
+      .page-head {
+        max-width: 1320px;
+        margin: 0 auto 48px;
+        text-align: center;
+      }
+      .page-head .eyebrow {
+        font-family: "Inter", sans-serif;
+        color: var(--gold-dark);
+        letter-spacing: 6px;
+        font-size: 13px;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .page-head h1 {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 700;
+        font-size: 40px;
+        letter-spacing: -1px;
+        margin: 14px 0 10px;
+        color: var(--ink);
+      }
+      .page-head p {
+        color: var(--ink-2);
+        font-size: 14px;
+        line-height: 1.7;
+      }
+      .page-head small {
+        color: var(--ink-3);
+        font-size: 12px;
+      }
+
+      .variant {
+        max-width: 1320px;
+        margin: 0 auto;
+      }
+      .variant-head {
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        margin-bottom: 22px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(138, 109, 47, 0.25);
+      }
+      .variant-head .tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 48px;
+        height: 30px;
+        padding: 0 12px;
+        background: var(--espresso);
+        color: var(--gold-3);
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 1px;
+        border: 1px solid var(--gold-line);
+      }
+      .variant-head h2 {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 700;
+        font-size: 22px;
+        color: var(--ink);
+      }
+      .variant-head .desc {
+        margin-left: auto;
+        color: var(--ink-3);
+        font-size: 13px;
+        letter-spacing: 0.5px;
+      }
+
+      .stage {
+        position: relative;
+        width: 100%;
+        background: #1a1206;
+        overflow: hidden;
+        aspect-ratio: 1920/400;
+        border: 1px solid rgba(184, 154, 90, 0.25);
+      }
+      .stage video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+      }
+
+      .replay-btn {
+        position: absolute;
+        bottom: 14px;
+        right: 14px;
+        z-index: 5;
+        background: rgba(42, 29, 10, 0.85);
+        border: 1px solid var(--gold-line);
+        color: var(--gold-3);
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        padding: 8px 14px;
+        cursor: pointer;
+        text-transform: uppercase;
+      }
+      .replay-btn:hover {
+        background: rgba(42, 29, 10, 0.95);
+      }
+
+      .video-fallback {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #1a1206 0%, #2a1d0a 100%);
+        color: rgba(244, 221, 150, 0.45);
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        letter-spacing: 3px;
+        font-size: 16px;
+        z-index: 0;
+      }
+      .video-fallback small {
+        display: block;
+        margin-top: 10px;
+        letter-spacing: 1px;
+        font-size: 11px;
+        color: rgba(244, 221, 150, 0.3);
+        font-weight: 400;
+      }
+
+      .notes {
+        margin: 18px 0 0;
+        padding: 16px 20px;
+        background: #fffdf8;
+        border: 1px solid rgba(184, 154, 90, 0.25);
+        color: var(--ink-2);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+      .notes b {
+        color: var(--ink);
+      }
+      .notes ul {
+        margin: 8px 0 0 0;
+        padding-left: 20px;
+      }
+      .notes li {
+        margin-bottom: 4px;
+      }
+
+      .pkg-info {
+        max-width: 1320px;
+        margin: 64px auto 0;
+        padding: 24px 28px;
+        background: #2a1d0a;
+        color: #f4e9c8;
+        border: 1px solid var(--gold-line);
+        outline: 1px solid rgba(184, 154, 90, 0.4);
+        outline-offset: 4px;
+        font-family: "Inter", sans-serif;
+      }
+      .pkg-info h3 {
+        font-family: "Noto Serif KR", serif;
+        font-size: 17px;
+        color: var(--gold-3);
+        margin-bottom: 12px;
+      }
+      .pkg-info ul {
+        padding-left: 20px;
+        font-size: 13px;
+        line-height: 1.95;
+        color: #e8d8a8;
+      }
+      .pkg-info code {
+        background: rgba(244, 221, 150, 0.12);
+        padding: 2px 8px;
+        color: var(--gold-3);
+        font-family: Consolas, monospace;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-head">
+      <div class="eyebrow">Numbers Box · Final Pick</div>
+      <h1>숫자로 보는 노블홍 — 인트로 영상</h1>
+      <p>
+        5초 인트로 영상이 자동 재생됩니다. 영상 끝나면 박스가 등장하는 트랜지션
+        구조.<br />
+        <small
+          >↳ Replay 버튼으로 다시 재생 가능 / 영상 파일이 같은 폴더에 있어야
+          자동재생됩니다</small
+        >
+      </p>
+    </div>
+
+    <div class="variant">
+      <div class="variant-head">
+        <span class="tag">V-1</span>
+        <h2>Pre-roll Intro · 1920×400 · 5초</h2>
+        <span class="desc"
+          >파티클 위→아래 + 배경 글로우 반짝 + 폰트 그라데이션 좌→우</span
+        >
+      </div>
+      <div class="stage" id="v1Stage">
+        <div class="video-fallback">
+          V-1 PRE-ROLL INTRO<br /><small
+            >스크롤로 화면에 진입 시 자동재생</small
+          >
+        </div>
+        <video
+          id="v1Video"
+          src="v1.mp4"
+          muted
+          playsinline
+          preload="auto"
+        ></video>
+        <button class="replay-btn" onclick="replayV1()">↻ Replay</button>
+      </div>
+      <div class="notes">
+        <b>트리거:</b> 스크롤로 이 박스가 화면에 60% 이상 보이면 영상이 처음부터
+        재생됩니다.<br />
+        <b>구성 요소:</b>
+        <ul>
+          <li>배경: 단색 #1a1206 (가운데 spotlight 효과 제거)</li>
+          <li>파티클: 위→아래 흐름, 크기 균일 3px, 랜덤 등장/소멸</li>
+          <li>0.4~1.4초: "Noble HONG · Numbers" + "Since 1996" 타이포 등장</li>
+          <li>1.8~2.2초: 타이포 페이드아웃</li>
+          <li>2.0초: 박스 4개 + 코너 마크 등장</li>
+          <li>2.3~3.6초: 4숫자 카운트업 (30 / 8,000 / 75 / 3)</li>
+          <li>3.6~5초: 안정화 유지</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 스크롤 진입 데모용 spacer -->
+    <div
+      style="
+        height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ink-3);
+        font-size: 13px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border: 1px dashed rgba(184, 154, 90, 0.3);
+        margin: 48px auto;
+        max-width: 1320px;
+        background: #fffdf8;
+      "
+    >
+      ↑ 위로 스크롤 후 다시 내려와 보세요 — V-1 박스가 화면 진입할 때 영상이
+      처음부터 재생됩니다
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- AFTER-PLAY · 카운트 후 계속 강조될 효과 5안                   -->
+    <!-- ============================================================ -->
+    <style>
+      .ap-section {
+        max-width: 1320px;
+        margin: 80px auto 48px;
+      }
+      .ap-section .ap-head {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+      .ap-section .ap-head .eyebrow {
+        font-family: "Inter", sans-serif;
+        color: var(--gold-dark);
+        letter-spacing: 6px;
+        font-size: 13px;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .ap-section .ap-head h2 {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 700;
+        font-size: 32px;
+        letter-spacing: -1px;
+        margin: 12px 0 8px;
+        color: var(--ink);
+      }
+      .ap-section .ap-head p {
+        color: var(--ink-2);
+        font-size: 14px;
+      }
+      .ap-card {
+        margin-bottom: 56px;
+      }
+      .ap-card-head {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(138, 109, 47, 0.25);
+      }
+      .ap-card-head .tag {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 60px;
+        height: 28px;
+        padding: 0 12px;
+        background: var(--espresso);
+        color: var(--gold-3);
+        font-family: "Inter", sans-serif;
+        font-weight: 700;
+        font-size: 13px;
+        letter-spacing: 1px;
+        border: 1px solid var(--gold-line);
+      }
+      .ap-card-head h3 {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 700;
+        font-size: 18px;
+        color: var(--ink);
+      }
+      .ap-card-head .desc {
+        margin-left: auto;
+        color: var(--ink-3);
+        font-size: 12.5px;
+      }
+
+      .ap-stage {
+        position: relative;
+        background: linear-gradient(180deg, #2a1d0a 0%, #1a1206 100%);
+        border: 1px solid var(--gold-line);
+        outline: 1px solid rgba(184, 154, 90, 0.4);
+        outline-offset: 4px;
+        aspect-ratio: 1920/400;
+        overflow: hidden;
+      }
+      .ap-stage .row {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        align-items: center;
+      }
+      .ap-stage .stat {
+        position: relative;
+        text-align: center;
+        padding: 0 18px;
+        border-right: 1px solid rgba(184, 154, 90, 0.35);
+      }
+      .ap-stage .stat:last-child {
+        border-right: 0;
+      }
+      .ap-num {
+        font-family: "Inter", sans-serif;
+        font-weight: 800;
+        font-size: 78px;
+        letter-spacing: -2.5px;
+        line-height: 1;
+        color: #fff5d8;
+        margin-bottom: 12px;
+        text-shadow:
+          0 0 30px rgba(255, 245, 216, 0.7),
+          0 0 60px rgba(244, 221, 150, 0.35);
+      }
+      .ap-num .suf {
+        font-size: 0.4em;
+        font-weight: 700;
+        margin-left: 4px;
+        color: #f4dd96;
+      }
+      .ap-label {
+        font-family: "Noto Serif KR", serif;
+        font-weight: 700;
+        font-size: 19px;
+        color: #fff5d8;
+        margin-bottom: 6px;
+      }
+      .ap-sub {
+        font-size: 12px;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: rgba(255, 245, 216, 0.75);
+      }
+      .ap-corner {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border: 1px solid #f4dd96;
+        z-index: 4;
+      }
+      .ap-corner.tl {
+        top: 10px;
+        left: 10px;
+        border-right: 0;
+        border-bottom: 0;
+      }
+      .ap-corner.tr {
+        top: 10px;
+        right: 10px;
+        border-left: 0;
+        border-bottom: 0;
+      }
+      .ap-corner.bl {
+        bottom: 10px;
+        left: 10px;
+        border-right: 0;
+        border-top: 0;
+      }
+      .ap-corner.br {
+        bottom: 10px;
+        right: 10px;
+        border-left: 0;
+        border-top: 0;
+      }
+      .ap-note {
+        margin-top: 10px;
+        padding: 12px 16px;
+        background: #fffdf8;
+        border: 1px solid rgba(184, 154, 90, 0.25);
+        color: var(--ink-2);
+        font-size: 12.5px;
+        line-height: 1.6;
+      }
+      .ap-note b {
+        color: var(--ink);
+      }
+
+      /* ===== A안: Glow Breathing (숫자 글로우 들숨/날숨) ===== */
+      .ap-a .ap-num {
+        animation: apBreath 3.2s ease-in-out infinite;
+      }
+      @keyframes apBreath {
+        0%,
+        100% {
+          text-shadow:
+            0 0 20px rgba(255, 245, 216, 0.5),
+            0 0 40px rgba(244, 221, 150, 0.2);
+        }
+        50% {
+          text-shadow:
+            0 0 50px rgba(255, 245, 216, 1),
+            0 0 100px rgba(244, 221, 150, 0.6);
+        }
+      }
+
+      /* ===== B안: Underline Sweep (각 박스 하단 골드 라인 흐름) ===== */
+      .ap-b .stat::after {
+        content: "";
+        position: absolute;
+        left: 15%;
+        right: 15%;
+        bottom: 18px;
+        height: 1.5px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(244, 221, 150, 0.85),
+          transparent
+        );
+        background-size: 200% 100%;
+        background-position: 100% 50%;
+        animation: apSweep 3.5s ease-in-out infinite;
+      }
+      @keyframes apSweep {
+        0% {
+          background-position: 200% 50%;
+        }
+        100% {
+          background-position: -100% 50%;
+        }
+      }
+
+      /* ===== C안: Corner Wink (코너 마크 stagger 깜빡) ===== */
+      .ap-c .ap-corner {
+        animation: apWink 4s ease-in-out infinite;
+      }
+      .ap-c .ap-corner.tl {
+        animation-delay: 0s;
+      }
+      .ap-c .ap-corner.tr {
+        animation-delay: 1s;
+      }
+      .ap-c .ap-corner.br {
+        animation-delay: 2s;
+      }
+      .ap-c .ap-corner.bl {
+        animation-delay: 3s;
+      }
+      @keyframes apWink {
+        0%,
+        80%,
+        100% {
+          opacity: 1;
+          box-shadow: 0 0 0 rgba(244, 221, 150, 0);
+        }
+        90% {
+          opacity: 0.4;
+          box-shadow: 0 0 14px rgba(244, 221, 150, 0.8);
+        }
+      }
+
+      /* ===== D안: Shimmer Sweep (박스 안 빛 sweep) ===== */
+      .ap-d .stat {
+        overflow: hidden;
+      }
+      .ap-d .stat::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 80%;
+        left: -80%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(244, 221, 150, 0.18),
+          rgba(255, 245, 216, 0.28),
+          rgba(244, 221, 150, 0.18),
+          transparent
+        );
+        filter: blur(20px);
+        animation: apShimmer 5s ease-in-out infinite;
+        pointer-events: none;
+      }
+      .ap-d .stat:nth-child(2)::before {
+        animation-delay: 1.25s;
+      }
+      .ap-d .stat:nth-child(3)::before {
+        animation-delay: 2.5s;
+      }
+      .ap-d .stat:nth-child(4)::before {
+        animation-delay: 3.75s;
+      }
+      @keyframes apShimmer {
+        0% {
+          left: -80%;
+        }
+        50%,
+        100% {
+          left: 180%;
+        }
+      }
+
+      /* ===== E안: Pulse Ring (숫자 뒤 원형 글로우 펄스) ===== */
+      .ap-e .stat {
+        overflow: hidden;
+      }
+      .ap-e .stat .ring {
+        position: absolute;
+        left: 50%;
+        top: 38%;
+        transform: translate(-50%, -50%);
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(244, 221, 150, 0.35) 0%,
+          rgba(244, 221, 150, 0.12) 40%,
+          transparent 70%
+        );
+        filter: blur(20px);
+        animation: apRing 3.5s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .ap-e .stat .ap-num,
+      .ap-e .stat .ap-label,
+      .ap-e .stat .ap-sub {
+        position: relative;
+        z-index: 2;
+      }
+      .ap-e .stat:nth-child(2) .ring {
+        animation-delay: 0.7s;
+      }
+      .ap-e .stat:nth-child(3) .ring {
+        animation-delay: 1.4s;
+      }
+      .ap-e .stat:nth-child(4) .ring {
+        animation-delay: 2.1s;
+      }
+      @keyframes apRing {
+        0%,
+        100% {
+          transform: translate(-50%, -50%) scale(0.6);
+          opacity: 0.3;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.2);
+          opacity: 0.9;
+        }
+      }
+    </style>
+
+    <div class="ap-section">
+      <div class="ap-head">
+        <div class="eyebrow">After-Play · Continuous Effects</div>
+        <h2>카운트 후 계속 강조될 효과 — 5안</h2>
+        <p>
+          영상 끝나고 박스가 안정 상태로 보일 때 살아있는 느낌을 주는 효과 5종.
+          모두 라이브 미리보기로 동작 중입니다.
+        </p>
+      </div>
+
+      <!-- A안: Glow Breathing -->
+      <div class="ap-card">
+        <div class="ap-card-head">
+          <span class="tag">AP-A</span>
+          <h3>Glow Breathing — 숫자 글로우 들숨/날숨</h3>
+          <span class="desc">3.2초 사이클, 부드러운 sine 펄스</span>
+        </div>
+        <div class="ap-stage ap-a">
+          <span class="ap-corner tl"></span><span class="ap-corner tr"></span>
+          <span class="ap-corner bl"></span><span class="ap-corner br"></span>
+          <div class="row">
+            <div class="stat">
+              <div class="ap-num">30<span class="suf">년</span></div>
+              <div class="ap-label">매칭 노하우</div>
+              <div class="ap-sub">Since 1996</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">8,000<span class="suf">명+</span></div>
+              <div class="ap-label">성혼 기준</div>
+              <div class="ap-sub">커플매니저 제1호</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">75<span class="suf">%</span></div>
+              <div class="ap-label">30대 교제율</div>
+              <div class="ap-sub">3회 이상 만남</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">3<span class="suf">년 연속</span></div>
+              <div class="ap-label">브랜드만족지수 1위</div>
+              <div class="ap-sub">2022~2024</div>
+            </div>
+          </div>
+        </div>
+        <div class="ap-note">
+          <b>특징:</b> 모든 숫자가 동시에 부드럽게 들숨/날숨 →
+          <b>화면 전체가 살아있는 통일감</b>. 가장 우아하고 절제된 효과.
+        </div>
+      </div>
+
+      <!-- B안: Underline Sweep -->
+      <div class="ap-card">
+        <div class="ap-card-head">
+          <span class="tag">AP-B</span>
+          <h3>Underline Sweep — 박스 하단 골드 라인 흐름</h3>
+          <span class="desc">3.5초 사이클, 좌→우 빛이 한 줄로 통과</span>
+        </div>
+        <div class="ap-stage ap-b">
+          <span class="ap-corner tl"></span><span class="ap-corner tr"></span>
+          <span class="ap-corner bl"></span><span class="ap-corner br"></span>
+          <div class="row">
+            <div class="stat">
+              <div class="ap-num">30<span class="suf">년</span></div>
+              <div class="ap-label">매칭 노하우</div>
+              <div class="ap-sub">Since 1996</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">8,000<span class="suf">명+</span></div>
+              <div class="ap-label">성혼 기준</div>
+              <div class="ap-sub">커플매니저 제1호</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">75<span class="suf">%</span></div>
+              <div class="ap-label">30대 교제율</div>
+              <div class="ap-sub">3회 이상 만남</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">3<span class="suf">년 연속</span></div>
+              <div class="ap-label">브랜드만족지수 1위</div>
+              <div class="ap-sub">2022~2024</div>
+            </div>
+          </div>
+        </div>
+        <div class="ap-note">
+          <b>특징:</b> 박스 하단에 미세한 골드 빛줄기가 좌→우로 흘러감 →
+          <b>방향성 강조, 시선 유도</b>.
+        </div>
+      </div>
+
+      <!-- C안: Corner Wink -->
+      <div class="ap-card">
+        <div class="ap-card-head">
+          <span class="tag">AP-C</span>
+          <h3>Corner Wink — 코너 마크 stagger 깜빡</h3>
+          <span class="desc">4초 사이클, 4코너 1초 간격 stagger</span>
+        </div>
+        <div class="ap-stage ap-c">
+          <span class="ap-corner tl"></span><span class="ap-corner tr"></span>
+          <span class="ap-corner bl"></span><span class="ap-corner br"></span>
+          <div class="row">
+            <div class="stat">
+              <div class="ap-num">30<span class="suf">년</span></div>
+              <div class="ap-label">매칭 노하우</div>
+              <div class="ap-sub">Since 1996</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">8,000<span class="suf">명+</span></div>
+              <div class="ap-label">성혼 기준</div>
+              <div class="ap-sub">커플매니저 제1호</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">75<span class="suf">%</span></div>
+              <div class="ap-label">30대 교제율</div>
+              <div class="ap-sub">3회 이상 만남</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">3<span class="suf">년 연속</span></div>
+              <div class="ap-label">브랜드만족지수 1위</div>
+              <div class="ap-sub">2022~2024</div>
+            </div>
+          </div>
+        </div>
+        <div class="ap-note">
+          <b>특징:</b> 박스 4모서리가 시계 방향으로 stagger 깜빡 →
+          <b>프리미엄 디테일 강조</b>. 가장 미니멀.
+        </div>
+      </div>
+
+      <!-- D안: Shimmer Sweep -->
+      <div class="ap-card">
+        <div class="ap-card-head">
+          <span class="tag">AP-D</span>
+          <h3>Shimmer Sweep — 박스 안 빛 sweep (스태거)</h3>
+          <span class="desc">5초 사이클, 4박스 1.25초 간격으로 차례 sweep</span>
+        </div>
+        <div class="ap-stage ap-d">
+          <span class="ap-corner tl"></span><span class="ap-corner tr"></span>
+          <span class="ap-corner bl"></span><span class="ap-corner br"></span>
+          <div class="row">
+            <div class="stat">
+              <div class="ap-num">30<span class="suf">년</span></div>
+              <div class="ap-label">매칭 노하우</div>
+              <div class="ap-sub">Since 1996</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">8,000<span class="suf">명+</span></div>
+              <div class="ap-label">성혼 기준</div>
+              <div class="ap-sub">커플매니저 제1호</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">75<span class="suf">%</span></div>
+              <div class="ap-label">30대 교제율</div>
+              <div class="ap-sub">3회 이상 만남</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">3<span class="suf">년 연속</span></div>
+              <div class="ap-label">브랜드만족지수 1위</div>
+              <div class="ap-sub">2022~2024</div>
+            </div>
+          </div>
+        </div>
+        <div class="ap-note">
+          <b>특징:</b> 박스 안에 골드 빛 덩어리가 좌→우로 통과, 4박스가 1.25초
+          간격으로 순차 → <b>가장 시각적으로 화려, 광고 느낌</b>.
+        </div>
+      </div>
+
+      <!-- E안: Pulse Ring -->
+      <div class="ap-card">
+        <div class="ap-card-head">
+          <span class="tag">AP-E</span>
+          <h3>Pulse Ring — 숫자 뒤 원형 글로우 펄스</h3>
+          <span class="desc">3.5초 사이클, 4박스 0.7초 간격 stagger</span>
+        </div>
+        <div class="ap-stage ap-e">
+          <span class="ap-corner tl"></span><span class="ap-corner tr"></span>
+          <span class="ap-corner bl"></span><span class="ap-corner br"></span>
+          <div class="row">
+            <div class="stat">
+              <div class="ring"></div>
+              <div class="ap-num">30<span class="suf">년</span></div>
+              <div class="ap-label">매칭 노하우</div>
+              <div class="ap-sub">Since 1996</div>
+            </div>
+            <div class="stat">
+              <div class="ring"></div>
+              <div class="ap-num">8,000<span class="suf">명+</span></div>
+              <div class="ap-label">성혼 기준</div>
+              <div class="ap-sub">커플매니저 제1호</div>
+            </div>
+            <div class="stat">
+              <div class="ring"></div>
+              <div class="ap-num">75<span class="suf">%</span></div>
+              <div class="ap-label">30대 교제율</div>
+              <div class="ap-sub">3회 이상 만남</div>
+            </div>
+            <div class="stat">
+              <div class="ring"></div>
+              <div class="ap-num">3<span class="suf">년 연속</span></div>
+              <div class="ap-label">브랜드만족지수 1위</div>
+              <div class="ap-sub">2022~2024</div>
+            </div>
+          </div>
+        </div>
+        <div class="ap-note">
+          <b>특징:</b> 각 숫자 뒤에 원형 글로우가 호흡하며 펼쳐짐 →
+          <b>숫자 자체에 시선 집중, 무게감</b>. 가장 럭셔리.
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- TEXT-EFFECT · 큰 글자 자체 효과 5안 (구글 트렌드 기반)        -->
+    <!-- ============================================================ -->
+    <style>
+      /* ===== TX-A: Gold Foil Shimmer (호일이 글자 위로 무한 흐름) ===== */
+      .tx-a .ap-num {
+        background: linear-gradient(
+          90deg,
+          #8a6d2f 0%,
+          #c4a55a 25%,
+          #f4dd96 45%,
+          #fff5d8 50%,
+          #f4dd96 55%,
+          #c4a55a 75%,
+          #8a6d2f 100%
+        );
+        background-size: 250% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        text-shadow: none;
+        filter: drop-shadow(0 0 18px rgba(244, 221, 150, 0.45));
+        animation: txShimmer 3s linear infinite;
+      }
+      .tx-a .stat:nth-child(1) .ap-num {
+        animation-delay: 0s;
+      }
+      .tx-a .stat:nth-child(2) .ap-num {
+        animation-delay: 0.4s;
+      }
+      .tx-a .stat:nth-child(3) .ap-num {
+        animation-delay: 0.8s;
+      }
+      .tx-a .stat:nth-child(4) .ap-num {
+        animation-delay: 1.2s;
+      }
+      @keyframes txShimmer {
+        0% {
+          background-position: 250% 50%;
+        }
+        100% {
+          background-position: -150% 50%;
+        }
+      }
+
+      /* ===== TX-B: Neon Glow Pulse (네온 펄스, 다층 글로우) ===== */
+      .tx-b .ap-num {
+        color: #fff5d8;
+        text-shadow:
+          0 0 4px #fff5d8,
+          0 0 12px #f4dd96,
+          0 0 28px rgba(244, 221, 150, 0.9),
+          0 0 50px rgba(196, 165, 90, 0.7);
+        animation: txNeon 2.6s ease-in-out infinite;
+      }
+      @keyframes txNeon {
+        0%,
+        100% {
+          text-shadow:
+            0 0 4px #fff5d8,
+            0 0 12px #f4dd96,
+            0 0 28px rgba(244, 221, 150, 0.55),
+            0 0 50px rgba(196, 165, 90, 0.35);
+        }
+        50% {
+          text-shadow:
+            0 0 8px #fff5d8,
+            0 0 20px #f4dd96,
+            0 0 45px rgba(244, 221, 150, 1),
+            0 0 80px rgba(196, 165, 90, 0.7);
+        }
+      }
+
+      /* ===== TX-C: Light Reflection Sweep (반사광 좌→우 통과) ===== */
+      .tx-c .ap-num {
+        position: relative;
+        color: #c4a55a;
+        text-shadow:
+          0 0 25px rgba(196, 165, 90, 0.5),
+          0 0 50px rgba(196, 165, 90, 0.25);
+      }
+      .tx-c .ap-num .reflect {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          110deg,
+          transparent 35%,
+          rgba(255, 255, 255, 0.95) 48%,
+          rgba(255, 245, 216, 0.85) 50%,
+          rgba(255, 255, 255, 0.95) 52%,
+          transparent 65%
+        );
+        background-size: 250% 100%;
+        background-position: 250% 50%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        animation: txReflect 4s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+        pointer-events: none;
+      }
+      @keyframes txReflect {
+        0% {
+          background-position: 250% 50%;
+        }
+        70%,
+        100% {
+          background-position: -150% 50%;
+        }
+      }
+
+      /* ===== TX-D: Liquid Gold Wave (그라데이션 출렁임) ===== */
+      .tx-d .ap-num {
+        background: linear-gradient(
+          135deg,
+          #5c4621 0%,
+          #8a6d2f 15%,
+          #c4a55a 30%,
+          #f4dd96 45%,
+          #fff5d8 55%,
+          #f4dd96 65%,
+          #c4a55a 80%,
+          #8a6d2f 95%,
+          #5c4621 100%
+        );
+        background-size: 300% 300%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+        filter: drop-shadow(0 0 20px rgba(244, 221, 150, 0.4));
+        animation: txWave 5s ease-in-out infinite;
+      }
+      @keyframes txWave {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* ===== TX-E: Engraved Emboss (양각 입체 + 글로우 호흡) ===== */
+      .tx-e .ap-num {
+        color: #d4b369;
+        text-shadow:
+          0 1px 0 #fff5d8,
+          0 2px 0 rgba(232, 197, 114, 0.9),
+          0 3px 0 rgba(196, 165, 90, 0.8),
+          0 4px 4px rgba(0, 0, 0, 0.5),
+          0 0 35px rgba(244, 221, 150, 0.4);
+        animation: txEmboss 4s ease-in-out infinite;
+      }
+      @keyframes txEmboss {
+        0%,
+        100% {
+          text-shadow:
+            0 1px 0 #fff5d8,
+            0 2px 0 rgba(232, 197, 114, 0.9),
+            0 3px 0 rgba(196, 165, 90, 0.8),
+            0 4px 4px rgba(0, 0, 0, 0.5),
+            0 0 25px rgba(244, 221, 150, 0.3);
+        }
+        50% {
+          text-shadow:
+            0 1px 0 #fff5d8,
+            0 2px 0 rgba(232, 197, 114, 0.9),
+            0 3px 0 rgba(196, 165, 90, 0.8),
+            0 4px 4px rgba(0, 0, 0, 0.5),
+            0 0 50px rgba(244, 221, 150, 0.7);
+        }
+      }
+    </style>
+
+    <div class="ap-section">
+      <div class="ap-head">
+        <div class="eyebrow">Text Effects · Big Number Typography</div>
+        <h2>큰 글자 자체 효과 — 5안 (구글 트렌드 기반)</h2>
+        <p>
+          숫자/타이틀 폰트 자체에 적용되는 럭셔리 효과 5종. CSS Tricks ·
+          Awwwards · Motion-Primitives 트렌드 참고.
+        </p>
+      </div>
+
+      <!-- TX-A: Gold Foil Shimmer -->
+      <div class="ap-card">
+        <div class="ap-card-head">
+          <span class="tag">TX-A</span>
+          <h3>Gold Foil Shimmer — 골드 호일이 글자 위로 무한 흐름</h3>
+          <span class="desc"
+            >background-clip:text + 좌→우 슬라이드 (3.5초)</span
+          >
+        </div>
+        <div class="ap-stage tx-a">
+          <span class="ap-corner tl"></span><span class="ap-corner tr"></span>
+          <span class="ap-corner bl"></span><span class="ap-corner br"></span>
+          <div class="row">
+            <div class="stat">
+              <div class="ap-num">30<span class="suf">년</span></div>
+              <div class="ap-label">매칭 노하우</div>
+              <div class="ap-sub">Since 1996</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">8,000<span class="suf">명+</span></div>
+              <div class="ap-label">성혼 기준</div>
+              <div class="ap-sub">커플매니저 제1호</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">75<span class="suf">%</span></div>
+              <div class="ap-label">30대 교제율</div>
+              <div class="ap-sub">3회 이상 만남</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">3<span class="suf">년 연속</span></div>
+              <div class="ap-label">브랜드만족지수 1위</div>
+              <div class="ap-sub">2022~2024</div>
+            </div>
+          </div>
+        </div>
+        <div class="ap-note">
+          <b>레퍼런스:</b> Vogue/Dior 헤드라인, Apple iPhone 스펙 페이지. 가장
+          클래식한 럭셔리 효과. 주의: 글자 자체가 그라데이션이라 일부 구간은
+          어두워 보일 수 있음.
+        </div>
+      </div>
+
+      <!-- TX-B: Neon Glow Pulse -->
+      <div class="ap-card">
+        <div class="ap-card-head">
+          <span class="tag">TX-B</span>
+          <h3>Neon Glow Pulse — 네온 사인처럼 다층 글로우 펄스</h3>
+          <span class="desc">4단 text-shadow + 2.6초 ease 펄스</span>
+        </div>
+        <div class="ap-stage tx-b">
+          <span class="ap-corner tl"></span><span class="ap-corner tr"></span>
+          <span class="ap-corner bl"></span><span class="ap-corner br"></span>
+          <div class="row">
+            <div class="stat">
+              <div class="ap-num">30<span class="suf">년</span></div>
+              <div class="ap-label">매칭 노하우</div>
+              <div class="ap-sub">Since 1996</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">8,000<span class="suf">명+</span></div>
+              <div class="ap-label">성혼 기준</div>
+              <div class="ap-sub">커플매니저 제1호</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">75<span class="suf">%</span></div>
+              <div class="ap-label">30대 교제율</div>
+              <div class="ap-sub">3회 이상 만남</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">3<span class="suf">년 연속</span></div>
+              <div class="ap-label">브랜드만족지수 1위</div>
+              <div class="ap-sub">2022~2024</div>
+            </div>
+          </div>
+        </div>
+        <div class="ap-note">
+          <b>레퍼런스:</b> Awwwards 다크 테마 사이트, Stripe 통계 페이지. 글자는
+          흰색이지만 골드 글로우가 4겹으로 펄스 → 부드러우면서 강한 임팩트.
+        </div>
+      </div>
+
+      <!-- TX-C: Light Reflection Sweep -->
+      <div class="ap-card">
+        <div class="ap-card-head">
+          <span class="tag">TX-C</span>
+          <h3>Light Reflection Sweep — 반사광이 글자 표면 통과</h3>
+          <span class="desc">110도 기울인 흰빛 sweep (4초 사이클)</span>
+        </div>
+        <div class="ap-stage tx-c">
+          <span class="ap-corner tl"></span><span class="ap-corner tr"></span>
+          <span class="ap-corner bl"></span><span class="ap-corner br"></span>
+          <div class="row">
+            <div class="stat">
+              <div class="ap-num">
+                30<span class="suf">년</span><span class="reflect">30년</span>
+              </div>
+              <div class="ap-label">매칭 노하우</div>
+              <div class="ap-sub">Since 1996</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">
+                8,000<span class="suf">명+</span
+                ><span class="reflect">8,000명+</span>
+              </div>
+              <div class="ap-label">성혼 기준</div>
+              <div class="ap-sub">커플매니저 제1호</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">
+                75<span class="suf">%</span><span class="reflect">75%</span>
+              </div>
+              <div class="ap-label">30대 교제율</div>
+              <div class="ap-sub">3회 이상 만남</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">
+                3<span class="suf">년 연속</span
+                ><span class="reflect">3년 연속</span>
+              </div>
+              <div class="ap-label">브랜드만족지수 1위</div>
+              <div class="ap-sub">2022~2024</div>
+            </div>
+          </div>
+        </div>
+        <div class="ap-note">
+          <b>레퍼런스:</b> Rolex/Cartier 시계 광고 사이트. 글자는 골드 base, 그
+          위에 흰 반사광이 비스듬히 한 번 통과 →
+          <b>금속 표면에 빛이 미끄러지는 느낌</b>.
+        </div>
+      </div>
+
+      <!-- TX-D: Liquid Gold Wave -->
+      <div class="ap-card">
+        <div class="ap-card-head">
+          <span class="tag">TX-D</span>
+          <h3>Liquid Gold Wave — 액체 금속이 출렁임</h3>
+          <span class="desc">대각선 그라데이션이 좌상→우하 출렁 (5초)</span>
+        </div>
+        <div class="ap-stage tx-d">
+          <span class="ap-corner tl"></span><span class="ap-corner tr"></span>
+          <span class="ap-corner bl"></span><span class="ap-corner br"></span>
+          <div class="row">
+            <div class="stat">
+              <div class="ap-num">30<span class="suf">년</span></div>
+              <div class="ap-label">매칭 노하우</div>
+              <div class="ap-sub">Since 1996</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">8,000<span class="suf">명+</span></div>
+              <div class="ap-label">성혼 기준</div>
+              <div class="ap-sub">커플매니저 제1호</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">75<span class="suf">%</span></div>
+              <div class="ap-label">30대 교제율</div>
+              <div class="ap-sub">3회 이상 만남</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">3<span class="suf">년 연속</span></div>
+              <div class="ap-label">브랜드만족지수 1위</div>
+              <div class="ap-sub">2022~2024</div>
+            </div>
+          </div>
+        </div>
+        <div class="ap-note">
+          <b>레퍼런스:</b> Bvlgari/Hermes 시즌 캠페인. 액체 금속이 흐르듯
+          그라데이션 위치가 출렁 → <b>가장 부드럽고 시네마틱</b>.
+        </div>
+      </div>
+
+      <!-- TX-E: Engraved Emboss -->
+      <div class="ap-card">
+        <div class="ap-card-head">
+          <span class="tag">TX-E</span>
+          <h3>Engraved Emboss — 양각 입체 + 글로우 호흡</h3>
+          <span class="desc">5단 text-shadow (양각) + 글로우 펄스 (4초)</span>
+        </div>
+        <div class="ap-stage tx-e">
+          <span class="ap-corner tl"></span><span class="ap-corner tr"></span>
+          <span class="ap-corner bl"></span><span class="ap-corner br"></span>
+          <div class="row">
+            <div class="stat">
+              <div class="ap-num">30<span class="suf">년</span></div>
+              <div class="ap-label">매칭 노하우</div>
+              <div class="ap-sub">Since 1996</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">8,000<span class="suf">명+</span></div>
+              <div class="ap-label">성혼 기준</div>
+              <div class="ap-sub">커플매니저 제1호</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">75<span class="suf">%</span></div>
+              <div class="ap-label">30대 교제율</div>
+              <div class="ap-sub">3회 이상 만남</div>
+            </div>
+            <div class="stat">
+              <div class="ap-num">3<span class="suf">년 연속</span></div>
+              <div class="ap-label">브랜드만족지수 1위</div>
+              <div class="ap-sub">2022~2024</div>
+            </div>
+          </div>
+        </div>
+        <div class="ap-note">
+          <b>레퍼런스:</b> 트로피/메달 각인, 명함 양각 인쇄. 글자가 박스에서
+          입체적으로 튀어나온 듯한 묵직한 양각 + 글로우 호흡 →
+          <b>품격 있고 묵직</b>.
+        </div>
+      </div>
+    </div>
+
+    <div class="pkg-info">
+      <h3>📦 자동재생 패키지 안내</h3>
+      <ul>
+        <li><code>stats_v1/</code> 폴더 전체 zip 압축 → 고객 전송</li>
+        <li>
+          고객은 압축해제 → <code>index.html</code> 더블클릭 → Chrome/Edge에서
+          자동재생
+        </li>
+        <li>
+          영상은 <code>muted + playsinline + autoplay</code> 속성으로 브라우저
+          자동재생 정책 통과
+        </li>
+        <li>
+          본 홈페이지 stats 섹션에 적용 시: V-1 영상 → 박스 트랜지션 구조 그대로
+          사용
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      const v1Video = document.getElementById("v1Video");
+      const v1Stage = document.getElementById("v1Stage");
+
+      function replayV1() {
+        if (v1Video) {
+          v1Video.currentTime = 0;
+          v1Video.play();
+        }
+      }
+
+      // 화면 진입 시 자동재생 (IntersectionObserver)
+      let hasPlayed = false;
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+              if (v1Video) {
+                v1Video.currentTime = 0;
+                v1Video.play().catch(() => {});
+                hasPlayed = true;
+              }
+            } else if (!entry.isIntersecting && hasPlayed) {
+              if (v1Video) v1Video.pause();
+            }
+          });
+        },
+        { threshold: [0, 0.6, 1] },
+      );
+      if (v1Stage) io.observe(v1Stage);
+    </script>
+  </body>
+</html>
