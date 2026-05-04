@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>노블홍 결혼정보회사 — 대한민국 커플매니저 제1호</title>
 <meta property="og:title" content="노블홍 결혼정보회사 — 대한민국 커플매니저 제1호" />    <meta property="og:description" content="격이 다른 프리미엄 결혼정보. 30년 경력, 8,000명 성혼. Since 1996" />    <meta property="og:image" content="https://noblehong.vercel.app/og-home.png" />    <meta property="og:type" content="website" />    <meta property="og:url" content="https://noblehong.vercel.app" />
-    <meta name="description" content="30년 경력의 커플매니저 제1호 홍유진 대표가 이끄는 프리미엄 결혼정보회사. 8,000명 이상 성혼, KBSI 3년 연속 1위." />
+    <meta name="description" content="30년 경력의 커플매니저 제1호 홍유진 대표가 이끄는 프리미엄 결혼정보회사. 8,000쌍 이상 성혼, KBSI 3년 연속 1위." />
     <link rel="icon" type="image/x-icon" href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-16x16.png" />
@@ -435,11 +435,11 @@
         font-weight: 800;
         background: linear-gradient(
           90deg,
-          #d4af57 0%,
-          #f4dd96 25%,
-          #fff5d6 50%,
-          #f4dd96 75%,
-          #d4af57 100%
+          #c4a55a 0%,
+          #e8c572 25%,
+          #f4dd96 50%,
+          #e8c572 75%,
+          #c4a55a 100%
         );
         background-size: 220% 100%;
         -webkit-background-clip: text;
@@ -449,59 +449,6 @@
         display: inline-block;
         padding: 0.05em 0.3em;
         animation: titleShimmer 5s ease-in-out infinite;
-      }
-      @keyframes titleShimmer {
-        0%,
-        100% { background-position: 100% 50%; }
-        50% { background-position: 0% 50%; }
-      }
-      /* 분해 동안 원본 글자 숨김 (박스는 유지) */
-      .hero-title-strong.dispersing > .visible-text {
-        visibility: hidden;
-      }
-      .hero-title-trail {
-        display: inline-block;
-        will-change: transform;
-      }
-      .particle-canvas {
-        position: absolute;
-        pointer-events: none;
-        z-index: 5;
-      }
-      /* 노블홍 — 글자만 밝게, 뒤 글로우/후광 없음 */
-      .hero-title-strong .engrave {
-        display: inline-block;
-        background: linear-gradient(
-          180deg,
-          #ffffff 0%,
-          #fff5d6 30%,
-          #ffe6a8 65%,
-          #f4dd96 100%
-        );
-        background-size: 100% 220%;
-        background-position: 50% 50%;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        clip-path: inset(0 0 100% 0);
-        will-change: clip-path, filter;
-        letter-spacing: 0.04em;
-        font-weight: 800;
-      }
-      .hero-title-strong .engrave.engraved {
-        clip-path: inset(0 0 0% 0);
-        transition:
-          clip-path 1.4s cubic-bezier(0.4, 0, 0.15, 1);
-      }
-      @keyframes engraveChisel {
-        0%   { transform: translateY(0); }
-        18%  { transform: translateY(0.6px); }
-        38%  { transform: translateY(-0.4px); }
-        62%  { transform: translateY(0.3px); }
-        100% { transform: translateY(0); }
-      }
-      .hero-title-strong .engrave.engraved {
-        animation: engraveChisel 1.4s cubic-bezier(0.3, 0.7, 0.3, 1);
       }
       .hero-title strong::before {
         content: "";
@@ -655,28 +602,9 @@
 
       /* ===== STATS ===== */
       .stats {
-        padding: 32px 32px 110px;
+        padding: 120px 32px;
         position: relative;
         overflow: hidden;
-      }
-      /* 스탯 카드 플립 진입 (Y축 오른쪽 회전) */
-      .stats-grid {
-        perspective: 1400px;
-        perspective-origin: center;
-      }
-      .stat-item {
-        opacity: 0;
-        transform-origin: right center;
-        transform: rotateY(-95deg);
-        backface-visibility: hidden;
-        transition: none;
-      }
-      .stat-item.flipped {
-        opacity: 1;
-        transform: rotateY(0deg);
-        transition:
-          opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-          transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
       }
       .stats-bg {
         position: absolute;
@@ -1183,148 +1111,14 @@
         z-index: 1;
       }
       .ceo-inner {
-        max-width: 1200px;
+        max-width: 1100px;
         margin: 0 auto;
+        display: grid;
+        grid-template-columns: 48% 52%;
+        gap: 40px;
+        align-items: center;
         position: relative;
         z-index: 2;
-      }
-      .ceo-top {
-        display: grid;
-        grid-template-columns: 360px 1fr;
-        gap: 48px;
-        align-items: center;
-        margin-bottom: 56px;
-      }
-      .ceo-cards {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-      }
-      .ceo-card {
-        background: #fff;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 26px 24px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-      }
-      .ceo-card-heading {
-        font-size: 18px;
-        font-weight: 700;
-        color: var(--text);
-        letter-spacing: 0.3px;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: 12px;
-        margin-bottom: 16px;
-      }
-      .ceo-card-heading .num {
-        display: inline-block;
-        width: 30px;
-        height: 30px;
-        line-height: 30px;
-        text-align: center;
-        background: var(--gold);
-        color: #fff;
-        border-radius: 50%;
-        font-family: inherit;
-        font-style: normal;
-        font-weight: 700;
-        font-size: 17px;
-        margin-right: 10px;
-        vertical-align: -4px;
-      }
-      .ceo-card .bio-list {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        font-size: 13px;
-        color: var(--text-secondary);
-        line-height: 1.85;
-      }
-      .ceo-card .bio-list li::before {
-        content: "·";
-        color: var(--gold);
-        margin-right: 8px;
-      }
-      .ceo-card .career-flow {
-        font-size: 13px;
-        color: var(--text);
-        line-height: 1.85;
-        padding-bottom: 12px;
-        margin-bottom: 12px;
-        border-bottom: 1px dashed var(--border);
-      }
-      .ceo-card .career-flow strong {
-        color: var(--gold-dark);
-      }
-      .ceo-card .subheading {
-        font-size: 12px;
-        color: var(--gold-dark);
-        font-weight: 700;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        margin: 14px 0 6px;
-      }
-      .ceo-card .edu-deg {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--text);
-      }
-      .ceo-card .edu-note {
-        font-size: 12px;
-        color: var(--text-muted);
-        line-height: 1.75;
-        padding-left: 10px;
-        margin-top: 2px;
-      }
-      .ceo-card .book-item {
-        margin-bottom: 16px;
-      }
-      .ceo-card .book-item:last-child {
-        margin-bottom: 0;
-      }
-      .ceo-card .book-title {
-        font-size: 13px;
-        font-weight: 700;
-        color: var(--text);
-        line-height: 1.45;
-      }
-      .ceo-card .book-meta {
-        font-size: 11px;
-        color: var(--gold-dark);
-        font-weight: 600;
-        letter-spacing: 0.3px;
-        margin-top: 2px;
-      }
-      .ceo-card .book-desc {
-        font-size: 12px;
-        color: var(--text-muted);
-        line-height: 1.7;
-        margin-top: 6px;
-      }
-      .ceo-pills {
-        margin: 12px 0 4px;
-      }
-      .ceo-pill {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 999px;
-        background: rgba(184, 154, 90, 0.12);
-        color: var(--gold-dark);
-        font-size: 11px;
-        font-weight: 600;
-        letter-spacing: 0.3px;
-        margin: 0 4px 6px 0;
-      }
-      .ceo-meaning-note {
-        font-style: italic;
-        color: var(--text-secondary);
-        font-size: 14px;
-        line-height: 1.7;
-        padding: 14px 18px;
-        background: rgba(212, 184, 112, 0.08);
-        border-left: 3px solid var(--gold);
-        border-radius: 2px;
-        margin: 20px 0 24px;
       }
       .ceo-image-wrap {
         position: relative;
@@ -1334,7 +1128,7 @@
       .ceo-image-clip {
         overflow: hidden;
         border-radius: 4px;
-        margin: 0;
+        margin: 0 64px;
       }
       .ceo-image {
         position: relative;
@@ -2341,31 +2135,58 @@
         transform: translateY(140%);
         transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
-      .bottom-inquiry-bar.visible { transform: translateY(0); }
-      .bib-row-main { display: flex; align-items: center; justify-content: center; gap: 14px; }
+      .bottom-inquiry-bar.visible {
+        transform: translateY(0);
+      }
+      .bib-row-main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
       .bib-head {
-        flex-shrink: 0; padding-right: 16px;
+        flex-shrink: 0;
+        padding-right: 16px;
         border-right: 1px solid rgba(184, 146, 74, 0.3);
       }
       .bib-eyebrow {
         font-family: "Cormorant Garamond", serif;
-        font-size: 10px; font-style: italic; letter-spacing: 3px;
-        color: #d4bd7a; text-transform: uppercase;
+        font-size: 10px;
+        font-style: italic;
+        letter-spacing: 3px;
+        color: #d4bd7a;
+        text-transform: uppercase;
       }
       .bib-title {
-        font-size: 14px; font-weight: 800; color: #f4dd96;
-        letter-spacing: -0.2px; white-space: nowrap;
+        font-size: 14px;
+        font-weight: 800;
+        color: #f4dd96;
+        letter-spacing: -0.2px;
+        white-space: nowrap;
       }
-      .bib-fields { display: flex; gap: 7px; }
-      .bib-input, .bib-select {
-        padding: 14px 14px; font-size: 14px;
+      .bib-fields {
+        display: flex;
+        gap: 7px;
+      }
+      .bib-input,
+      .bib-select {
+        padding: 14px 14px;
+        font-size: 14px;
         border-radius: 2px;
         border: 1px solid rgba(212, 189, 122, 0.35);
         background: rgba(244, 221, 150, 0.06);
-        color: #ffffff; min-width: 0; font-family: inherit;
+        color: #ffffff;
+        min-width: 0;
+        font-family: inherit;
       }
-      .bib-input::placeholder { color: rgba(244, 236, 212, 0.4); }
-      .bib-select option { background: #ffffff; color: #1a1207; font-weight: 500; }
+      .bib-input::placeholder {
+        color: rgba(244, 236, 212, 0.4);
+      }
+      .bib-select option {
+        background: #ffffff;
+        color: #1a1207;
+        font-weight: 500;
+      }
       .bib-input.w-name { flex: 0 0 100px; }
       .bib-input.w-phone { flex: 0 0 130px; }
       .bib-select.w-gender { flex: 0 0 85px; }
@@ -2374,83 +2195,143 @@
       .bib-submit {
         padding: 14px 28px;
         background: linear-gradient(135deg, #d4bd7a, #b8924a);
-        color: #1a1207; font-size: 14px; font-weight: 800;
-        letter-spacing: 0.3px; border: 1px solid #d4bd7a;
-        border-radius: 2px; cursor: pointer; white-space: nowrap;
-        font-family: inherit; transition: all 0.3s;
+        color: #1a1207;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+        border: 1px solid #d4bd7a;
+        border-radius: 2px;
+        cursor: pointer;
+        white-space: nowrap;
+        font-family: inherit;
+        transition: all 0.3s;
       }
-      .bib-submit:hover { background: linear-gradient(135deg, #e8c572, #c99a52); }
+      .bib-submit:hover {
+        background: linear-gradient(135deg, #e8c572, #c99a52);
+      }
       .bib-row-consent {
-        display: flex; align-items: center; justify-content: center; gap: 18px;
-        margin-top: 10px; padding-top: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 10px;
+        padding-top: 8px;
       }
       .bib-check {
-        display: flex; align-items: center; gap: 6px;
-        font-size: 11px; color: rgba(244, 236, 212, 0.72); cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        color: rgba(244, 236, 212, 0.72);
+        cursor: pointer;
       }
       .bib-check strong { color: #d4bd7a; }
       .bib-check input[type="checkbox"] {
-        width: 13px; height: 13px;
-        accent-color: #b89a5a; cursor: pointer;
+        width: 13px;
+        height: 13px;
+        accent-color: #b89a5a;
+        cursor: pointer;
       }
 
       /* ===== SIDE INQUIRY BAR (Vertical Form Card) ===== */
       .side-inquiry-bar {
-        position: fixed; right: 16px; top: 50%;
+        position: fixed;
+        right: 16px;
+        top: 50%;
         transform: translateY(-50%);
-        width: 220px; z-index: 95;
+        width: 220px;
+        z-index: 95;
         background: #1a1207;
         border: 1px solid #b89a5a;
         outline: 1px solid rgba(184, 146, 74, 0.4);
         outline-offset: 3px;
-        border-radius: 2px; padding: 18px 16px;
+        border-radius: 2px;
+        padding: 18px 16px;
         box-shadow: 0 14px 36px rgba(20, 14, 6, 0.4);
       }
       .sib-eyebrow {
         font-family: "Cormorant Garamond", serif;
-        font-size: 10.5px; font-style: italic; letter-spacing: 3px;
-        color: #d4bd7a; text-transform: uppercase;
-        text-align: center; margin-bottom: 6px;
+        font-size: 10.5px;
+        font-style: italic;
+        letter-spacing: 3px;
+        color: #d4bd7a;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 6px;
       }
       .sib-title {
-        font-size: 13px; font-weight: 800; color: #f4dd96;
-        text-align: center; margin-bottom: 12px;
+        font-size: 13px;
+        font-weight: 800;
+        color: #f4dd96;
+        text-align: center;
+        margin-bottom: 12px;
       }
       .sib-input {
-        width: 100%; padding: 9px 11px;
+        width: 100%;
+        padding: 9px 11px;
         background: rgba(244, 221, 150, 0.06);
         border: 1px solid rgba(212, 189, 122, 0.3);
-        color: #ffffff; font-size: 12px;
-        border-radius: 2px; margin-bottom: 8px; font-family: inherit;
+        color: #ffffff;
+        font-size: 12px;
+        border-radius: 2px;
+        margin-bottom: 8px;
+        font-family: inherit;
       }
-      .sib-input::placeholder { color: rgba(244, 236, 212, 0.4); }
+      .sib-input::placeholder {
+        color: rgba(244, 236, 212, 0.4);
+      }
       .sib-submit {
-        width: 100%; padding: 10px;
+        width: 100%;
+        padding: 10px;
         background: linear-gradient(135deg, #d4bd7a, #b8924a);
-        color: #1a1207; font-size: 12px; font-weight: 800;
-        letter-spacing: 0.3px; border: none; border-radius: 2px;
-        cursor: pointer; font-family: inherit; transition: background 0.3s;
+        color: #1a1207;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.3s;
       }
-      .sib-submit:hover { background: linear-gradient(135deg, #e8c572, #c99a52); }
+      .sib-submit:hover {
+        background: linear-gradient(135deg, #e8c572, #c99a52);
+      }
       .sib-phone {
-        margin-top: 10px; padding-top: 10px;
+        margin-top: 10px;
+        padding-top: 10px;
         border-top: 1px solid rgba(184, 146, 74, 0.2);
-        text-align: center; color: #d4bd7a;
-        font-size: 11px; letter-spacing: 0.5px;
+        text-align: center;
+        color: #d4bd7a;
+        font-size: 11px;
+        letter-spacing: 0.5px;
       }
-      .sib-phone strong { color: #f4dd96; font-size: 14px; font-weight: 800; }
-      @media (max-width: 1280px) { .side-inquiry-bar { display: none; } }
+      .sib-phone strong {
+        color: #f4dd96;
+        font-size: 14px;
+        font-weight: 800;
+      }
+      @media (max-width: 1280px) {
+        .side-inquiry-bar { display: none; }
+      }
       @media (max-width: 960px) {
-        .bib-input.w-name, .bib-input.w-phone,
-        .bib-select.w-gender, .bib-select.w-marital, .bib-select.w-year {
-          flex: 1 1 auto; min-width: 0;
+        .bib-input.w-name,
+        .bib-input.w-phone,
+        .bib-select.w-gender,
+        .bib-select.w-marital,
+        .bib-select.w-year {
+          flex: 1 1 auto;
+          min-width: 0;
         }
         .bib-head { display: none; }
       }
       @media (max-width: 720px) {
         .bottom-inquiry-bar {
-          left: 0; right: 0; bottom: 0;
-          border-radius: 0; padding: 10px 14px;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-radius: 0;
+          padding: 10px 14px;
         }
         .bib-row-main { flex-wrap: wrap; }
         .bib-fields { flex-wrap: wrap; }
@@ -2485,11 +2366,7 @@
         .service-grid {
           grid-template-columns: 1fr;
         }
-        .ceo-top {
-          grid-template-columns: 1fr;
-          gap: 32px;
-        }
-        .ceo-cards {
+        .ceo-inner {
           grid-template-columns: 1fr;
         }
         .chart-section {
@@ -2618,7 +2495,7 @@
     <!-- GNB -->
     <nav class="gnb" id="gnb">
       <div class="gnb-inner">
-        <a href="/" class="gnb-logo"><img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp" alt="Noble HONG" /></a>
+        <a href="index.html" class="gnb-logo"><img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp" alt="Noble HONG" /></a>
         <ul class="gnb-menu">
           <li><a href="about.html">노블홍</a></li>
           <li><a href="noblematching.html">노블매칭</a></li>
@@ -2655,7 +2532,7 @@
           <span class="hero-eyebrow-line"></span>
         </div>
         <h1 class="hero-title">
-          당신에게도<br /><strong class="hero-title-strong" id="heroTitleStrong"><span class="visible-text">특별한 인연</span></strong><span class="hero-title-trail" id="heroTitleTrail">이 있습니다</span>
+          당신에게도<br /><strong>특별한 인연</strong>이 있습니다
         </h1>
         <p class="hero-sub">
           30년간 쉬지 않고, 매일 소중한 인연을 이어온<br />8,000명의 인연 —
@@ -2708,8 +2585,7 @@
           <div class="stat-item">
             <div class="stat-num" data-target="8000" data-suffix="명+">0</div>
             <div class="stat-label">성혼 실적</div>
-            <div class="stat-sub">대한민국 커플매니저 제1호<sup style="font-size:0.6em;vertical-align:super;margin-left:2px;opacity:0.85;">*</sup></div>
-            <div class="stat-note" style="font-size:10px;opacity:0.55;font-style:italic;margin-top:2px;letter-spacing:0.3px;">* 직업사전 등록 기준</div>
+            <div class="stat-sub">대한민국 커플매니저 제1호</div>
           </div>
           <div class="stat-item">
             <div class="stat-num" data-target="75" data-suffix="%">0</div>
@@ -2864,58 +2740,59 @@
       </div>
       <div class="ceo-bg-overlay"></div>
       <div class="ceo-inner">
-        <div class="ceo-top">
-          <div class="ceo-image-wrap" id="ceoImageCol">
-            <div class="ceo-image-clip">
-              <div class="ceo-image" id="ceoImage">
-                <img
-                  src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/greeting.webp"
-                  alt="대표 인사"
-                />
-                <video
-                  src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/greeting.mp4"
-                  muted
-                  playsinline
-                  loop
-                ></video>
-              </div>
+        <div class="ceo-image-wrap" id="ceoImageCol">
+          <div class="ceo-image-clip">
+            <div class="ceo-image" id="ceoImage">
+              <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/greeting.webp" alt="대표 인사" />
+              <video
+                src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/greeting.mp4"
+                muted
+                playsinline
+                loop
+              ></video>
             </div>
           </div>
-          <div class="ceo-content" id="ceoContentCol">
-            <div class="ceo-title-badge" id="ceoTitleBadge">
-              <canvas class="ceo-title-canvas" id="ceoDustCanvas"></canvas>
-              <span class="ceo-title-badge-line"></span>
-              <span class="ceo-title-badge-text" id="ceoBadgeText"
-                >대한민국 커플매니저 제<span
-                  style="
-                    font-family: &quot;Pretendard Variable&quot;, sans-serif;
-                    font-size: 1.1em;
-                    font-weight: 700;
-                  "
-                  >1</span
-                >호</span
-              >
-              <span class="ceo-title-badge-line"></span>
-            </div>
-            <div class="ceo-quote">
-              제 이름을 걸고<br /><strong>책임지는 매칭,</strong><br />그것이
-              노블홍입니다
-            </div>
-            <div class="ceo-name">홍유진</div>
-            <div class="ceo-role">
-              대표이사 &middot; Ph.D &middot; 성혼 전문가
-            </div>
-            <p class="ceo-bio">
-              1996년 대한민국 최초 커플매니저로 출발해 30년간 오직 한 길만
-              걸어왔습니다. 5만 명 이상의 성혼상담과 8,000명 이상의 성혼 실적이
-              말해주듯, 노블홍의 매칭은 데이터와 경험, 그리고 진심이 만나는
-              곳입니다.
-            </p>
-            <div class="ceo-meaning-note">
-              연애와 결혼은 사람에 대한 관심을 가져야 하는 매우 중요한
-              분야이기에, 대한민국 최초로 커플매니저 직업을 직업사전에
-              등록시켰습니다.
-            </div>
+        </div>
+        <div class="ceo-content" id="ceoContentCol">
+          <div class="ceo-title-badge" id="ceoTitleBadge">
+            <canvas class="ceo-title-canvas" id="ceoDustCanvas"></canvas>
+            <span class="ceo-title-badge-line"></span>
+            <span class="ceo-title-badge-text" id="ceoBadgeText"
+              >대한민국 커플매니저 제<span
+                style="
+                  font-family: &quot;Pretendard Variable&quot;, sans-serif;
+                  font-size: 1.1em;
+                  font-weight: 700;
+                "
+                >1</span
+              >호</span
+            >
+            <span class="ceo-title-badge-line"></span>
+          </div>
+          <div class="ceo-quote">
+            제 이름을 걸고<br /><strong>책임지는 매칭,</strong><br />그것이
+            노블홍입니다
+          </div>
+          <div class="ceo-name">홍유진</div>
+          <div class="ceo-role">
+            대표이사 &middot; Ph.D &middot; 성혼 전문가
+          </div>
+          <p class="ceo-bio">
+            1996년 대한민국 최초 커플매니저로 출발해 30년간 오직 한 길만
+            걸어왔습니다. 5만 명 이상의 성혼상담과 8,000명 이상의 성혼 실적이
+            말해주듯, 노블홍의 매칭은 데이터와 경험, 그리고 진심이 만나는
+            곳입니다.
+          </p>
+          <div class="ceo-career" style="margin-bottom:28px;font-size:14px;line-height:2;color:var(--text-secondary);">
+            <strong style="color:var(--text);font-size:15px;">경력</strong><br>
+            듀오(1996~) &rarr; 닥스클럽 &rarr; 바로연 &rarr; 대명위드원(대명그룹) &rarr; 노블홍 설립(2020~)<br><br>
+            <strong style="color:var(--text);font-size:15px;">학력 &middot; 연구</strong><br>
+            &middot; Ph.D 자연치유학 박사 (명상음악과 커플매니저 직무스트레스 연구)<br>
+            &middot; 연세대학교 행정대학원 석사 (초혼/재혼 결혼조건 차이 연구)<br><br>
+            <strong style="color:var(--text);font-size:15px;">저서</strong><br>
+            &middot; &laquo;당신에게 연애가 어려운 이유&raquo; (2015)<br>
+            &middot; &laquo;국가 소멸 위기의 저출산문제 해결방안&raquo; 공동저서 (2024)
+          </div>
           <div class="ceo-stats-bar" id="ceoStatsBar">
             <div class="ceo-stat-item">
               <span class="ceo-stat-num" data-target="30" data-suffix="년"
@@ -2950,85 +2827,8 @@
               <span class="ceo-stat-label">방송 출연</span>
             </div>
           </div>
-          </div>
-          <!-- /ceo-content -->
         </div>
-        <!-- /ceo-top -->
-
-        <div class="ceo-cards">
-          <div class="ceo-card">
-            <div class="ceo-card-heading">
-              <span class="num">1</span>경력 &amp; 현재 활동
-            </div>
-            <div class="career-flow">
-              <strong>1996 ~ 현재</strong><br />
-              듀오(1996~) &rarr; 닥스클럽 &rarr; 바로연 &rarr;
-              대명위드원(대명그룹, 듀오&middot;닥스클럽&middot;바로연&middot;행복출발
-              총괄) &rarr; 노블홍 설립(2020~)
-            </div>
-            <div class="subheading">현재 활동 · 12</div>
-            <ul class="bio-list">
-              <li>Ph.D 자연치유학 박사</li>
-              <li>(주)노블홍 결혼정보회사 대표이사</li>
-              <li>매칭전략연구소 대표</li>
-              <li>연세대학교 행정대학원 총동창회 부회장</li>
-              <li>사단법인 연세사회복지회 법인이사</li>
-              <li>사단법인 한국결혼장려운동연합 법인이사</li>
-              <li>한국건강행복 사회적협동조합 이사</li>
-              <li>여성경제인연합회 정회원</li>
-              <li>글로벌사이버대학(BTS 모교) 홍보대사</li>
-              <li>남양홍씨 종친회 종중 청년회 사무총장</li>
-              <li>서울시 강남구 소상공인협회 이사</li>
-              <li>글로벌코리아포스트 부설 인구문제연구소 소장</li>
-            </ul>
-          </div>
-
-          <div class="ceo-card">
-            <div class="ceo-card-heading">
-              <span class="num">2</span>학력 &middot; 연구
-            </div>
-            <div class="subheading">박사 (Ph.D)</div>
-            <div class="edu-deg">자연치유학 박사</div>
-            <div class="edu-note">
-              논문: 「명상음악 프로그램이 커플매니저의 직무스트레스에 미치는
-              영향」
-            </div>
-            <div class="subheading">석사</div>
-            <div class="edu-deg">연세대학교 행정대학원 · 사회복지학</div>
-            <div class="edu-note">
-              논문: 「초혼과 재혼의 결혼조건 차이와 미래 가족관에 대한 연구」
-              (강남4구 중심)
-            </div>
-          </div>
-
-          <div class="ceo-card">
-            <div class="ceo-card-heading">
-              <span class="num">3</span>저서
-            </div>
-            <div class="book-item">
-              <div class="book-title">
-                『국가 소멸 위기의 저출산문제 해결방안』
-              </div>
-              <div class="book-meta">2024 · 공동저서 · 하움출판사</div>
-              <p class="book-desc">
-                30년간 5만 명 이상의 싱글과 부모를 성혼상담해온 현장 경험을
-                바탕으로, 저출생 정책 이전에 결혼장려와 한국형 교육이 필요함을
-                정부&middot;지자체에 제안하기 위해 집필한 공동저서.
-              </p>
-            </div>
-            <div class="book-item">
-              <div class="book-title">『당신에게 연애가 어려운 이유』</div>
-              <div class="book-meta">2015 · 단독 · 꽃피는아침마을</div>
-              <p class="book-desc">
-                20대에는 열정적인 사랑을, 30대에는 연애 세포가 소멸된 싱글
-                여성들을 위한 &mdash; 따끔하면서도 통쾌한 연애 공략서.
-              </p>
-            </div>
-          </div>
-        </div>
-        <!-- /ceo-cards -->
       </div>
-      <!-- /ceo-inner -->
       <div class="ceo-broadcast" id="ceoBroadcast">
         <p class="ceo-broadcast-label">방송 출연 <span class="bc-num">300</span>회+</p>
         <p class="ceo-broadcast-channels">
@@ -3252,27 +3052,27 @@
         <p class="qualify-desc reveal" style="color:#5c5040;">브로셔 5p에서 확인된 10가지 강점</p>
         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;text-align:left;margin-top:48px;">
           <div class="reveal" style="padding:28px;background:#fff;border:1px solid #e8e0ce;border-radius:12px;">
-            <strong style="color:var(--gold-dark);font-size:15px;word-break:keep-all;">대표 직접 매칭 관여</strong>
+            <strong style="color:var(--gold-dark);font-size:15px;">대표 직접 매칭 관여</strong>
             <p style="color:#5c5040;font-size:14px;margin-top:8px;line-height:1.7;">홍유진 대표가 모든 회원의 매칭 전략에 직접 참여합니다</p>
           </div>
           <div class="reveal" style="padding:28px;background:#fff;border:1px solid #e8e0ce;border-radius:12px;">
-            <strong style="color:var(--gold-dark);font-size:15px;word-break:keep-all;"><span style="white-space:nowrap;">8,000명 이상</span> 성혼 노하우</strong>
+            <strong style="color:var(--gold-dark);font-size:15px;">8,000명 이상 성혼 노하우</strong>
             <p style="color:#5c5040;font-size:14px;margin-top:8px;line-height:1.7;">매칭에도 성공 전략이 있습니다</p>
           </div>
           <div class="reveal" style="padding:28px;background:#fff;border:1px solid #e8e0ce;border-radius:12px;">
-            <strong style="color:var(--gold-dark);font-size:15px;word-break:keep-all;">매주 2~3회 매칭 전략 회의</strong>
+            <strong style="color:var(--gold-dark);font-size:15px;">매주 2~3회 매칭 전략 회의</strong>
             <p style="color:#5c5040;font-size:14px;margin-top:8px;line-height:1.7;">10년 이상 경력 매니저들의 브리핑과 분석</p>
           </div>
           <div class="reveal" style="padding:28px;background:#fff;border:1px solid #e8e0ce;border-radius:12px;">
-            <strong style="color:var(--gold-dark);font-size:15px;word-break:keep-all;">공정거래위원회 표준약관 준수</strong>
+            <strong style="color:var(--gold-dark);font-size:15px;">공정거래위원회 표준약관 준수</strong>
             <p style="color:#5c5040;font-size:14px;margin-top:8px;line-height:1.7;">투명하고 안전한 계약</p>
           </div>
           <div class="reveal" style="padding:28px;background:#fff;border:1px solid #e8e0ce;border-radius:12px;">
-            <strong style="color:var(--gold-dark);font-size:15px;word-break:keep-all;">철저한 신원인증</strong>
+            <strong style="color:var(--gold-dark);font-size:15px;">철저한 신원인증</strong>
             <p style="color:#5c5040;font-size:14px;margin-top:8px;line-height:1.7;">가족, 혼인, 학력, 재직, 자산 등 서류 검증</p>
           </div>
           <div class="reveal" style="padding:28px;background:#fff;border:1px solid #e8e0ce;border-radius:12px;">
-            <strong style="color:var(--gold-dark);font-size:15px;word-break:keep-all;">법무법인 고문 협약</strong>
+            <strong style="color:var(--gold-dark);font-size:15px;">법무법인 고문 협약</strong>
             <p style="color:#5c5040;font-size:14px;margin-top:8px;line-height:1.7;">법무법인(유) 원앤파트너스 &mdash; 회원 안전을 법적으로 보장</p>
           </div>
         </div>
@@ -3476,40 +3276,40 @@
         <p class="qualify-desc reveal" style="color:#5c5040;">MOU 체결 및 지자체 협력을 통한 결혼문화 확산</p>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:48px;">
           <div class="reveal" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
-            <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/001-1한국경비협회01.webp" alt="한국경비협회 MOU" style="width:100%;height:100%;object-fit:cover;">
+            <img src="images/카다록용사진/Links/mou협약/001-1한국경비협회01.jpg" alt="한국경비협회 MOU" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="reveal" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
-            <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/002-1서울시건축사회01.webp" alt="서울시건축사회 MOU" style="width:100%;height:100%;object-fit:cover;">
+            <img src="images/카다록용사진/Links/mou협약/002-1서울시건축사회01.jpg" alt="서울시건축사회 MOU" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="reveal" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
-            <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/005-1한국노인장기요양기관협회01.webp" alt="한국노인장기요양기관협회 MOU" style="width:100%;height:100%;object-fit:cover;">
+            <img src="images/카다록용사진/Links/mou협약/005-1한국노인장기요양기관협회01.jpg" alt="한국노인장기요양기관협회 MOU" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="reveal" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
-            <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/국회의원이양수표창01.webp" alt="국회의원 이양수 표창" style="width:100%;height:100%;object-fit:cover;">
+            <img src="images/카다록용사진/Links/mou협약/국회의원이양수표창01.jpg" alt="국회의원 이양수 표창" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="reveal" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
-            <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/강남구청장 미팅.webp" alt="강남구청장 미팅" style="width:100%;height:100%;object-fit:cover;">
+            <img src="images/카다록용사진/Links/mou협약/강남구청장 미팅.jpg" alt="강남구청장 미팅" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="reveal" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
-            <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/경북도지사 미팅.webp" alt="경북도지사 미팅" style="width:100%;height:100%;object-fit:cover;">
+            <img src="images/카다록용사진/Links/mou협약/경북도지사 미팅.jpg" alt="경북도지사 미팅" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="reveal" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
-            <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/계룡시장 미팅.webp" alt="계룡시장 미팅" style="width:100%;height:100%;object-fit:cover;">
+            <img src="images/카다록용사진/Links/mou협약/계룡시장 미팅.jpg" alt="계룡시장 미팅" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="reveal" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
-            <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/이천시장 미팅.webp" alt="이천시장 미팅" style="width:100%;height:100%;object-fit:cover;">
+            <img src="images/카다록용사진/Links/mou협약/이천시장 미팅.jpg" alt="이천시장 미팅" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="reveal" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
-            <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/김예지국회의원 미팅.webp" alt="김예지 국회의원 미팅" style="width:100%;height:100%;object-fit:cover;">
+            <img src="images/카다록용사진/Links/mou협약/김예지국회의원 미팅.jpg" alt="김예지 국회의원 미팅" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="reveal" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
-            <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/서초구청 직원들과의 미팅.webp" alt="서초구청 미팅" style="width:100%;height:100%;object-fit:cover;">
+            <img src="images/카다록용사진/Links/mou협약/서초구청 직원들과의 미팅.jpg" alt="서초구청 미팅" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="reveal" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
-            <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/도봉구청 직원들과의 미팅.webp" alt="도봉구청 미팅" style="width:100%;height:100%;object-fit:cover;">
+            <img src="images/카다록용사진/Links/mou협약/도봉구청 직원들과의 미팅.jpg" alt="도봉구청 미팅" style="width:100%;height:100%;object-fit:cover;">
           </div>
           <div class="reveal" style="border-radius:8px;overflow:hidden;aspect-ratio:4/3;">
-            <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/청주시의회의장 미팅.webp" alt="청주시의회의장 미팅" style="width:100%;height:100%;object-fit:cover;">
+            <img src="images/카다록용사진/Links/mou협약/청주시의회의장 미팅.jpg" alt="청주시의회의장 미팅" style="width:100%;height:100%;object-fit:cover;">
           </div>
         </div>
       </div>
@@ -3601,14 +3401,13 @@
           </div>
         </div>
         <div class="footer-links">
-          <a href="/privacy">개인정보처리방침</a>
-          <a href="/terms">이용약관</a>
-          <a href="/damages">손해배상절차</a>
+          <a href="privacy.html">개인정보처리방침</a>
+          <a href="terms.html">이용약관</a>
+          <a href="damages.html">손해배상절차</a>
         </div>
       </div>
     </footer>
 
-    <!-- Fixed CTA -->
     <!-- Bottom Inquiry Bar (A-3 · Espresso Gold Frame) -->
     <div class="bottom-inquiry-bar" id="fixedCta">
       <div class="bib-row-main">
@@ -3702,162 +3501,6 @@
           1.3,
         )
         .to(".scroll-cue", { opacity: 1, duration: 0.8 }, 1.6);
-
-      /* ── 특별한 인연 → 노블홍 모래 분해 시퀀스 (Wind Sweep) ── */
-      (() => {
-        const GOLD_PALETTE = [
-          [255, 245, 214],
-          [255, 230, 168],
-          [244, 221, 150],
-          [232, 197, 114],
-          [212, 175, 90],
-          [196, 165, 90],
-        ];
-        const pickColor = () =>
-          GOLD_PALETTE[Math.floor(Math.random() * GOLD_PALETTE.length)];
-
-        function extractParticles(text, fontPx, fontFamily, fontWeight) {
-          const dpr = Math.max(1, window.devicePixelRatio || 1);
-          const padding = Math.ceil(fontPx * 0.4);
-          const measureCan = document.createElement("canvas");
-          const mctx = measureCan.getContext("2d");
-          mctx.font = `${fontWeight} ${fontPx}px ${fontFamily}`;
-          const metrics = mctx.measureText(text);
-          const w = Math.ceil(metrics.width) + padding * 2;
-          const h = Math.ceil(fontPx * 1.4) + padding * 2;
-
-          const can = document.createElement("canvas");
-          can.width = w * dpr;
-          can.height = h * dpr;
-          const ctx = can.getContext("2d");
-          ctx.scale(dpr, dpr);
-          ctx.font = `${fontWeight} ${fontPx}px ${fontFamily}`;
-          ctx.fillStyle = "#000";
-          ctx.textBaseline = "middle";
-          ctx.fillText(text, padding, h / 2);
-
-          const data = ctx.getImageData(0, 0, can.width, can.height).data;
-          const particles = [];
-          const step = 1;
-          for (let y = 0; y < can.height; y += step) {
-            for (let x = 0; x < can.width; x += step) {
-              const idx = (y * can.width + x) * 4;
-              if (data[idx + 3] > 80) {
-                const fx = x / dpr;
-                const fy = y / dpr;
-                // Option A — Thanos Snap (오른쪽 바람 + 살짝 위 + random delay)
-                particles.push({
-                  x: fx,
-                  y: fy,
-                  vx: 1 + Math.random() * 3,
-                  vy: -Math.random() * 2,
-                  ay: 0.05,
-                  fade: 0.008 + Math.random() * 0.014,
-                  delay: Math.random() * 25 + (fx / w) * 12,
-                  r: pickColor(),
-                  alpha: 1,
-                  size: 0.6 + Math.random() * 0.7,
-                  shrink: 0.985 + Math.random() * 0.01,
-                });
-              }
-            }
-          }
-          return { particles, w, h, padding };
-        }
-
-        function dissolveStrong() {
-          const strong = document.getElementById("heroTitleStrong");
-          const trail = document.getElementById("heroTitleTrail");
-          if (!strong || !trail) return;
-          const visible = strong.querySelector(".visible-text");
-          const text = visible ? visible.textContent : strong.textContent;
-          const cs = getComputedStyle(strong);
-          const fontPx = parseFloat(cs.fontSize);
-          const fontFamily = cs.fontFamily;
-          const fontWeight = cs.fontWeight || "800";
-          const { particles, w, h, padding } = extractParticles(
-            text,
-            fontPx,
-            fontFamily,
-            fontWeight,
-          );
-
-          const visRect = visible
-            ? visible.getBoundingClientRect()
-            : strong.getBoundingClientRect();
-          const dpr = Math.max(1, window.devicePixelRatio || 1);
-          const can = document.createElement("canvas");
-          can.className = "particle-canvas";
-          can.style.left = visRect.left + window.scrollX - padding + "px";
-          can.style.top =
-            visRect.top + window.scrollY - (h - visRect.height) / 2 + "px";
-          can.style.width = w + "px";
-          can.style.height = h + "px";
-          can.width = w * dpr;
-          can.height = h * dpr;
-          document.body.appendChild(can);
-          const ctx = can.getContext("2d");
-          ctx.scale(dpr, dpr);
-
-          strong.classList.add("dispersing");
-
-          let frame = 0;
-          function tick() {
-            ctx.clearRect(0, 0, can.width, can.height);
-            let alive = 0;
-            for (const p of particles) {
-              if (p.delay > 0) {
-                p.delay--;
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = `rgb(${p.r[0]},${p.r[1]},${p.r[2]})`;
-                ctx.fillRect(p.x, p.y, p.size, p.size);
-                alive++;
-                continue;
-              }
-              if (p.alpha <= 0 || p.size < 0.15) continue;
-              p.vy += p.ay;
-              p.x += p.vx;
-              p.y += p.vy;
-              p.alpha -= p.fade;
-              p.size *= p.shrink;
-              if (p.alpha < 0) p.alpha = 0;
-              ctx.globalAlpha = p.alpha;
-              ctx.fillStyle = `rgb(${p.r[0]},${p.r[1]},${p.r[2]})`;
-              ctx.fillRect(p.x, p.y, p.size, p.size);
-              alive++;
-            }
-            frame++;
-            if (alive > 0 && frame < 600) {
-              requestAnimationFrame(tick);
-            } else {
-              can.remove();
-              const startRect = trail.getBoundingClientRect();
-              strong.innerHTML = '<span class="engrave">노블홍</span>';
-              const endRect = trail.getBoundingClientRect();
-              const dx = startRect.left - endRect.left;
-              gsap.fromTo(
-                trail,
-                { x: dx },
-                { x: 0, duration: 1.0, ease: "power3.out" },
-              );
-              requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                  strong.querySelector(".engrave").classList.add("engraved");
-                });
-              });
-            }
-          }
-          requestAnimationFrame(tick);
-        }
-
-        if (document.fonts && document.fonts.ready) {
-          document.fonts.ready.then(() => {
-            gsap.delayedCall(3.0, dissolveStrong);
-          });
-        } else {
-          gsap.delayedCall(3.0, dissolveStrong);
-        }
-      })();
 
       /* ── HERO BG — 이미지 2초 후 영상 전환 ── */
       (() => {
@@ -3960,18 +3603,6 @@
           },
           once: true,
         });
-      });
-
-      // Stat cards — sequential right-Y flip on viewport entry
-      ScrollTrigger.create({
-        trigger: ".stats-grid",
-        start: "top 82%",
-        once: true,
-        onEnter: () => {
-          document.querySelectorAll(".stats-grid .stat-item").forEach((item, i) => {
-            setTimeout(() => item.classList.add("flipped"), i * 240);
-          });
-        },
       });
 
       // Chart cards — fade up

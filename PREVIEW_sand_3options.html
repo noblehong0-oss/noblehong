@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>모래 분해 3종 비교 — A.Thanos / B.Sand Trickle / C.Wind Sweep</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400&family=Noto+Serif+KR:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fdfaf3;
+        --gold: #b89a5a;
+        --gold-light: #d4af57;
+        --gold-bright: #f4dd96;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        background: var(--bg);
+        color: #1a160f;
+        font-family: "Noto Serif KR", system-ui, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* 상단 컨트롤 */
+      .controls {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        background: rgba(20, 16, 10, 0.96);
+        backdrop-filter: blur(10px);
+        color: #f4dd96;
+        padding: 14px 20px;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        flex-wrap: wrap;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+      }
+      .controls strong {
+        color: #f4dd96;
+        font-weight: 700;
+      }
+      .controls button {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        border: none;
+        padding: 9px 18px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+      }
+      .controls button:hover {
+        transform: translateY(-1px);
+      }
+      .controls .hint {
+        font-size: 12px;
+        opacity: 0.7;
+        margin-left: auto;
+      }
+
+      /* 비교 컨테이너 */
+      .compare-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .demo-row {
+        padding: 60px 32px;
+        border-bottom: 2px dashed rgba(184, 154, 90, 0.25);
+        text-align: center;
+        position: relative;
+      }
+      .demo-row:nth-child(odd) {
+        background: #fdfaf3;
+      }
+      .demo-row:nth-child(even) {
+        background: #f9f3e3;
+      }
+
+      .demo-tag {
+        display: inline-block;
+        background: var(--gold);
+        color: #fff;
+        padding: 4px 14px;
+        border-radius: 3px;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .demo-name {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 28px;
+        font-weight: 600;
+        color: #2c2820;
+        margin-bottom: 6px;
+      }
+      .demo-desc {
+        font-size: 14px;
+        color: #6b6052;
+        margin-bottom: 36px;
+        font-weight: 400;
+      }
+
+      /* 히어로 타이틀 (실제 프로덕션과 동일) */
+      .hero-title {
+        font-size: clamp(48px, 6vw, 80px);
+        font-weight: 500;
+        letter-spacing: -1.5px;
+        line-height: 1.22;
+        color: #0d0b08;
+        margin-bottom: 28px;
+        position: relative;
+        display: inline-block;
+      }
+      .hero-title-strong {
+        font-weight: 800;
+        background: linear-gradient(
+          90deg,
+          #d4af57 0%,
+          #f4dd96 25%,
+          #fff5d6 50%,
+          #f4dd96 75%,
+          #d4af57 100%
+        );
+        background-size: 220% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        display: inline-block;
+        padding: 0.05em 0.3em;
+        animation: titleShimmer 5s ease-in-out infinite;
+        will-change: filter;
+      }
+      @keyframes titleShimmer {
+        0%,
+        100% {
+          background-position: 100% 50%;
+        }
+        50% {
+          background-position: 0% 50%;
+        }
+      }
+      .hero-title-strong::before {
+        content: "";
+        position: absolute;
+        inset: 2px;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(212, 168, 74, 0.18) 0%,
+          rgba(184, 146, 74, 0.06) 55%,
+          transparent 80%
+        );
+        z-index: -1;
+        pointer-events: none;
+        border-radius: 1px;
+      }
+      .hero-title-strong::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #2a1d0a;
+        border: 1px solid #b89a5a;
+        outline: 1px solid rgba(184, 146, 74, 0.45);
+        outline-offset: 4px;
+        border-radius: 2px;
+        z-index: -2;
+        box-shadow: 0 10px 28px rgba(20, 14, 6, 0.35);
+        pointer-events: none;
+      }
+
+      /* 노블홍 새겨짐 — 글자만 밝게, 뒤 글로우 없음 */
+      .hero-title-strong .engrave {
+        display: inline-block;
+        background: linear-gradient(
+          180deg,
+          #ffffff 0%,
+          #fff5d6 30%,
+          #ffe6a8 65%,
+          #f4dd96 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        clip-path: inset(0 0 100% 0);
+        will-change: clip-path;
+        letter-spacing: 0.04em;
+        font-weight: 800;
+      }
+      .hero-title-strong .engrave.engraved {
+        clip-path: inset(0 0 0% 0);
+        transition: clip-path 1.4s cubic-bezier(0.4, 0, 0.15, 1);
+        animation: engraveChisel 1.4s cubic-bezier(0.3, 0.7, 0.3, 1);
+      }
+      @keyframes engraveChisel {
+        0% {
+          transform: translateY(0);
+        }
+        18% {
+          transform: translateY(0.6px);
+        }
+        38% {
+          transform: translateY(-0.4px);
+        }
+        62% {
+          transform: translateY(0.3px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      /* 텍스트가 분해될 동안 원본 글자 숨기기 */
+      .hero-title-strong.dispersing > .visible-text {
+        visibility: hidden;
+      }
+
+      /* particle canvas */
+      .particle-canvas {
+        position: absolute;
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      .replay-btn {
+        background: #fff;
+        color: #2a1d0a;
+        border: 1.5px solid var(--gold);
+        padding: 10px 24px;
+        border-radius: 4px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .replay-btn:hover {
+        background: var(--gold);
+        color: #fff;
+      }
+
+      .params {
+        display: inline-flex;
+        gap: 18px;
+        margin-top: 18px;
+        font-size: 12px;
+        color: #888;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .params span {
+        background: rgba(184, 154, 90, 0.1);
+        padding: 4px 10px;
+        border-radius: 3px;
+        color: #6b5d3e;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <strong>모래 분해 효과 3종 비교</strong>
+      <button onclick="playAll()">▶ 3개 모두 동시 재생</button>
+      <button onclick="resetAll()">↻ 리셋</button>
+      <span class="hint"
+        >박스(다크 플레이트 + 골드 프레임)는 그대로 유지 · 글자만 분해 →
+        "노블홍" 새겨짐</span
+      >
+    </div>
+
+    <div class="compare-grid">
+      <!-- A: Thanos Snap -->
+      <section class="demo-row" id="rowA">
+        <span class="demo-tag">Option A</span>
+        <h2 class="demo-name">Thanos Snap (Disintegration)</h2>
+        <p class="demo-desc">
+          픽셀 분해 → 오른쪽 바람 + 살짝 위로 떠오르며 fade out · 영화적 임팩트
+        </p>
+        <div>
+          <h1 class="hero-title">
+            당신에게도<br /><strong
+              class="hero-title-strong"
+              data-effect="thanos"
+              ><span class="visible-text">특별한 인연</span></strong
+            ><span class="hero-title-trail">이 있습니다</span>
+          </h1>
+        </div>
+        <button class="replay-btn" onclick="playOne('rowA', 'thanos')">
+          ▶ A 재생
+        </button>
+        <div class="params">
+          <span>vx: 1~4 (오른쪽 바람)</span>
+          <span>vy: -2~0 (살짝 위)</span>
+          <span>중력: 0.05</span>
+          <span>fade: 0.7s</span>
+        </div>
+      </section>
+
+      <!-- B: Sand Trickle -->
+      <section class="demo-row" id="rowB">
+        <span class="demo-tag">Option B</span>
+        <h2 class="demo-name">Sand Trickle (모래 흘러내림)</h2>
+        <p class="demo-desc">
+          중력으로 아래로 떨어지며 흩어짐 · 모래시계 같은 부드러운 느낌
+        </p>
+        <div>
+          <h1 class="hero-title">
+            당신에게도<br /><strong class="hero-title-strong" data-effect="sand"
+              ><span class="visible-text">특별한 인연</span></strong
+            ><span class="hero-title-trail">이 있습니다</span>
+          </h1>
+        </div>
+        <button class="replay-btn" onclick="playOne('rowB', 'sand')">
+          ▶ B 재생
+        </button>
+        <div class="params">
+          <span>vx: -0.4~0.4 (수평 미세)</span>
+          <span>vy: 0 시작</span>
+          <span>중력: 0.18 (강함)</span>
+          <span>위→아래 stagger</span>
+        </div>
+      </section>
+
+      <!-- C: Wind Sweep -->
+      <section class="demo-row" id="rowC">
+        <span class="demo-tag">Option C</span>
+        <h2 class="demo-name">Wind Sweep (좌→우 휩쓸림)</h2>
+        <p class="demo-desc">
+          왼쪽부터 차례로 분해되며 강한 바람에 휩쓸려감 · wave 효과
+        </p>
+        <div>
+          <h1 class="hero-title">
+            당신에게도<br /><strong class="hero-title-strong" data-effect="wind"
+              ><span class="visible-text">특별한 인연</span></strong
+            ><span class="hero-title-trail">이 있습니다</span>
+          </h1>
+        </div>
+        <button class="replay-btn" onclick="playOne('rowC', 'wind')">
+          ▶ C 재생
+        </button>
+        <div class="params">
+          <span>vx: 3~7 (강한 바람)</span>
+          <span>vy: -0.5~0.5</span>
+          <span>중력: 0.02</span>
+          <span>좌→우 stagger</span>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      const GOLD_PALETTE = [
+        [255, 245, 214],
+        [255, 230, 168],
+        [244, 221, 150],
+        [232, 197, 114],
+        [212, 175, 90],
+        [196, 165, 90],
+      ];
+
+      function pickColor() {
+        return GOLD_PALETTE[Math.floor(Math.random() * GOLD_PALETTE.length)];
+      }
+
+      // 텍스트를 픽셀로 추출 → particle 배열 반환
+      function extractParticles(text, fontPx, fontFamily, fontWeight, mode) {
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+        const padding = Math.ceil(fontPx * 0.4);
+        // measure
+        const measureCan = document.createElement("canvas");
+        const mctx = measureCan.getContext("2d");
+        mctx.font = `${fontWeight} ${fontPx}px ${fontFamily}`;
+        const metrics = mctx.measureText(text);
+        const w = Math.ceil(metrics.width) + padding * 2;
+        const h = Math.ceil(fontPx * 1.4) + padding * 2;
+
+        const can = document.createElement("canvas");
+        can.width = w * dpr;
+        can.height = h * dpr;
+        const ctx = can.getContext("2d");
+        ctx.scale(dpr, dpr);
+        ctx.font = `${fontWeight} ${fontPx}px ${fontFamily}`;
+        ctx.fillStyle = "#000";
+        ctx.textBaseline = "middle";
+        ctx.fillText(text, padding, h / 2);
+
+        const data = ctx.getImageData(0, 0, can.width, can.height).data;
+        const particles = [];
+        // 모래 알갱이 — pixel 단위로 추출 (입자 수 ↑, 크기 ↓)
+        const step = 1;
+        for (let y = 0; y < can.height; y += step) {
+          for (let x = 0; x < can.width; x += step) {
+            const idx = (y * can.width + x) * 4;
+            if (data[idx + 3] > 80) {
+              // 모드별 초기 속도/지연 설정
+              let vx = 0,
+                vy = 0,
+                ay = 0.05,
+                fade = 0.012,
+                delay = 0;
+              const fx = x / dpr;
+              const fy = y / dpr;
+              if (mode === "thanos") {
+                vx = 1 + Math.random() * 3;
+                vy = -Math.random() * 2;
+                ay = 0.05;
+                fade = 0.008 + Math.random() * 0.014;
+                delay = Math.random() * 25 + (fx / w) * 12;
+              } else if (mode === "sand") {
+                vx = (Math.random() - 0.5) * 0.8;
+                vy = Math.random() * 0.3;
+                ay = 0.18;
+                fade = 0.006 + Math.random() * 0.01;
+                // 위쪽 픽셀이 먼저 흘러내리도록
+                delay = (fy / h) * 35 + Math.random() * 10;
+              } else if (mode === "wind") {
+                vx = 3 + Math.random() * 4;
+                vy = (Math.random() - 0.5) * 1.2;
+                ay = 0.02;
+                fade = 0.012 + Math.random() * 0.012;
+                // 왼쪽 픽셀이 먼저
+                delay = (fx / w) * 50 + Math.random() * 8;
+              }
+              particles.push({
+                x: fx,
+                y: fy,
+                vx,
+                vy,
+                ay,
+                fade,
+                delay,
+                r: pickColor(),
+                alpha: 1,
+                // 매우 작은 모래 알갱이 (0.6~1.3 px)
+                size: 0.6 + Math.random() * 0.7,
+                // 시간 지날수록 더 작아짐 (dust로 흩어짐)
+                shrink: 0.985 + Math.random() * 0.01,
+              });
+            }
+          }
+        }
+        return { particles, w, h, padding };
+      }
+
+      function dissolve(strongEl, mode, onDone) {
+        if (strongEl.dataset.busy === "1") return;
+        strongEl.dataset.busy = "1";
+
+        const visible = strongEl.querySelector(".visible-text");
+        const text = visible ? visible.textContent : strongEl.textContent;
+        const cs = getComputedStyle(strongEl);
+        const fontPx = parseFloat(cs.fontSize);
+        const fontFamily = cs.fontFamily;
+        const fontWeight = cs.fontWeight || "800";
+
+        const { particles, w, h, padding } = extractParticles(
+          text,
+          fontPx,
+          fontFamily,
+          fontWeight,
+          mode,
+        );
+
+        // text 위치 계산
+        const visRect = visible
+          ? visible.getBoundingClientRect()
+          : strongEl.getBoundingClientRect();
+
+        // overlay canvas (강한 단위로 absolute, body에 추가)
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+        const can = document.createElement("canvas");
+        can.className = "particle-canvas";
+        can.style.left = visRect.left + window.scrollX - padding + "px";
+        can.style.top =
+          visRect.top + window.scrollY - (h - visRect.height) / 2 + "px";
+        can.style.width = w + "px";
+        can.style.height = h + "px";
+        can.width = w * dpr;
+        can.height = h * dpr;
+        document.body.appendChild(can);
+        const ctx = can.getContext("2d");
+        ctx.scale(dpr, dpr);
+
+        // 원본 글자 숨김 (박스는 유지)
+        strongEl.classList.add("dispersing");
+
+        let frame = 0;
+        function tick() {
+          ctx.clearRect(0, 0, can.width, can.height);
+          let alive = 0;
+          for (const p of particles) {
+            if (p.delay > 0) {
+              p.delay--;
+              // 아직 시작 전: 원래 위치에 그대로 유지
+              ctx.globalAlpha = p.alpha;
+              ctx.fillStyle = `rgb(${p.r[0]},${p.r[1]},${p.r[2]})`;
+              ctx.fillRect(p.x, p.y, p.size, p.size);
+              alive++;
+              continue;
+            }
+            if (p.alpha <= 0 || p.size < 0.15) continue;
+            p.vy += p.ay;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.alpha -= p.fade;
+            // 점점 작아지며 사라짐
+            p.size *= p.shrink;
+            if (p.alpha < 0) p.alpha = 0;
+            ctx.globalAlpha = p.alpha;
+            ctx.fillStyle = `rgb(${p.r[0]},${p.r[1]},${p.r[2]})`;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+            alive++;
+          }
+          frame++;
+          if (alive > 0 && frame < 600) {
+            requestAnimationFrame(tick);
+          } else {
+            can.remove();
+            // "노블홍" 새겨짐
+            strongEl.innerHTML = '<span class="engrave">노블홍</span>';
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                strongEl.querySelector(".engrave").classList.add("engraved");
+              });
+            });
+            // 1.6s 뒤에 reset 가능 상태로
+            setTimeout(() => {
+              strongEl.dataset.busy = "0";
+              if (onDone) onDone();
+            }, 1800);
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+
+      function resetOne(rowId) {
+        const row = document.getElementById(rowId);
+        const strong = row.querySelector(".hero-title-strong");
+        strong.classList.remove("dispersing");
+        strong.dataset.busy = "0";
+        strong.innerHTML = '<span class="visible-text">특별한 인연</span>';
+        // 잔여 canvas 제거
+        document
+          .querySelectorAll(".particle-canvas")
+          .forEach((c) => c.remove());
+      }
+
+      function playOne(rowId, mode) {
+        resetOne(rowId);
+        setTimeout(() => {
+          const row = document.getElementById(rowId);
+          const strong = row.querySelector(".hero-title-strong");
+          dissolve(strong, mode);
+        }, 50);
+      }
+
+      function playAll() {
+        resetAll();
+        setTimeout(() => {
+          dissolve(
+            document.querySelector("#rowA .hero-title-strong"),
+            "thanos",
+          );
+          dissolve(document.querySelector("#rowB .hero-title-strong"), "sand");
+          dissolve(document.querySelector("#rowC .hero-title-strong"), "wind");
+        }, 80);
+      }
+
+      function resetAll() {
+        resetOne("rowA");
+        resetOne("rowB");
+        resetOne("rowC");
+      }
+
+      // 폰트 로드 후 자동 재생
+      document.fonts.ready.then(() => {
+        setTimeout(playAll, 600);
+      });
+    </script>
+  </body>
+</html>
