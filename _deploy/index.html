@@ -752,10 +752,38 @@
         font-weight: 300;
         margin-bottom: 12px;
         color: #2c2820;
+        perspective: 1200px;
       }
       .stats-title strong {
         font-weight: 600;
         color: var(--gold);
+      }
+      /* 글자 단위 카드 (양면) — 두 카피 무한 토글
+         inline-grid stack: 양면 글자 중 더 넓은 폭으로 카드 폭 고정 → 겹침 0 */
+      .stats-title .ch {
+        display: inline-grid;
+        grid-template-areas: "stack";
+        vertical-align: baseline;
+        transform-style: preserve-3d;
+        transition: transform 0.65s cubic-bezier(0.5, 0, 0.2, 1);
+        will-change: transform;
+      }
+      .stats-title .ch.flipped {
+        transform: rotateY(180deg);
+      }
+      .stats-title .face {
+        grid-area: stack;
+        display: inline-block;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        white-space: pre;
+      }
+      .stats-title .face.back {
+        transform: rotateY(180deg);
+      }
+      .stats-title .ch.gold .face {
+        color: var(--gold);
+        font-weight: 600;
       }
       .stats-subtitle {
         font-size: 15px;
@@ -4846,6 +4874,87 @@
           document.querySelectorAll(".stats-grid .stat-item").forEach((item, i) => {
             setTimeout(() => item.classList.add("flipped"), i * 240);
           });
+        },
+      });
+
+      // "숫자로 보는 노블홍" ↔ "노블홍 30년 노하우" 글자 단위 카드 토글 (무한)
+      ScrollTrigger.create({
+        trigger: ".stats-title",
+        start: "top 85%",
+        once: true,
+        onEnter: () => {
+          const titleEl = document.querySelector(".stats-title");
+          if (!titleEl || titleEl.dataset.cycle === "1") return;
+          titleEl.dataset.cycle = "1";
+
+          const TEXTS = ["숫자로 보는 노블홍", "노블홍 30년 노하우"];
+          const GOLDS = [new Set([7, 8, 9]), new Set([0, 1, 2])];
+          const MAX_LEN = Math.max(...TEXTS.map((t) => t.length));
+          const GAP = 100;
+          const HOLD = 2400;
+          const INTERVAL = MAX_LEN * GAP + 700 + HOLD;
+          let cur = 0;
+          let busy = false;
+
+          function ent(c) {
+            return c === " " ? "&nbsp;" : c;
+          }
+
+          // 양면에 두 텍스트의 i번째 글자를 모두 채워 카드 폭을 max로 고정
+          function buildInitial() {
+            titleEl.innerHTML = "";
+            const front = TEXTS[cur];
+            const back = TEXTS[(cur + 1) % TEXTS.length];
+            const gold = GOLDS[cur];
+            for (let i = 0; i < MAX_LEN; i++) {
+              const fc = front[i] || " ";
+              const bc = back[i] || " ";
+              const ch = document.createElement("span");
+              ch.className = "ch";
+              if (gold.has(i)) ch.classList.add("gold");
+              ch.innerHTML =
+                `<span class="face front">${ent(fc)}</span>` +
+                `<span class="face back">${ent(bc)}</span>`;
+              titleEl.appendChild(ch);
+            }
+          }
+
+          function swapNext() {
+            if (busy) return;
+            busy = true;
+            const nextIdx = (cur + 1) % TEXTS.length;
+            const nextText = TEXTS[nextIdx];
+            const nextGold = GOLDS[nextIdx];
+            const afterIdx = (nextIdx + 1) % TEXTS.length;
+            const afterText = TEXTS[afterIdx];
+            const chs = titleEl.querySelectorAll(".ch");
+            // back은 이미 next 글자 (buildInitial 또는 직전 swap에서 채움) — 즉시 회전
+            chs.forEach((ch, i) => {
+              setTimeout(() => ch.classList.add("flipped"), i * GAP);
+            });
+            const total = chs.length * GAP + 700;
+            setTimeout(() => {
+              chs.forEach((ch, i) => {
+                const fc = nextText[i] || " ";
+                const bc = afterText[i] || " ";
+                ch.style.transition = "none";
+                ch.classList.remove("flipped");
+                ch.classList.toggle("gold", nextGold.has(i));
+                ch.querySelector(".face.front").innerHTML = ent(fc);
+                ch.querySelector(".face.back").innerHTML = ent(bc);
+              });
+              void titleEl.offsetWidth;
+              chs.forEach((ch) => (ch.style.transition = ""));
+              cur = nextIdx;
+              busy = false;
+            }, total);
+          }
+
+          buildInitial();
+          setTimeout(() => {
+            swapNext();
+            setInterval(swapNext, INTERVAL);
+          }, 1500);
         },
       });
 

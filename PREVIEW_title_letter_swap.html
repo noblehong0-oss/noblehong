@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>"숫자로 보는 노블홍" → "노블홍 30년 노하우" 글자 카드 뒤집기</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --gold: #b89a5a;
+        --gold-light: #d4af57;
+        --gold-dark: #8a6f2a;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        background: #fbf7eb;
+        color: #1a160f;
+        font-family: "Noto Serif KR", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .controls {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        background: rgba(20, 16, 10, 0.96);
+        backdrop-filter: blur(10px);
+        color: #f4dd96;
+        padding: 14px 20px;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .controls strong {
+        color: #f4dd96;
+      }
+      .controls button {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        border: none;
+        padding: 9px 18px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .controls .alt {
+        background: #fff;
+        color: #2a1d0a;
+        border: 1.5px solid var(--gold);
+      }
+      .hint {
+        font-size: 12px;
+        opacity: 0.7;
+        margin-left: auto;
+      }
+
+      .demo {
+        padding: 100px 32px;
+        text-align: center;
+        background: #fdfaf3;
+        border-bottom: 2px dashed rgba(184, 154, 90, 0.25);
+      }
+      .demo:nth-child(odd) {
+        background: #f9f3e3;
+      }
+      .pattern-tag {
+        display: inline-block;
+        background: var(--gold);
+        color: #fff;
+        padding: 4px 14px;
+        border-radius: 3px;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .pattern-name {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 24px;
+        font-weight: 600;
+        color: #2c2820;
+        margin-bottom: 6px;
+      }
+      .pattern-desc {
+        font-size: 13px;
+        color: #6b6052;
+        margin-bottom: 50px;
+      }
+
+      .stats-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold-dark);
+        margin-bottom: 16px;
+      }
+      .stats-title {
+        font-size: clamp(28px, 3.6vw, 44px);
+        font-weight: 300;
+        color: #2c2820;
+        line-height: 1.4;
+        perspective: 1200px;
+        min-height: 1.5em;
+      }
+      .stats-title strong {
+        font-weight: 600;
+        color: var(--gold);
+      }
+
+      /* 글자 단위 카드 (양면) */
+      .ch {
+        display: inline-block;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.65s cubic-bezier(0.5, 0, 0.2, 1);
+        will-change: transform;
+        min-width: 0.05em;
+      }
+      .ch.flipped {
+        transform: rotateY(180deg);
+      }
+      .face {
+        display: inline-block;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+      }
+      .face.back {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform: rotateY(180deg);
+        width: 100%;
+      }
+      /* "노블홍" 강조 색 */
+      .ch.gold .face {
+        color: var(--gold);
+        font-weight: 600;
+      }
+
+      .progress {
+        margin-top: 24px;
+        font-size: 11px;
+        color: #888;
+        font-family: "Cormorant Garamond", serif;
+        letter-spacing: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <strong>"숫자로 보는 노블홍" → "노블홍 30년 노하우"</strong>
+      <button onclick="play(60)">▶ 빠른 재생 (60ms)</button>
+      <button onclick="play(100)">▶ 보통 재생 (100ms)</button>
+      <button onclick="play(160)">▶ 느린 재생 (160ms)</button>
+      <button class="alt" onclick="reset()">↻ 처음 텍스트</button>
+      <span class="hint"
+        >왼쪽 글자부터 한 개씩 Y축 180° 회전 → 뒷면 새 글자</span
+      >
+    </div>
+
+    <section class="demo">
+      <span class="pattern-tag">PREVIEW</span>
+      <h3 class="pattern-name">글자 단위 카드 뒤집기 + 텍스트 교체</h3>
+      <p class="pattern-desc">
+        앞면(숫,자,로, ,보,는, ,노,블,홍) → 뒤집힘 → 뒷면(노,블,홍, ,3,0,년,
+        ,노,하,우)
+      </p>
+
+      <div class="stats-eyebrow">Noble HONG in Numbers</div>
+      <h2 class="stats-title" id="title"></h2>
+      <div class="progress" id="progress">대기중</div>
+    </section>
+
+    <script>
+      // 전: "숫자로 보는 노블홍" (9자 - 공백 2개 포함은 10? 다시 셈)
+      // 숫(1)자(2)로(3) (4)보(5)는(6) (7)노(8)블(9)홍(10) → 10자
+      // 후: "노블홍 30년 노하우"
+      // 노(1)블(2)홍(3) (4)3(5)0(6)년(7) (8)노(9)하(10)우(11) → 11자
+      // 사이클 카피 — 무한 반복
+      const TEXTS = ["숫자로 보는 노블홍", "노블홍 30년 노하우"];
+      // 각 카피별 "강조(골드)" 글자 인덱스
+      const GOLDS = [
+        new Set([7, 8, 9]), // 숫자로 보는 [노블홍]
+        new Set([0, 1, 2]), // [노블홍] 30년 노하우
+      ];
+
+      const titleEl = document.getElementById("title");
+      const progressEl = document.getElementById("progress");
+      const MAX_LEN = Math.max(...TEXTS.map((t) => t.length));
+      let cur = 0;
+      let busy = false;
+      let cycleTimer = null;
+      let HOLD_MS = 2400; // 한 텍스트 보여주는 시간
+      let GAP = 100; // 글자별 stagger
+
+      function buildText(idx) {
+        titleEl.innerHTML = "";
+        const text = TEXTS[idx];
+        const gold = GOLDS[idx];
+        for (let i = 0; i < MAX_LEN; i++) {
+          const c = text[i] || " ";
+          const ch = document.createElement("span");
+          ch.className = "ch";
+          if (gold.has(i)) ch.classList.add("gold");
+          ch.innerHTML =
+            `<span class="face front">${c === " " ? "&nbsp;" : c}</span>` +
+            `<span class="face back">&nbsp;</span>`;
+          titleEl.appendChild(ch);
+        }
+      }
+
+      function swapTo(nextIdx, gap) {
+        if (busy) return;
+        busy = true;
+        const next = TEXTS[nextIdx];
+        const nextGold = GOLDS[nextIdx];
+        const chs = titleEl.querySelectorAll(".ch");
+        // 뒷면에 다음 카피 글자 채움
+        chs.forEach((ch, i) => {
+          const c = next[i] || " ";
+          ch.querySelector(".face.back").innerHTML = c === " " ? "&nbsp;" : c;
+        });
+        // 좌→우 stagger flip
+        chs.forEach((ch, i) => {
+          setTimeout(() => ch.classList.add("flipped"), i * gap);
+        });
+        const total = chs.length * gap + 700;
+        setTimeout(() => {
+          // 회전 끝 — 앞면을 다음 카피로 동기화 + reset
+          chs.forEach((ch, i) => {
+            const c = next[i] || " ";
+            ch.style.transition = "none";
+            ch.classList.remove("flipped");
+            ch.classList.toggle("gold", nextGold.has(i));
+            ch.querySelector(".face.front").innerHTML =
+              c === " " ? "&nbsp;" : c;
+          });
+          void titleEl.offsetWidth;
+          chs.forEach((ch) => (ch.style.transition = ""));
+          cur = nextIdx;
+          progressEl.textContent =
+            "현재 [" +
+            (cur + 1) +
+            "/" +
+            TEXTS.length +
+            "] '" +
+            TEXTS[cur] +
+            "'";
+          busy = false;
+        }, total);
+      }
+
+      function startCycle(gap, hold) {
+        GAP = gap;
+        HOLD_MS = hold;
+        if (cycleTimer) clearInterval(cycleTimer);
+        const interval = MAX_LEN * GAP + 700 + HOLD_MS;
+        cycleTimer = setInterval(() => {
+          const nextIdx = (cur + 1) % TEXTS.length;
+          swapTo(nextIdx, GAP);
+        }, interval);
+      }
+
+      function play(gap = 100) {
+        // 외부 버튼: 사이클 가속/리셋
+        if (cycleTimer) clearInterval(cycleTimer);
+        buildText(0);
+        cur = 0;
+        progressEl.textContent =
+          "사이클 시작 [1/" + TEXTS.length + "] '" + TEXTS[0] + "'";
+        setTimeout(() => {
+          swapTo(1, gap);
+          startCycle(gap, 2400);
+        }, 1200);
+      }
+
+      function reset() {
+        if (cycleTimer) clearInterval(cycleTimer);
+        cycleTimer = null;
+        busy = false;
+        cur = 0;
+        buildText(0);
+        progressEl.textContent = "정지 — '" + TEXTS[0] + "'";
+      }
+
+      document.fonts.ready.then(() => {
+        buildText(0);
+        progressEl.textContent =
+          "사이클 시작 [1/" + TEXTS.length + "] '" + TEXTS[0] + "'";
+        setTimeout(() => {
+          swapTo(1, 100);
+          startCycle(100, 2400);
+        }, 1200);
+      });
+    </script>
+  </body>
+</html>

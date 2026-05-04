@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>"숫자로 보는 노블홍" — 글자 한개씩 오른쪽 회전 진입</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Noto+Serif+KR:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --gold: #b89a5a;
+        --gold-light: #d4af57;
+        --gold-dark: #8a6f2a;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        background: #fbf7eb;
+        color: #1a160f;
+        font-family: "Noto Serif KR", system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .controls {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        background: rgba(20, 16, 10, 0.96);
+        backdrop-filter: blur(10px);
+        color: #f4dd96;
+        padding: 14px 20px;
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .controls strong {
+        color: #f4dd96;
+      }
+      .controls button {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        border: none;
+        padding: 9px 18px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .hint {
+        font-size: 12px;
+        opacity: 0.7;
+        margin-left: auto;
+      }
+
+      .demo-row {
+        padding: 90px 32px;
+        text-align: center;
+        border-bottom: 2px dashed rgba(184, 154, 90, 0.25);
+        background: #fdfaf3;
+      }
+      .demo-row:nth-child(odd) {
+        background: #f9f3e3;
+      }
+
+      .pattern-tag {
+        display: inline-block;
+        background: var(--gold);
+        color: #fff;
+        padding: 4px 14px;
+        border-radius: 3px;
+        font-size: 11px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .pattern-name {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 26px;
+        font-weight: 600;
+        color: #2c2820;
+        margin-bottom: 6px;
+      }
+      .pattern-desc {
+        font-size: 13px;
+        color: #6b6052;
+        margin-bottom: 50px;
+      }
+
+      .stats-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold-dark);
+        margin-bottom: 16px;
+      }
+      .stats-title {
+        font-size: clamp(28px, 3.6vw, 44px);
+        font-weight: 300;
+        color: #2c2820;
+        line-height: 1.3;
+        perspective: 1000px;
+      }
+      .stats-title strong {
+        font-weight: 600;
+        color: var(--gold);
+      }
+
+      /* 글자 단위 진입 회전 */
+      .ch {
+        display: inline-block;
+        transform-origin: center center;
+        transform: rotateY(-90deg);
+        opacity: 0;
+        transition:
+          transform 0.7s cubic-bezier(0.5, 0, 0.2, 1),
+          opacity 0.5s cubic-bezier(0.5, 0, 0.2, 1);
+        backface-visibility: hidden;
+      }
+      .ch.in {
+        transform: rotateY(0deg);
+        opacity: 1;
+      }
+      /* strong 안의 글자도 동일하게 */
+      .stats-title strong .ch {
+        color: var(--gold);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="controls">
+      <strong>"숫자로 보는 노블홍" 글자 한개씩 오른쪽 회전 진입</strong>
+      <button onclick="replayA()">▶ A 다시 재생</button>
+      <button onclick="replayB()">▶ B 다시 재생</button>
+      <span class="hint">각 글자 rotateY(-90° → 0°) · 좌→우 stagger</span>
+    </div>
+
+    <!-- 패턴 A: 빠른 stagger (80ms) -->
+    <section class="demo-row" id="rowA">
+      <span class="pattern-tag">PATTERN A</span>
+      <h3 class="pattern-name">빠른 회전 (80ms 간격)</h3>
+      <p class="pattern-desc">
+        한 글자당 80ms 간격 · 8글자 = 약 0.6s 안에 다 펼쳐짐 · 임팩트 강함
+      </p>
+
+      <div class="stats-eyebrow">Noble HONG in Numbers</div>
+      <h2 class="stats-title" id="titleA"></h2>
+    </section>
+
+    <!-- 패턴 B: 느린 stagger (140ms) -->
+    <section class="demo-row" id="rowB">
+      <span class="pattern-tag">PATTERN B</span>
+      <h3 class="pattern-name">여유 회전 (140ms 간격)</h3>
+      <p class="pattern-desc">
+        한 글자당 140ms 간격 · 8글자 = 약 1.1s · 한 글자씩 또박또박 보임
+      </p>
+
+      <div class="stats-eyebrow">Noble HONG in Numbers</div>
+      <h2 class="stats-title" id="titleB"></h2>
+    </section>
+
+    <script>
+      const TITLE_HTML = "숫자로 보는 <strong>노블홍</strong>";
+
+      // HTML을 글자 단위 .ch span으로 변환 (strong 보존)
+      function buildLetterTitle(targetEl) {
+        targetEl.innerHTML = "";
+        const tmp = document.createElement("div");
+        tmp.innerHTML = TITLE_HTML;
+        function walk(src, dst) {
+          for (const node of src.childNodes) {
+            if (node.nodeType === 3) {
+              for (const c of node.textContent) {
+                const ch = document.createElement("span");
+                ch.className = "ch";
+                ch.innerHTML = c === " " ? "&nbsp;" : c;
+                dst.appendChild(ch);
+              }
+            } else {
+              const tag = document.createElement(node.tagName);
+              dst.appendChild(tag);
+              walk(node, tag);
+            }
+          }
+        }
+        walk(tmp, targetEl);
+      }
+
+      function play(targetEl, gap) {
+        const chs = targetEl.querySelectorAll(".ch");
+        chs.forEach((ch) => ch.classList.remove("in"));
+        void targetEl.offsetWidth;
+        chs.forEach((ch, i) => {
+          setTimeout(() => ch.classList.add("in"), i * gap);
+        });
+      }
+
+      function replayA() {
+        buildLetterTitle(document.getElementById("titleA"));
+        play(document.getElementById("titleA"), 80);
+      }
+      function replayB() {
+        buildLetterTitle(document.getElementById("titleB"));
+        play(document.getElementById("titleB"), 140);
+      }
+
+      document.fonts.ready.then(() => {
+        buildLetterTitle(document.getElementById("titleA"));
+        buildLetterTitle(document.getElementById("titleB"));
+        setTimeout(() => {
+          play(document.getElementById("titleA"), 80);
+          play(document.getElementById("titleB"), 140);
+        }, 500);
+      });
+    </script>
+  </body>
+</html>
