@@ -659,24 +659,58 @@
         position: relative;
         overflow: hidden;
       }
-      /* 스탯 카드 플립 진입 (Y축 오른쪽 회전) */
+      /* 스탯 카드 — 진입 도미노(.in) + 양면 사이클 플립(.flipped) */
       .stats-grid {
-        perspective: 1400px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+        perspective: 1600px;
         perspective-origin: center;
+        max-width: 1100px;
+        margin: 0 auto;
       }
       .stat-item {
+        position: relative;
+        min-height: 220px;
+        transform-style: preserve-3d;
         opacity: 0;
-        transform-origin: right center;
+        transform-origin: center center;
         transform: rotateY(-95deg);
-        backface-visibility: hidden;
-        transition: none;
+        transition: transform 1.1s cubic-bezier(0.5, 0, 0.2, 1);
       }
-      .stat-item.flipped {
+      .stat-item.in {
         opacity: 1;
         transform: rotateY(0deg);
         transition:
           opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
           transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .stat-item.in.flipped {
+        transform: rotateY(180deg);
+        transition: transform 1.2s cubic-bezier(0.5, 0, 0.2, 1);
+      }
+      .stat-item .face {
+        position: absolute;
+        inset: 0;
+        padding: 30px 20px;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-right: 1px solid rgba(184, 154, 90, 0.2);
+      }
+      .stat-item:last-child .face {
+        border-right: none;
+      }
+      .stat-item .face-back {
+        transform: rotateY(180deg);
+        background: linear-gradient(
+          180deg,
+          rgba(42, 29, 10, 0.05),
+          rgba(42, 29, 10, 0)
+        );
       }
       .stats-bg {
         position: absolute;
@@ -787,29 +821,9 @@
         margin-bottom: 64px;
       }
 
-      .stats-video-stage {
-        position: relative;
-        width: 100%;
-        max-width: 1280px;
-        margin: 0 auto;
-        aspect-ratio: 1920 / 400;
-        overflow: hidden;
-        background: #1a1206;
-        border: 1px solid rgba(184, 154, 90, 0.55);
-        outline: 1px solid rgba(184, 154, 90, 0.3);
-        outline-offset: 4px;
-      }
-      .stats-video-stage video {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-      }
       .stat-footnote {
-        max-width: 1280px;
-        margin: 18px auto 0;
+        max-width: 1100px;
+        margin: 22px auto 0;
         text-align: center;
         font-size: 11px;
         color: #8a7e6a;
@@ -818,74 +832,56 @@
         opacity: 0.75;
       }
 
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 0;
-      }
-      .stat-item {
-        padding: 40px 24px;
-        opacity: 0;
-        transform: translateY(30px);
-        border-right: 1px solid #e8e0ce;
-        position: relative;
-      }
-      .stat-item:last-child {
-        border-right: none;
-      }
-      .stat-item::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 40px;
-        height: 1px;
-        background: var(--gold-light);
-        opacity: 0.4;
-      }
+      /* 카드 face 컨텐츠 */
       .stat-num {
-        font-family: "Pretendard Variable", "Pretendard", sans-serif;
-        font-size: clamp(42px, 5vw, 64px);
-        font-weight: 700;
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(42px, 5.2vw, 64px);
+        font-weight: 600;
+        color: var(--gold-dark);
         line-height: 1;
-        background: linear-gradient(
-          135deg,
-          #8c7030,
-          #b89a5a
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 12px;
+        margin-bottom: 14px;
+        letter-spacing: -1px;
         white-space: nowrap;
-        position: relative;
-      }
-      .stat-num-glow {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        font-family: "Pretendard Variable", "Pretendard", sans-serif;
-        font-size: clamp(42px, 5vw, 64px);
-        font-weight: 700;
-        line-height: 1.1;
-        color: var(--gold-lighter);
-        opacity: 0;
-        filter: blur(18px);
-        animation: statGlow 2.5s ease-in-out infinite;
-        pointer-events: none;
       }
       .stat-label {
-        font-size: 15px;
-        font-weight: 500;
+        font-size: 16px;
+        font-weight: 600;
         color: #2c2820;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
       }
       .stat-sub {
         font-size: 12px;
         color: #8c8070;
+        line-height: 1.5;
+        text-align: center;
+      }
+      .stat-copy-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12px;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 10px;
+      }
+      .stat-copy {
+        font-size: 17px;
+        font-weight: 600;
+        color: #2a1d0a;
+        line-height: 1.5;
+        text-align: center;
+      }
+      .stat-copy strong {
+        color: var(--gold-dark);
+        font-weight: 800;
+      }
+
+      @media (max-width: 720px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .stat-item {
+          min-height: 200px;
+        }
       }
 
       /* Charts */
@@ -2760,16 +2756,53 @@
         <p class="stats-subtitle">
           대한민국 커플매니저 제1호가 만들어 온 성혼의 역사
         </p>
-        <div class="stats-video-stage" id="statsVideoStage">
-          <video
-            id="statsVideo"
-            src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/stats/stats_v1.mp4"
-            muted
-            playsinline
-            preload="auto"
-          ></video>
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-item">
+            <div class="face face-front">
+              <div class="stat-num">30년</div>
+              <div class="stat-label">매칭 노하우</div>
+              <div class="stat-sub">1996년부터 현재까지</div>
+            </div>
+            <div class="face face-back">
+              <div class="stat-copy-eyebrow">Noble Legacy</div>
+              <div class="stat-copy">노블홍의<br /><strong>30년 매칭 노하우</strong></div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="face face-front">
+              <div class="stat-num">8,000명+</div>
+              <div class="stat-label">성혼 실적</div>
+              <div class="stat-sub">대한민국 커플매니저 제1호*</div>
+            </div>
+            <div class="face face-back">
+              <div class="stat-copy-eyebrow">Couples</div>
+              <div class="stat-copy">한 길로 이은<br /><strong>8,000명+ 성혼</strong></div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="face face-front">
+              <div class="stat-num">75%</div>
+              <div class="stat-label">30대 교제율</div>
+              <div class="stat-sub">3회 이상 만남 기준</div>
+            </div>
+            <div class="face face-back">
+              <div class="stat-copy-eyebrow">Match Rate</div>
+              <div class="stat-copy">30대 교제율<br /><strong>업계 최고 75%</strong></div>
+            </div>
+          </div>
+          <div class="stat-item">
+            <div class="face face-front">
+              <div class="stat-num">3년 연속</div>
+              <div class="stat-label">브랜드만족지수 1위</div>
+              <div class="stat-sub">2022~2024 결혼정보 부문</div>
+            </div>
+            <div class="face face-back">
+              <div class="stat-copy-eyebrow">Brand Index</div>
+              <div class="stat-copy">KBSI<br /><strong>3년 연속 1위</strong></div>
+            </div>
+          </div>
         </div>
-        <p class="stat-footnote">* 8,000명+ 성혼 기준은 직업사전 등록 기준 / 30대 교제율은 3회 이상 만남 기준 / 브랜드만족지수 2022~2024 결혼정보 부문</p>
+        <p class="stat-footnote">* 직업사전 등록 기준</p>
 
         <div class="chart-section">
           <div class="chart-card">
@@ -4111,80 +4144,36 @@
         );
       })();
 
-      /* ── STATS — staggered reveal + counting ── */
-      document.querySelectorAll(".stat-item").forEach((item, i) => {
-        gsap.fromTo(
-          item,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            delay: i * 0.12,
-            ease: "expo.out",
-            scrollTrigger: { trigger: ".stats-grid", start: "top 82%" },
-          },
-        );
-      });
-
-      // Count up — with refined easing
-      document.querySelectorAll(".stat-num").forEach((el) => {
-        const target = parseInt(el.dataset.target);
-        const suffix = el.dataset.suffix || "";
-        ScrollTrigger.create({
-          trigger: el,
-          start: "top 85%",
-          onEnter: () => {
-            gsap.to(
-              { val: 0 },
-              {
-                val: target,
-                duration: 2.8,
-                ease: "expo.out",
-                onUpdate: function () {
-                  el.textContent =
-                    Math.round(this.targets()[0].val).toLocaleString() + suffix;
-                },
-              },
-            );
-          },
-          once: true,
-        });
-      });
-
-      // Stats V-1 영상 — 진입 시 자동재생 (IntersectionObserver)
+      /* ── STATS 카드 — 진입 도미노(.in) + 양면 무한 사이클(.flipped) ── */
       (function () {
-        const stage = document.getElementById("statsVideoStage");
-        if (!stage) return;
-        const video = document.getElementById("statsVideo");
-        if (!video) return;
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
-                video.currentTime = 0;
-                video.play().catch(() => {});
-              } else if (!entry.isIntersecting) {
-                video.pause();
-              }
-            });
-          },
-          { threshold: [0, 0.4, 1] },
+        const items = Array.from(
+          document.querySelectorAll(".stats-grid .stat-item"),
         );
-        io.observe(stage);
+        if (!items.length) return;
+        let cycleTimer = null;
+        let cursor = 0;
+        ScrollTrigger.create({
+          trigger: ".stats-grid",
+          start: "top 80%",
+          once: true,
+          onEnter: () => {
+            // 진입 도미노 — 좌→우 220ms stagger
+            items.forEach((it, i) => {
+              setTimeout(() => it.classList.add("in"), i * 220);
+            });
+            // 도미노 끝나고 1.5s 뒤 무한 사이클 — 1.4s 간격으로 한 장씩 토글
+            const startAfter = items.length * 220 + 1500;
+            setTimeout(() => {
+              if (cycleTimer) clearInterval(cycleTimer);
+              cycleTimer = setInterval(() => {
+                const it = items[cursor % items.length];
+                it.classList.toggle("flipped");
+                cursor++;
+              }, 1400);
+            }, startAfter);
+          },
+        });
       })();
-
-      // Stat cards — sequential right-Y flip on viewport entry
-      ScrollTrigger.create({
-        trigger: ".stats-grid",
-        start: "top 82%",
-        once: true,
-        onEnter: () => {
-          document.querySelectorAll(".stats-grid .stat-item").forEach((item, i) => {
-            setTimeout(() => item.classList.add("flipped"), i * 240);
-          });
-        },
-      });
 
       // "숫자로 보는 노블홍" ↔ "노블홍 30년 노하우" 글자 단위 카드 토글 (무한)
       ScrollTrigger.create({
