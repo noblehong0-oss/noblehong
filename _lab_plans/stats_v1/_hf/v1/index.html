@@ -227,7 +227,7 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="10"
+      data-duration="16"
       data-width="1920"
       data-height="400"
     >
@@ -235,7 +235,7 @@
         id="particles"
         class="clip"
         data-start="0"
-        data-duration="10"
+        data-duration="16"
         data-track-index="2"
       ></div>
 
@@ -243,7 +243,7 @@
         id="gold-dust"
         class="clip"
         data-start="0"
-        data-duration="10"
+        data-duration="16"
         data-track-index="20"
       ></div>
 
@@ -251,7 +251,7 @@
         class="center-line clip"
         id="cline"
         data-start="0"
-        data-duration="10"
+        data-duration="16"
         data-track-index="3"
       ></div>
 
@@ -259,7 +259,7 @@
         class="eyebrow clip"
         id="eyebrow"
         data-start="0"
-        data-duration="10"
+        data-duration="16"
         data-track-index="4"
       >
         Noble HONG · Numbers
@@ -268,7 +268,7 @@
         class="title clip"
         id="title"
         data-start="0"
-        data-duration="10"
+        data-duration="16"
         data-track-index="5"
       >
         Since 1996
@@ -278,7 +278,7 @@
         class="stats-row clip"
         id="row"
         data-start="0"
-        data-duration="10"
+        data-duration="16"
         data-track-index="6"
       >
         <div class="stat">
@@ -307,42 +307,42 @@
         class="border-outer clip"
         id="bord-out"
         data-start="0"
-        data-duration="10"
+        data-duration="16"
         data-track-index="7"
       ></div>
       <div
         class="border clip"
         id="bord-in"
         data-start="0"
-        data-duration="10"
+        data-duration="16"
         data-track-index="8"
       ></div>
       <div
         class="corner c-tl clip"
         id="ctl"
         data-start="0"
-        data-duration="10"
+        data-duration="16"
         data-track-index="9"
       ></div>
       <div
         class="corner c-tr clip"
         id="ctr"
         data-start="0"
-        data-duration="10"
+        data-duration="16"
         data-track-index="10"
       ></div>
       <div
         class="corner c-bl clip"
         id="cbl"
         data-start="0"
-        data-duration="10"
+        data-duration="16"
         data-track-index="11"
       ></div>
       <div
         class="corner c-br clip"
         id="cbr"
         data-start="0"
-        data-duration="10"
+        data-duration="16"
         data-track-index="12"
       ></div>
     </div>
@@ -480,13 +480,14 @@
         );
       });
 
-      // 카운트 끝난 후 (5.4초~) — TX-A Gold Foil Shimmer
+      // 카운트 끝난 후 (5.4초~16초) — TX-A Gold Foil Shimmer
       // 좌→우 stagger + 한 방향 끊김 없이 이어짐 (background-size 200% × 2.4초/주기)
+      // 16초 총 길이 동안 5.4~16초 = 10.6초간 shimmer (≈4.4 사이클, 마지막 5초는 단독)
       const shimmerIds = ["#n1", "#n2", "#n3", "#n4"];
       const cycleDuration = 2.4;
       const staggerStep = 0.3;
       const shimmerStart = 5.4;
-      const totalCycles = 2; // 2주기 = 4.8초 (5.4~10.2초)
+      const totalCycles = 5; // 5주기 = 12초 → 5.4~17.4 (16초에서 잘림, 마지막 5초 dust 없이 단독)
 
       shimmerIds.forEach((id, i) => {
         // 시작 위치 50% (가장 밝은 가운데) → -350% (한 방향, 끊김 없이)
@@ -521,7 +522,7 @@
       // = y 300~385 (박스 하단 영역만)
       const trailY = 340;
       const trailStart = 5.4;
-      const trailDuration = 4.6; // 5.4~10초
+      const trailDuration = 4.0; // 5.4~9.4초 spawn (단축: 마지막 5초 dust-free 구간 확보)
       const spawnRate = 0.025; // 0.025초마다 spawn (큰 grain이라 약간 줄임)
       const numSpawns = Math.floor(trailDuration / spawnRate);
 
@@ -548,7 +549,7 @@
           const offsetY = (rand2() - 0.5) * 8;
           const driftX = -4 + rand2() * 8;
           const driftY = -4 - rand2() * 10;
-          const life = 1.0 + rand2() * 1.5;
+          const life = 0.8 + rand2() * 0.9; // 단축: max 1.7초 (last spawn @9.4 → done @11.3, pure shimmer 4.7초)
           const colorIdx = Math.floor(rand2() * GOLDS.length);
           const color = GOLDS[colorIdx];
 
