@@ -753,10 +753,12 @@
         color: var(--gold);
       }
       /* 글자 단위 카드 (양면) — 두 카피 무한 토글
-         inline-grid stack: 양면 글자 중 더 넓은 폭으로 카드 폭 고정 → 겹침 0 */
+         inline-grid stack: 양면 글자 중 더 넓은 폭으로 카드 폭 고정 → 겹침 0
+         min-width는 JS에서 모든 상태(글자×weight 조합) 측정 후 주입 → weight 토글 시에도 폭 불변 */
       .stats-title .ch {
         display: inline-grid;
         grid-template-areas: "stack";
+        justify-items: center;
         vertical-align: baseline;
         transform-style: preserve-3d;
         transition: transform 0.65s cubic-bezier(0.5, 0, 0.2, 1);
@@ -3804,6 +3806,165 @@
           return { particles, w, h, padding };
         }
 
+        // "노블홍" 글자의 픽셀 타깃 좌표 추출 (속도/페이드 없음 — 도착점만)
+        function extractTargets(text, fontPx, fontFamily, fontWeight) {
+          const dpr = Math.max(1, window.devicePixelRatio || 1);
+          const padding = Math.ceil(fontPx * 0.4);
+          const measureCan = document.createElement("canvas");
+          const mctx = measureCan.getContext("2d");
+          mctx.font = `${fontWeight} ${fontPx}px ${fontFamily}`;
+          const metrics = mctx.measureText(text);
+          const w = Math.ceil(metrics.width) + padding * 2;
+          const h = Math.ceil(fontPx * 1.4) + padding * 2;
+          const can = document.createElement("canvas");
+          can.width = w * dpr;
+          can.height = h * dpr;
+          const ctx = can.getContext("2d");
+          ctx.scale(dpr, dpr);
+          ctx.font = `${fontWeight} ${fontPx}px ${fontFamily}`;
+          ctx.fillStyle = "#000";
+          ctx.textBaseline = "middle";
+          ctx.fillText(text, padding, h / 2);
+          const data = ctx.getImageData(0, 0, can.width, can.height).data;
+          const targets = [];
+          const STEP = 2; // 픽셀 서브샘플 — 적정 파티클 수 유지
+          for (let y = 0; y < can.height; y += STEP) {
+            for (let x = 0; x < can.width; x += STEP) {
+              const idx = (y * can.width + x) * 4;
+              if (data[idx + 3] > 80) {
+                targets.push({ x: x / dpr, y: y / dpr });
+              }
+            }
+          }
+          return { targets, w, h, padding };
+        }
+
+        // "노블홍" 모집(gather) — 흩어진 파티클들이 글자로 모여 형성
+        let gatherStarted = false;
+        function gatherNoblehong() {
+          if (gatherStarted) return;
+          gatherStarted = true;
+          const strong = document.getElementById("heroTitleStrong");
+          const trail = document.getElementById("heroTitleTrail");
+          if (!strong || !trail) return;
+
+          // strong 박스 폭을 OLD에 잠근 상태로 콘텐츠 교체 → 박스 점프 0
+          const W_old = strong.getBoundingClientRect().width;
+          strong.style.width = W_old + "px";
+
+          strong.innerHTML = '<span class="engrave gather-mode">노블홍</span>';
+          const engrave = strong.querySelector(".engrave");
+          engrave.style.clipPath = "none";
+          engrave.style.opacity = "0";
+
+          // 새 자연 폭 계측 (잠시 풀어서 측정 후 다시 잠금)
+          strong.style.width = "";
+          const W_new = strong.getBoundingClientRect().width;
+          strong.style.width = W_old + "px";
+
+          // strong 폭을 부드럽게 W_old → W_new 전환 → trail은 문서 흐름으로 자연스레 따라옴
+          gsap.to(strong, {
+            width: W_new,
+            duration: 1.4,
+            ease: "power3.inOut",
+            onComplete: () => {
+              strong.style.width = "";
+            },
+          });
+
+          const cs = getComputedStyle(strong);
+          const fontPx = parseFloat(cs.fontSize);
+          const fontFamily = cs.fontFamily;
+          const fontWeight = cs.fontWeight || "800";
+          const text = engrave.textContent;
+          const { targets, w, h, padding } = extractTargets(
+            text,
+            fontPx,
+            fontFamily,
+            fontWeight,
+          );
+
+          const engRect = engrave.getBoundingClientRect();
+          const dpr = Math.max(1, window.devicePixelRatio || 1);
+          const can = document.createElement("canvas");
+          can.className = "particle-canvas";
+          can.style.left = engRect.left + window.scrollX - padding + "px";
+          can.style.top =
+            engRect.top + window.scrollY - (h - engRect.height) / 2 + "px";
+          can.style.width = w + "px";
+          can.style.height = h + "px";
+          can.width = w * dpr;
+          can.height = h * dpr;
+          document.body.appendChild(can);
+          const ctx = can.getContext("2d");
+          ctx.scale(dpr, dpr);
+
+          // 흩어진 파티클들이 여기로 모이는 인상 — 출발점은 오른쪽 + 아래쪽 편향
+          // (특별한 인연이 오른쪽으로 흩어졌으므로 자연스러운 회수 동선)
+          const gatherers = targets.map((t) => {
+            const angle = Math.random() * Math.PI - Math.PI * 0.15; // 우측~하측 위주
+            const dist = 180 + Math.random() * 360;
+            const ox = t.x + Math.cos(angle) * dist + dist * 0.35;
+            const oy = t.y + Math.abs(Math.sin(angle)) * dist * 0.6;
+            return {
+              tx: t.x,
+              ty: t.y,
+              ox,
+              oy,
+              x: ox,
+              y: oy,
+              progress: 0,
+              // 좌측 글자가 먼저 자리잡도록 약한 stagger (왼→오)
+              delay: Math.random() * 18 + (t.x / w) * 14,
+              duration: 55 + Math.random() * 35,
+              color: pickColor(),
+              size: 0.7 + Math.random() * 0.7,
+              alpha: 0,
+            };
+          });
+
+          let frame = 0;
+          function gtick() {
+            ctx.clearRect(0, 0, can.width, can.height);
+            let moving = 0;
+            for (const p of gatherers) {
+              if (p.delay > 0) {
+                p.delay--;
+                continue;
+              }
+              if (p.progress < 1) {
+                p.progress = Math.min(1, p.progress + 1 / p.duration);
+                const e = 1 - Math.pow(1 - p.progress, 3); // power3.out
+                p.x = p.ox + (p.tx - p.ox) * e;
+                p.y = p.oy + (p.ty - p.oy) * e;
+                p.alpha = Math.min(1, p.progress * 1.6);
+                moving++;
+              }
+              ctx.globalAlpha = p.alpha;
+              ctx.fillStyle = `rgb(${p.color[0]},${p.color[1]},${p.color[2]})`;
+              ctx.fillRect(p.x, p.y, p.size, p.size);
+            }
+            frame++;
+            if (moving > 0 && frame < 240) {
+              requestAnimationFrame(gtick);
+            } else {
+              // 모집 완료 → 실제 텍스트로 크로스페이드
+              gsap.to(engrave, {
+                opacity: 1,
+                duration: 0.55,
+                ease: "power2.out",
+              });
+              gsap.to(can, {
+                opacity: 0,
+                duration: 0.55,
+                ease: "power2.out",
+                onComplete: () => can.remove(),
+              });
+            }
+          }
+          requestAnimationFrame(gtick);
+        }
+
         function dissolveStrong() {
           const strong = document.getElementById("heroTitleStrong");
           const trail = document.getElementById("heroTitleTrail");
@@ -3840,6 +4001,9 @@
 
           strong.classList.add("dispersing");
 
+          // 흩어짐이 진행되는 동안 노블홍 모집을 동시 시작 → 연결점 자연스럽게 오버랩
+          setTimeout(gatherNoblehong, 850);
+
           let frame = 0;
           function tick() {
             ctx.clearRect(0, 0, can.width, can.height);
@@ -3869,21 +4033,8 @@
             if (alive > 0 && frame < 600) {
               requestAnimationFrame(tick);
             } else {
+              // 흩어짐 캔버스만 제거 (텍스트 교체/트레일 슬라이드는 gatherNoblehong이 담당)
               can.remove();
-              const startRect = trail.getBoundingClientRect();
-              strong.innerHTML = '<span class="engrave">노블홍</span>';
-              const endRect = trail.getBoundingClientRect();
-              const dx = startRect.left - endRect.left;
-              gsap.fromTo(
-                trail,
-                { x: dx },
-                { x: 0, duration: 1.0, ease: "power3.out" },
-              );
-              requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                  strong.querySelector(".engrave").classList.add("engraved");
-                });
-              });
             }
           }
           requestAnimationFrame(tick);
@@ -4076,6 +4227,48 @@
             }
           }
 
+          // 각 셀의 min-width를 모든 가능한 상태에서의 최대 폭으로 고정.
+          // 토글 시 .gold 클래스가 옮겨가며 font-weight 300↔600으로 바뀌어도 폭 불변.
+          function lockCellWidths() {
+            const measure = document.createElement("span");
+            const cs = window.getComputedStyle(titleEl);
+            measure.style.cssText =
+              "position:absolute;left:-9999px;top:-9999px;visibility:hidden;white-space:pre;";
+            measure.style.fontFamily = cs.fontFamily;
+            measure.style.fontSize = cs.fontSize;
+            measure.style.fontStyle = cs.fontStyle;
+            measure.style.letterSpacing = cs.letterSpacing;
+            document.body.appendChild(measure);
+
+            const widths = [];
+            for (let i = 0; i < MAX_LEN; i++) {
+              let maxW = 0;
+              for (let t = 0; t < TEXTS.length; t++) {
+                const c = TEXTS[t][i] || " ";
+                const glyph = c === " " ? " " : c;
+                // 이 위치가 어느 한 상태라도 gold가 되면 600도 측정해야 함
+                const weights = new Set();
+                for (let g = 0; g < GOLDS.length; g++) {
+                  weights.add(GOLDS[g].has(i) ? "600" : "300");
+                }
+                weights.forEach((w) => {
+                  measure.style.fontWeight = w;
+                  measure.textContent = glyph;
+                  const r = measure.getBoundingClientRect().width;
+                  if (r > maxW) maxW = r;
+                });
+              }
+              // 서브픽셀 라운딩 여유 1px
+              widths.push(Math.ceil(maxW) + 1);
+            }
+            measure.remove();
+
+            const chs = titleEl.querySelectorAll(".ch");
+            chs.forEach((ch, i) => {
+              ch.style.minWidth = widths[i] + "px";
+            });
+          }
+
           function swapNext() {
             if (busy) return;
             busy = true;
@@ -4107,6 +4300,7 @@
           }
 
           buildInitial();
+          lockCellWidths();
           setTimeout(() => {
             swapNext();
             setInterval(swapNext, INTERVAL);

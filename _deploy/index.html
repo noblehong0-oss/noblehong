@@ -759,10 +759,12 @@
         color: var(--gold);
       }
       /* 글자 단위 카드 (양면) — 두 카피 무한 토글
-         inline-grid stack: 양면 글자 중 더 넓은 폭으로 카드 폭 고정 → 겹침 0 */
+         inline-grid stack: 양면 글자 중 더 넓은 폭으로 카드 폭 고정 → 겹침 0
+         min-width는 JS에서 모든 상태(글자×weight 조합) 측정 후 주입 → weight 토글 시에도 폭 불변 */
       .stats-title .ch {
         display: inline-grid;
         grid-template-areas: "stack";
+        justify-items: center;
         vertical-align: baseline;
         transform-style: preserve-3d;
         transition: transform 0.65s cubic-bezier(0.5, 0, 0.2, 1);
@@ -4667,6 +4669,156 @@
           return { particles, w, h, padding };
         }
 
+        function extractTargets(text, fontPx, fontFamily, fontWeight) {
+          const dpr = Math.max(1, window.devicePixelRatio || 1);
+          const padding = Math.ceil(fontPx * 0.4);
+          const measureCan = document.createElement("canvas");
+          const mctx = measureCan.getContext("2d");
+          mctx.font = `${fontWeight} ${fontPx}px ${fontFamily}`;
+          const metrics = mctx.measureText(text);
+          const w = Math.ceil(metrics.width) + padding * 2;
+          const h = Math.ceil(fontPx * 1.4) + padding * 2;
+          const can = document.createElement("canvas");
+          can.width = w * dpr;
+          can.height = h * dpr;
+          const ctx = can.getContext("2d");
+          ctx.scale(dpr, dpr);
+          ctx.font = `${fontWeight} ${fontPx}px ${fontFamily}`;
+          ctx.fillStyle = "#000";
+          ctx.textBaseline = "middle";
+          ctx.fillText(text, padding, h / 2);
+          const data = ctx.getImageData(0, 0, can.width, can.height).data;
+          const targets = [];
+          const STEP = 2;
+          for (let y = 0; y < can.height; y += STEP) {
+            for (let x = 0; x < can.width; x += STEP) {
+              const idx = (y * can.width + x) * 4;
+              if (data[idx + 3] > 80) {
+                targets.push({ x: x / dpr, y: y / dpr });
+              }
+            }
+          }
+          return { targets, w, h, padding };
+        }
+
+        let gatherStarted = false;
+        function gatherNoblehong() {
+          if (gatherStarted) return;
+          gatherStarted = true;
+          const strong = document.getElementById("heroTitleStrong");
+          const trail = document.getElementById("heroTitleTrail");
+          if (!strong || !trail) return;
+
+          const W_old = strong.getBoundingClientRect().width;
+          strong.style.width = W_old + "px";
+
+          strong.innerHTML = '<span class="engrave gather-mode">노블홍</span>';
+          const engrave = strong.querySelector(".engrave");
+          engrave.style.clipPath = "none";
+          engrave.style.opacity = "0";
+
+          strong.style.width = "";
+          const W_new = strong.getBoundingClientRect().width;
+          strong.style.width = W_old + "px";
+
+          gsap.to(strong, {
+            width: W_new,
+            duration: 1.4,
+            ease: "power3.inOut",
+            onComplete: () => {
+              strong.style.width = "";
+            },
+          });
+
+          const cs = getComputedStyle(strong);
+          const fontPx = parseFloat(cs.fontSize);
+          const fontFamily = cs.fontFamily;
+          const fontWeight = cs.fontWeight || "800";
+          const text = engrave.textContent;
+          const { targets, w, h, padding } = extractTargets(
+            text,
+            fontPx,
+            fontFamily,
+            fontWeight,
+          );
+
+          const engRect = engrave.getBoundingClientRect();
+          const dpr = Math.max(1, window.devicePixelRatio || 1);
+          const can = document.createElement("canvas");
+          can.className = "particle-canvas";
+          can.style.left = engRect.left + window.scrollX - padding + "px";
+          can.style.top =
+            engRect.top + window.scrollY - (h - engRect.height) / 2 + "px";
+          can.style.width = w + "px";
+          can.style.height = h + "px";
+          can.width = w * dpr;
+          can.height = h * dpr;
+          document.body.appendChild(can);
+          const ctx = can.getContext("2d");
+          ctx.scale(dpr, dpr);
+
+          const gatherers = targets.map((t) => {
+            const angle = Math.random() * Math.PI - Math.PI * 0.15;
+            const dist = 180 + Math.random() * 360;
+            const ox = t.x + Math.cos(angle) * dist + dist * 0.35;
+            const oy = t.y + Math.abs(Math.sin(angle)) * dist * 0.6;
+            return {
+              tx: t.x,
+              ty: t.y,
+              ox,
+              oy,
+              x: ox,
+              y: oy,
+              progress: 0,
+              delay: Math.random() * 18 + (t.x / w) * 14,
+              duration: 55 + Math.random() * 35,
+              color: pickColor(),
+              size: 0.7 + Math.random() * 0.7,
+              alpha: 0,
+            };
+          });
+
+          let frame = 0;
+          function gtick() {
+            ctx.clearRect(0, 0, can.width, can.height);
+            let moving = 0;
+            for (const p of gatherers) {
+              if (p.delay > 0) {
+                p.delay--;
+                continue;
+              }
+              if (p.progress < 1) {
+                p.progress = Math.min(1, p.progress + 1 / p.duration);
+                const e = 1 - Math.pow(1 - p.progress, 3);
+                p.x = p.ox + (p.tx - p.ox) * e;
+                p.y = p.oy + (p.ty - p.oy) * e;
+                p.alpha = Math.min(1, p.progress * 1.6);
+                moving++;
+              }
+              ctx.globalAlpha = p.alpha;
+              ctx.fillStyle = `rgb(${p.color[0]},${p.color[1]},${p.color[2]})`;
+              ctx.fillRect(p.x, p.y, p.size, p.size);
+            }
+            frame++;
+            if (moving > 0 && frame < 240) {
+              requestAnimationFrame(gtick);
+            } else {
+              gsap.to(engrave, {
+                opacity: 1,
+                duration: 0.55,
+                ease: "power2.out",
+              });
+              gsap.to(can, {
+                opacity: 0,
+                duration: 0.55,
+                ease: "power2.out",
+                onComplete: () => can.remove(),
+              });
+            }
+          }
+          requestAnimationFrame(gtick);
+        }
+
         function dissolveStrong() {
           const strong = document.getElementById("heroTitleStrong");
           const trail = document.getElementById("heroTitleTrail");
@@ -4703,6 +4855,9 @@
 
           strong.classList.add("dispersing");
 
+          // 흩어짐 진행 중에 노블홍 모집을 시작 → 자연스러운 오버랩
+          setTimeout(gatherNoblehong, 850);
+
           let frame = 0;
           function tick() {
             ctx.clearRect(0, 0, can.width, can.height);
@@ -4733,20 +4888,6 @@
               requestAnimationFrame(tick);
             } else {
               can.remove();
-              const startRect = trail.getBoundingClientRect();
-              strong.innerHTML = '<span class="engrave">노블홍</span>';
-              const endRect = trail.getBoundingClientRect();
-              const dx = startRect.left - endRect.left;
-              gsap.fromTo(
-                trail,
-                { x: dx },
-                { x: 0, duration: 1.0, ease: "power3.out" },
-              );
-              requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                  strong.querySelector(".engrave").classList.add("engraved");
-                });
-              });
             }
           }
           requestAnimationFrame(tick);
@@ -4919,6 +5060,46 @@
             }
           }
 
+          // 각 셀의 min-width를 모든 가능한 상태에서의 최대 폭으로 고정.
+          // 토글 시 .gold 클래스가 옮겨가며 font-weight 300↔600으로 바뀌어도 폭 불변.
+          function lockCellWidths() {
+            const measure = document.createElement("span");
+            const cs = window.getComputedStyle(titleEl);
+            measure.style.cssText =
+              "position:absolute;left:-9999px;top:-9999px;visibility:hidden;white-space:pre;";
+            measure.style.fontFamily = cs.fontFamily;
+            measure.style.fontSize = cs.fontSize;
+            measure.style.fontStyle = cs.fontStyle;
+            measure.style.letterSpacing = cs.letterSpacing;
+            document.body.appendChild(measure);
+
+            const widths = [];
+            for (let i = 0; i < MAX_LEN; i++) {
+              let maxW = 0;
+              for (let t = 0; t < TEXTS.length; t++) {
+                const c = TEXTS[t][i] || " ";
+                const glyph = c === " " ? " " : c;
+                const weights = new Set();
+                for (let g = 0; g < GOLDS.length; g++) {
+                  weights.add(GOLDS[g].has(i) ? "600" : "300");
+                }
+                weights.forEach((w) => {
+                  measure.style.fontWeight = w;
+                  measure.textContent = glyph;
+                  const r = measure.getBoundingClientRect().width;
+                  if (r > maxW) maxW = r;
+                });
+              }
+              widths.push(Math.ceil(maxW) + 1);
+            }
+            measure.remove();
+
+            const chs = titleEl.querySelectorAll(".ch");
+            chs.forEach((ch, i) => {
+              ch.style.minWidth = widths[i] + "px";
+            });
+          }
+
           function swapNext() {
             if (busy) return;
             busy = true;
@@ -4951,6 +5132,7 @@
           }
 
           buildInitial();
+          lockCellWidths();
           setTimeout(() => {
             swapNext();
             setInterval(swapNext, INTERVAL);
