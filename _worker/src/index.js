@@ -2016,7 +2016,10 @@ function parseManagerProfile(html) {
   const imgMatch = html.match(
     /<img\s+src="(\/_xfile\/manager\/[^"]+)"\s+width/,
   );
-  const photo = imgMatch ? `https://www.noblehong.com${imgMatch[1]}` : null;
+  // imgMatch[1] = "/_xfile/manager/홍유진.jpg" → Worker manager-photo proxy로 변환
+  const photo = imgMatch
+    ? `/api/manager-photo/${imgMatch[1].split("/").pop()}`
+    : null;
 
   const nameMatch = html.match(
     /class="txt_name">([^<&]+)(?:&nbsp;)?\s*<span>([^<]*)<\/span>/,
@@ -2082,6 +2085,99 @@ function parseManagerProfile(html) {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// 매니저 사진 R2 lazy caching + 매월 말일 동기화
+// /api/manager-photo/{filename} — R2 hit이면 즉시, miss면 카페24 fetch → R2 PUT
+// 카페24 서버 파일은 READ-only로만 fetch (변경 X)
+// ─────────────────────────────────────────────────────────────────
+async function handleManagerPhoto(request, env) {
+  const url = new URL(request.url);
+  const raw = url.pathname.replace("/api/manager-photo/", "");
+  const filename = decodeURIComponent(raw);
+  if (!filename || !/^[^/]+\.(jpg|jpeg|png|gif|webp)$/i.test(filename)) {
+    return json({ error: "Invalid filename" }, 400);
+  }
+  const r2Key = `manager/${filename}`;
+
+  // 1) R2 hit
+  if (env.BUCKET) {
+    const obj = await env.BUCKET.get(r2Key);
+    if (obj) {
+      const ct = obj.httpMetadata?.contentType || "image/jpeg";
+      return new Response(obj.body, {
+        headers: {
+          "Content-Type": ct,
+          "Cache-Control": "public, max-age=86400",
+          "X-R2-Cache": "HIT",
+        },
+      });
+    }
+  }
+
+  // 2) Miss → 카페24 fetch (HTTP + crm hostname + Host 헤더 우회 패턴)
+  const sourceUrl = `http://crm.noblehong.com/_xfile/manager/${encodeURIComponent(filename)}`;
+  let fetchRes;
+  try {
+    fetchRes = await fetch(sourceUrl, {
+      headers: { Host: "www.noblehong.com" },
+    });
+  } catch (e) {
+    return new Response("Upstream fetch failed", { status: 502 });
+  }
+  if (!fetchRes.ok) {
+    return new Response("Not Found", { status: fetchRes.status });
+  }
+
+  const ct = fetchRes.headers.get("Content-Type") || "image/jpeg";
+  const bytes = await fetchRes.arrayBuffer();
+
+  // 3) R2 PUT (background, fire-and-forget)
+  if (env.BUCKET) {
+    bgRun(
+      env,
+      env.BUCKET.put(r2Key, bytes, { httpMetadata: { contentType: ct } }),
+    );
+  }
+
+  return new Response(bytes, {
+    headers: {
+      "Content-Type": ct,
+      "Cache-Control": "public, max-age=86400",
+      "X-R2-Cache": "MISS",
+    },
+  });
+}
+
+// R2 listing 기반 재동기화: 매월 말일 cron이 호출
+async function syncManagerPhotosR2(env) {
+  if (!env.BUCKET) return { synced: 0, failed: 0, total: 0 };
+  let synced = 0,
+    failed = 0;
+  const list = await env.BUCKET.list({ prefix: "manager/" });
+  for (const obj of list.objects) {
+    const filename = obj.key.replace("manager/", "");
+    try {
+      const sourceUrl = `http://crm.noblehong.com/_xfile/manager/${encodeURIComponent(filename)}`;
+      const r = await fetch(sourceUrl, {
+        headers: { Host: "www.noblehong.com" },
+      });
+      if (r.ok) {
+        const ct = r.headers.get("Content-Type") || "image/jpeg";
+        const bytes = await r.arrayBuffer();
+        await env.BUCKET.put(obj.key, bytes, {
+          httpMetadata: { contentType: ct },
+        });
+        synced++;
+      } else {
+        failed++;
+      }
+    } catch (e) {
+      failed++;
+    }
+  }
+  return { synced, failed, total: list.objects.length };
+}
+
+// ─────────────────────────────────────────────────────────────────
 // 라우터
 // ─────────────────────────────────────────────────────────────────
 async function route(request, env) {
@@ -2125,6 +2221,8 @@ async function route(request, env) {
   if (path === "/api/content") return handlePublicContent(request, env);
   if (path === "/api/couple-manager/search")
     return handleCoupleManagerSearch(request);
+  if (path.startsWith("/api/manager-photo/"))
+    return handleManagerPhoto(request, env);
 
   return json({ error: "Not found", path }, 404);
 }
@@ -2144,8 +2242,42 @@ export default {
     }
   },
 
-  // Cron Trigger: KST 03:00 = UTC 18:00 매일 — 홍유진TV 자동 동기화
+  // Cron Triggers (UTC):
+  //   "0 18 * * *"      매일 KST 03:00 — 홍유진TV 동기화
+  //   "0 18 28-31 * *"  28~31일 KST 03:00 — 코드에서 말일 체크 후 매니저 사진 R2 재동기화
   async scheduled(event, env, ctx) {
+    const cronExpr = event.cron;
+
+    // 매일 매니저 사진 cron 후보 슬롯이면 말일 여부 체크
+    if (cronExpr === "0 18 28-31 * *") {
+      ctx.waitUntil(
+        (async () => {
+          try {
+            const kst = new Date(Date.now() + 9 * 3600 * 1000);
+            const tomorrow = new Date(
+              kst.getFullYear(),
+              kst.getMonth(),
+              kst.getDate() + 1,
+            );
+            const isLastDay = tomorrow.getDate() === 1;
+            if (!isLastDay) return; // 28/29/30/31 중 말일 아니면 skip
+            const r = await syncManagerPhotosR2(env);
+            tgDebug(
+              env,
+              `[노블홍/manager-sync] R2 재동기화 — 갱신 ${r.synced} / 실패 ${r.failed} / 총 ${r.total}`,
+            );
+          } catch (e) {
+            tgDebug(
+              env,
+              `[노블홍/manager-sync] 실패: ${(e?.message || "").slice(0, 200)}`,
+            );
+          }
+        })(),
+      );
+      return;
+    }
+
+    // 기존: 매일 홍유진TV 동기화
     ctx.waitUntil(
       (async () => {
         try {

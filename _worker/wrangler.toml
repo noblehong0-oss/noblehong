@@ -24,9 +24,11 @@ ADMIN_URL = "https://noblehong.vercel.app/admin"
 YOUTUBE_CHANNEL_ID = "UCTc2jA14tl_5VZEI7Ztf0zA"
 
 # Cron Triggers (Cloudflare Workers scheduled events)
-# UTC 기준 매일 18:00 = KST 03:00 (홍유진TV 자동 동기화)
+# UTC 18:00 = KST 03:00
+# "0 18 * * *"      매일 — 홍유진TV 자동 동기화
+# "0 18 28-31 * *"  28~31일 — 코드에서 말일 체크 후 매니저 사진 R2 재동기화
 [triggers]
-crons = ["0 18 * * *"]
+crons = ["0 18 * * *", "0 18 28-31 * *"]
 
 # Secrets (set via `wrangler secret put`):
 #   ADMIN_JWT_SECRET,
