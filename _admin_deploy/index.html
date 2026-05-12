@@ -1024,26 +1024,24 @@
           <div class="eyebrow">NOBLE HONG</div>
           <div class="title">관리자 로그인</div>
         </div>
-        <div id="stepRequest">
-          <div class="login-hint">
-            텔레그램 관리자 채팅으로 6자리 OTP를 전송합니다.
-          </div>
-          <button id="btnRequest" class="login-btn">OTP 발송</button>
-        </div>
-        <div id="stepVerify" style="display: none">
-          <label for="otpInput">OTP 6자리</label>
+        <div id="stepLogin">
+          <label for="loginId">ID</label>
           <input
-            id="otpInput"
+            id="loginId"
             type="text"
-            inputmode="numeric"
-            maxlength="6"
-            autocomplete="one-time-code"
-            placeholder="------"
+            autocomplete="username"
+            placeholder="admin"
           />
-          <button id="btnVerify" class="login-btn">로그인</button>
-          <div class="login-hint">
-            <a href="#" id="btnResend" style="color: var(--gold)">OTP 재발송</a>
-          </div>
+          <label for="loginPw" style="margin-top: 12px">Password</label>
+          <input
+            id="loginPw"
+            type="password"
+            autocomplete="current-password"
+            placeholder="••••••••"
+          />
+          <button id="btnLogin" class="login-btn" style="margin-top: 16px">
+            로그인
+          </button>
         </div>
         <div id="loginStatus" class="login-status"></div>
       </div>
@@ -1422,71 +1420,37 @@
         else showLogin();
       }
 
-      // ───────── 로그인 플로우 ─────────
-      document
-        .getElementById("btnRequest")
-        .addEventListener("click", async () => {
-          const btn = document.getElementById("btnRequest");
-          btn.disabled = true;
-          btn.textContent = "전송 중...";
-          setLoginStatus("", "");
-          const r = await api("/api/admin/otp/request", { method: "POST" });
-          if (r.ok) {
-            document.getElementById("stepRequest").style.display = "none";
-            document.getElementById("stepVerify").style.display = "block";
-            setLoginStatus(
-              "텔레그램 관리자 채팅에서 OTP를 확인하세요. 5분 내 입력.",
-              "ok",
-            );
-            setTimeout(() => document.getElementById("otpInput").focus(), 50);
-          } else {
-            setLoginStatus(
-              r.json.error || "OTP 발송 실패. 네트워크 확인 후 재시도.",
-              "err",
-            );
-          }
-          btn.disabled = false;
-          btn.textContent = "OTP 발송";
+      // ───────── 로그인 플로우 (ID/PW) ─────────
+      async function doLogin() {
+        const username = (
+          document.getElementById("loginId").value || ""
+        ).trim();
+        const password = document.getElementById("loginPw").value || "";
+        if (!username || !password) {
+          setLoginStatus("ID와 비밀번호를 입력하세요.", "err");
+          return;
+        }
+        const btn = document.getElementById("btnLogin");
+        btn.disabled = true;
+        btn.textContent = "확인 중...";
+        const r = await api("/api/admin/login", {
+          method: "POST",
+          body: JSON.stringify({ username, password }),
         });
-
-      document
-        .getElementById("btnResend")
-        .addEventListener("click", async (e) => {
-          e.preventDefault();
-          setLoginStatus("OTP 재발송 중...", "ok");
-          const r = await api("/api/admin/otp/request", { method: "POST" });
-          if (r.ok)
-            setLoginStatus("새 OTP가 텔레그램으로 발송되었습니다.", "ok");
-          else setLoginStatus(r.json.error || "재발송 실패", "err");
+        btn.disabled = false;
+        btn.textContent = "로그인";
+        if (r.ok) {
+          setLoginStatus("로그인 성공. 대시보드 로딩...", "ok");
+          setTimeout(showApp, 300);
+        } else {
+          setLoginStatus(r.json.error || "ID/PW가 일치하지 않습니다.", "err");
+        }
+      }
+      document.getElementById("btnLogin").addEventListener("click", doLogin);
+      ["loginId", "loginPw"].forEach((id) => {
+        document.getElementById(id).addEventListener("keydown", (e) => {
+          if (e.key === "Enter") doLogin();
         });
-
-      document
-        .getElementById("btnVerify")
-        .addEventListener("click", async () => {
-          const otp = (document.getElementById("otpInput").value || "").trim();
-          if (!/^\d{6}$/.test(otp)) {
-            setLoginStatus("6자리 숫자를 입력하세요.", "err");
-            return;
-          }
-          const btn = document.getElementById("btnVerify");
-          btn.disabled = true;
-          btn.textContent = "확인 중...";
-          const r = await api("/api/admin/otp/verify", {
-            method: "POST",
-            body: JSON.stringify({ otp }),
-          });
-          btn.disabled = false;
-          btn.textContent = "로그인";
-          if (r.ok) {
-            setLoginStatus("로그인 성공. 대시보드 로딩...", "ok");
-            setTimeout(showApp, 300);
-          } else {
-            setLoginStatus(r.json.error || "OTP가 일치하지 않습니다.", "err");
-          }
-        });
-
-      document.getElementById("otpInput").addEventListener("keydown", (e) => {
-        if (e.key === "Enter") document.getElementById("btnVerify").click();
       });
 
       // ───────── 로그아웃 ─────────

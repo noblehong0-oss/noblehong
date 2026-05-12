@@ -1356,6 +1356,95 @@ async function handleOtpVerify(request, env) {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// 핸들러: ID/PW 로그인 (OTP 대체)
+// ─────────────────────────────────────────────────────────────────
+async function handleAdminLogin(request, env) {
+  if (request.method !== "POST")
+    return json({ error: "Method not allowed" }, 405);
+  const ct = (request.headers.get("content-type") || "").toLowerCase();
+  if (!ct.includes("application/json"))
+    return json({ error: "application/json required" }, 415);
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "Invalid JSON" }, 400);
+  }
+
+  const SECRET = env.ADMIN_JWT_SECRET;
+  const SESSION_TTL = parseInt(env.ADMIN_SESSION_TTL || "43200", 10);
+  const ADMIN_USER = env.ADMIN_USERNAME;
+  const ADMIN_PW = env.ADMIN_PASSWORD;
+  if (!SECRET || !ADMIN_USER || !ADMIN_PW)
+    return json({ error: "Server misconfigured" }, 500);
+
+  const username = String(body.username || "").trim();
+  const password = String(body.password || "");
+  if (!username || !password)
+    return json({ error: "Username/Password required" }, 400);
+
+  // 입력 길이 동일하지 않으면 dummy 비교로 timing 일치
+  const u1 =
+    username.length === ADMIN_USER.length ? username : ADMIN_USER + "x";
+  const p1 = password.length === ADMIN_PW.length ? password : ADMIN_PW + "x";
+  let userDiff = 0,
+    pwDiff = 0;
+  for (let i = 0; i < ADMIN_USER.length; i++)
+    userDiff |= u1.charCodeAt(i) ^ ADMIN_USER.charCodeAt(i);
+  for (let i = 0; i < ADMIN_PW.length; i++)
+    pwDiff |= p1.charCodeAt(i) ^ ADMIN_PW.charCodeAt(i);
+  const ok =
+    userDiff === 0 &&
+    pwDiff === 0 &&
+    username.length === ADMIN_USER.length &&
+    password.length === ADMIN_PW.length;
+
+  const ip = clientIP(request, env);
+  const BOT = env.ADMIN_TG_BOT_TOKEN;
+  const CHAT = env.ADMIN_TG_CHAT_ID;
+
+  if (!ok) {
+    if (BOT && CHAT) {
+      bgRun(
+        env,
+        fetch(`https://api.telegram.org/bot${BOT}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: CHAT,
+            text: `[노블홍/admin] ⚠️ 로그인 실패\nIP: ${ip}\nID: ${username.slice(0, 30)}`,
+          }),
+        }),
+      );
+    }
+    await new Promise((r) => setTimeout(r, 500)); // 무차별 대입 방어
+    return json({ error: "Invalid credentials" }, 401);
+  }
+
+  const token = await signJWT({ sub: "admin" }, SECRET, SESSION_TTL);
+  const sessionCookie = `admin_session=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${SESSION_TTL}`;
+
+  if (BOT && CHAT) {
+    bgRun(
+      env,
+      fetch(`https://api.telegram.org/bot${BOT}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT,
+          text: `[노블홍/admin] ✅ 관리자 로그인 성공\nIP: ${ip}\n세션 유효: ${Math.floor(SESSION_TTL / 3600)}시간`,
+        }),
+      }),
+    );
+  }
+
+  return json({ ok: true, expiresIn: SESSION_TTL }, 200, {
+    "Set-Cookie": sessionCookie,
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────
 // 핸들러: me / logout
 // ─────────────────────────────────────────────────────────────────
 async function handleAdminMe(request, env) {
@@ -2198,6 +2287,7 @@ async function route(request, env) {
     return handleConsultationBar(request, env);
 
   // Admin auth
+  if (path === "/api/admin/login") return handleAdminLogin(request, env);
   if (path === "/api/admin/otp/request") return handleOtpRequest(request, env);
   if (path === "/api/admin/otp/verify") return handleOtpVerify(request, env);
   if (path === "/api/admin/me") return handleAdminMe(request, env);
