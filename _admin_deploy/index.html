@@ -592,8 +592,8 @@
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 14px;
-        background: #0f0e0d;
-        border: 1px solid #2a2620;
+        background: #faf7ef;
+        border: 1px solid var(--border);
         border-radius: 8px;
         min-height: 200px;
         padding: 16px;
@@ -616,13 +616,13 @@
         gap: 12px;
         margin: 24px 0 12px;
         padding-bottom: 8px;
-        border-bottom: 1px solid #2a2620;
+        border-bottom: 1px solid var(--border);
       }
       .yt-section-header h3 {
         margin: 0;
         font-size: 14px;
         font-weight: 700;
-        color: #d4af6e;
+        color: var(--espresso);
         letter-spacing: 0.3px;
       }
       .yt-count {
@@ -641,8 +641,8 @@
       /* 콘텐츠 카드 — 썸네일 풀폭 + 좌상단 번호(클릭 편집) + 우상단 그립(드래그) */
       .content-card {
         position: relative;
-        background: #1a1612;
-        border: 1px solid #2a2620;
+        background: #fff;
+        border: 1px solid var(--border);
         border-radius: 10px;
         overflow: hidden;
         cursor: pointer;
@@ -651,8 +651,8 @@
           box-shadow 0.12s;
       }
       .content-card:hover {
-        border-color: rgba(212, 175, 110, 0.5);
-        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+        border-color: var(--gold);
+        box-shadow: 0 4px 14px rgba(184, 146, 74, 0.18);
       }
       .content-card.card-ghost {
         opacity: 0.4;
@@ -660,8 +660,8 @@
         transition: none !important;
       }
       .content-card.card-chosen {
-        border-color: rgba(212, 175, 110, 0.95);
-        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55);
+        border-color: var(--gold);
+        box-shadow: 0 6px 22px rgba(184, 146, 74, 0.28);
         transition: none !important;
       }
       .sortable-drag {
@@ -677,9 +677,9 @@
         width: 40px;
         height: 40px;
         border-radius: 8px;
-        background: rgba(14, 12, 10, 0.88);
-        border: 1px solid rgba(212, 175, 110, 0.35);
-        color: #d4af6e;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--gold);
+        color: var(--espresso);
         font-size: 19px;
         font-weight: 800;
         font-variant-numeric: tabular-nums;
@@ -696,16 +696,17 @@
           border-color 0.15s,
           transform 0.15s;
         backdrop-filter: blur(4px);
+        box-shadow: 0 2px 6px rgba(26, 18, 7, 0.12);
       }
       .card-order:hover {
-        background: #d4af6e;
-        color: #1a1612;
-        border-color: #d4af6e;
+        background: var(--gold);
+        color: #fff;
+        border-color: var(--gold);
         transform: scale(1.08);
       }
       .card-order.editing {
-        background: #d4af6e;
-        color: #1a1612;
+        background: var(--gold);
+        color: #fff;
         cursor: text;
       }
       .card-order input {
@@ -734,9 +735,9 @@
         width: 34px;
         height: 34px;
         border-radius: 6px;
-        background: rgba(14, 12, 10, 0.88);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        color: #8a7e60;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--border);
+        color: var(--ink-2);
         font-size: 16px;
         line-height: 1;
         display: flex;
@@ -745,15 +746,16 @@
         cursor: grab;
         user-select: none;
         backdrop-filter: blur(4px);
+        box-shadow: 0 2px 6px rgba(26, 18, 7, 0.1);
         transition:
           color 0.15s,
           background 0.15s,
           border-color 0.15s;
       }
       .card-grip:hover {
-        color: #d4af6e;
-        background: rgba(212, 175, 110, 0.18);
-        border-color: rgba(212, 175, 110, 0.4);
+        color: var(--espresso);
+        background: var(--gold-soft);
+        border-color: var(--gold);
       }
       .card-grip:active {
         cursor: grabbing;
@@ -761,7 +763,7 @@
       .card-thumb {
         width: 100%;
         aspect-ratio: 4 / 3;
-        background: #0e0c0a;
+        background: #f1ece0;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -775,7 +777,7 @@
       }
       .card-thumb-empty {
         font-size: 12px;
-        color: #5a5040;
+        color: var(--ink-2);
       }
       .card-info {
         padding: 10px 12px 12px;
@@ -784,7 +786,7 @@
       .card-title {
         font-size: 13px;
         font-weight: 600;
-        color: #e5ddc8;
+        color: var(--ink);
         line-height: 1.4;
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -794,7 +796,7 @@
       }
       .card-meta {
         font-size: 11px;
-        color: #8a7e60;
+        color: var(--ink-2);
         margin-top: 6px;
       }
       @media (max-width: 768px) {
@@ -821,20 +823,20 @@
       }
       .row-title {
         font-size: 14px;
-        color: #e5ddc8;
+        color: var(--ink);
       }
       .row-meta {
         font-size: 12px;
-        color: #8a7e60;
+        color: var(--ink-2);
       }
       .page-head .primary,
       .page-head button {
         padding: 8px 14px;
         font-size: 13px;
         cursor: pointer;
-        background: #1a1814;
-        border: 1px solid #2a2620;
-        color: #e5ddc8;
+        background: #fff;
+        border: 1px solid var(--border);
+        color: var(--ink);
         border-radius: 6px;
       }
       .page-head .primary {
@@ -847,11 +849,16 @@
         filter: brightness(1.1);
       }
 
-      /* ─── 상담 카드 리스트 ─── */
+      /* ─── 상담 카드 리스트 (2열 그리드) ─── */
       .card-list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      @media (max-width: 880px) {
+        .card-list {
+          grid-template-columns: 1fr;
+        }
       }
       .date-group {
         margin-top: 22px;
@@ -1919,6 +1926,13 @@
         }
       }
 
+      const R2_BASE = "https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/";
+      function toFullThumb(thumb) {
+        if (!thumb) return "";
+        if (/^https?:\/\//i.test(thumb)) return thumb; // 절대 URL
+        if (thumb.startsWith("/")) return thumb; // /api/... 같은 절대 경로
+        return R2_BASE + thumb; // 상대 경로 → R2 prefix
+      }
       function renderContentCards(listEl, moduleKey, records) {
         listEl.innerHTML = records
           .map((rec, i) => {
@@ -1927,12 +1941,13 @@
             const title = f["제목"] || f["제휴사"] || "(제목 없음)";
             const status = f["상태"] || "—";
             const pinned = f["pinned"];
-            const thumb =
+            const thumb = toFullThumb(
               f["썸네일"] ||
-              f["사진"] ||
-              f["증빙이미지"] ||
-              f["표지이미지"] ||
-              "";
+                f["사진"] ||
+                f["증빙이미지"] ||
+                f["표지이미지"] ||
+                "",
+            );
             const date = f["게시일"] || f["수상일"] || f["체결일"] || "";
             const meta =
               escapeHtml(status) + (date ? " · " + escapeHtml(date) : "");
