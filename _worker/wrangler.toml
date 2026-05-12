@@ -32,10 +32,10 @@ crons = ["0 18 * * *", "0 18 28-31 * *"]
 
 # Secrets (set via `wrangler secret put`):
 #   ADMIN_JWT_SECRET,
+#   ADMIN_USERNAME, ADMIN_PASSWORD  (관리자 ID/PW 로그인)
 #   ADMIN_TG_BOT_TOKEN, ADMIN_TG_CHAT_ID,
 #   TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_DEBUG_CHAT_ID,
 #   GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN,
 #   CRM_ENDPOINT,
 #   ADMIN_BYPASS_IPS  (콤마 구분 관리자 IP 화이트리스트: rate limit + 3초 가드 우회)
 #   YOUTUBE_API_KEY   (YouTube Data API v3 — 채널 영상 자동 동기화)
-#   AIRTABLE_PAT      (legacy, 보존: 롤백 안전망 — 1주 운영 안정 후 wrangler secret delete 검토)
