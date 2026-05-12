@@ -1,0 +1,39 @@
+name = "noblehong-api"
+main = "src/index.js"
+compatibility_date = "2026-04-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "noblehong-r2"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "noblehong-db"
+database_id = "4badadd8-4077-4dfd-bf74-46eb2cb10113"
+
+[vars]
+R2_PUBLIC_URL = "https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev"
+ALLOWED_ORIGINS = "https://noblehong.vercel.app,https://noblehong.com,https://www.noblehong.com,https://admin.noblehong.com,http://localhost:3000,http://localhost:5173,http://localhost:8889,http://192.168.0.23:8889"
+GMAIL_FROM = "noblehong0@gmail.com"
+GMAIL_TO = "noblehong1004@naver.com"
+CRM_COURSE_CODE = "5002"
+ADMIN_OTP_TTL = "300"
+ADMIN_SESSION_TTL = "43200"
+ADMIN_URL = "https://noblehong.vercel.app/admin"
+YOUTUBE_CHANNEL_ID = "UCTc2jA14tl_5VZEI7Ztf0zA"
+
+# Cron Triggers (Cloudflare Workers scheduled events)
+# UTC 기준 매일 18:00 = KST 03:00 (홍유진TV 자동 동기화)
+[triggers]
+crons = ["0 18 * * *"]
+
+# Secrets (set via `wrangler secret put`):
+#   ADMIN_JWT_SECRET,
+#   ADMIN_TG_BOT_TOKEN, ADMIN_TG_CHAT_ID,
+#   TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_DEBUG_CHAT_ID,
+#   GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN,
+#   CRM_ENDPOINT,
+#   ADMIN_BYPASS_IPS  (콤마 구분 관리자 IP 화이트리스트: rate limit + 3초 가드 우회)
+#   YOUTUBE_API_KEY   (YouTube Data API v3 — 채널 영상 자동 동기화)
+#   AIRTABLE_PAT      (legacy, 보존: 롤백 안전망 — 1주 운영 안정 후 wrangler secret delete 검토)

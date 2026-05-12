@@ -1,0 +1,18 @@
+{
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "framework": null,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://noblehong-api.noblehong0.workers.dev/api/:path*"
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "admin.noblehong.com" }],
+      "destination": "/admin/:path*"
+    }
+  ]
+}
