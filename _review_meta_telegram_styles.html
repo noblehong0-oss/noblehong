@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Meta Lead · 텔레그램 메시지 스타일 (라벨+헤더 혼합)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family:
+          "Pretendard Variable",
+          -apple-system,
+          sans-serif;
+        background: #1c1c1e;
+        color: #fff;
+      }
+      .tg-chat {
+        background-image: radial-gradient(
+          rgba(120, 180, 220, 0.06) 1px,
+          transparent 1px
+        );
+        background-size: 22px 22px;
+        background-color: #17212b;
+      }
+      .tg-bubble {
+        background: #182533;
+        color: #f1f5f9;
+        border-radius: 14px 14px 14px 4px;
+        max-width: 96%;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+      }
+      .tg-time {
+        color: #6b8aa3;
+        font-size: 10.5px;
+      }
+      .mono {
+        font-variant-numeric: tabular-nums;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      pre.msg {
+        font-family:
+          "Pretendard Variable",
+          -apple-system,
+          sans-serif;
+        white-space: pre-wrap;
+        line-height: 1.6;
+        font-size: 14.5px;
+        margin: 0;
+      }
+      .card-title {
+        color: #b8924a;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+      }
+      .stick {
+        color: #7ea3c2;
+        margin-right: 6px;
+      }
+      .label {
+        color: #92b3d1;
+        display: inline-block;
+        min-width: 70px;
+      }
+      .pick {
+        background: linear-gradient(135deg, #d4bd7a, #8a6420);
+        color: #1a1207;
+      }
+      .pick:hover {
+        filter: brightness(1.05);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen p-6 lg:p-10">
+    <div class="max-w-7xl mx-auto">
+      <header class="mb-8">
+        <div class="text-xs tracking-[0.3em] text-amber-200/70 mb-2">
+          NOBLE HONG · META LEAD NOTIFICATION
+        </div>
+        <h1 class="text-2xl lg:text-3xl font-bold text-amber-100">
+          라벨정렬 + 헤더구분 혼합 · 짝대기 캐릭터 비교
+        </h1>
+        <p class="text-sm text-slate-400 mt-2">
+          헤더 줄 + 가로 구분선 + 라벨 정렬 + 각 줄 앞 짝대기. 짝대기 문자만
+          바꿔서 3종 비교.
+        </p>
+        <div class="text-xs text-slate-500 mt-2">
+          샘플: 홍길동 / 남성 / 1988 / 초혼 / 010-1234-5678 / 서울 ·
+          성혼전문_2026Q2 · Instagram
+        </div>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- V1 · 하이픈 - -->
+        <section
+          class="rounded-2xl border border-amber-200/15 bg-slate-900/40 p-5"
+        >
+          <div class="flex items-baseline justify-between mb-3">
+            <div class="card-title text-sm">V1 · 하이픈 ( - )</div>
+            <div class="text-[10px] text-slate-500">가장 보편적</div>
+          </div>
+          <div class="tg-chat rounded-xl p-3 lg:p-4">
+            <div class="tg-bubble p-3 lg:p-4">
+              <pre
+                class="msg"
+              ><span class="font-bold text-amber-200">[새 상담 접수]</span> <span class="text-amber-100/80">Meta · Instagram</span>
+<span class="text-slate-500">─────────────────────</span>
+<span class="stick">-</span><span class="label">이름</span>홍길동
+<span class="stick">-</span><span class="label">인적사항</span>남성 · 1988 · 초혼
+<span class="stick">-</span><span class="label">연락처</span><span class="mono">010-1234-5678</span>
+<span class="stick">-</span><span class="label">지역</span>서울
+<span class="stick">-</span><span class="label">광고</span>성혼전문_2026Q2
+<span class="stick">-</span><span class="label">접수시각</span>2026.05.15 16:42
+<span class="text-slate-500">─────────────────────</span>
+<u class="text-sky-300">어드민에서 열기 →</u></pre>
+            </div>
+            <div class="tg-time text-right mt-1 mr-2">16:42</div>
+          </div>
+          <button
+            data-pick="V1"
+            class="pick mt-4 w-full rounded-lg py-2.5 font-bold text-sm tracking-wide"
+          >
+            V1안 선택
+          </button>
+        </section>
+
+        <!-- V2 · 점 · -->
+        <section
+          class="rounded-2xl border border-amber-200/15 bg-slate-900/40 p-5"
+        >
+          <div class="flex items-baseline justify-between mb-3">
+            <div class="card-title text-sm">V2 · 가운데점 ( · )</div>
+            <div class="text-[10px] text-slate-500">단정 · 한국어 자연</div>
+          </div>
+          <div class="tg-chat rounded-xl p-3 lg:p-4">
+            <div class="tg-bubble p-3 lg:p-4">
+              <pre
+                class="msg"
+              ><span class="font-bold text-amber-200">[새 상담 접수]</span> <span class="text-amber-100/80">Meta · Instagram</span>
+<span class="text-slate-500">─────────────────────</span>
+<span class="stick">·</span><span class="label">이름</span>홍길동
+<span class="stick">·</span><span class="label">인적사항</span>남성 · 1988 · 초혼
+<span class="stick">·</span><span class="label">연락처</span><span class="mono">010-1234-5678</span>
+<span class="stick">·</span><span class="label">지역</span>서울
+<span class="stick">·</span><span class="label">광고</span>성혼전문_2026Q2
+<span class="stick">·</span><span class="label">접수시각</span>2026.05.15 16:42
+<span class="text-slate-500">─────────────────────</span>
+<u class="text-sky-300">어드민에서 열기 →</u></pre>
+            </div>
+            <div class="tg-time text-right mt-1 mr-2">16:42</div>
+          </div>
+          <button
+            data-pick="V2"
+            class="pick mt-4 w-full rounded-lg py-2.5 font-bold text-sm tracking-wide"
+          >
+            V2안 선택
+          </button>
+        </section>
+
+        <!-- V3 · 불릿 • -->
+        <section
+          class="rounded-2xl border border-amber-200/15 bg-slate-900/40 p-5"
+        >
+          <div class="flex items-baseline justify-between mb-3">
+            <div class="card-title text-sm">V3 · 불릿 ( • )</div>
+            <div class="text-[10px] text-slate-500">시인성 강함</div>
+          </div>
+          <div class="tg-chat rounded-xl p-3 lg:p-4">
+            <div class="tg-bubble p-3 lg:p-4">
+              <pre
+                class="msg"
+              ><span class="font-bold text-amber-200">[새 상담 접수]</span> <span class="text-amber-100/80">Meta · Instagram</span>
+<span class="text-slate-500">─────────────────────</span>
+<span class="stick">•</span><span class="label">이름</span>홍길동
+<span class="stick">•</span><span class="label">인적사항</span>남성 · 1988 · 초혼
+<span class="stick">•</span><span class="label">연락처</span><span class="mono">010-1234-5678</span>
+<span class="stick">•</span><span class="label">지역</span>서울
+<span class="stick">•</span><span class="label">광고</span>성혼전문_2026Q2
+<span class="stick">•</span><span class="label">접수시각</span>2026.05.15 16:42
+<span class="text-slate-500">─────────────────────</span>
+<u class="text-sky-300">어드민에서 열기 →</u></pre>
+            </div>
+            <div class="tg-time text-right mt-1 mr-2">16:42</div>
+          </div>
+          <button
+            data-pick="V3"
+            class="pick mt-4 w-full rounded-lg py-2.5 font-bold text-sm tracking-wide"
+          >
+            V3안 선택
+          </button>
+        </section>
+      </div>
+
+      <div
+        class="mt-8 rounded-xl bg-slate-900/60 border border-slate-700/50 p-4 text-xs text-slate-400"
+      >
+        <div class="text-amber-200/80 font-semibold mb-1">공통 규칙</div>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>이모지 없음. 텍스트와 정렬만으로 정보 계층 표현</li>
+          <li>헤더 = [새 상담 접수] + 플랫폼 라벨</li>
+          <li>상하 가로 구분선 (─) 으로 본문 박싱</li>
+          <li>각 라인 = [짝대기] [라벨(70px 정렬)] [값]</li>
+          <li>광고명 누락 시 해당 라인 자동 생략</li>
+          <li>FB lead → "Meta · Facebook"으로 분기</li>
+          <li>IP 미표시 (Make.com IP라 의미 없음)</li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll("[data-pick]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const pick = btn.getAttribute("data-pick");
+          alert(
+            pick +
+              " 선택. 채팅에 '" +
+              pick +
+              "으로 진행' 라고 알려주시면 워커에 반영합니다.",
+          );
+        });
+      });
+    </script>
+  </body>
+</html>

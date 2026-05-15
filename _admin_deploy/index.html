@@ -199,6 +199,9 @@
         font-weight: 700;
         color: #fff;
       }
+      .mobile-menu-toggle {
+        display: none;
+      }
       .nav-item {
         display: flex;
         align-items: center;
@@ -228,6 +231,9 @@
       }
       .nav-item.disabled:hover {
         background: transparent;
+      }
+      .nav-item.nav-link {
+        text-decoration: none;
       }
       .nav-section {
         margin-top: 16px;
@@ -385,6 +391,20 @@
         color: var(--espresso);
         border: 1px solid rgba(42, 29, 10, 0.25);
       }
+      .badge.src-meta-ig {
+        background: linear-gradient(
+          135deg,
+          rgba(225, 48, 108, 0.16),
+          rgba(245, 133, 41, 0.16)
+        );
+        color: #c0306e;
+        border: 1px solid rgba(225, 48, 108, 0.35);
+      }
+      .badge.src-meta-fb {
+        background: rgba(24, 119, 242, 0.12);
+        color: #1d4eaa;
+        border: 1px solid rgba(24, 119, 242, 0.3);
+      }
       .badge.src-unknown {
         background: #f0ebdf;
         color: var(--ink-2);
@@ -454,6 +474,317 @@
       .pagination button:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+      }
+
+      /* GA4 유입통계 */
+      .analytics-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .date-range {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      .date-range input {
+        width: 132px;
+        min-height: 34px;
+        padding: 6px 8px;
+        border: 1px solid #eee8da;
+        border-radius: 6px;
+        background: #fffdf8;
+        color: var(--ink);
+        font-size: 12px;
+      }
+      .date-range span {
+        color: var(--ink-2);
+        font-size: 12px;
+      }
+      .date-range button {
+        min-height: 34px;
+        padding: 7px 10px;
+        border: 1px solid #d8ccb5;
+        border-radius: 6px;
+        background: #faf7ef;
+        color: var(--espresso);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .range-tabs {
+        display: inline-flex;
+        gap: 4px;
+        padding: 4px;
+        background: #efe8d8;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      .range-tabs button,
+      .connection-indicator {
+        min-height: 34px;
+        padding: 7px 12px;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--ink-2);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .range-tabs button.active {
+        background: #fff;
+        color: var(--espresso);
+        border-color: rgba(184, 146, 74, 0.28);
+        box-shadow: 0 3px 10px rgba(42, 29, 10, 0.08);
+      }
+      .connection-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: #fff;
+        color: var(--ink-2);
+        border-color: var(--border);
+        cursor: default;
+      }
+      .status-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #b8894a;
+        box-shadow: 0 0 0 4px rgba(184, 137, 74, 0.12);
+      }
+      .connection-indicator.is-connected {
+        color: #2a6345;
+        border-color: rgba(58, 136, 96, 0.28);
+        background: rgba(58, 136, 96, 0.08);
+      }
+      .connection-indicator.is-connected .status-dot {
+        background: #3a8860;
+        box-shadow: 0 0 0 4px rgba(58, 136, 96, 0.14);
+      }
+      .connection-indicator.is-disconnected {
+        color: #8c3232;
+        border-color: rgba(184, 64, 64, 0.28);
+        background: rgba(184, 64, 64, 0.08);
+      }
+      .connection-indicator.is-disconnected .status-dot {
+        background: #b84040;
+        box-shadow: 0 0 0 4px rgba(184, 64, 64, 0.14);
+      }
+      .analytics-status {
+        min-height: 20px;
+        margin: -8px 0 16px;
+        color: var(--ink-2);
+        font-size: 12px;
+      }
+      .analytics-kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .analytics-kpi {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px;
+        min-height: 118px;
+      }
+      .analytics-kpi .label {
+        color: var(--ink-2);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .analytics-kpi .value {
+        margin-top: 10px;
+        color: var(--espresso);
+        font-size: clamp(30px, 4vw, 48px);
+        line-height: 1;
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+      .analytics-kpi .sub {
+        margin-top: 8px;
+        color: #6f624d;
+        font-size: 12px;
+      }
+      .analytics-hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.9fr);
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+      .analytics-panel {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 16px;
+        min-width: 0;
+      }
+      .analytics-panel-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: baseline;
+        margin-bottom: 12px;
+      }
+      .analytics-panel-title {
+        color: var(--espresso);
+        font-size: 14px;
+        font-weight: 800;
+      }
+      .analytics-panel-meta {
+        color: var(--ink-2);
+        font-size: 11px;
+      }
+      .analytics-chart {
+        width: 100%;
+        height: 330px;
+        border: 1px solid #eee8da;
+        border-radius: 8px;
+        background:
+          linear-gradient(#fffdf9, #fffdf9) padding-box,
+          repeating-linear-gradient(
+              to bottom,
+              transparent 0,
+              transparent 64px,
+              rgba(120, 100, 65, 0.12) 65px
+            )
+            border-box;
+        overflow: hidden;
+      }
+      .analytics-chart svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .analytics-labels {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 9px;
+        color: var(--ink-2);
+        font-size: 11px;
+      }
+      .analytics-labels span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: center;
+      }
+      .source-bars {
+        display: grid;
+        gap: 11px;
+      }
+      .source-row {
+        display: grid;
+        grid-template-columns: minmax(82px, 120px) minmax(0, 1fr) 58px;
+        gap: 10px;
+        align-items: center;
+        font-size: 12px;
+        color: var(--ink-2);
+      }
+      .source-name {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--ink);
+        font-weight: 700;
+      }
+      .source-track {
+        height: 12px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: #eee8da;
+      }
+      .source-fill {
+        display: block;
+        height: 100%;
+        min-width: 2px;
+        border-radius: inherit;
+        background: #446fc4;
+      }
+      .source-value {
+        color: var(--espresso);
+        font-weight: 800;
+        text-align: right;
+      }
+      .analytics-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 14px;
+      }
+      .page-rank {
+        display: grid;
+        gap: 9px;
+      }
+      .page-row {
+        display: grid;
+        grid-template-columns: minmax(140px, 1fr) minmax(0, 1.2fr) 66px;
+        gap: 10px;
+        align-items: center;
+        font-size: 12px;
+      }
+      .page-path {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--ink);
+        font-weight: 700;
+      }
+      .device-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .device-tile {
+        border: 1px solid #eee8da;
+        border-radius: 8px;
+        padding: 12px;
+        min-height: 104px;
+        background: #fffdf8;
+      }
+      .device-name {
+        color: var(--ink-2);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: capitalize;
+      }
+      .device-value {
+        margin-top: 8px;
+        color: var(--espresso);
+        font-size: 26px;
+        font-weight: 800;
+      }
+      .device-track {
+        margin-top: 10px;
+        height: 8px;
+        border-radius: 999px;
+        background: #eee8da;
+        overflow: hidden;
+      }
+      .device-track span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: #19858f;
+      }
+      .analytics-empty {
+        display: grid;
+        place-items: center;
+        min-height: 140px;
+        color: var(--ink-2);
+        font-size: 13px;
+        border: 1px dashed #ddd1ba;
+        border-radius: 8px;
+        background: #fffdf8;
       }
 
       /* 상세 모달 */
@@ -564,22 +895,147 @@
       @media (max-width: 900px) {
         .app {
           grid-template-columns: 1fr;
+          padding-bottom: 96px;
         }
         .sidebar {
-          position: static;
-          padding: 16px;
+          position: fixed;
+          top: auto;
+          right: 12px;
+          bottom: calc(12px + env(safe-area-inset-bottom));
+          left: 12px;
+          z-index: 90;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 8px;
+          max-height: calc(72vh - env(safe-area-inset-bottom));
+          padding: 10px;
+          border: 1px solid rgba(231, 217, 184, 0.2);
+          border-radius: 18px;
+          box-shadow: 0 16px 46px rgba(26, 18, 7, 0.28);
+          overflow: hidden;
+          scrollbar-width: thin;
+          -webkit-overflow-scrolling: touch;
+        }
+        .sidebar.mobile-open {
+          overflow-y: auto;
+        }
+        .sidebar .brand {
+          grid-column: 1;
+          margin: 0;
+          padding: 0 8px 0 2px;
+          border-bottom: 0;
+          min-width: 0;
+        }
+        .sidebar .brand .eyebrow {
+          display: block;
+          font-size: 9px;
+          letter-spacing: 1.6px;
+        }
+        .sidebar .brand .title {
+          margin: 0;
+          font-size: 13px;
+          line-height: 1.2;
+        }
+        .mobile-menu-toggle {
+          grid-column: 2;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 72px;
+          min-height: 40px;
+          padding: 9px 14px;
+          border: 1px solid rgba(231, 217, 184, 0.28);
+          border-radius: 12px;
+          background: linear-gradient(135deg, var(--gold), var(--gold-2));
+          color: var(--espresso);
+          font-size: 12px;
+          font-weight: 800;
+          white-space: nowrap;
+        }
+        .nav-section {
+          display: none;
+        }
+        .nav-item {
+          display: none;
+        }
+        .sidebar.mobile-open .nav-section {
+          grid-column: 1 / -1;
+          display: block;
+          margin: 8px 4px 0;
+          padding: 10px 2px 2px;
+        }
+        .sidebar.mobile-open .nav-item {
+          grid-column: 1 / -1;
+          display: flex;
+          width: 100%;
+          min-height: 42px;
+          max-width: none;
+          margin: 0;
+          padding: 10px 12px;
+          border: 1px solid rgba(231, 217, 184, 0.18);
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.06);
+          font-size: 13px;
+        }
+        .sidebar.mobile-open .nav-item.active {
+          border-color: rgba(231, 217, 184, 0.28);
+          background: linear-gradient(135deg, var(--gold), var(--gold-2));
+          color: var(--espresso);
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
         }
         .sidebar-footer {
-          margin-top: 12px;
+          display: none;
+        }
+        .sidebar.mobile-open .sidebar-footer {
+          grid-column: 1 / -1;
+          position: static;
+          display: block;
+          margin: 8px 0 0;
+          padding: 8px 0 0;
+          border-top: 1px solid rgba(231, 217, 184, 0.15);
+        }
+        .logout-btn {
+          width: 100%;
+          min-height: 42px;
+          padding: 9px 12px;
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.06);
+          white-space: nowrap;
         }
         .main {
-          padding: 18px;
+          padding: 18px 14px 116px;
         }
         table {
           font-size: 12px;
         }
         .table-wrap {
           overflow-x: auto;
+        }
+        .analytics-kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .analytics-hero,
+        .analytics-grid {
+          grid-template-columns: 1fr;
+        }
+        .analytics-chart {
+          height: 280px;
+        }
+      }
+      @media (max-width: 420px) {
+        .sidebar {
+          right: 8px;
+          bottom: calc(8px + env(safe-area-inset-bottom));
+          left: 8px;
+          padding: 8px;
+          border-radius: 16px;
+        }
+        .nav-item {
+          max-width: 132px;
+        }
+        .main {
+          padding-bottom: 108px;
         }
       }
 
@@ -778,6 +1234,33 @@
       .card-thumb-empty {
         font-size: 12px;
         color: var(--ink-2);
+      }
+      .image-load-fallback {
+        width: 100%;
+        height: 100%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        color: var(--ink-2);
+        font-size: 12px;
+        text-align: center;
+        background: #f1ece0;
+      }
+      .modal-image-preview {
+        width: 180px;
+        height: 120px;
+        margin-bottom: 10px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        overflow: hidden;
+        background: #f1ece0;
+      }
+      .modal-image-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
       }
       .card-info {
         padding: 10px 12px 12px;
@@ -1018,6 +1501,28 @@
           justify-content: space-between;
           width: 100%;
         }
+        .analytics-toolbar {
+          justify-content: flex-start;
+        }
+        .date-range {
+          width: 100%;
+          flex-wrap: wrap;
+        }
+        .date-range input {
+          width: calc(50% - 18px);
+          min-width: 126px;
+        }
+        .analytics-kpis,
+        .device-grid {
+          grid-template-columns: 1fr;
+        }
+        .source-row,
+        .page-row {
+          grid-template-columns: 1fr;
+        }
+        .source-value {
+          text-align: left;
+        }
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
@@ -1061,9 +1566,19 @@
           <div class="eyebrow">ADMIN</div>
           <div class="title">노블홍 관리</div>
         </div>
+        <button
+          id="btnMobileMenu"
+          class="mobile-menu-toggle"
+          type="button"
+          aria-expanded="false"
+        >
+          메뉴
+        </button>
         <div class="nav-item active" data-page="consultations">
           상담 접수 관리
         </div>
+        <div class="nav-section">통계</div>
+        <div class="nav-item" data-page="analytics">유입통계</div>
         <div class="nav-section">콘텐츠 관리</div>
         <div class="nav-item" data-page="press">언론에 비친 노블홍</div>
         <div class="nav-item" data-page="campaign">결혼장려 공익캠페인</div>
@@ -1096,7 +1611,9 @@
               <option value="상담문의">상담문의</option>
               <option value="간편상담신청">간편상담신청</option>
               <option value="하단바">하단바</option>
-              <option value="Meta">Meta</option>
+              <option value="meta-ig">Meta · Instagram</option>
+              <option value="meta-fb">Meta · Facebook</option>
+              <option value="meta">Meta (기타)</option>
             </select>
             <select id="filterStatus">
               <option value="">상태 전체</option>
@@ -1123,6 +1640,108 @@
           </div>
         </section>
         <!-- /상담 접수 패널 -->
+
+        <section class="tab-panel" data-page-panel="analytics" hidden>
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">GA4 ACQUISITION</div>
+              <div class="title">유입통계</div>
+            </div>
+            <div class="analytics-toolbar">
+              <div class="range-tabs" aria-label="분석 기간">
+                <button type="button" data-analytics-range="7d">7일</button>
+                <button type="button" class="active" data-analytics-range="28d">
+                  28일
+                </button>
+                <button type="button" data-analytics-range="90d">90일</button>
+              </div>
+              <div class="date-range" aria-label="직접 날짜">
+                <input type="date" id="analyticsStartDate" />
+                <span>~</span>
+                <input type="date" id="analyticsEndDate" />
+                <button type="button" id="btnAnalyticsDateApply">적용</button>
+              </div>
+              <div
+                class="connection-indicator is-checking"
+                id="ga4ConnectionIndicator"
+                title="GA4 Data API 연결 상태"
+              >
+                <span class="status-dot" aria-hidden="true"></span>
+                <span id="ga4ConnectionText">연결 확인</span>
+              </div>
+            </div>
+          </div>
+          <div class="analytics-status" id="analyticsStatus">—</div>
+
+          <div class="analytics-kpis" data-analytics-kpis>
+            <div class="analytics-kpi">
+              <div class="label">방문자</div>
+              <div class="value" data-kpi="users">0</div>
+              <div class="sub" data-kpi-sub="users">total users</div>
+            </div>
+            <div class="analytics-kpi">
+              <div class="label">세션</div>
+              <div class="value" data-kpi="sessions">0</div>
+              <div class="sub" data-kpi-sub="sessions">sessions</div>
+            </div>
+            <div class="analytics-kpi">
+              <div class="label">페이지뷰</div>
+              <div class="value" data-kpi="views">0</div>
+              <div class="sub" data-kpi-sub="views">screen page views</div>
+            </div>
+            <div class="analytics-kpi">
+              <div class="label">전환</div>
+              <div class="value" data-kpi="keyEvents">0</div>
+              <div class="sub" data-kpi-sub="keyEvents">key events</div>
+            </div>
+          </div>
+
+          <div class="analytics-hero">
+            <section class="analytics-panel">
+              <div class="analytics-panel-head">
+                <div class="analytics-panel-title">유입 채널</div>
+                <div class="analytics-panel-meta" id="analyticsRangeMeta">
+                  28일
+                </div>
+              </div>
+              <div class="analytics-chart">
+                <svg
+                  id="analyticsBarsSvg"
+                  viewBox="0 0 720 320"
+                  role="img"
+                  aria-label="유입 채널 막대 그래프"
+                ></svg>
+              </div>
+              <div class="analytics-labels" id="analyticsBarLabels"></div>
+            </section>
+
+            <section class="analytics-panel">
+              <div class="analytics-panel-head">
+                <div class="analytics-panel-title">상위 유입원</div>
+                <div class="analytics-panel-meta">users</div>
+              </div>
+              <div class="source-bars" id="analyticsSourceBars"></div>
+            </section>
+          </div>
+
+          <div class="analytics-grid">
+            <section class="analytics-panel">
+              <div class="analytics-panel-head">
+                <div class="analytics-panel-title">상위 페이지</div>
+                <div class="analytics-panel-meta">views</div>
+              </div>
+              <div class="page-rank" id="analyticsPageRank"></div>
+            </section>
+
+            <section class="analytics-panel">
+              <div class="analytics-panel-head">
+                <div class="analytics-panel-title">기기</div>
+                <div class="analytics-panel-meta">users</div>
+              </div>
+              <div class="device-grid" id="analyticsDevices"></div>
+            </section>
+          </div>
+        </section>
 
         <!-- 콘텐츠 모듈 9종 패널 (구조 뼈대) -->
         <section class="tab-panel" data-page-panel="press" hidden>
@@ -1470,14 +2089,41 @@
 
       // ───────── 상담 접수 목록 ─────────
       function badgeFor(source) {
+        const raw = String(source || "");
+        // meta-ig:{광고명} / meta-fb:{광고명} / meta:{광고명} 패턴 분기
+        const m = raw.match(/^meta(?:-(ig|fb))?(?::(.+))?$/i);
+        if (m) {
+          const plat = (m[1] || "").toLowerCase();
+          const adName = m[2] || "";
+          let cls = "src-meta";
+          let label = "Meta";
+          if (plat === "ig") {
+            cls = "src-meta-ig";
+            label = "Meta · IG";
+          } else if (plat === "fb") {
+            cls = "src-meta-fb";
+            label = "Meta · FB";
+          }
+          if (adName)
+            return (
+              '<span class="badge ' +
+              cls +
+              '" title="' +
+              esc(adName) +
+              '">' +
+              esc(label) +
+              "</span>"
+            );
+          return '<span class="badge ' + cls + '">' + esc(label) + "</span>";
+        }
         const map = {
           상담문의: "src-full",
           간편상담신청: "src-quick",
           하단바: "src-bar",
           Meta: "src-meta",
         };
-        const cls = map[source] || "src-unknown";
-        const label = source || "(미지정)";
+        const cls = map[raw] || "src-unknown";
+        const label = raw || "(미지정)";
         return '<span class="badge ' + cls + '">' + esc(label) + "</span>";
       }
 
@@ -1845,6 +2491,363 @@
         );
       }
 
+      const analyticsState = {
+        range: "28d",
+        startDate: "",
+        endDate: "",
+        loadedKey: "",
+        loading: false,
+        connectionLoaded: false,
+      };
+      const analyticsColors = [
+        "#446fc4",
+        "#25755f",
+        "#d2a84c",
+        "#19858f",
+        "#ba4b45",
+        "#7356b7",
+        "#8c7030",
+      ];
+
+      function num(v) {
+        const n = Number(v || 0);
+        return Number.isFinite(n) ? n : 0;
+      }
+
+      function compactNumber(value) {
+        const n = Math.round(num(value));
+        if (n >= 1000000)
+          return (n / 1000000).toFixed(1).replace(/\.0$/, "") + "m";
+        if (n >= 10000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "k";
+        return n.toLocaleString("ko-KR");
+      }
+
+      function pct(value) {
+        const n = num(value);
+        return (n > 1 ? n : n * 100).toFixed(1).replace(/\.0$/, "") + "%";
+      }
+
+      function duration(value) {
+        const sec = Math.round(num(value));
+        if (!sec) return "0초";
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return m ? `${m}분 ${s}초` : `${s}초`;
+      }
+
+      function localIsoDate(offsetDays = 0) {
+        const d = new Date();
+        d.setDate(d.getDate() + offsetDays);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        return d.toISOString().slice(0, 10);
+      }
+
+      function analyticsRequestKey() {
+        if (analyticsState.startDate && analyticsState.endDate) {
+          return `custom:${analyticsState.startDate}:${analyticsState.endDate}`;
+        }
+        return analyticsState.range;
+      }
+
+      function analyticsQuery() {
+        const params = new URLSearchParams();
+        if (analyticsState.startDate && analyticsState.endDate) {
+          params.set("range", "custom");
+          params.set("startDate", analyticsState.startDate);
+          params.set("endDate", analyticsState.endDate);
+        } else {
+          params.set("range", analyticsState.range);
+        }
+        return params.toString();
+      }
+
+      function initAnalyticsDates() {
+        const start = document.getElementById("analyticsStartDate");
+        const end = document.getElementById("analyticsEndDate");
+        if (!start || !end) return;
+        start.value = localIsoDate(-27);
+        end.value = localIsoDate(0);
+        end.max = localIsoDate(0);
+        start.max = localIsoDate(0);
+      }
+
+      function setAnalyticsQuickRange(range) {
+        analyticsState.range = range || "28d";
+        analyticsState.startDate = "";
+        analyticsState.endDate = "";
+        document.querySelectorAll("[data-analytics-range]").forEach((x) => {
+          x.classList.toggle(
+            "active",
+            x.dataset.analyticsRange === analyticsState.range,
+          );
+        });
+      }
+
+      function metric(row, snake, camel) {
+        return num(row?.[snake] ?? row?.[camel]);
+      }
+
+      function aggregateRows(rows, nameFn, valueFn, extraFn) {
+        const map = new Map();
+        (rows || []).forEach((row) => {
+          const name = nameFn(row) || "(not set)";
+          if (!map.has(name)) {
+            map.set(name, {
+              name,
+              value: 0,
+              extra: extraFn ? extraFn(row) : "",
+            });
+          }
+          map.get(name).value += valueFn(row);
+        });
+        return Array.from(map.values()).sort((a, b) => b.value - a.value);
+      }
+
+      function setAnalyticsStatus(text) {
+        const el = document.getElementById("analyticsStatus");
+        if (el) el.textContent = text || "";
+      }
+
+      function setGa4Connection(connected, text) {
+        const box = document.getElementById("ga4ConnectionIndicator");
+        const label = document.getElementById("ga4ConnectionText");
+        if (!box || !label) return;
+        box.classList.remove("is-checking", "is-connected", "is-disconnected");
+        box.classList.add(connected ? "is-connected" : "is-disconnected");
+        label.textContent = text || (connected ? "GA4 연결" : "GA4 미연결");
+      }
+
+      async function loadGa4ConnectionStatus(force = false) {
+        if (!force && analyticsState.connectionLoaded) return;
+        try {
+          const r = await api("/api/admin/analytics/status");
+          if (r.status === 401) {
+            showLogin();
+            return;
+          }
+          if (!r.ok || !r.json.connected) {
+            setGa4Connection(false, "GA4 미연결");
+            analyticsState.connectionLoaded = true;
+            return;
+          }
+          setGa4Connection(true, "GA4 연결");
+          analyticsState.connectionLoaded = true;
+        } catch (e) {
+          setGa4Connection(false, "GA4 미연결");
+          analyticsState.connectionLoaded = true;
+        }
+      }
+
+      function setKpi(key, value, sub) {
+        const main = document.querySelector(`[data-kpi="${key}"]`);
+        const subEl = document.querySelector(`[data-kpi-sub="${key}"]`);
+        if (main) main.textContent = compactNumber(value);
+        if (subEl) subEl.textContent = sub || "";
+      }
+
+      function emptyBlock(label) {
+        return `<div class="analytics-empty">${escapeHtml(label)}</div>`;
+      }
+
+      function renderAnalyticsChart(items) {
+        const svg = document.getElementById("analyticsBarsSvg");
+        const labels = document.getElementById("analyticsBarLabels");
+        if (!svg || !labels) return;
+        const top = items.slice(0, 7);
+        const max = Math.max(...top.map((item) => item.value), 0);
+        const grid = [80, 140, 200, 260]
+          .map(
+            (y) =>
+              `<line x1="34" y1="${y}" x2="686" y2="${y}" stroke="#ece4d5" stroke-width="1" />`,
+          )
+          .join("");
+        if (!top.length || max <= 0) {
+          svg.innerHTML =
+            grid +
+            `<text x="360" y="168" text-anchor="middle" fill="#7a6c58" font-size="16" font-weight="700">수집된 유입 없음</text>`;
+          labels.innerHTML = "";
+          return;
+        }
+        const gap = 18;
+        const barW = Math.floor((652 - gap * (top.length - 1)) / top.length);
+        const bars = top
+          .map((item, index) => {
+            const h = Math.max(8, Math.round((item.value / max) * 230));
+            const x = 34 + index * (barW + gap);
+            const y = 280 - h;
+            const color = analyticsColors[index % analyticsColors.length];
+            return (
+              `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="8" fill="${color}" />` +
+              `<text x="${x + barW / 2}" y="${Math.max(24, y - 10)}" text-anchor="middle" fill="#2a1d0a" font-size="14" font-weight="800">${compactNumber(item.value)}</text>`
+            );
+          })
+          .join("");
+        svg.innerHTML = grid + bars;
+        labels.innerHTML = top
+          .map(
+            (item) =>
+              `<span title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</span>`,
+          )
+          .join("");
+      }
+
+      function renderSourceBars(items) {
+        const el = document.getElementById("analyticsSourceBars");
+        if (!el) return;
+        const top = items.slice(0, 7);
+        const max = Math.max(...top.map((item) => item.value), 0);
+        if (!top.length || max <= 0) {
+          el.innerHTML = emptyBlock("수집된 유입 없음");
+          return;
+        }
+        el.innerHTML = top
+          .map((item, index) => {
+            const width = Math.max(3, Math.round((item.value / max) * 100));
+            const color = analyticsColors[index % analyticsColors.length];
+            return `<div class="source-row">
+              <div class="source-name" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</div>
+              <div class="source-track"><span class="source-fill" style="width:${width}%;background:${color}"></span></div>
+              <div class="source-value">${compactNumber(item.value)}</div>
+            </div>`;
+          })
+          .join("");
+      }
+
+      function renderPageRank(items) {
+        const el = document.getElementById("analyticsPageRank");
+        if (!el) return;
+        const top = items.slice(0, 8);
+        const max = Math.max(...top.map((item) => item.value), 0);
+        if (!top.length || max <= 0) {
+          el.innerHTML = emptyBlock("수집된 페이지 없음");
+          return;
+        }
+        el.innerHTML = top
+          .map((item, index) => {
+            const width = Math.max(3, Math.round((item.value / max) * 100));
+            const color = analyticsColors[index % analyticsColors.length];
+            return `<div class="page-row">
+              <div class="page-path" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</div>
+              <div class="source-track"><span class="source-fill" style="width:${width}%;background:${color}"></span></div>
+              <div class="source-value">${compactNumber(item.value)}</div>
+            </div>`;
+          })
+          .join("");
+      }
+
+      function renderDevices(items) {
+        const el = document.getElementById("analyticsDevices");
+        if (!el) return;
+        const top = items.slice(0, 3);
+        const max = Math.max(...top.map((item) => item.value), 0);
+        if (!top.length || max <= 0) {
+          el.innerHTML = emptyBlock("수집된 기기 없음");
+          return;
+        }
+        el.innerHTML = top
+          .map((item, index) => {
+            const width = Math.max(3, Math.round((item.value / max) * 100));
+            const color = analyticsColors[(index + 3) % analyticsColors.length];
+            return `<div class="device-tile">
+              <div class="device-name">${escapeHtml(item.name)}</div>
+              <div class="device-value">${compactNumber(item.value)}</div>
+              <div class="device-track"><span style="width:${width}%;background:${color}"></span></div>
+            </div>`;
+          })
+          .join("");
+      }
+
+      function renderAnalytics(snapshot) {
+        const totals = snapshot?.totals || {};
+        setKpi(
+          "users",
+          totals.totalUsers,
+          `${compactNumber(totals.newUsers)} 신규`,
+        );
+        setKpi(
+          "sessions",
+          totals.sessions,
+          `${pct(totals.engagementRate)} 참여`,
+        );
+        setKpi(
+          "views",
+          totals.screenPageViews,
+          `${duration(totals.averageSessionDuration)} 평균`,
+        );
+        setKpi("keyEvents", totals.keyEvents, "key events");
+
+        const rangeMeta = document.getElementById("analyticsRangeMeta");
+        if (rangeMeta)
+          rangeMeta.textContent = snapshot
+            ? `${snapshot.startDate} - ${snapshot.endDate}`
+            : analyticsState.range;
+
+        const channels = aggregateRows(
+          snapshot?.channels,
+          (row) => row.source_medium || row.sourceMedium || row.channel,
+          (row) => metric(row, "total_users", "totalUsers"),
+        );
+        const channelGroups = aggregateRows(
+          snapshot?.channels,
+          (row) => row.channel,
+          (row) => metric(row, "total_users", "totalUsers"),
+        );
+        const pages = aggregateRows(
+          snapshot?.pages,
+          (row) => row.page_path || row.pagePath || "/",
+          (row) => metric(row, "screen_page_views", "screenPageViews"),
+        );
+        const devices = aggregateRows(
+          snapshot?.devices,
+          (row) => row.device_category || row.deviceCategory,
+          (row) => metric(row, "total_users", "totalUsers"),
+        );
+
+        renderAnalyticsChart(channelGroups);
+        renderSourceBars(channels.length ? channels : channelGroups);
+        renderPageRank(pages);
+        renderDevices(devices);
+
+        if (!snapshot) {
+          setAnalyticsStatus("저장된 GA4 스냅샷 없음");
+          return;
+        }
+        const raw = snapshot.rawR2Key ? "R2 원본 저장" : "D1 요약";
+        setAnalyticsStatus(
+          `최근 수집 ${fmtDate(snapshot.createdAt)} · ${snapshot.rangeKey} · ${raw}`,
+        );
+      }
+
+      async function loadAnalyticsDashboard(force = false) {
+        if (analyticsState.loading) return;
+        loadGa4ConnectionStatus(force);
+        const requestKey = analyticsRequestKey();
+        if (!force && analyticsState.loadedKey === requestKey) return;
+        analyticsState.loading = true;
+        setAnalyticsStatus("GA4 통계 로딩...");
+        try {
+          const r = await api(
+            `/api/admin/analytics/summary?${analyticsQuery()}`,
+          );
+          if (r.status === 401) {
+            showLogin();
+            return;
+          }
+          if (!r.ok) {
+            setAnalyticsStatus(`로드 실패: ${r.json.error || r.status}`);
+            renderAnalytics(null);
+            return;
+          }
+          analyticsState.loadedKey = requestKey;
+          renderAnalytics(r.json.snapshot || null);
+        } catch (e) {
+          setAnalyticsStatus("네트워크 오류");
+          renderAnalytics(null);
+        } finally {
+          analyticsState.loading = false;
+        }
+      }
+
       const contentLoaded = new Set();
       async function loadContentList(moduleKey) {
         // youtube는 영상/쇼츠 분리 표시 (영상타입 기반)
@@ -1927,11 +2930,62 @@
       }
 
       const R2_BASE = "https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/";
-      function toFullThumb(thumb) {
-        if (!thumb) return "";
-        if (/^https?:\/\//i.test(thumb)) return thumb; // 절대 URL
-        if (thumb.startsWith("/")) return thumb; // /api/... 같은 절대 경로
-        return R2_BASE + thumb; // 상대 경로 → R2 prefix
+      const SITE_ASSET_BASE = "https://www.noblehong.com/";
+      const IMAGE_FIELD_CANDIDATES = [
+        "썸네일",
+        "사진",
+        "증빙이미지",
+        "표지이미지",
+        "첨부이미지",
+      ];
+      function normalizeImageValue(raw) {
+        if (!raw) return "";
+        if (Array.isArray(raw)) return normalizeImageValue(raw[0]);
+        if (typeof raw === "object") {
+          return normalizeImageValue(
+            raw.url ||
+              raw.thumbnails?.large?.url ||
+              raw.thumbnails?.full?.url ||
+              raw.thumbnails?.small?.url ||
+              "",
+          );
+        }
+        const value = String(raw).trim();
+        if (!value) return "";
+        if (value.startsWith("{") || value.startsWith("[")) {
+          try {
+            return normalizeImageValue(JSON.parse(value));
+          } catch {
+            return value;
+          }
+        }
+        return value;
+      }
+      function encodeAssetPath(path) {
+        return encodeURI(path).replace(/#/g, "%23");
+      }
+      function toAdminImageUrl(raw) {
+        const value = normalizeImageValue(raw);
+        if (!value) return "";
+        if (/^(https?:|data:image\/|blob:)/i.test(value)) return value;
+        if (value.startsWith("//")) return "https:" + value;
+        const clean = value.replace(/^\.?\//, "");
+        if (/^(images|assets)\//i.test(clean)) {
+          return SITE_ASSET_BASE + encodeAssetPath(clean);
+        }
+        if (value.startsWith("/")) return value;
+        return R2_BASE + encodeAssetPath(clean);
+      }
+      function firstContentImage(fields) {
+        for (const key of IMAGE_FIELD_CANDIDATES) {
+          if (fields?.[key]) return fields[key];
+        }
+        return "";
+      }
+      function showImageFallback(img) {
+        img.style.display = "none";
+        const fallback = img.nextElementSibling;
+        if (fallback) fallback.style.display = "flex";
       }
       function renderContentCards(listEl, moduleKey, records) {
         listEl.innerHTML = records
@@ -1941,13 +2995,7 @@
             const title = f["제목"] || f["제휴사"] || "(제목 없음)";
             const status = f["상태"] || "—";
             const pinned = f["pinned"];
-            const thumb = toFullThumb(
-              f["썸네일"] ||
-                f["사진"] ||
-                f["증빙이미지"] ||
-                f["표지이미지"] ||
-                "",
-            );
+            const thumb = toAdminImageUrl(firstContentImage(f));
             const date = f["게시일"] || f["수상일"] || f["체결일"] || "";
             const meta =
               escapeHtml(status) + (date ? " · " + escapeHtml(date) : "");
@@ -1955,7 +3003,7 @@
               <div class="card-order">${order}</div>
               <div class="card-thumb">${
                 thumb
-                  ? `<img src="${escapeHtml(thumb)}" loading="lazy" onerror="this.style.display='none'">`
+                  ? `<img src="${escapeHtml(thumb)}" alt="${escapeHtml(title)}" loading="lazy" onerror="showImageFallback(this)"><div class="image-load-fallback">이미지 오류</div>`
                   : `<div class="card-thumb-empty">—</div>`
               }</div>
               <div class="card-info">
@@ -2095,14 +3143,61 @@
         document.querySelectorAll(".tab-panel").forEach((p) => {
           p.hidden = p.dataset.pagePanel !== page;
         });
-        if (page !== "consultations") {
+        if (page === "analytics") {
+          loadAnalyticsDashboard();
+        } else if (page !== "consultations") {
           loadContentList(page);
         }
       }
 
       document.querySelectorAll(".nav-item[data-page]").forEach((n) => {
-        n.addEventListener("click", () => switchTab(n.dataset.page));
+        n.addEventListener("click", () => {
+          switchTab(n.dataset.page);
+          setMobileMenu(false);
+        });
       });
+      const sidebarEl = document.querySelector(".sidebar");
+      const mobileMenuBtn = document.getElementById("btnMobileMenu");
+      function setMobileMenu(open) {
+        if (!sidebarEl || !mobileMenuBtn) return;
+        sidebarEl.classList.toggle("mobile-open", !!open);
+        mobileMenuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        mobileMenuBtn.textContent = open ? "닫기" : "메뉴";
+      }
+      mobileMenuBtn?.addEventListener("click", () => {
+        setMobileMenu(!sidebarEl.classList.contains("mobile-open"));
+      });
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 900) setMobileMenu(false);
+      });
+      initAnalyticsDates();
+      document.querySelectorAll("[data-analytics-range]").forEach((b) => {
+        b.addEventListener("click", () => {
+          setAnalyticsQuickRange(b.dataset.analyticsRange || "28d");
+          loadAnalyticsDashboard(true);
+        });
+      });
+      document
+        .getElementById("btnAnalyticsDateApply")
+        .addEventListener("click", () => {
+          const start = document.getElementById("analyticsStartDate").value;
+          const end = document.getElementById("analyticsEndDate").value;
+          if (!start || !end) {
+            alert("시작일과 종료일을 선택하세요.");
+            return;
+          }
+          if (start > end) {
+            alert("시작일은 종료일보다 늦을 수 없습니다.");
+            return;
+          }
+          analyticsState.startDate = start;
+          analyticsState.endDate = end;
+          analyticsState.range = "custom";
+          document.querySelectorAll("[data-analytics-range]").forEach((x) => {
+            x.classList.remove("active");
+          });
+          loadAnalyticsDashboard(true);
+        });
 
       document.querySelectorAll("[data-action='new']").forEach((b) => {
         b.addEventListener("click", () =>
@@ -2257,6 +3352,7 @@
             const isLong = longCols.includes(col);
             const isDate = dateCols.includes(col);
             const isSelect = mod.selectCols && mod.selectCols[col];
+            const previewUrl = isImg ? toAdminImageUrl(v) : "";
             let input;
             if (isSelect) {
               input =
@@ -2274,8 +3370,8 @@
             } else if (isImg) {
               const labelText = v ? "이미지 변경" : "이미지 업로드";
               input =
-                (v
-                  ? `<div style="margin-bottom:10px"><img src="${escapeHtml(v)}" style="max-width:180px;max-height:120px;border:1px solid var(--border);border-radius:6px;display:block" onerror="this.style.opacity=0.3"></div>`
+                (previewUrl
+                  ? `<div class="modal-image-preview"><img src="${escapeHtml(previewUrl)}" alt="${escapeHtml(col)} 미리보기" onerror="showImageFallback(this)"><div class="image-load-fallback">이미지 오류</div></div>`
                   : `<div style="margin-bottom:10px;width:180px;height:120px;border:1px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--ink-2);font-size:12px;background:rgba(0,0,0,0.2)">미리보기</div>`) +
                 `<input type="hidden" data-field="${col}" value="${escapeHtml(v)}">` +
                 `<label style="display:inline-block;padding:8px 14px;background:#d4af6e;color:#1a1612;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">${labelText}<input type="file" accept="image/*" onchange="uploadContentImage(this,'${col}')" style="display:none"></label>` +

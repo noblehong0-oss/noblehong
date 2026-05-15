@@ -15,6 +15,9 @@
  *   GET|POST /api/admin/content                 콘텐츠 모듈 9종 CRUD (관리자)
  *   POST  /api/admin/upload                     R2 이미지 업로드 (관리자)
  *   GET   /api/content                          공개 콘텐츠 조회
+ *   GET   /api/admin/analytics/status           GA4 연결 상태 확인
+ *   GET   /api/admin/analytics/summary          GA4 방문통계 D1 스냅샷 조회
+ *   POST  /api/admin/analytics/sync             GA4 방문통계 수집 + D1/R2 영속화
  *   GET|POST /api/couple-manager/search         레거시 커플매니저 스크레이핑
  *
  * Bindings: env.BUCKET (R2 "noblehong-r2"), env.DB (D1 "noblehong-db")
@@ -25,11 +28,12 @@
  *   GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN,
  *   CRM_ENDPOINT, ADMIN_BYPASS_IPS,
  *   ADMIN_USERNAME, ADMIN_PASSWORD,
+ *   GA4_OAUTH_CLIENT_ID, GA4_OAUTH_CLIENT_SECRET, GA4_OAUTH_REFRESH_TOKEN,
  * Vars:
  *   R2_PUBLIC_URL, ALLOWED_ORIGINS,
  *   GMAIL_FROM, GMAIL_TO, CRM_COURSE_CODE,
  *   ADMIN_OTP_TTL (default 300), ADMIN_SESSION_TTL (default 43200),
- *   ADMIN_URL
+ *   ADMIN_URL, GA4_PROPERTY_ID
  */
 
 import iconv from "iconv-lite";
@@ -369,7 +373,14 @@ function formatKoreanDate(iso) {
   return `${yy}.${mm}.${dd} ${hh}:${mi}`;
 }
 
-const SOURCE_LABEL = { quick: "사이드바", bar: "하단바", submit: "상담문의" };
+const SOURCE_LABEL = {
+  quick: "사이드바",
+  bar: "하단바",
+  submit: "상담문의",
+  meta: "Meta 광고",
+  "meta-ig": "Meta · Instagram",
+  "meta-fb": "Meta · Facebook",
+};
 
 // C안 HTML 풀폼 — 정상 접수 알림 (일반 채널)
 function buildConsultMessage(env, source, fields, recordId, ip) {
@@ -418,11 +429,11 @@ function tgConsult(env, source, fields, recordId, ip) {
   );
 }
 
-// 디버그/에러 채널 (별도 채널, 없으면 일반 채널 폴백)
+// 디버그/에러 채널 — 관리자/에러 봇 우선, 없으면 일반 채널 폴백
 function tgDebug(env, message) {
-  const token = env.TELEGRAM_BOT_TOKEN || env.ADMIN_TG_BOT_TOKEN;
+  const token = env.ADMIN_TG_BOT_TOKEN || env.TELEGRAM_BOT_TOKEN;
   const chatId =
-    env.TELEGRAM_DEBUG_CHAT_ID || env.TELEGRAM_CHAT_ID || env.ADMIN_TG_CHAT_ID;
+    env.TELEGRAM_DEBUG_CHAT_ID || env.ADMIN_TG_CHAT_ID || env.TELEGRAM_CHAT_ID;
   return tgSend(token, chatId, message);
 }
 
@@ -1081,6 +1092,174 @@ async function handleConsultationQuick(request, env) {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// 핸들러: Meta lead → Make → Worker  /api/lead/meta
+//   인증: X-Meta-Secret 헤더 (timing-safe 비교)
+//   Body (한글 키): { 이름, 연락처, 성별, 혼인여부, 출생년도, 지역, 광고명 }
+//   처리: D1 consultations INSERT + Telegram 알림 (카페24 CRM 미연동)
+// ─────────────────────────────────────────────────────────────────
+// Meta lead 전용 텔레그램 메시지 (라벨정렬 + 헤더구분선 + 하이픈 짝대기)
+function displayWidth(s) {
+  let w = 0;
+  for (const c of String(s || "")) w += c.charCodeAt(0) > 127 ? 2 : 1;
+  return w;
+}
+function buildMetaLeadMessage(env, fields, recordId, platformLabel) {
+  const adminBase = env.ADMIN_URL || "https://noblehong.vercel.app/admin";
+  const adminLink = `${adminBase}/?id=${encodeURIComponent(recordId || "")}`;
+  const headerPlat = platformLabel ? `Meta · ${platformLabel}` : "Meta 광고";
+  const personalBits = [];
+  if (fields.gender) personalBits.push(fields.gender);
+  if (fields.birthYear) personalBits.push(String(fields.birthYear));
+  if (fields.marriage) personalBits.push(fields.marriage);
+  const rows = [
+    ["이름", fields.name],
+    ["인적사항", personalBits.join(" · ")],
+    ["연락처", fields.phone],
+    ["지역", fields.address],
+    ["광고", fields.adName],
+    ["접수시각", formatKoreanDate()],
+  ].filter(([, v]) => v && String(v).trim() !== "");
+  const bodyLines = rows.map(
+    ([k, v]) => `- <b>${escapeHtml(k)}</b>  ${escapeHtml(v)}`,
+  );
+  const divider = "─────────────────────";
+  return [
+    `<b>[새 상담 접수]</b> ${escapeHtml(headerPlat)}`,
+    divider,
+    ...bodyLines,
+    divider,
+    `<a href="${escapeHtml(adminLink)}">어드민에서 열기 →</a>`,
+  ].join("\n");
+}
+
+function timingSafeEqualStr(a, b) {
+  if (typeof a !== "string" || typeof b !== "string") return false;
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+async function handleMetaLead(request, env) {
+  if (request.method !== "POST")
+    return json({ error: "Method not allowed" }, 405);
+  const ct = (request.headers.get("content-type") || "").toLowerCase();
+  if (!ct.includes("application/json"))
+    return json({ error: "application/json required" }, 415);
+
+  const expected = env.META_LEAD_SECRET;
+  if (!expected) {
+    await tgDebug(env, `[노블홍/meta-lead] META_LEAD_SECRET 미설정 — 차단`);
+    return json({ error: "Server misconfigured" }, 500);
+  }
+  const provided = request.headers.get("x-meta-secret") || "";
+  if (!timingSafeEqualStr(provided, expected)) {
+    const ip = clientIP(request, env);
+    await tgDebug(
+      env,
+      `[노블홍/meta-lead] ⚠️ 시크릿 불일치 차단\nIP: ${ip}\nprovided len: ${provided.length}`,
+    );
+    return json({ error: "Unauthorized" }, 401);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "Invalid JSON" }, 400);
+  }
+
+  const name = str(body["이름"] || body.name || "", 50);
+  // 연락처 정규화: +82, 0082, 82 prefix → 0 으로 통일 (Meta는 E.164로 보냄)
+  let phone = str(body["연락처"] || body.phone || "", 30).replace(
+    /[\s()]/g,
+    "",
+  );
+  phone = phone.replace(/^\+?0{0,2}82-?/, "0").replace(/^82(?=1\d)/, "0");
+  const gender = str(body["성별"] || "", 10);
+  const marriage = str(body["혼인여부"] || "", 10);
+  const birthYearRaw = str(body["출생년도"] || body["출생연도"] || "", 10);
+  const region = str(body["지역"] || "", 100);
+  const adName = str(body["광고명"] || "", 200);
+  // 플랫폼: ig/fb 정규화 (instagram, facebook, IG, FB, instagram_feed 등 모두 수용)
+  const platformRaw = String(body["플랫폼"] || body.platform || "")
+    .toLowerCase()
+    .trim();
+  let platform = "";
+  if (/(^|[^a-z])ig|insta/.test(platformRaw)) platform = "ig";
+  else if (/(^|[^a-z])fb|face/.test(platformRaw)) platform = "fb";
+  const sourceKey = platform ? `meta-${platform}` : "meta";
+  const sourceLabel = SOURCE_LABEL[sourceKey] || "Meta 광고";
+
+  const errors = [];
+  if (!name) errors.push("이름");
+  if (!/^0\d{1,2}-?\d{3,4}-?\d{4}$/.test(phone)) errors.push("연락처");
+  if (errors.length)
+    return json({ error: "Invalid fields", fields: errors }, 400);
+
+  const ip = clientIP(request, env);
+  const ua = str(request.headers.get("user-agent") || "Make/Meta", 500);
+  if (!env.DB) return json({ error: "Server misconfigured" }, 500);
+
+  try {
+    const messageText = adName ? `[Meta 광고] ${adName}` : "[Meta 광고]";
+    const { id: recordId, error: saveError } = await saveConsultation(env, {
+      이름: name,
+      연락처: phone,
+      성별: gender || null,
+      혼인여부: marriage || null,
+      출생연도: birthYearRaw || null,
+      주소: region || null,
+      문의내용: messageText,
+      개인정보동의: true,
+      상태: "접수",
+      출처: adName ? `${sourceKey}:${adName}` : sourceKey,
+      IP: ip,
+      UserAgent: ua,
+      Referrer: str(request.headers.get("referer") || "make.com", 300),
+      제출일시: new Date().toISOString(),
+    });
+    if (saveError) {
+      await tgDebug(
+        env,
+        `[노블홍/meta-lead] D1 저장 실패\nIP: ${ip}\n${saveError}`,
+      );
+      return json({ error: "Failed to save" }, 500);
+    }
+
+    const platformLabel =
+      platform === "ig" ? "Instagram" : platform === "fb" ? "Facebook" : "";
+    const tgText = buildMetaLeadMessage(
+      env,
+      {
+        name,
+        phone,
+        gender,
+        marriage,
+        birthYear: birthYearRaw,
+        address: region,
+        adName,
+      },
+      recordId,
+      platformLabel,
+    );
+    await tgSend(
+      env.TELEGRAM_BOT_TOKEN || env.ADMIN_TG_BOT_TOKEN,
+      env.TELEGRAM_CHAT_ID || env.ADMIN_TG_CHAT_ID,
+      tgText,
+    );
+
+    return json({ ok: true, id: recordId });
+  } catch (err) {
+    await tgDebug(
+      env,
+      `[노블홍/meta-lead] 500 에러\nIP:${ip}\n${String(err?.message || err).slice(0, 200)}`,
+    );
+    return json({ error: "Server error" }, 500);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
 // 핸들러: 하단바 /api/consultation/bar
 // ─────────────────────────────────────────────────────────────────
 async function handleConsultationBar(request, env) {
@@ -1483,8 +1662,14 @@ async function handleConsultationsList(request, env) {
   const where = [];
   const binds = [];
   if (source) {
-    where.push(`"출처" = ?`);
-    binds.push(source);
+    // meta / meta-ig / meta-fb 는 광고명 suffix가 붙으므로 prefix LIKE 매칭
+    if (/^meta(-(ig|fb))?$/i.test(source)) {
+      where.push(`("출처" = ? OR "출처" LIKE ?)`);
+      binds.push(source, `${source}:%`);
+    } else {
+      where.push(`"출처" = ?`);
+      binds.push(source);
+    }
   }
   if (status) {
     where.push(`"상태" = ?`);
@@ -2011,6 +2196,622 @@ async function handleYoutubeSync(request, env) {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// GA4 Data API — 방문통계 스냅샷 영속화 (D1 요약 + R2 원본)
+// ─────────────────────────────────────────────────────────────────
+const GA4_SUMMARY_METRICS = [
+  "totalUsers",
+  "activeUsers",
+  "newUsers",
+  "sessions",
+  "screenPageViews",
+  "eventCount",
+  "keyEvents",
+  "engagementRate",
+  "averageSessionDuration",
+];
+const GA4_FLOW_METRICS = [
+  "totalUsers",
+  "sessions",
+  "screenPageViews",
+  "keyEvents",
+];
+
+function isIsoDate(raw) {
+  const s = String(raw || "").trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+  const d = new Date(`${s}T00:00:00Z`);
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s;
+}
+
+function daysInclusive(startDate, endDate) {
+  const start = Date.parse(`${startDate}T00:00:00Z`);
+  const end = Date.parse(`${endDate}T00:00:00Z`);
+  return Math.floor((end - start) / 86400000) + 1;
+}
+
+function parseGa4Range(rangeKey, startDateInput, endDateInput) {
+  const startDate = String(startDateInput || "").trim();
+  const endDate = String(endDateInput || "").trim();
+  if (startDate || endDate) {
+    if (!isIsoDate(startDate) || !isIsoDate(endDate)) {
+      throw new Error("GA4 custom date requires YYYY-MM-DD startDate/endDate");
+    }
+    const days = daysInclusive(startDate, endDate);
+    if (days <= 0)
+      throw new Error("GA4 custom date startDate must be before endDate");
+    if (days > 366)
+      throw new Error("GA4 custom date range is limited to 366 days");
+    return {
+      rangeKey: `custom_${startDate}_${endDate}`,
+      days,
+      startDate,
+      endDate,
+      snapshotStartDate: startDate,
+      snapshotEndDate: endDate,
+    };
+  }
+  const raw = String(rangeKey || "28d")
+    .trim()
+    .toLowerCase();
+  const days = raw === "7d" ? 7 : raw === "90d" ? 90 : 28;
+  return {
+    rangeKey: `${days}d`,
+    days,
+    startDate: `${days - 1}daysAgo`,
+    endDate: "today",
+    snapshotStartDate: isoDateUTC(-(days - 1)),
+    snapshotEndDate: isoDateUTC(0),
+  };
+}
+
+function isoDateUTC(offsetDays = 0) {
+  const d = new Date(Date.now() + offsetDays * 86400000);
+  return d.toISOString().slice(0, 10);
+}
+
+function ga4Date(raw) {
+  const s = String(raw || "");
+  if (/^\d{8}$/.test(s))
+    return `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6)}`;
+  return s.slice(0, 10);
+}
+
+function metricNumber(v) {
+  const n = Number(v || 0);
+  return Number.isFinite(n) ? n : 0;
+}
+
+async function ga4AccessToken(env) {
+  const clientId = env.GA4_OAUTH_CLIENT_ID;
+  const clientSecret = env.GA4_OAUTH_CLIENT_SECRET;
+  const refreshToken = env.GA4_OAUTH_REFRESH_TOKEN;
+  if (!clientId || !clientSecret || !refreshToken) {
+    throw new Error("GA4 OAuth env missing");
+  }
+  const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      refresh_token: refreshToken,
+      grant_type: "refresh_token",
+    }).toString(),
+  });
+  const data = await tokenRes.json();
+  if (!tokenRes.ok || !data.access_token) {
+    throw new Error(
+      `GA4 token ${tokenRes.status}: ${String(data.error || data.error_description || "").slice(0, 160)}`,
+    );
+  }
+  return data.access_token;
+}
+
+async function ga4RunReport(env, accessToken, body) {
+  const propertyId = env.GA4_PROPERTY_ID;
+  if (!propertyId) throw new Error("GA4_PROPERTY_ID missing");
+  const res = await fetch(
+    `https://analyticsdata.googleapis.com/v1beta/properties/${propertyId}:runReport`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    },
+  );
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(
+      `GA4 runReport ${res.status}: ${String(data.error?.message || "").slice(0, 200)}`,
+    );
+  }
+  return data;
+}
+
+function ga4Rows(report, dimensions, metrics) {
+  return (report.rows || []).map((row) => {
+    const out = {};
+    dimensions.forEach((name, i) => {
+      out[name] = row.dimensionValues?.[i]?.value || "";
+    });
+    metrics.forEach((name, i) => {
+      out[name] = metricNumber(row.metricValues?.[i]?.value);
+    });
+    return out;
+  });
+}
+
+function sumBy(items, keyFn, seedFn, mergeFn) {
+  const map = new Map();
+  for (const item of items) {
+    const key = keyFn(item);
+    if (!map.has(key)) map.set(key, seedFn(item));
+    mergeFn(map.get(key), item);
+  }
+  return Array.from(map.values());
+}
+
+function buildGa4Snapshot(env, range, reports) {
+  const dateRows = ga4Rows(reports.date, ["date"], GA4_SUMMARY_METRICS);
+  const channelRows = ga4Rows(
+    reports.channel,
+    ["date", "sessionDefaultChannelGroup", "sessionSourceMedium"],
+    GA4_FLOW_METRICS,
+  );
+  const pageRows = ga4Rows(
+    reports.page,
+    ["date", "pagePath", "pageTitle"],
+    ["screenPageViews", "totalUsers", "sessions"],
+  );
+  const deviceRows = ga4Rows(
+    reports.device,
+    ["deviceCategory"],
+    GA4_FLOW_METRICS,
+  );
+
+  const totals = dateRows.reduce(
+    (acc, r) => {
+      for (const k of [
+        "totalUsers",
+        "activeUsers",
+        "newUsers",
+        "sessions",
+        "screenPageViews",
+        "eventCount",
+        "keyEvents",
+      ]) {
+        acc[k] += metricNumber(r[k]);
+      }
+      acc.engagementRateWeighted +=
+        metricNumber(r.engagementRate) * metricNumber(r.sessions);
+      acc.avgSessionDurationWeighted +=
+        metricNumber(r.averageSessionDuration) * metricNumber(r.sessions);
+      return acc;
+    },
+    {
+      totalUsers: 0,
+      activeUsers: 0,
+      newUsers: 0,
+      sessions: 0,
+      screenPageViews: 0,
+      eventCount: 0,
+      keyEvents: 0,
+      engagementRateWeighted: 0,
+      avgSessionDurationWeighted: 0,
+    },
+  );
+  const sessions = Math.max(totals.sessions, 1);
+  totals.engagementRate = totals.engagementRateWeighted / sessions;
+  totals.averageSessionDuration = totals.avgSessionDurationWeighted / sessions;
+
+  const channels = sumBy(
+    channelRows,
+    (r) =>
+      [
+        ga4Date(r.date),
+        r.sessionDefaultChannelGroup || "(not set)",
+        r.sessionSourceMedium || "(not set)",
+      ].join("|"),
+    (r) => ({
+      date: ga4Date(r.date),
+      channel: r.sessionDefaultChannelGroup || "(not set)",
+      sourceMedium: r.sessionSourceMedium || "(not set)",
+      totalUsers: 0,
+      sessions: 0,
+      screenPageViews: 0,
+      keyEvents: 0,
+    }),
+    (acc, r) => {
+      acc.totalUsers += metricNumber(r.totalUsers);
+      acc.sessions += metricNumber(r.sessions);
+      acc.screenPageViews += metricNumber(r.screenPageViews);
+      acc.keyEvents += metricNumber(r.keyEvents);
+    },
+  )
+    .sort((a, b) => b.totalUsers - a.totalUsers)
+    .slice(0, 80);
+
+  const pages = sumBy(
+    pageRows,
+    (r) => [ga4Date(r.date), r.pagePath || "/"].join("|"),
+    (r) => ({
+      date: ga4Date(r.date),
+      pagePath: r.pagePath || "/",
+      pageTitle: r.pageTitle || "",
+      screenPageViews: 0,
+      totalUsers: 0,
+      sessions: 0,
+    }),
+    (acc, r) => {
+      acc.screenPageViews += metricNumber(r.screenPageViews);
+      acc.totalUsers += metricNumber(r.totalUsers);
+      acc.sessions += metricNumber(r.sessions);
+    },
+  )
+    .sort((a, b) => b.screenPageViews - a.screenPageViews)
+    .slice(0, 80);
+
+  const devices = deviceRows
+    .map((r) => ({
+      deviceCategory: r.deviceCategory || "(not set)",
+      totalUsers: metricNumber(r.totalUsers),
+      sessions: metricNumber(r.sessions),
+      screenPageViews: metricNumber(r.screenPageViews),
+      keyEvents: metricNumber(r.keyEvents),
+    }))
+    .sort((a, b) => b.totalUsers - a.totalUsers);
+
+  const endDate = range.snapshotEndDate || isoDateUTC(0);
+  return {
+    id: `ga4_${env.GA4_PROPERTY_ID}_${range.rangeKey}_${endDate}_${crypto.randomUUID()}`,
+    propertyId: String(env.GA4_PROPERTY_ID),
+    rangeKey: range.rangeKey,
+    startDate: range.snapshotStartDate || isoDateUTC(-(range.days - 1)),
+    endDate: range.snapshotEndDate || endDate,
+    createdAt: new Date().toISOString(),
+    totals,
+    topChannel: channels[0]?.channel || "",
+    topPage: pages[0]?.pagePath || "",
+    channels,
+    pages,
+    devices,
+    raw: reports,
+  };
+}
+
+async function persistGa4Snapshot(env, snapshot) {
+  if (!env.DB) throw new Error("DB binding missing");
+  let rawR2Key = "";
+  if (env.BUCKET) {
+    rawR2Key = `analytics/ga4/property-${snapshot.propertyId}/${snapshot.endDate}/${snapshot.id}.json`;
+    await env.BUCKET.put(rawR2Key, JSON.stringify(snapshot), {
+      httpMetadata: { contentType: "application/json; charset=utf-8" },
+      customMetadata: {
+        propertyId: snapshot.propertyId,
+        rangeKey: snapshot.rangeKey,
+        createdAt: snapshot.createdAt,
+      },
+    });
+  }
+
+  const t = snapshot.totals;
+  await env.DB.prepare(
+    `INSERT INTO ga4_snapshots (
+      id, property_id, range_key, start_date, end_date,
+      total_users, active_users, new_users, sessions, screen_page_views,
+      event_count, key_events, engagement_rate, avg_session_duration,
+      top_channel, top_page, raw_r2_key, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  )
+    .bind(
+      snapshot.id,
+      snapshot.propertyId,
+      snapshot.rangeKey,
+      snapshot.startDate,
+      snapshot.endDate,
+      Math.round(t.totalUsers),
+      Math.round(t.activeUsers),
+      Math.round(t.newUsers),
+      Math.round(t.sessions),
+      Math.round(t.screenPageViews),
+      Math.round(t.eventCount),
+      Math.round(t.keyEvents),
+      t.engagementRate,
+      t.averageSessionDuration,
+      snapshot.topChannel,
+      snapshot.topPage,
+      rawR2Key,
+      snapshot.createdAt,
+    )
+    .run();
+
+  const stmts = [];
+  for (const row of snapshot.channels) {
+    stmts.push(
+      env.DB.prepare(
+        `INSERT OR REPLACE INTO ga4_channel_daily (
+          snapshot_id, report_date, channel, source_medium,
+          total_users, sessions, screen_page_views, key_events
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      ).bind(
+        snapshot.id,
+        row.date,
+        row.channel,
+        row.sourceMedium,
+        Math.round(row.totalUsers),
+        Math.round(row.sessions),
+        Math.round(row.screenPageViews),
+        Math.round(row.keyEvents),
+      ),
+    );
+  }
+  for (const row of snapshot.pages) {
+    stmts.push(
+      env.DB.prepare(
+        `INSERT OR REPLACE INTO ga4_page_daily (
+          snapshot_id, report_date, page_path, page_title,
+          screen_page_views, total_users, sessions
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      ).bind(
+        snapshot.id,
+        row.date,
+        row.pagePath,
+        row.pageTitle,
+        Math.round(row.screenPageViews),
+        Math.round(row.totalUsers),
+        Math.round(row.sessions),
+      ),
+    );
+  }
+  for (const row of snapshot.devices) {
+    stmts.push(
+      env.DB.prepare(
+        `INSERT OR REPLACE INTO ga4_device_breakdown (
+          snapshot_id, device_category, total_users, sessions,
+          screen_page_views, key_events
+        ) VALUES (?, ?, ?, ?, ?, ?)`,
+      ).bind(
+        snapshot.id,
+        row.deviceCategory,
+        Math.round(row.totalUsers),
+        Math.round(row.sessions),
+        Math.round(row.screenPageViews),
+        Math.round(row.keyEvents),
+      ),
+    );
+  }
+  if (stmts.length) await env.DB.batch(stmts);
+  return { ...snapshot, rawR2Key };
+}
+
+async function syncGa4Analytics(env, rangeKey = "28d", startDate, endDate) {
+  const range = parseGa4Range(rangeKey, startDate, endDate);
+  const accessToken = await ga4AccessToken(env);
+  const dateRanges = [{ startDate: range.startDate, endDate: range.endDate }];
+  const reports = {
+    date: await ga4RunReport(env, accessToken, {
+      dateRanges,
+      dimensions: [{ name: "date" }],
+      metrics: GA4_SUMMARY_METRICS.map((name) => ({ name })),
+      orderBys: [{ dimension: { dimensionName: "date" } }],
+      limit: 120,
+    }),
+    channel: await ga4RunReport(env, accessToken, {
+      dateRanges,
+      dimensions: [
+        { name: "date" },
+        { name: "sessionDefaultChannelGroup" },
+        { name: "sessionSourceMedium" },
+      ],
+      metrics: GA4_FLOW_METRICS.map((name) => ({ name })),
+      orderBys: [{ metric: { metricName: "totalUsers" }, desc: true }],
+      limit: 200,
+    }),
+    page: await ga4RunReport(env, accessToken, {
+      dateRanges,
+      dimensions: [
+        { name: "date" },
+        { name: "pagePath" },
+        { name: "pageTitle" },
+      ],
+      metrics: ["screenPageViews", "totalUsers", "sessions"].map((name) => ({
+        name,
+      })),
+      orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
+      limit: 200,
+    }),
+    device: await ga4RunReport(env, accessToken, {
+      dateRanges,
+      dimensions: [{ name: "deviceCategory" }],
+      metrics: GA4_FLOW_METRICS.map((name) => ({ name })),
+      orderBys: [{ metric: { metricName: "totalUsers" }, desc: true }],
+      limit: 10,
+    }),
+  };
+  const snapshot = buildGa4Snapshot(env, range, reports);
+  return persistGa4Snapshot(env, snapshot);
+}
+
+async function latestGa4Snapshot(env, rangeKey = "28d", startDate, endDate) {
+  if (!env.DB) throw new Error("DB binding missing");
+  const propertyId = String(env.GA4_PROPERTY_ID || "");
+  if (!propertyId) throw new Error("GA4_PROPERTY_ID missing");
+  const range = parseGa4Range(rangeKey, startDate, endDate);
+  const row = await env.DB.prepare(
+    `SELECT * FROM ga4_snapshots WHERE property_id = ? AND range_key = ? ORDER BY created_at DESC LIMIT 1`,
+  )
+    .bind(propertyId, range.rangeKey)
+    .first();
+  if (!row) return null;
+  const [channels, pages, devices] = await Promise.all([
+    env.DB.prepare(
+      `SELECT * FROM ga4_channel_daily WHERE snapshot_id = ? ORDER BY total_users DESC LIMIT 20`,
+    )
+      .bind(row.id)
+      .all(),
+    env.DB.prepare(
+      `SELECT * FROM ga4_page_daily WHERE snapshot_id = ? ORDER BY screen_page_views DESC LIMIT 20`,
+    )
+      .bind(row.id)
+      .all(),
+    env.DB.prepare(
+      `SELECT * FROM ga4_device_breakdown WHERE snapshot_id = ? ORDER BY total_users DESC`,
+    )
+      .bind(row.id)
+      .all(),
+  ]);
+  return {
+    id: row.id,
+    propertyId: row.property_id,
+    rangeKey: row.range_key,
+    startDate: row.start_date,
+    endDate: row.end_date,
+    createdAt: row.created_at,
+    rawR2Key: row.raw_r2_key,
+    totals: {
+      totalUsers: Number(row.total_users || 0),
+      activeUsers: Number(row.active_users || 0),
+      newUsers: Number(row.new_users || 0),
+      sessions: Number(row.sessions || 0),
+      screenPageViews: Number(row.screen_page_views || 0),
+      eventCount: Number(row.event_count || 0),
+      keyEvents: Number(row.key_events || 0),
+      engagementRate: Number(row.engagement_rate || 0),
+      averageSessionDuration: Number(row.avg_session_duration || 0),
+    },
+    topChannel: row.top_channel || "",
+    topPage: row.top_page || "",
+    channels: channels.results || [],
+    pages: pages.results || [],
+    devices: devices.results || [],
+  };
+}
+
+async function latestGa4SnapshotMeta(env) {
+  if (!env.DB) return null;
+  const propertyId = String(env.GA4_PROPERTY_ID || "");
+  if (!propertyId) return null;
+  const row = await env.DB.prepare(
+    `SELECT id, range_key, start_date, end_date, total_users, sessions, screen_page_views, raw_r2_key, created_at
+     FROM ga4_snapshots
+     WHERE property_id = ?
+     ORDER BY created_at DESC
+     LIMIT 1`,
+  )
+    .bind(propertyId)
+    .first();
+  if (!row) return null;
+  return {
+    id: row.id,
+    rangeKey: row.range_key,
+    startDate: row.start_date,
+    endDate: row.end_date,
+    totalUsers: Number(row.total_users || 0),
+    sessions: Number(row.sessions || 0),
+    screenPageViews: Number(row.screen_page_views || 0),
+    rawR2: Boolean(row.raw_r2_key),
+    createdAt: row.created_at,
+  };
+}
+
+async function handleAnalyticsStatus(request, env) {
+  if (request.method !== "GET")
+    return json({ error: "Method not allowed" }, 405);
+  const gate = await requireAuth(request, env);
+  if (gate.error) return gate.error;
+
+  const checkedAt = new Date().toISOString();
+  try {
+    const accessToken = await ga4AccessToken(env);
+    const report = await ga4RunReport(env, accessToken, {
+      dateRanges: [{ startDate: "today", endDate: "today" }],
+      metrics: [{ name: "totalUsers" }],
+      limit: 1,
+    });
+    return json({
+      ok: true,
+      connected: true,
+      propertyId: String(env.GA4_PROPERTY_ID || ""),
+      checkedAt,
+      todayUsers: metricNumber(report.rows?.[0]?.metricValues?.[0]?.value),
+      latestSnapshot: await latestGa4SnapshotMeta(env),
+    });
+  } catch (e) {
+    return json({
+      ok: true,
+      connected: false,
+      propertyId: String(env.GA4_PROPERTY_ID || ""),
+      checkedAt,
+      error: String(e?.message || e).slice(0, 200),
+      latestSnapshot: await latestGa4SnapshotMeta(env),
+    });
+  }
+}
+
+async function handleAnalyticsSummary(request, env) {
+  if (request.method !== "GET")
+    return json({ error: "Method not allowed" }, 405);
+  const gate = await requireAuth(request, env);
+  if (gate.error) return gate.error;
+  const url = new URL(request.url);
+  const range = url.searchParams.get("range") || "28d";
+  const startDate = url.searchParams.get("startDate") || "";
+  const endDate = url.searchParams.get("endDate") || "";
+  try {
+    const snapshot = await latestGa4Snapshot(env, range, startDate, endDate);
+    return json({ ok: true, snapshot });
+  } catch (e) {
+    return json(
+      {
+        error: "Analytics summary failed",
+        detail: String(e?.message || e).slice(0, 200),
+      },
+      500,
+    );
+  }
+}
+
+async function handleAnalyticsSync(request, env) {
+  if (request.method !== "POST")
+    return json({ error: "Method not allowed" }, 405);
+  const gate = await requireAuth(request, env);
+  if (gate.error) return gate.error;
+  const url = new URL(request.url);
+  const range = url.searchParams.get("range") || "28d";
+  const startDate = url.searchParams.get("startDate") || "";
+  const endDate = url.searchParams.get("endDate") || "";
+  try {
+    const snapshot = await syncGa4Analytics(env, range, startDate, endDate);
+    return json({
+      ok: true,
+      snapshot: {
+        id: snapshot.id,
+        propertyId: snapshot.propertyId,
+        rangeKey: snapshot.rangeKey,
+        startDate: snapshot.startDate,
+        endDate: snapshot.endDate,
+        createdAt: snapshot.createdAt,
+        rawR2Key: snapshot.rawR2Key,
+        totals: snapshot.totals,
+        topChannel: snapshot.topChannel,
+        topPage: snapshot.topPage,
+      },
+      counts: {
+        channels: snapshot.channels.length,
+        pages: snapshot.pages.length,
+        devices: snapshot.devices.length,
+      },
+    });
+  } catch (e) {
+    const msg = String(e?.message || e).slice(0, 220);
+    tgDebug(env, `[noblehong/ga4-sync] ${msg}`);
+    return json({ error: "GA4 sync failed", detail: msg }, 500);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
 // 핸들러: 공개 조회 /api/content
 // ─────────────────────────────────────────────────────────────────
 async function handlePublicContent(request, env) {
@@ -2285,6 +3086,7 @@ async function route(request, env) {
     return handleConsultationQuick(request, env);
   if (path === "/api/consultation/bar")
     return handleConsultationBar(request, env);
+  if (path === "/api/lead/meta") return handleMetaLead(request, env);
 
   // Admin auth
   if (path === "/api/admin/login") return handleAdminLogin(request, env);
@@ -2306,6 +3108,12 @@ async function route(request, env) {
   if (path === "/api/admin/upload") return handleUpload(request, env);
   if (path === "/api/admin/youtube/sync")
     return handleYoutubeSync(request, env);
+  if (path === "/api/admin/analytics/status")
+    return handleAnalyticsStatus(request, env);
+  if (path === "/api/admin/analytics/summary")
+    return handleAnalyticsSummary(request, env);
+  if (path === "/api/admin/analytics/sync")
+    return handleAnalyticsSync(request, env);
 
   // Public
   if (path === "/api/content") return handlePublicContent(request, env);
@@ -2333,7 +3141,7 @@ export default {
   },
 
   // Cron Triggers (UTC):
-  //   "0 18 * * *"      매일 KST 03:00 — 홍유진TV 동기화
+  //   "0 18 * * *"      매일 KST 03:00 — 홍유진TV + GA4 방문통계 동기화
   //   "0 18 28-31 * *"  28~31일 KST 03:00 — 코드에서 말일 체크 후 매니저 사진 R2 재동기화
   async scheduled(event, env, ctx) {
     const cronExpr = event.cron;
@@ -2380,6 +3188,25 @@ export default {
           tgDebug(
             env,
             `[noblehong/youtube-cron] 실패: ${(e?.message || "").slice(0, 200)}`,
+          );
+        }
+        try {
+          if (
+            env.GA4_PROPERTY_ID &&
+            env.GA4_OAUTH_CLIENT_ID &&
+            env.GA4_OAUTH_CLIENT_SECRET &&
+            env.GA4_OAUTH_REFRESH_TOKEN
+          ) {
+            const r = await syncGa4Analytics(env, "28d");
+            tgDebug(
+              env,
+              `[noblehong/ga4-cron] 스냅샷 완료 — users ${Math.round(r.totals.totalUsers)} / pages ${r.pages.length} / R2 ${r.rawR2Key ? "ok" : "skip"}`,
+            );
+          }
+        } catch (e) {
+          tgDebug(
+            env,
+            `[noblehong/ga4-cron] 실패: ${(e?.message || "").slice(0, 200)}`,
           );
         }
       })(),
