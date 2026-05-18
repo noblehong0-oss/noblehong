@@ -12,6 +12,9 @@
  *   GET   /api/admin/consultations/list         상담 목록 (관리자)
  *   POST  /api/admin/consultations/update       상담 상태/메모 수정 (관리자)
  *   POST  /api/admin/consultations/delete       상담 삭제 (관리자)
+ *   GET   /api/admin/blacklist/list             블랙리스트 목록 (관리자)
+ *   POST  /api/admin/blacklist/add              블랙리스트 추가 (관리자)
+ *   POST  /api/admin/blacklist/delete           블랙리스트 삭제 (관리자)
  *   GET|POST /api/admin/content                 콘텐츠 모듈 9종 CRUD (관리자)
  *   POST  /api/admin/upload                     R2 이미지 업로드 (관리자)
  *   GET   /api/content                          공개 콘텐츠 조회
@@ -35,8 +38,6 @@
  *   ADMIN_OTP_TTL (default 300), ADMIN_SESSION_TTL (default 43200),
  *   ADMIN_URL, GA4_PROPERTY_ID
  */
-
-import iconv from "iconv-lite";
 
 // ─────────────────────────────────────────────────────────────────
 // 콘텐츠 모듈 매핑
@@ -478,6 +479,37 @@ function generateRecordId() {
   return s;
 }
 
+function generateBlacklistId() {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const buf = crypto.getRandomValues(new Uint8Array(14));
+  let s = "bl";
+  for (let i = 0; i < 14; i++) s += chars[buf[i] % 62];
+  return s;
+}
+
+// 연락처 정규화 (숫자만 추출) — 블랙리스트 저장/매칭 키
+function normalizePhone(p) {
+  return String(p || "").replace(/[^0-9]/g, "");
+}
+
+// 블랙리스트 매칭 — phone(숫자만) 정확 일치. DB 에러는 false(차단 안 함)로 처리해 가용성 보장
+async function checkBlacklist(env, phone) {
+  if (!env || !env.DB) return false;
+  const digits = normalizePhone(phone);
+  if (!digits) return false;
+  try {
+    const r = await env.DB.prepare(
+      `SELECT id FROM blacklist WHERE 연락처 = ? LIMIT 1`,
+    )
+      .bind(digits)
+      .first();
+    return !!r;
+  } catch {
+    return false;
+  }
+}
+
 const CONSULT_COLUMNS = [
   "id",
   "이름",
@@ -563,30 +595,18 @@ function bgRun(env, promise) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// Cafe24 CRM POST — EUC-KR 인코딩 + 원본 폼(sub02_05_1.html) 필드 구조 재현
-//   u_hp1/u_hp2/u_hp3 분할, agree1/agree2 포함, charset=EUC-KR
+// Cafe24 CRM POST — UTF-8 인코딩 + 원본 폼(sub02_05_1.html) 필드 구조 재현
+//   u_hp1/u_hp2/u_hp3 분할, agree1/agree2 포함, charset=UTF-8
+// 카페24 호스팅의 ASP는 inc_top.html의 `Response.CharSet="utf-8"` /
+// `<meta charset=utf-8>` 흐름으로 form 데이터를 UTF-8로 디코드한다.
+// (DBConnect.asp의 `Session.Codepage = 949`는 주석 처리되어 있음.)
+// EUC-KR로 보내면 한글이 UTF-8로 잘못 디코드 → MSSQL varchar에 `?` 폴백.
 // ─────────────────────────────────────────────────────────────────
-const UNRESERVED = /[A-Za-z0-9_\-.~]/;
-function eucKrUrlEncode(str) {
-  if (str === undefined || str === null || str === "") return "";
-  const buf = iconv.encode(String(str), "euc-kr"); // Buffer
-  let result = "";
-  for (let i = 0; i < buf.length; i++) {
-    const b = buf[i];
-    if (b < 0x80 && UNRESERVED.test(String.fromCharCode(b))) {
-      result += String.fromCharCode(b);
-    } else {
-      result += "%" + b.toString(16).toUpperCase().padStart(2, "0");
-    }
-  }
-  return result;
-}
-
-function buildEucKrForm(params) {
+function buildForm(params) {
   const parts = [];
   for (const [k, v] of Object.entries(params)) {
     if (v === undefined || v === null) continue;
-    parts.push(`${eucKrUrlEncode(k)}=${eucKrUrlEncode(v)}`);
+    parts.push(`${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`);
   }
   return parts.join("&");
 }
@@ -617,7 +637,7 @@ async function postToCafe24(env, fields) {
     agree2: fields.agree2 || "N",
   };
 
-  const body = buildEucKrForm(params);
+  const body = buildForm(params);
 
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 8000);
@@ -631,7 +651,7 @@ async function postToCafe24(env, fields) {
       method: "POST",
       headers: {
         Host: _url.host, // www.noblehong.com — 카페24 IIS 가상호스트 매칭
-        "Content-Type": "application/x-www-form-urlencoded; charset=EUC-KR",
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) noblehong-cf-worker",
         Referer: "https://www.noblehong.com/sub02/sub02_05_1.html",
@@ -640,13 +660,13 @@ async function postToCafe24(env, fields) {
       signal: ctrl.signal,
       redirect: "manual",
     });
-    // 응답은 EUC-KR HTML. 알 수 없는 오류 문자열(한글)도 EUC-KR 디코딩해서 검사
+    // 응답은 UTF-8 HTML (inc_top.html: Response.CharSet="utf-8")
     const bytes = new Uint8Array(await r.arrayBuffer());
     let text = "";
     try {
-      text = new TextDecoder("euc-kr").decode(bytes);
+      text = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
     } catch {
-      text = new TextDecoder("utf-8").decode(bytes);
+      text = new TextDecoder("euc-kr").decode(bytes);
     }
     // 디버그: Cafe24 응답 첫 300자를 Telegram으로 관측 (성공/실패 모두)
     bgRun(
@@ -869,6 +889,18 @@ async function handleConsultationSubmit(request, env) {
 
   if (!env.DB) return json({ error: "Server misconfigured" }, 500);
 
+  // 블랙리스트 차단 — fake 200 + 어드민 알림. 모든 후속 처리 스킵
+  if (await checkBlacklist(env, phone)) {
+    bgRun(
+      env,
+      tgDebug(
+        env,
+        `[노블홍/consultations] 🚫 블랙리스트 차단\nIP: ${ip}\n이름: ${name}\n연락처: ${phone}`,
+      ),
+    );
+    return json({ ok: true, message: "접수되었습니다" });
+  }
+
   try {
     const { limited } = await checkRateLimit(env, ip);
     if (limited) {
@@ -1028,6 +1060,18 @@ async function handleConsultationQuick(request, env) {
   const TG_CHAT = env.TELEGRAM_CHAT_ID || env.ADMIN_TG_CHAT_ID;
   if (!env.DB) return json({ error: "Server misconfigured" }, 500);
 
+  // 블랙리스트 차단 — fake 200 + 어드민 알림. 모든 후속 처리 스킵
+  if (await checkBlacklist(env, phone)) {
+    bgRun(
+      env,
+      tgDebug(
+        env,
+        `[노블홍/quick] 🚫 블랙리스트 차단\nIP: ${ip}\n이름: ${name}\n연락처: ${phone}`,
+      ),
+    );
+    return json({ ok: true, message: "접수되었습니다" });
+  }
+
   try {
     const { limited } = await checkRateLimit(env, ip);
     if (limited) {
@@ -1095,7 +1139,7 @@ async function handleConsultationQuick(request, env) {
 // 핸들러: Meta lead → Make → Worker  /api/lead/meta
 //   인증: X-Meta-Secret 헤더 (timing-safe 비교)
 //   Body (한글 키): { 이름, 연락처, 성별, 혼인여부, 출생년도, 지역, 광고명 }
-//   처리: D1 consultations INSERT + Telegram 알림 (카페24 CRM 미연동)
+//   처리: D1 consultations INSERT + Telegram 알림 + 카페24 CRM(u_memo 출처태그)
 // ─────────────────────────────────────────────────────────────────
 // Meta lead 전용 텔레그램 메시지 (라벨정렬 + 헤더구분선 + 하이픈 짝대기)
 function displayWidth(s) {
@@ -1201,6 +1245,18 @@ async function handleMetaLead(request, env) {
   const ua = str(request.headers.get("user-agent") || "Make/Meta", 500);
   if (!env.DB) return json({ error: "Server misconfigured" }, 500);
 
+  // 블랙리스트 차단 — fake 200 반환 + 어드민 알림. D1/카페24/TG 전부 스킵
+  if (await checkBlacklist(env, phone)) {
+    bgRun(
+      env,
+      tgDebug(
+        env,
+        `[노블홍/meta-lead] 🚫 블랙리스트 차단\nIP: ${ip}\n이름: ${name}\n연락처: ${phone}\n광고: ${adName || "-"}`,
+      ),
+    );
+    return json({ ok: true, id: null });
+  }
+
   try {
     const messageText = adName ? `[Meta 광고] ${adName}` : "[Meta 광고]";
     const { id: recordId, error: saveError } = await saveConsultation(env, {
@@ -1247,6 +1303,35 @@ async function handleMetaLead(request, env) {
       env.TELEGRAM_BOT_TOKEN || env.ADMIN_TG_BOT_TOKEN,
       env.TELEGRAM_CHAT_ID || env.ADMIN_TG_CHAT_ID,
       tgText,
+    );
+
+    // 카페24 CRM (MSSQL) INSERT — fire-and-forget. 실패해도 D1/TG 영향 없음
+    const cafe24Tag =
+      platform === "ig"
+        ? "Meta광고-IG"
+        : platform === "fb"
+          ? "Meta광고-FB"
+          : "Meta광고";
+    const cafe24Memo = adName ? `[${cafe24Tag}] ${adName}` : `[${cafe24Tag}]`;
+    bgRun(
+      env,
+      postToCafe24(env, {
+        in_course2: env.CRM_COURSE_CODE || "5002",
+        in_course_desc: cafe24Tag,
+        u_name: name,
+        u_hp: phone.replace(/[^0-9]/g, ""),
+        u_gender: gender === "남성" ? "1" : gender === "여성" ? "2" : "",
+        u_married: marriage === "초혼" ? "1" : marriage === "재혼" ? "2" : "",
+        u_birthY: birthYearRaw || "",
+        u_memo: cafe24Memo,
+        agree1: "Y",
+        agree2: "N",
+      }).catch((e) =>
+        tgDebug(
+          env,
+          `[노블홍/meta-lead] 카페24 전송 실패\nRecord:${recordId}\n${String(e).slice(0, 200)}`,
+        ),
+      ),
     );
 
     return json({ ok: true, id: recordId });
@@ -1319,6 +1404,18 @@ async function handleConsultationBar(request, env) {
   const TG_TOKEN = env.TELEGRAM_BOT_TOKEN || env.ADMIN_TG_BOT_TOKEN;
   const TG_CHAT = env.TELEGRAM_CHAT_ID || env.ADMIN_TG_CHAT_ID;
   if (!env.DB) return json({ error: "Server misconfigured" }, 500);
+
+  // 블랙리스트 차단 — fake 200 + 어드민 알림. 모든 후속 처리 스킵
+  if (await checkBlacklist(env, phone)) {
+    bgRun(
+      env,
+      tgDebug(
+        env,
+        `[노블홍/bar] 🚫 블랙리스트 차단\nIP: ${ip}\n이름: ${name}\n연락처: ${phone}`,
+      ),
+    );
+    return json({ ok: true, message: "접수되었습니다" });
+  }
 
   try {
     const { limited } = await checkRateLimit(env, ip);
@@ -1803,6 +1900,151 @@ async function handleConsultationsDelete(request, env) {
       .run();
     const deleted = (r.meta?.changes || 0) > 0;
     return json({ ok: true, id, deleted });
+  } catch (e) {
+    return json(
+      {
+        error: "DB delete failed",
+        detail: String(e?.message || e).slice(0, 200),
+      },
+      500,
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// 핸들러: 블랙리스트 관리 /api/admin/blacklist/{list,add,delete}
+//   매칭 키: 연락처(숫자만 정규화). list/add/delete는 모두 관리자 인증 필요
+//   4개 폼 핸들러(meta-lead / bar / quick / submit)가 checkBlacklist 호출
+// ─────────────────────────────────────────────────────────────────
+async function handleBlacklistList(request, env) {
+  if (request.method !== "GET")
+    return json({ error: "Method not allowed" }, 405);
+  const gate = await requireAuth(request, env);
+  if (gate.error) return gate.error;
+  if (!env.DB) return json({ error: "DB not configured" }, 500);
+
+  const url = new URL(request.url);
+  const offset = parseInt(url.searchParams.get("offset") || "0", 10) || 0;
+  const q = (url.searchParams.get("q") || "").trim();
+  const PAGE_SIZE = 100;
+
+  const where = [];
+  const binds = [];
+  if (q) {
+    where.push(`("이름" LIKE ? OR "연락처" LIKE ? OR "사유" LIKE ?)`);
+    const like = `%${q.replace(/[^0-9a-zA-Z가-힣\s_-]/g, "")}%`;
+    binds.push(like, like, like);
+  }
+  const whereSQL = where.length ? `WHERE ${where.join(" AND ")}` : "";
+
+  try {
+    const r = await env.DB.prepare(
+      `SELECT id, "연락처", "이름", "사유", "등록자", "등록일시" FROM blacklist ${whereSQL} ORDER BY "등록일시" DESC LIMIT ? OFFSET ?`,
+    )
+      .bind(...binds, PAGE_SIZE, offset)
+      .all();
+    const records = r.results || [];
+    const nextOffset =
+      records.length === PAGE_SIZE ? String(offset + PAGE_SIZE) : null;
+    return json({ ok: true, records, offset: nextOffset });
+  } catch (e) {
+    return json(
+      {
+        error: "DB query failed",
+        detail: String(e?.message || e).slice(0, 200),
+      },
+      500,
+    );
+  }
+}
+
+async function handleBlacklistAdd(request, env) {
+  if (request.method !== "POST")
+    return json({ error: "Method not allowed" }, 405);
+  const gate = await requireAuth(request, env);
+  if (gate.error) return gate.error;
+  if (!env.DB) return json({ error: "DB not configured" }, 500);
+
+  const ct = (request.headers.get("content-type") || "").toLowerCase();
+  if (!ct.includes("application/json"))
+    return json({ error: "application/json required" }, 415);
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "Invalid JSON" }, 400);
+  }
+
+  const phoneRaw = String(body.phone || body["연락처"] || "").trim();
+  const digits = normalizePhone(phoneRaw);
+  if (digits.length < 9 || digits.length > 11)
+    return json({ error: "Invalid phone", field: "phone" }, 400);
+
+  const name = String(body.name || body["이름"] || "")
+    .trim()
+    .slice(0, 50);
+  const reason = String(body.reason || body["사유"] || "")
+    .trim()
+    .slice(0, 500);
+  const admin =
+    (gate.payload && (gate.payload.sub || gate.payload.email)) || "admin";
+
+  const id = generateBlacklistId();
+  const now = new Date().toISOString();
+
+  try {
+    await env.DB.prepare(
+      `INSERT INTO blacklist (id, "연락처", "이름", "사유", "등록자", "등록일시") VALUES (?, ?, ?, ?, ?, ?)`,
+    )
+      .bind(id, digits, name || null, reason || null, admin, now)
+      .run();
+    return json({
+      ok: true,
+      record: {
+        id,
+        연락처: digits,
+        이름: name || null,
+        사유: reason || null,
+        등록자: admin,
+        등록일시: now,
+      },
+    });
+  } catch (e) {
+    const msg = String(e?.message || e);
+    if (/UNIQUE|already exists/i.test(msg))
+      return json({ error: "이미 등록된 번호입니다", field: "phone" }, 409);
+    return json({ error: "DB insert failed", detail: msg.slice(0, 200) }, 500);
+  }
+}
+
+async function handleBlacklistDelete(request, env) {
+  if (request.method !== "POST")
+    return json({ error: "Method not allowed" }, 405);
+  const gate = await requireAuth(request, env);
+  if (gate.error) return gate.error;
+  if (!env.DB) return json({ error: "DB not configured" }, 500);
+
+  const ct = (request.headers.get("content-type") || "").toLowerCase();
+  if (!ct.includes("application/json"))
+    return json({ error: "application/json required" }, 415);
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: "Invalid JSON" }, 400);
+  }
+
+  const id = String(body.id || "").trim();
+  if (!/^bl[a-zA-Z0-9]{14}$/.test(id))
+    return json({ error: "Invalid blacklist id" }, 400);
+
+  try {
+    const r = await env.DB.prepare(`DELETE FROM blacklist WHERE id = ?`)
+      .bind(id)
+      .run();
+    return json({ ok: true, id, deleted: (r.meta?.changes || 0) > 0 });
   } catch (e) {
     return json(
       {
@@ -3102,6 +3344,14 @@ async function route(request, env) {
     return handleConsultationsUpdate(request, env);
   if (path === "/api/admin/consultations/delete")
     return handleConsultationsDelete(request, env);
+
+  // Admin blacklist
+  if (path === "/api/admin/blacklist/list")
+    return handleBlacklistList(request, env);
+  if (path === "/api/admin/blacklist/add")
+    return handleBlacklistAdd(request, env);
+  if (path === "/api/admin/blacklist/delete")
+    return handleBlacklistDelete(request, env);
 
   // Admin content
   if (path === "/api/admin/content") return handleAdminContent(request, env);
