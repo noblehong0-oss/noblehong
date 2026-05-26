@@ -639,52 +639,68 @@ async function postToCafe24(env, fields) {
 
   const body = buildForm(params);
 
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 8000);
-  try {
-    // CF Workers는 URL의 IP literal을 차단(1003) → hostname 필수
-    // crm.noblehong.com (DNS A 1.234.1.48, Proxy OFF) 사용
-    // Host 헤더로 www.noblehong.com 명시 → 카페24 IIS 가상호스트 매칭
-    const _url = new URL(env.CRM_ENDPOINT);
-    const _hostnameUrl = `http://crm.noblehong.com${_url.pathname}${_url.search}`;
-    const r = await fetch(_hostnameUrl, {
-      method: "POST",
-      headers: {
-        Host: _url.host, // www.noblehong.com — 카페24 IIS 가상호스트 매칭
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) noblehong-cf-worker",
-        Referer: "https://www.noblehong.com/sub02/sub02_05_1.html",
-      },
-      body,
-      signal: ctrl.signal,
-      redirect: "manual",
-    });
-    // 응답은 UTF-8 HTML (inc_top.html: Response.CharSet="utf-8")
-    const bytes = new Uint8Array(await r.arrayBuffer());
-    let text = "";
+  // CF Workers는 URL의 IP literal을 차단(1003) → hostname 필수
+  // crm.noblehong.com (DNS A 1.234.1.48, Proxy OFF) 사용
+  // Host 헤더로 www.noblehong.com 명시 → 카페24 IIS 가상호스트 매칭
+  const _url = new URL(env.CRM_ENDPOINT);
+  const _hostnameUrl = `http://crm.noblehong.com${_url.pathname}${_url.search}`;
+
+  // 카페24 IIS는 종종 일시 지연(App Pool recycle, MSSQL 락) 발생.
+  // 15s 타임아웃 + 1회 재시도(1.5s 대기). 총 최대 ~31.5s.
+  const TIMEOUT_MS = 15000;
+  const MAX_ATTEMPTS = 2;
+  let lastErr;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
     try {
-      text = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
-    } catch {
-      text = new TextDecoder("euc-kr").decode(bytes);
-    }
-    // 디버그: Cafe24 응답 첫 300자를 Telegram으로 관측 (성공/실패 모두)
-    bgRun(
-      env,
-      tgDebug(
+      const r = await fetch(_hostnameUrl, {
+        method: "POST",
+        headers: {
+          Host: _url.host, // www.noblehong.com — 카페24 IIS 가상호스트 매칭
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) noblehong-cf-worker",
+          Referer: "https://www.noblehong.com/sub02/sub02_05_1.html",
+        },
+        body,
+        signal: ctrl.signal,
+        redirect: "manual",
+      });
+      // 응답은 UTF-8 HTML (inc_top.html: Response.CharSet="utf-8")
+      const bytes = new Uint8Array(await r.arrayBuffer());
+      let text = "";
+      try {
+        text = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+      } catch {
+        text = new TextDecoder("euc-kr").decode(bytes);
+      }
+      // 디버그: Cafe24 응답 첫 300자를 Telegram으로 관측 (성공/실패 모두)
+      bgRun(
         env,
-        `[노블홍/cafe24-debug] status=${r.status}\nname=${fields.u_name}\nhp=${fields.u_hp}\nbody(head)=${text
-          .replace(/<[^>]+>/g, " ")
-          .replace(/\s+/g, " ")
-          .slice(0, 280)}`,
-      ),
-    );
-    if (text.includes("알 수 없는 오류"))
-      throw new Error("CRM returned error alert");
-    return { ok: true, status: r.status };
-  } finally {
-    clearTimeout(t);
+        tgDebug(
+          env,
+          `[노블홍/cafe24-debug] status=${r.status} attempt=${attempt}\nname=${fields.u_name}\nhp=${fields.u_hp}\nbody(head)=${text
+            .replace(/<[^>]+>/g, " ")
+            .replace(/\s+/g, " ")
+            .slice(0, 280)}`,
+        ),
+      );
+      if (text.includes("알 수 없는 오류"))
+        throw new Error("CRM returned error alert");
+      return { ok: true, status: r.status, attempt };
+    } catch (e) {
+      lastErr = e;
+      if (attempt < MAX_ATTEMPTS) {
+        await new Promise((res) => setTimeout(res, 1500));
+        continue;
+      }
+      throw e;
+    } finally {
+      clearTimeout(t);
+    }
   }
+  throw lastErr;
 }
 
 // ─────────────────────────────────────────────────────────────────
