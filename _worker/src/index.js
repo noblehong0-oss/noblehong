@@ -2337,6 +2337,22 @@ function parseYoutubeDuration(iso) {
   );
 }
 
+// YouTube API 일시적 오류 대비 재시도 fetch
+// (search/playlistItems가 간헐적으로 403 "cannot act on behalf of..."을 뱉는 알려진 버그 + 5xx 대응)
+async function ytFetchJson(url, label, tries = 3) {
+  let lastErr = "";
+  for (let i = 0; i < tries; i++) {
+    const res = await fetch(url);
+    if (res.ok) return res.json();
+    lastErr = (await res.text()).slice(0, 300);
+    const retryable = res.status === 403 || res.status >= 500;
+    if (!retryable || i === tries - 1) {
+      throw new Error(`${label} ${res.status}: ${lastErr}`);
+    }
+    await new Promise((r) => setTimeout(r, 800 * (i + 1)));
+  }
+}
+
 async function syncYoutubeVideos(env) {
   if (!env.YOUTUBE_API_KEY) throw new Error("YOUTUBE_API_KEY 미설정");
   if (!env.YOUTUBE_CHANNEL_ID) throw new Error("YOUTUBE_CHANNEL_ID 미설정");
@@ -2344,31 +2360,25 @@ async function syncYoutubeVideos(env) {
 
   const KEY = env.YOUTUBE_API_KEY;
   const CHANNEL_ID = env.YOUTUBE_CHANNEL_ID;
+  // 채널 업로드 플레이리스트(UC→UU)로 조회 — search.list보다 안정적이고 quota 100배 저렴(1유닛/회)
+  const uploadsId = CHANNEL_ID.startsWith("UC")
+    ? "UU" + CHANNEL_ID.slice(2)
+    : CHANNEL_ID;
 
   const sUrl =
-    `https://www.googleapis.com/youtube/v3/search` +
-    `?key=${KEY}&channelId=${encodeURIComponent(CHANNEL_ID)}` +
-    `&part=snippet&order=date&type=video&maxResults=50`;
-  const sRes = await fetch(sUrl);
-  if (!sRes.ok) {
-    const err = (await sRes.text()).slice(0, 300);
-    throw new Error(`search.list ${sRes.status}: ${err}`);
-  }
-  const sData = await sRes.json();
+    `https://www.googleapis.com/youtube/v3/playlistItems` +
+    `?key=${KEY}&playlistId=${encodeURIComponent(uploadsId)}` +
+    `&part=contentDetails&maxResults=50`;
+  const sData = await ytFetchJson(sUrl, "playlistItems.list");
   const videoIds = (sData.items || [])
-    .map((i) => i.id?.videoId)
+    .map((i) => i.contentDetails?.videoId)
     .filter(Boolean);
   if (!videoIds.length) return { inserted: 0, updated: 0, total: 0 };
 
   const vUrl =
     `https://www.googleapis.com/youtube/v3/videos` +
     `?key=${KEY}&id=${videoIds.join(",")}&part=snippet,contentDetails`;
-  const vRes = await fetch(vUrl);
-  if (!vRes.ok) {
-    const err = (await vRes.text()).slice(0, 300);
-    throw new Error(`videos.list ${vRes.status}: ${err}`);
-  }
-  const vData = await vRes.json();
+  const vData = await ytFetchJson(vUrl, "videos.list");
   const items = vData.items || [];
 
   let inserted = 0;
