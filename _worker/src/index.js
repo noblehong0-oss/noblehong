@@ -611,6 +611,32 @@ function buildForm(params) {
   return parts.join("&");
 }
 
+// 2자리 연도 → 4자리 피벗 (예: 58 → 1958, 05 → 2005, 기준: 올해 2자리)
+function pivotYY(yy, cy) {
+  return yy <= cy % 100 ? 2000 + yy : 1900 + yy;
+}
+// 생년 보정식: 잡다한 형식의 생년 입력을 유효 4자리 연도로 정규화해 일정한 값만 cafe24로 전송.
+//  복원: "1962"→"1962" | "82"→"1982" | "19627016"·"1972년"·"1998.0"·"1991, 12,"→앞 4자리 연도
+//  복원불가/미입력("", "*", "9182", "느금마" 등) → "1911" (미상·오류 공통 센티넬)
+//    → 상담원이 "1911"을 보면 '생년 미입력 또는 잘못된 값'임을 즉시 인지 가능
+//  ※ cafe24 m_birthY 컬럼이 varchar(4)라 4자리 초과 숫자를 보내면 '*'로 깨짐 → 반드시 4자리로.
+const BIRTHY_UNKNOWN = "1911"; // 미상/오류 공통값 (현재 고객층에 실재 불가능한 연도라 식별 용이)
+function normBirthYear(raw) {
+  const cy = new Date().getFullYear();
+  const MIN_Y = 1925;
+  const MAX_Y = cy - 18;
+  const d = String(raw == null ? "" : raw).replace(/\D/g, "");
+  let y = null;
+  if (d.length >= 4) {
+    const h4 = parseInt(d.slice(0, 4), 10);
+    if (h4 >= MIN_Y && h4 <= MAX_Y) y = h4;
+    else if (d.length > 4) y = pivotYY(parseInt(d.slice(0, 2), 10), cy);
+  } else if (d.length === 2 || d.length === 3) {
+    y = pivotYY(parseInt(d.slice(0, 2), 10), cy);
+  }
+  return y != null && y >= MIN_Y && y <= MAX_Y ? String(y) : BIRTHY_UNKNOWN;
+}
+
 async function postToCafe24(env, fields) {
   if (!env.CRM_ENDPOINT) throw new Error("CRM_ENDPOINT not configured");
 
@@ -631,7 +657,7 @@ async function postToCafe24(env, fields) {
     u_hp3: hp3,
     u_gender: fields.u_gender || "",
     u_married: fields.u_married || "",
-    u_birthY: fields.u_birthY || "",
+    u_birthY: normBirthYear(fields.u_birthY),
     u_memo: String(fields.u_memo || "").slice(0, 300),
     agree1: fields.agree1 || "Y",
     agree2: fields.agree2 || "N",
