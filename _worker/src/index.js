@@ -352,6 +352,17 @@ function str(v, max = 500) {
     .slice(0, max);
 }
 
+// 자유입력 단일라인 정화: 제어문자·개행 → 공백, 연속공백 축소, trim, 길이 컷.
+// 줄바꿈 폭주·구조 스푸핑·제어문자 주입을 무력화한다 (CRM/Telegram/D1 공통 위생).
+// SQL 인젝션은 D1 바인딩 + cafe24 SQLInject + encodeURIComponent로 이미 실행 차단됨.
+function cleanLine(v, max = 100) {
+  return String(v == null ? "" : v)
+    .replace(/[\u0000-\u001f\u007f-\u009f]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, max);
+}
+
 function escapeHtml(s) {
   return String(s || "").replace(
     /[<>&"']/g,
@@ -651,14 +662,14 @@ async function postToCafe24(env, fields) {
   const params = {
     in_course2: fields.in_course2 || "5002",
     in_course_desc: String(fields.in_course_desc || "").slice(0, 30),
-    u_name: String(fields.u_name || "").slice(0, 8),
+    u_name: cleanLine(fields.u_name, 8),
     u_hp1: hp1,
     u_hp2: hp2,
     u_hp3: hp3,
     u_gender: fields.u_gender || "",
     u_married: fields.u_married || "",
     u_birthY: normBirthYear(fields.u_birthY),
-    u_memo: String(fields.u_memo || "").slice(0, 300),
+    u_memo: cleanLine(fields.u_memo, 300),
     agree1: fields.agree1 || "Y",
     agree2: fields.agree2 || "N",
   };
@@ -851,7 +862,7 @@ async function handleConsultationSubmit(request, env) {
     return json({ error: "Too fast" }, 429);
 
   // 필드 유효성
-  const name = str(body.name, 50);
+  const name = cleanLine(body.name, 50);
   const genderRaw = str(body.gender, 10).toLowerCase();
   const marriage = str(body.marriage, 10);
   const birthYear = parseInt(body.birthYear, 10);
@@ -868,9 +879,9 @@ async function handleConsultationSubmit(request, env) {
   }
 
   // address: 폼에서 region으로 올 수도 있으므로 둘 다 허용
-  const address = str(body.address || body.region, 200);
-  const addressDetail = str(body.addressDetail, 200);
-  const message = str(body.message, 500);
+  const address = cleanLine(body.address || body.region, 200);
+  const addressDetail = cleanLine(body.addressDetail, 200);
+  const message = cleanLine(body.message, 500);
 
   const genderKo = ["남", "남성", "male", "m"].includes(genderRaw)
     ? "남성"
@@ -1084,7 +1095,7 @@ async function handleConsultationQuick(request, env) {
   )
     return json({ error: "Too fast" }, 429);
 
-  const name = str(body.name, 50);
+  const name = cleanLine(body.name, 50);
   const phone = str(body.phone, 30).replace(/\s+/g, "");
   const errors = [];
   if (!name) errors.push("name");
@@ -1255,7 +1266,7 @@ async function handleMetaLead(request, env) {
     return json({ error: "Invalid JSON" }, 400);
   }
 
-  const name = str(body["이름"] || body.name || "", 50);
+  const name = cleanLine(body["이름"] || body.name || "", 50);
   // 연락처 정규화: +82, 0082, 82 prefix → 0 으로 통일 (Meta는 E.164로 보냄)
   let phone = str(body["연락처"] || body.phone || "", 30).replace(
     /[\s()]/g,
@@ -1265,8 +1276,8 @@ async function handleMetaLead(request, env) {
   const gender = str(body["성별"] || "", 10);
   const marriage = str(body["혼인여부"] || "", 10);
   const birthYearRaw = str(body["출생년도"] || body["출생연도"] || "", 10);
-  const region = str(body["지역"] || "", 100);
-  const adName = str(body["광고명"] || "", 200);
+  const region = cleanLine(body["지역"] || "", 100);
+  const adName = cleanLine(body["광고명"] || "", 200);
   // 플랫폼: ig/fb 정규화 (instagram, facebook, IG, FB, instagram_feed 등 모두 수용)
   const platformRaw = String(body["플랫폼"] || body.platform || "")
     .toLowerCase()
@@ -1419,7 +1430,7 @@ async function handleConsultationBar(request, env) {
   )
     return json({ error: "Too fast" }, 429);
 
-  const name = str(body.name, 50);
+  const name = cleanLine(body.name, 50);
   const phone = str(body.phone, 30).replace(/\s+/g, "");
   const genderKo = str(body.gender, 10);
   const marriage = str(body.marriage, 10);
