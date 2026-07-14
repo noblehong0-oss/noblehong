@@ -1272,7 +1272,11 @@ async function handleMetaLead(request, env) {
     /[\s()]/g,
     "",
   );
-  phone = phone.replace(/^\+?0{0,2}82-?/, "0").replace(/^82(?=1\d)/, "0");
+  phone = phone
+    .replace(/^\+?0{0,2}82-?/, "0")
+    .replace(/^82(?=1\d)/, "0")
+    // Meta/Make가 국가코드 없이 로컬번호(0…)에 +만 붙인 경우: +010… → 010…
+    .replace(/^\+(?=0)/, "");
   const gender = str(body["성별"] || "", 10);
   const marriage = str(body["혼인여부"] || "", 10);
   const birthYearRaw = str(body["출생년도"] || body["출생연도"] || "", 10);
