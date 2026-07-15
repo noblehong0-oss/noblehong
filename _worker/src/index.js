@@ -3637,9 +3637,11 @@ export default {
   async scheduled(event, env, ctx) {
     const cronExpr = event.cron;
 
-    // 15분마다 접수 경로 헬스체크 — 아래 유튜브/GA4 동기화가 조건 없이 실행되므로
-    // 반드시 조기 return으로 격리한다 (안 그러면 유튜브 API가 15분마다 호출됨).
-    if (cronExpr === "*/15 * * * *") {
+    // 6시간마다 접수 경로 헬스체크 (00/06/12/18 UTC).
+    // 아래 유튜브/GA4 동기화가 조건 없이 실행되므로 반드시 조기 return으로 격리한다.
+    // (18:00 은 "0 18 * * *" 과 겹치지만 CF가 크론별로 event.cron 을 따로 넘기므로
+    //  각 크론이 자기 분기만 탄다 — 유튜브가 6시간마다 도는 일은 없음)
+    if (cronExpr === "0 */6 * * *") {
       ctx.waitUntil(
         (async () => {
           try {

@@ -29,7 +29,7 @@ GA4_PROPERTY_ID = "537274350"
 # "0 18 * * *"      매일 — 홍유진TV 자동 동기화 + GA4 방문통계 스냅샷
 # "0 18 28-31 * *"  28~31일 — 코드에서 말일 체크 후 매니저 사진 R2 재동기화
 [triggers]
-crons = ["0 18 * * *", "0 18 28-31 * *", "*/15 * * * *"]
+crons = ["0 18 * * *", "0 18 28-31 * *", "0 */6 * * *"]
 
 # Secrets (set via `wrangler secret put`):
 #   ADMIN_JWT_SECRET,
