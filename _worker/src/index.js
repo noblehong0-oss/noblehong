@@ -449,6 +449,180 @@ function tgDebug(env, message) {
   return tgSend(token, chatId, message);
 }
 
+// 인프라 장애 채널 — 리드 알림봇 오염 방지용 별도 채널. 미설정 시 tgDebug 폴백
+function sendInfraAlert(env, message) {
+  if (env.INFRA_TG_BOT_TOKEN && env.INFRA_TG_CHAT_ID)
+    return tgSend(env.INFRA_TG_BOT_TOKEN, env.INFRA_TG_CHAT_ID, message);
+  return tgDebug(env, message);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// 헬스체크 — 반드시 noblehong.com(Vercel 경유)을 찌른다.
+// 2026-07-14 장애는 워커가 아니라 "Vercel→워커 다리"가 끊긴 것이라,
+// 워커 자기 자신을 체크하면 동일 사고를 100% 놓친다.
+// 폼 프로브는 빈 연락처를 보내 400(Invalid fields)을 기대 → saveConsultation
+// 도달 전에 잘리므로 D1·카페24·리드알림·레이트리밋 어디에도 기록되지 않는다(드라이런).
+// ─────────────────────────────────────────────────────────────────
+const HEALTH_SITE = "https://noblehong.com";
+const HEALTH_PROBES = [
+  {
+    name: "폼 간편(quick)",
+    method: "POST",
+    path: "/api/consultation/quick",
+    expect: 400,
+  },
+  {
+    name: "폼 하단바(bar)",
+    method: "POST",
+    path: "/api/consultation/bar",
+    expect: 400,
+  },
+  {
+    name: "폼 풀폼(submit)",
+    method: "POST",
+    path: "/api/consultation/submit",
+    expect: 400,
+  },
+  { name: "홈", method: "GET", path: "/", expect: 200 },
+  {
+    name: "폼 스크립트",
+    method: "GET",
+    path: "/assets/js/inquiry-bars.js",
+    expect: 200,
+  },
+  { name: "cleanUrls(/privacy)", method: "GET", path: "/privacy", expect: 200 },
+];
+
+async function probeOne(p) {
+  const init = { method: p.method, redirect: "manual" };
+  if (p.method === "POST") {
+    init.headers = { "Content-Type": "application/json" };
+    init.body = "{}"; // 빈 payload → 필드검증 400 (저장 미도달)
+  }
+  try {
+    const res = await fetch(HEALTH_SITE + p.path, init);
+    // HTTP 상태가 돌아왔다 = 사이트 판정 가능
+    return {
+      ...p,
+      got: res.status,
+      ok: res.status === p.expect,
+      reachable: true,
+    };
+  } catch (e) {
+    // fetch 자체가 터짐 = 체커/네트워크 문제.
+    // 사이트 장애로 단정하면 오보가 되므로 별도 분류한다.
+    return {
+      ...p,
+      got: "ERR:" + String(e?.message || e).slice(0, 60),
+      ok: false,
+      reachable: false,
+    };
+  }
+}
+
+async function readHealthState(env) {
+  try {
+    const r = await env.DB.prepare(
+      `SELECT status, since FROM health_state WHERE id = 'site'`,
+    ).first();
+    return r || null;
+  } catch {
+    return null;
+  }
+}
+
+async function writeHealthState(env, status, detail, since) {
+  try {
+    await env.DB.prepare(
+      `INSERT INTO health_state (id, status, detail, since, checked_at)
+       VALUES ('site', ?, ?, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET
+         status = excluded.status,
+         detail = excluded.detail,
+         since = excluded.since,
+         checked_at = excluded.checked_at`,
+    )
+      .bind(status, detail, since, new Date().toISOString())
+      .run();
+  } catch (e) {
+    // 상태 저장 실패해도 체크 자체는 계속 — 다만 스팸 방지가 풀리므로 알림
+    await sendInfraAlert(
+      env,
+      `[노블홍/healthcheck] 상태 저장 실패 — ${String(e?.message || e).slice(0, 120)}`,
+    );
+  }
+}
+
+async function runHealthCheck(env) {
+  const results = await Promise.all(HEALTH_PROBES.map(probeOne));
+  const unreachable = results.filter((r) => !r.reachable);
+  const failed = results.filter((r) => r.reachable && !r.ok);
+  const nowIso = new Date().toISOString();
+
+  // 3단계 판정 — unreachable을 조용히 무시하면 "정상" 오판이 난다.
+  //   fail     : HTTP 상태가 기대와 다름 → 확실한 사이트 장애
+  //   degraded : 프로브가 fetch 자체 실패 → 판정 불가(체커/네트워크 문제 가능)
+  //   ok       : 전 항목 기대대로
+  let status;
+  if (failed.length) status = "fail";
+  else if (unreachable.length) status = "degraded";
+  else status = "ok";
+
+  const prev = await readHealthState(env);
+  const prevStatus = prev?.status || "unknown";
+  const detail = [...failed, ...unreachable]
+    .map((f) => `${f.name} ${f.expect}→${f.got}`)
+    .join(" · ")
+    .slice(0, 400);
+
+  // 상태 변화시에만 알림 (지속 장애 스팸 0)
+  if (status !== prevStatus) {
+    if (status === "fail") {
+      await sendInfraAlert(
+        env,
+        `<b>[노블홍/healthcheck] 🔴 접수 장애 감지</b>\n──────────────\n` +
+          failed
+            .map((f) => `- <b>${f.name}</b>  기대 ${f.expect} → 실제 ${f.got}`)
+            .join("\n") +
+          `\n\n- <b>정상 항목</b>  ${results.length - failed.length - unreachable.length}/${results.length}` +
+          `\n- <b>감지시각</b>  ${nowIso}` +
+          `\n\n※ /api 404 = Vercel 배포가 _deploy 아닌 repo 루트로 덮인 상태.\n` +
+          `복구: _deploy/ 에서 <code>vercel --prod</code> 재배포`,
+      );
+    } else if (status === "degraded") {
+      await sendInfraAlert(
+        env,
+        `<b>[노블홍/healthcheck] ⚠️ 판정 불가</b>\n──────────────\n` +
+          unreachable
+            .map((f) => `- <b>${f.name}</b>  ${String(f.got).slice(0, 70)}`)
+            .join("\n") +
+          `\n\n- <b>확인된 정상</b>  ${results.length - unreachable.length}/${results.length}` +
+          `\n- <b>시각</b>  ${nowIso}` +
+          `\n\n※ 사이트 장애가 아니라 체커 문제일 수 있음. 수동 확인 필요.`,
+      );
+    } else {
+      const downFrom = prev?.since
+        ? `\n- <b>직전 이상 시작</b>  ${prev.since}`
+        : "";
+      await sendInfraAlert(
+        env,
+        `<b>[노블홍/healthcheck] 🟢 정상 복구</b>\n──────────────\n` +
+          `- <b>전체 항목</b>  ${results.length}/${results.length} 정상${downFrom}` +
+          `\n- <b>복구시각</b>  ${nowIso}`,
+      );
+    }
+    await writeHealthState(env, status, detail, nowIso);
+  } else {
+    await writeHealthState(env, status, detail, prev?.since || nowIso);
+  }
+  return {
+    status,
+    failed: failed.length,
+    unreachable: unreachable.length,
+    total: results.length,
+  };
+}
+
 async function tgSend(token, chatId, text) {
   if (!token || !chatId) return;
   try {
@@ -3462,6 +3636,24 @@ export default {
   //   "0 18 28-31 * *"  28~31일 KST 03:00 — 코드에서 말일 체크 후 매니저 사진 R2 재동기화
   async scheduled(event, env, ctx) {
     const cronExpr = event.cron;
+
+    // 15분마다 접수 경로 헬스체크 — 아래 유튜브/GA4 동기화가 조건 없이 실행되므로
+    // 반드시 조기 return으로 격리한다 (안 그러면 유튜브 API가 15분마다 호출됨).
+    if (cronExpr === "*/15 * * * *") {
+      ctx.waitUntil(
+        (async () => {
+          try {
+            await runHealthCheck(env);
+          } catch (e) {
+            await sendInfraAlert(
+              env,
+              `[노블홍/healthcheck] 체크 자체 실패 — ${String(e?.message || e).slice(0, 200)}`,
+            );
+          }
+        })(),
+      );
+      return;
+    }
 
     // 매일 매니저 사진 cron 후보 슬롯이면 말일 여부 체크
     if (cronExpr === "0 18 28-31 * *") {

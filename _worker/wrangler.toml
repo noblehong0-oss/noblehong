@@ -22,13 +22,14 @@ ADMIN_OTP_TTL = "300"
 ADMIN_SESSION_TTL = "43200"
 ADMIN_URL = "https://noblehong.vercel.app/admin"
 YOUTUBE_CHANNEL_ID = "UCTc2jA14tl_5VZEI7Ztf0zA"
+GA4_PROPERTY_ID = "537274350"
 
 # Cron Triggers (Cloudflare Workers scheduled events)
 # UTC 18:00 = KST 03:00
-# "0 18 * * *"      매일 — 홍유진TV 자동 동기화
+# "0 18 * * *"      매일 — 홍유진TV 자동 동기화 + GA4 방문통계 스냅샷
 # "0 18 28-31 * *"  28~31일 — 코드에서 말일 체크 후 매니저 사진 R2 재동기화
 [triggers]
-crons = ["0 18 * * *", "0 18 28-31 * *"]
+crons = ["0 18 * * *", "0 18 28-31 * *", "*/15 * * * *"]
 
 # Secrets (set via `wrangler secret put`):
 #   ADMIN_JWT_SECRET,
@@ -39,3 +40,4 @@ crons = ["0 18 * * *", "0 18 28-31 * *"]
 #   CRM_ENDPOINT,
 #   ADMIN_BYPASS_IPS  (콤마 구분 관리자 IP 화이트리스트: rate limit + 3초 가드 우회)
 #   YOUTUBE_API_KEY   (YouTube Data API v3 — 채널 영상 자동 동기화)
+#   GA4_OAUTH_CLIENT_ID, GA4_OAUTH_CLIENT_SECRET, GA4_OAUTH_REFRESH_TOKEN
