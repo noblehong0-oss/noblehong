@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, follow" />
+    <title>페이지를 찾을 수 없습니다 — 노블홍</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Serif+Display&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fffefb;
+        --surface: #ffffff;
+        --border: #e8e0ce;
+        --border-gold: rgba(184, 154, 90, 0.25);
+        --text: #2c2820;
+        --text-secondary: #5c5040;
+        --text-muted: #8c8070;
+        --gold: #b89a5a;
+        --gold-light: #d4b870;
+        --gold-dark: #8c7030;
+        --espresso: #2a1d0a;
+        --serif: "Cormorant Garamond", serif;
+        --display: "DM Serif Display", serif;
+        --sans:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR",
+          sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        min-height: 100%;
+      }
+      body {
+        background: var(--bg);
+        font-family: var(--sans);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .nh-gnb {
+        height: 68px;
+        display: flex;
+        align-items: center;
+        padding: 0 40px;
+        border-bottom: 1px solid var(--border);
+        background: rgba(255, 254, 251, 0.92);
+        flex-shrink: 0;
+      }
+      .nh-gnb img {
+        height: 26px;
+        width: auto;
+      }
+      .nh-gnb .tel {
+        margin-left: auto;
+        font-family: var(--serif);
+        font-size: 15px;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        text-decoration: none;
+      }
+      .nh-gnb .tel b {
+        font-family: var(--sans);
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--espresso);
+        letter-spacing: 0.4px;
+      }
+
+      .b-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 70px 24px;
+        text-align: center;
+      }
+      .b-inner {
+        max-width: 640px;
+      }
+      .b-eyebrow {
+        font-family: var(--serif);
+        font-size: 12px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 20px;
+      }
+      .b-ghost {
+        font-family: var(--display);
+        font-size: 132px;
+        line-height: 1;
+        letter-spacing: 10px;
+        text-indent: 10px;
+        color: transparent;
+        -webkit-text-stroke: 1.2px rgba(184, 154, 90, 0.5);
+        user-select: none;
+        margin-bottom: 6px;
+      }
+      .b-title {
+        font-family: var(--serif);
+        font-size: 42px;
+        font-weight: 400;
+        letter-spacing: -0.8px;
+        color: var(--text);
+        margin-bottom: 8px;
+        word-break: keep-all;
+        text-wrap: pretty;
+      }
+      .b-title em {
+        font-style: italic;
+        color: var(--gold-dark);
+      }
+      .b-rule {
+        width: 40px;
+        height: 1px;
+        background: var(--gold);
+        margin: 24px auto;
+        opacity: 0.5;
+      }
+      .b-desc {
+        font-size: 15px;
+        line-height: 1.9;
+        color: var(--text-secondary);
+        margin-bottom: 32px;
+        word-break: keep-all;
+        text-wrap: pretty;
+      }
+      .b-cta {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 38px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 30px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        border-radius: 2px;
+        text-decoration: none;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+        min-height: 48px;
+      }
+      .btn-gold {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold));
+        color: #2a1d0a;
+        border-color: var(--gold-light);
+      }
+      .btn-gold:hover {
+        background: linear-gradient(135deg, #e8c572, #c99a52);
+        transform: translateY(-1px);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--text-secondary);
+        border-color: var(--border-gold);
+      }
+      .btn-ghost:hover {
+        border-color: var(--gold);
+        color: var(--espresso);
+      }
+      .b-quicklabel {
+        font-family: var(--serif);
+        font-size: 12px;
+        letter-spacing: 2.5px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .quick {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .quick a {
+        font-size: 13px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        padding: 8px 15px;
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        background: var(--surface);
+        transition: all 0.2s;
+      }
+      .quick a:hover {
+        border-color: var(--gold);
+        color: var(--espresso);
+        background: rgba(184, 154, 90, 0.05);
+      }
+      .b-tel {
+        margin-top: 32px;
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+      .b-tel b {
+        font-family: var(--serif);
+        font-size: 19px;
+        color: var(--espresso);
+        letter-spacing: 0.5px;
+      }
+      .b-foot {
+        flex-shrink: 0;
+        border-top: 1px solid var(--border);
+        padding: 20px 24px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      @media (max-width: 860px) {
+        .nh-gnb {
+          padding: 0 20px;
+        }
+        .nh-gnb .tel span {
+          display: none;
+        }
+        .b-body {
+          padding: 54px 22px;
+        }
+        .b-ghost {
+          font-size: 88px;
+        }
+        .b-title {
+          font-size: 28px;
+        }
+        .b-desc {
+          font-size: 14px;
+          line-height: 1.75;
+        }
+        .b-cta {
+          flex-direction: column;
+          align-items: stretch;
+          max-width: 320px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .btn {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="nh-gnb">
+      <a href="/" aria-label="노블홍 홈"
+        ><img
+          src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+          alt="Noble HONG"
+      /></a>
+      <a href="tel:1800-8194" class="tel">
+        <span>대표번호</span>
+        <b>1800-8194</b>
+      </a>
+    </nav>
+
+    <main class="b-body">
+      <div class="b-inner">
+        <div class="b-eyebrow">Page Not Found</div>
+        <div class="b-ghost" aria-hidden="true">404</div>
+        <h1 class="b-title">찾으시는 페이지가 <em>존재하지 않습니다</em></h1>
+        <div class="b-rule"></div>
+        <p class="b-desc">
+          주소가 변경되었거나 삭제된 페이지입니다.<br />
+          아래 메뉴에서 원하시는 정보를 찾아보실 수 있습니다.
+        </p>
+        <div class="b-cta">
+          <a href="/" class="btn btn-gold">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"
+              />
+              <path d="M9 21v-8h6v8" />
+            </svg>
+            홈으로 가기
+          </a>
+          <a href="/contact#form" class="btn btn-ghost">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+              />
+            </svg>
+            상담 신청하기
+          </a>
+        </div>
+        <div class="b-quicklabel">바로가기</div>
+        <div class="quick">
+          <a href="/about">노블홍</a>
+          <a href="/noblematching">노블매칭</a>
+          <a href="/consulting">맞춤컨설팅</a>
+          <a href="/matchinglounge">차별화 시스템</a>
+          <a href="/matchinglab">매칭전략연구소</a>
+          <a href="/contact#form">상담문의</a>
+        </div>
+        <div class="b-tel">
+          전화 상담 <b>1800-8194</b> &nbsp;·&nbsp; 평일 09:00 – 18:00
+        </div>
+      </div>
+    </main>
+
+    <div class="b-foot">© NOBLE HONG. All rights reserved.</div>
+  </body>
+</html>

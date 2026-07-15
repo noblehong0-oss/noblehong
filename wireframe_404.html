@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>노블홍 404 페이지 디자인 시안 — 3안</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Serif+Display&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fffefb;
+        --surface: #ffffff;
+        --surface-warm: #f9f6ef;
+        --surface-cream: #f2ece0;
+        --border: #e8e0ce;
+        --border-gold: rgba(184, 154, 90, 0.25);
+        --text: #2c2820;
+        --text-secondary: #5c5040;
+        --text-muted: #8c8070;
+        --gold: #b89a5a;
+        --gold-light: #d4b870;
+        --gold-lighter: #d9c577;
+        --gold-dark: #8c7030;
+        --espresso: #2a1d0a;
+        --espresso-deep: #1a1207;
+        --serif: "Cormorant Garamond", serif;
+        --display: "DM Serif Display", serif;
+        --sans:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR",
+          sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #e9e5dc;
+        font-family: var(--sans);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ───────── 리뷰용 컨트롤바 (실제 페이지에는 미포함) ───────── */
+      .review-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        background: var(--espresso);
+        border-bottom: 1px solid var(--gold);
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .review-label {
+        font-family: var(--serif);
+        font-size: 13px;
+        letter-spacing: 2px;
+        color: var(--gold-light);
+        text-transform: uppercase;
+      }
+      .review-tabs {
+        display: flex;
+        gap: 8px;
+      }
+      .review-tab {
+        padding: 7px 16px;
+        background: transparent;
+        border: 1px solid rgba(184, 154, 90, 0.4);
+        color: #d8cfb8;
+        font-size: 13px;
+        font-family: var(--sans);
+        border-radius: 2px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .review-tab:hover {
+        border-color: var(--gold);
+        color: #fff;
+      }
+      .review-tab.active {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold));
+        border-color: var(--gold-light);
+        color: #2a1d0a;
+        font-weight: 600;
+      }
+      .review-note {
+        margin-left: auto;
+        font-size: 12px;
+        color: #9a8d70;
+      }
+
+      .stage {
+        padding: 74px 0 40px;
+      }
+      .frame-wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .frame-cap {
+        font-family: var(--serif);
+        font-size: 15px;
+        letter-spacing: 1px;
+        color: #6b6355;
+        margin: 18px 4px 10px;
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+      }
+      .frame-cap b {
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--espresso);
+        background: var(--gold-lighter);
+        padding: 3px 9px;
+        border-radius: 2px;
+        letter-spacing: 0;
+      }
+      .frame-cap span {
+        font-family: var(--sans);
+        font-size: 12.5px;
+        color: #8a8172;
+        letter-spacing: 0;
+      }
+      .viewport {
+        background: var(--bg);
+        border: 1px solid #d5cec0;
+        box-shadow: 0 18px 50px rgba(30, 22, 10, 0.13);
+        overflow: hidden;
+      }
+      .opt {
+        display: none;
+      }
+      .opt.show {
+        display: block;
+      }
+
+      /* ───────── 공통: 상단 로고 바 ───────── */
+      .nh-gnb {
+        height: 68px;
+        display: flex;
+        align-items: center;
+        padding: 0 40px;
+        border-bottom: 1px solid var(--border);
+        background: rgba(255, 254, 251, 0.92);
+      }
+      .nh-gnb img {
+        height: 26px;
+        width: auto;
+      }
+      .nh-gnb .tel {
+        margin-left: auto;
+        font-family: var(--serif);
+        font-size: 15px;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .nh-gnb .tel b {
+        font-family: var(--sans);
+        font-weight: 700;
+        font-size: 14px;
+        color: var(--espresso);
+        letter-spacing: 0.4px;
+      }
+
+      /* ───────── 공통 버튼 ───────── */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 30px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        border-radius: 2px;
+        text-decoration: none;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+      }
+      .btn-gold {
+        background: linear-gradient(135deg, var(--gold-light), var(--gold));
+        color: #2a1d0a;
+        border-color: var(--gold-light);
+      }
+      .btn-gold:hover {
+        background: linear-gradient(135deg, #e8c572, #c99a52);
+        transform: translateY(-1px);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--text-secondary);
+        border-color: var(--border-gold);
+      }
+      .btn-ghost:hover {
+        border-color: var(--gold);
+        color: var(--espresso);
+      }
+      .btn-ghost-dark {
+        background: transparent;
+        color: #d8cfb8;
+        border-color: rgba(184, 154, 90, 0.45);
+      }
+      .btn-ghost-dark:hover {
+        border-color: var(--gold-light);
+        color: #fff;
+      }
+
+      /* 골드 시머 텍스트 */
+      @keyframes shimmer404 {
+        0% {
+          background-position: -200% center;
+        }
+        100% {
+          background-position: 200% center;
+        }
+      }
+      .shimmer {
+        background: linear-gradient(
+          100deg,
+          var(--gold-dark) 0%,
+          var(--gold) 20%,
+          #f4e3b0 42%,
+          #fff8e0 50%,
+          #f4e3b0 58%,
+          var(--gold) 80%,
+          var(--gold-dark) 100%
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer404 6s linear infinite;
+      }
+
+      /* 퀵링크 */
+      .quick {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .quick a {
+        font-size: 13px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        padding: 8px 15px;
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        background: var(--surface);
+        transition: all 0.2s;
+      }
+      .quick a:hover {
+        border-color: var(--gold);
+        color: var(--espresso);
+        background: var(--gold-bg, rgba(184, 154, 90, 0.05));
+      }
+
+      /* ═════════ A안 — 에스프레소 플레이트 ═════════ */
+      .a-body {
+        min-height: 620px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 64px 24px 72px;
+        position: relative;
+        background:
+          radial-gradient(
+            ellipse 60% 50% at 50% 40%,
+            rgba(184, 154, 90, 0.07),
+            transparent 70%
+          ),
+          var(--bg);
+      }
+      .a-plate {
+        background: var(--espresso);
+        border: 1px solid var(--gold);
+        outline: 1px solid rgba(184, 146, 74, 0.45);
+        outline-offset: 4px;
+        border-radius: 2px;
+        padding: 54px 64px 48px;
+        text-align: center;
+        max-width: 620px;
+        width: 100%;
+        box-shadow:
+          0 20px 60px rgba(20, 14, 6, 0.28),
+          inset 0 0 60px rgba(184, 154, 90, 0.09);
+        position: relative;
+      }
+      .a-eyebrow {
+        font-family: var(--serif);
+        font-size: 12px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: rgba(212, 184, 112, 0.75);
+        margin-bottom: 14px;
+      }
+      .a-num {
+        font-family: var(--display);
+        font-size: 104px;
+        line-height: 1;
+        letter-spacing: 4px;
+        margin-bottom: 6px;
+      }
+      .a-rule {
+        width: 54px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold),
+          transparent
+        );
+        margin: 20px auto 22px;
+      }
+      .a-title {
+        font-family: var(--serif);
+        font-size: 27px;
+        font-weight: 500;
+        color: #f4ecd4;
+        letter-spacing: -0.2px;
+        margin-bottom: 14px;
+        word-break: keep-all;
+      }
+      .a-desc {
+        font-size: 14.5px;
+        line-height: 1.85;
+        color: rgba(232, 221, 195, 0.72);
+        margin-bottom: 30px;
+        word-break: keep-all;
+      }
+      .a-cta {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .a-tel {
+        margin-top: 28px;
+        padding-top: 22px;
+        border-top: 1px solid rgba(184, 146, 74, 0.28);
+        font-size: 13px;
+        color: rgba(232, 221, 195, 0.6);
+      }
+      .a-tel b {
+        color: var(--gold-lighter);
+        font-size: 16px;
+        letter-spacing: 0.6px;
+      }
+      .a-quick {
+        margin-top: 30px;
+      }
+
+      /* ═════════ B안 — 아이보리 에디토리얼 ═════════ */
+      .b-body {
+        min-height: 620px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 70px 24px;
+        text-align: center;
+        background: var(--bg);
+        position: relative;
+        overflow: hidden;
+      }
+      .b-ghost {
+        font-family: var(--display);
+        font-size: 132px;
+        line-height: 1;
+        letter-spacing: 10px;
+        text-indent: 10px;
+        color: transparent;
+        -webkit-text-stroke: 1.2px rgba(184, 154, 90, 0.5);
+        user-select: none;
+        margin-bottom: 6px;
+      }
+      .b-inner {
+        position: relative;
+        z-index: 2;
+        max-width: 640px;
+      }
+      .b-eyebrow {
+        font-family: var(--serif);
+        font-size: 12px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 20px;
+      }
+      .b-title {
+        font-family: var(--serif);
+        font-size: 42px;
+        font-weight: 400;
+        letter-spacing: -0.8px;
+        color: var(--text);
+        margin-bottom: 8px;
+        word-break: keep-all;
+      }
+      .b-title em {
+        font-style: italic;
+        color: var(--gold-dark);
+      }
+      .b-rule {
+        width: 40px;
+        height: 1px;
+        background: var(--gold);
+        margin: 24px auto;
+        opacity: 0.5;
+      }
+      .b-desc {
+        font-size: 15px;
+        line-height: 1.9;
+        color: var(--text-secondary);
+        margin-bottom: 32px;
+        word-break: keep-all;
+      }
+      .b-cta {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 38px;
+      }
+      .b-quicklabel {
+        font-family: var(--serif);
+        font-size: 12px;
+        letter-spacing: 2.5px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .b-tel {
+        margin-top: 32px;
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+      .b-tel b {
+        font-family: var(--serif);
+        font-size: 19px;
+        color: var(--espresso);
+        letter-spacing: 0.5px;
+      }
+
+      /* ═════════ C안 — 스플릿 ═════════ */
+      .c-body {
+        min-height: 620px;
+        display: grid;
+        grid-template-columns: 44% 56%;
+      }
+      .c-left {
+        background:
+          radial-gradient(
+            ellipse 80% 60% at 50% 45%,
+            rgba(184, 154, 90, 0.14),
+            transparent 72%
+          ),
+          linear-gradient(180deg, var(--espresso) 0%, var(--espresso-deep) 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 40px;
+        position: relative;
+        border-right: 1px solid var(--gold);
+      }
+      .c-left::after {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border: 1px solid rgba(184, 146, 74, 0.3);
+        pointer-events: none;
+      }
+      .c-num {
+        font-family: var(--display);
+        font-size: 122px;
+        line-height: 1;
+        letter-spacing: 3px;
+      }
+      .c-eyebrow {
+        font-family: var(--serif);
+        font-size: 11.5px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: rgba(212, 184, 112, 0.7);
+        margin-top: 16px;
+      }
+      .c-mark {
+        margin-top: 30px;
+        opacity: 0.5;
+      }
+      .c-right {
+        background: var(--bg);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 60px 58px;
+      }
+      .c-title {
+        font-family: var(--serif);
+        font-size: 34px;
+        font-weight: 500;
+        color: var(--text);
+        letter-spacing: -0.5px;
+        margin-bottom: 16px;
+        word-break: keep-all;
+      }
+      .c-desc {
+        font-size: 14.5px;
+        line-height: 1.9;
+        color: var(--text-secondary);
+        margin-bottom: 30px;
+        word-break: keep-all;
+      }
+      .c-cta {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 34px;
+      }
+      .c-divider {
+        height: 1px;
+        background: var(--border);
+        margin-bottom: 22px;
+      }
+      .c-quicklabel {
+        font-family: var(--serif);
+        font-size: 11.5px;
+        letter-spacing: 2.5px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .c-quick {
+        justify-content: flex-start;
+      }
+      .c-tel {
+        margin-top: 26px;
+        font-size: 13px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .c-tel b {
+        font-family: var(--serif);
+        font-size: 19px;
+        color: var(--espresso);
+        letter-spacing: 0.5px;
+      }
+
+      /* ───────── 반응형 ───────── */
+      @media (max-width: 860px) {
+        .c-body {
+          grid-template-columns: 1fr;
+        }
+        .c-left {
+          padding: 48px 30px;
+          border-right: none;
+          border-bottom: 1px solid var(--gold);
+        }
+        .c-num {
+          font-size: 84px;
+        }
+        .c-right {
+          padding: 44px 28px;
+        }
+        .b-ghost {
+          font-size: 180px;
+        }
+        .a-plate {
+          padding: 40px 26px 34px;
+        }
+        .a-num {
+          font-size: 72px;
+        }
+        .a-title {
+          font-size: 22px;
+        }
+        .b-title {
+          font-size: 30px;
+        }
+        .nh-gnb {
+          padding: 0 20px;
+        }
+        .nh-gnb .tel span {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 리뷰 컨트롤바 (실제 배포 페이지에는 포함되지 않음) -->
+    <div class="review-bar">
+      <span class="review-label">404 Page — 시안 검토</span>
+      <div class="review-tabs">
+        <button class="review-tab active" data-opt="a">
+          A안 · 에스프레소 플레이트
+        </button>
+        <button class="review-tab" data-opt="b">
+          B안 · 아이보리 에디토리얼
+        </button>
+        <button class="review-tab" data-opt="c">C안 · 스플릿</button>
+        <button class="review-tab" data-opt="all">전체 비교</button>
+      </div>
+      <span class="review-note"
+        >브라우저 창을 좁히면 모바일 레이아웃 확인 가능</span
+      >
+    </div>
+
+    <div class="stage">
+      <!-- ═══════════ A안 ═══════════ -->
+      <div class="frame-wrap opt show" id="opt-a">
+        <div class="frame-cap">
+          <b>A안</b> 에스프레소 플레이트
+          <span
+            >하단 상담바·사이드바와 동일한 에스프레소 + 이중 골드 프레임. 브랜드
+            통일감 최상.</span
+          >
+        </div>
+        <div class="viewport">
+          <div class="nh-gnb">
+            <img
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+              alt="Noble HONG"
+            />
+            <div class="tel">
+              <span>대표번호</span>
+              <b>1800-8194</b>
+            </div>
+          </div>
+          <div class="a-body">
+            <div class="a-plate">
+              <div class="a-eyebrow">Page Not Found</div>
+              <div class="a-num shimmer">404</div>
+              <div class="a-rule"></div>
+              <h1 class="a-title">요청하신 페이지를 찾을 수 없습니다</h1>
+              <p class="a-desc">
+                주소가 변경되었거나 삭제된 페이지입니다.<br />
+                아래 메뉴를 통해 원하시는 정보를 찾아보실 수 있습니다.
+              </p>
+              <div class="a-cta">
+                <a href="/" class="btn btn-gold">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"
+                    />
+                    <path d="M9 21v-8h6v8" />
+                  </svg>
+                  홈으로 가기
+                </a>
+                <a href="/contact#form" class="btn btn-ghost-dark">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                    />
+                  </svg>
+                  상담 신청하기
+                </a>
+              </div>
+              <div class="a-tel">
+                전화 상담 <b>1800-8194</b> &nbsp;·&nbsp; 평일 09:00 – 18:00
+              </div>
+            </div>
+          </div>
+          <div style="padding: 0 24px 54px; background: var(--bg)">
+            <div class="quick a-quick">
+              <a href="/about">노블홍</a>
+              <a href="/noblematching">노블매칭</a>
+              <a href="/consulting">맞춤컨설팅</a>
+              <a href="/matchinglounge">차별화 시스템</a>
+              <a href="/campaign">결혼장려 공익캠페인</a>
+              <a href="/matchinglab">매칭전략연구소</a>
+              <a href="/contact#form">상담문의</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ B안 ═══════════ -->
+      <div class="frame-wrap opt" id="opt-b">
+        <div class="frame-cap">
+          <b>B안</b> 아이보리 에디토리얼
+          <span
+            >순백 배경 + 골드 아웃라인 404. 가장 가볍고 정적인 고급 톤.</span
+          >
+        </div>
+        <div class="viewport">
+          <div class="nh-gnb">
+            <img
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+              alt="Noble HONG"
+            />
+            <div class="tel">
+              <span>대표번호</span>
+              <b>1800-8194</b>
+            </div>
+          </div>
+          <div class="b-body">
+            <div class="b-inner">
+              <div class="b-eyebrow">Page Not Found</div>
+              <div class="b-ghost">404</div>
+              <h1 class="b-title">
+                찾으시는 페이지가 <em>존재하지 않습니다</em>
+              </h1>
+              <div class="b-rule"></div>
+              <p class="b-desc">
+                주소가 변경되었거나 삭제된 페이지입니다.<br />
+                아래 메뉴에서 원하시는 정보를 찾아보실 수 있습니다.
+              </p>
+              <div class="b-cta">
+                <a href="/" class="btn btn-gold">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"
+                    />
+                    <path d="M9 21v-8h6v8" />
+                  </svg>
+                  홈으로 가기
+                </a>
+                <a href="/contact#form" class="btn btn-ghost">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                    />
+                  </svg>
+                  상담 신청하기
+                </a>
+              </div>
+              <div class="b-quicklabel">바로가기</div>
+              <div class="quick">
+                <a href="/about">노블홍</a>
+                <a href="/noblematching">노블매칭</a>
+                <a href="/consulting">맞춤컨설팅</a>
+                <a href="/matchinglounge">차별화 시스템</a>
+                <a href="/matchinglab">매칭전략연구소</a>
+                <a href="/contact#form">상담문의</a>
+              </div>
+              <div class="b-tel">
+                전화 상담 <b>1800-8194</b> &nbsp;·&nbsp; 평일 09:00 – 18:00
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ C안 ═══════════ -->
+      <div class="frame-wrap opt" id="opt-c">
+        <div class="frame-cap">
+          <b>C안</b> 스플릿
+          <span
+            >좌측 에스프레소 패널 + 우측 아이보리 안내. 정보량이 가장 많고 안내
+            동선이 명확.</span
+          >
+        </div>
+        <div class="viewport">
+          <div class="nh-gnb">
+            <img
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+              alt="Noble HONG"
+            />
+            <div class="tel">
+              <span>대표번호</span>
+              <b>1800-8194</b>
+            </div>
+          </div>
+          <div class="c-body">
+            <div class="c-left">
+              <div class="c-num shimmer">404</div>
+              <div class="c-eyebrow">Page Not Found</div>
+              <div class="c-mark">
+                <svg
+                  width="34"
+                  height="34"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#d4b870"
+                  stroke-width="1"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12 21s-7.5-4.9-9.3-9.2A5.4 5.4 0 0 1 12 6.2a5.4 5.4 0 0 1 9.3 5.6C19.5 16.1 12 21 12 21z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="c-right">
+              <h1 class="c-title">요청하신 페이지를<br />찾을 수 없습니다</h1>
+              <p class="c-desc">
+                주소가 변경되었거나 삭제된 페이지입니다.<br />
+                입력하신 주소가 정확한지 다시 한 번 확인해 주세요.
+              </p>
+              <div class="c-cta">
+                <a href="/" class="btn btn-gold">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"
+                    />
+                    <path d="M9 21v-8h6v8" />
+                  </svg>
+                  홈으로 가기
+                </a>
+                <a href="/contact#form" class="btn btn-ghost">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                    />
+                  </svg>
+                  상담 신청하기
+                </a>
+              </div>
+              <div class="c-divider"></div>
+              <div class="c-quicklabel">바로가기</div>
+              <div class="quick c-quick">
+                <a href="/about">노블홍</a>
+                <a href="/noblematching">노블매칭</a>
+                <a href="/consulting">맞춤컨설팅</a>
+                <a href="/matchinglounge">차별화 시스템</a>
+                <a href="/matchinglab">매칭전략연구소</a>
+                <a href="/contact#form">상담문의</a>
+              </div>
+              <div class="c-tel">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#b89a5a"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"
+                  />
+                </svg>
+                전화 상담 <b>1800-8194</b> &nbsp;·&nbsp; 평일 09:00 – 18:00
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var tabs = document.querySelectorAll(".review-tab");
+      var opts = { a: "opt-a", b: "opt-b", c: "opt-c" };
+      tabs.forEach(function (t) {
+        t.addEventListener("click", function () {
+          tabs.forEach(function (x) {
+            x.classList.remove("active");
+          });
+          t.classList.add("active");
+          var v = t.dataset.opt;
+          Object.keys(opts).forEach(function (k) {
+            var el = document.getElementById(opts[k]);
+            el.classList.toggle("show", v === "all" || v === k);
+          });
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+      });
+    </script>
+  </body>
+</html>
