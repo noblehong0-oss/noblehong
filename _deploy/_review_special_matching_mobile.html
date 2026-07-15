@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>
+      매칭라운지 — 1:1 프리미엄 스페셜 맞선 모바일 4안 (와이어프레임)
+    </title>
+    <style>
+      :root {
+        --gold: #b89a5a;
+        --gold-dark: #8c7030;
+        --gold-light: #d4b870;
+        --espresso: #2a1d0a;
+        --ivory: #f4e8c8;
+        --ivory-soft: #faf3df;
+        --text: #2c2820;
+        --text-muted: #6e604a;
+        --text-secondary: #5c5040;
+        --bg: #fbf7ec;
+        --card: #ffffff;
+        --border: #e8dcb8;
+        --shadow: 0 4px 14px rgba(42, 29, 10, 0.08);
+        --shadow-strong: 0 12px 32px rgba(42, 29, 10, 0.18);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: #1a1410;
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Pretendard",
+          system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .review-wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 32px 16px 80px;
+      }
+      .review-head {
+        text-align: center;
+        color: #f1e4c2;
+        margin-bottom: 36px;
+      }
+      .review-head h1 {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .review-head p {
+        margin-top: 8px;
+        font-size: 13px;
+        color: rgba(241, 228, 194, 0.65);
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 22px;
+      }
+      @media (max-width: 1100px) {
+        .options {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .options {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .option-label {
+        text-align: center;
+        color: #f1e4c2;
+      }
+      .option-label .tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .option-label h2 {
+        font-size: 17px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .option-label .sub {
+        font-size: 11.5px;
+        color: rgba(241, 228, 194, 0.6);
+        margin-top: 4px;
+        line-height: 1.45;
+      }
+
+      .phone {
+        width: 360px;
+        max-width: 100%;
+        height: 720px;
+        background: var(--bg);
+        border: 12px solid #0c0905;
+        border-radius: 36px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 2px rgba(184, 154, 90, 0.3),
+          0 16px 40px rgba(0, 0, 0, 0.4);
+      }
+      .phone-inner {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: linear-gradient(180deg, #faf3df 0%, #f4e8c8 100%);
+        scrollbar-width: thin;
+      }
+      .phone-inner::-webkit-scrollbar {
+        width: 4px;
+      }
+      .phone-inner::-webkit-scrollbar-thumb {
+        background: rgba(140, 112, 48, 0.3);
+        border-radius: 2px;
+      }
+
+      .img-url {
+        background-image: url("https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/premium_matchmaking.webp");
+        background-size: cover;
+        background-position: center;
+      }
+
+      /* 공통 텍스트 */
+      .eyebrow {
+        font-size: 10.5px;
+        letter-spacing: 2.5px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      .badges span {
+        font-size: 10.5px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(184, 154, 90, 0.12);
+        border: 1px solid rgba(184, 154, 90, 0.3);
+        color: var(--gold-dark);
+      }
+      .cta {
+        display: block;
+        text-align: center;
+        padding: 12px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--gold-dark), #6e5a24);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      /* ─────────────────────────────────────
+         A안 — Hero Stack (이미지 풀폭 위 + 텍스트 아래)
+      ───────────────────────────────────── */
+      .a-hero {
+        width: 100%;
+        aspect-ratio: 16/10;
+        position: relative;
+      }
+      .a-hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          transparent 60%,
+          rgba(42, 29, 10, 0.35)
+        );
+      }
+      .a-body {
+        padding: 18px 18px 24px;
+      }
+      .a-eyebrow {
+        display: block;
+        margin-bottom: 8px;
+      }
+      .a-title {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--espresso);
+        line-height: 1.25;
+        letter-spacing: -0.5px;
+        margin-bottom: 4px;
+      }
+      .a-title strong {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .a-desc {
+        font-size: 12.5px;
+        color: var(--text-secondary);
+        line-height: 1.65;
+        word-break: keep-all;
+        margin: 12px 0 14px;
+      }
+      .a-badges {
+        margin-bottom: 16px;
+      }
+
+      /* ─────────────────────────────────────
+         B안 — Cinematic Overlay (이미지 위에 텍스트 오버레이)
+      ───────────────────────────────────── */
+      .b-card {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4/5;
+        overflow: hidden;
+      }
+      .b-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(42, 29, 10, 0.1) 30%,
+          rgba(42, 29, 10, 0.95) 95%
+        );
+      }
+      .b-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 22px 20px 24px;
+        z-index: 2;
+        color: #fff;
+      }
+      .b-eyebrow {
+        color: var(--gold-light);
+        font-size: 10.5px;
+        letter-spacing: 2.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .b-title {
+        font-size: 26px;
+        font-weight: 800;
+        line-height: 1.2;
+        letter-spacing: -0.6px;
+        margin-bottom: 10px;
+      }
+      .b-title strong {
+        background: linear-gradient(135deg, #f6e27a, var(--gold-light));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .b-desc {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.6;
+        word-break: keep-all;
+        margin-bottom: 14px;
+      }
+      .b-badges span {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(212, 184, 112, 0.4);
+        color: var(--gold-light);
+        font-size: 10px;
+      }
+      .b-cta-wrap {
+        padding: 16px 18px 0;
+      }
+
+      /* ─────────────────────────────────────
+         C안 — Side Card (이미지 좌 + 텍스트 우 가로 배치)
+      ───────────────────────────────────── */
+      .c-wrap {
+        padding: 14px;
+      }
+      .c-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .c-row {
+        display: grid;
+        grid-template-columns: 38% 1fr;
+        gap: 0;
+      }
+      .c-img {
+        aspect-ratio: 3/5;
+      }
+      .c-text {
+        padding: 14px 14px 14px 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .c-eyebrow {
+        font-size: 9.5px;
+        letter-spacing: 1.5px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .c-title {
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--espresso);
+        line-height: 1.2;
+        margin-top: 4px;
+        letter-spacing: -0.4px;
+      }
+      .c-title strong {
+        color: var(--gold-dark);
+      }
+      .c-desc-short {
+        font-size: 11px;
+        color: var(--text-secondary);
+        line-height: 1.55;
+        word-break: keep-all;
+        margin-top: 6px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .c-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 12px 14px;
+        border-top: 1px solid var(--border);
+        background: var(--ivory-soft);
+      }
+      .c-badges span {
+        background: transparent;
+        border: 1px solid rgba(184, 154, 90, 0.4);
+        color: var(--gold-dark);
+        font-size: 10px;
+        padding: 3px 8px;
+      }
+      .c-cta-wrap {
+        padding: 12px 14px 14px;
+        background: var(--ivory-soft);
+      }
+
+      /* ─────────────────────────────────────
+         D안 — Bento Card (다양한 사이즈 그리드)
+      ───────────────────────────────────── */
+      .d-wrap {
+        padding: 14px;
+      }
+      .d-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 10px;
+        box-shadow: var(--shadow);
+      }
+      .d-tile-img {
+        grid-column: 1 / -1;
+        aspect-ratio: 16/9;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .d-tile-text {
+        grid-column: 1 / -1;
+        padding: 4px 4px 0;
+      }
+      .d-eyebrow {
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .d-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--espresso);
+        line-height: 1.2;
+        letter-spacing: -0.4px;
+      }
+      .d-title strong {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .d-desc {
+        font-size: 11.5px;
+        color: var(--text-secondary);
+        line-height: 1.55;
+        word-break: keep-all;
+        margin-top: 8px;
+      }
+      .d-badge-tile {
+        background: linear-gradient(135deg, var(--ivory-soft), #fdf6e3);
+        border: 1px solid rgba(184, 154, 90, 0.25);
+        border-radius: 10px;
+        padding: 12px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+      }
+      .d-badge-tile .icon {
+        font-size: 18px;
+      }
+      .d-badge-tile .label {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--gold-dark);
+        line-height: 1.2;
+        word-break: keep-all;
+      }
+      .d-cta-wrap {
+        grid-column: 1 / -1;
+        padding: 6px 4px 4px;
+      }
+
+      /* 비교 표 */
+      .compare {
+        margin: 56px auto 0;
+        max-width: 1300px;
+        background: rgba(241, 228, 194, 0.08);
+        border: 1px solid rgba(241, 228, 194, 0.2);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .compare h3 {
+        padding: 16px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #f1e4c2;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.15);
+        background: rgba(241, 228, 194, 0.04);
+      }
+      .compare table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #e3d8b6;
+        font-size: 12px;
+      }
+      .compare th,
+      .compare td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.07);
+        vertical-align: top;
+      }
+      .compare th {
+        background: rgba(241, 228, 194, 0.04);
+        color: #f1e4c2;
+        font-weight: 700;
+        font-size: 11px;
+      }
+      .compare tr:last-child td {
+        border-bottom: none;
+      }
+      .compare .ok {
+        color: #c4a55a;
+      }
+      .compare .warn {
+        color: #d68a5a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-wrap">
+      <div class="review-head">
+        <h1>매칭라운지 — 1:1 프리미엄 스페셜 맞선 모바일 4안</h1>
+        <p>
+          360px 폰 viewport · premium_matchmaking 영상 + 4 배지 + CTA · 데이터
+          동일
+        </p>
+      </div>
+
+      <div class="options">
+        <!-- ============ A안 — Hero Stack ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">A</span>
+            <h2>Hero Stack</h2>
+            <p class="sub">이미지 풀폭 위 + 텍스트 아래 1col</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="a-hero img-url"></div>
+              <div class="a-body">
+                <span class="eyebrow a-eyebrow">Special Matching</span>
+                <h3 class="a-title">
+                  1:1 프리미엄<br /><strong>스페셜 맞선</strong>
+                </h3>
+                <p class="a-desc">
+                  노블홍이 엄선한 최상위 회원을 대상으로 하는 1:1 맞춤형 스페셜
+                  매칭. 대표가 직접 관여하여 양측의 조건과 가치관을 세밀하게
+                  조율합니다.
+                </p>
+                <div class="badges a-badges">
+                  <span>대표 직접 매칭</span>
+                  <span>완벽한 프라이버시</span>
+                  <span>맞춤형 장소 세팅</span>
+                  <span>사전 호감도 검증</span>
+                </div>
+                <a href="#" class="cta">스페셜 맞선 상담</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ B안 — Cinematic Overlay ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">B</span>
+            <h2>Cinematic Overlay</h2>
+            <p class="sub">이미지 위 다크 그라디언트 + 텍스트 오버레이</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="b-card img-url">
+                <div class="b-content">
+                  <span class="b-eyebrow">Special Matching</span>
+                  <h3 class="b-title">
+                    1:1 프리미엄<br /><strong>스페셜 맞선</strong>
+                  </h3>
+                  <p class="b-desc">
+                    노블홍이 엄선한 최상위 회원을 대상으로 하는 1:1 맞춤형
+                    스페셜 매칭. 대표가 직접 관여합니다.
+                  </p>
+                  <div class="badges b-badges">
+                    <span>대표 직접 매칭</span>
+                    <span>완벽한 프라이버시</span>
+                    <span>맞춤형 장소</span>
+                    <span>호감도 검증</span>
+                  </div>
+                </div>
+              </div>
+              <div class="b-cta-wrap">
+                <a href="#" class="cta">스페셜 맞선 상담</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ C안 — Side Card ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">C</span>
+            <h2>Side Card</h2>
+            <p class="sub">이미지 좌 + 텍스트 우 가로 38:62 배치</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="c-wrap">
+                <div class="c-card">
+                  <div class="c-row">
+                    <div class="c-img img-url"></div>
+                    <div class="c-text">
+                      <div>
+                        <div class="c-eyebrow">Special Matching</div>
+                        <h3 class="c-title">
+                          1:1 프리미엄<br /><strong>스페셜 맞선</strong>
+                        </h3>
+                        <p class="c-desc-short">
+                          노블홍이 엄선한 최상위 회원 대상 1:1 맞춤형 스페셜
+                          매칭. 대표가 직접 관여.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="c-badges">
+                    <span>대표 직접 매칭</span>
+                    <span>완벽한 프라이버시</span>
+                    <span>맞춤형 장소</span>
+                    <span>호감도 검증</span>
+                  </div>
+                  <div class="c-cta-wrap">
+                    <a href="#" class="cta">스페셜 맞선 상담</a>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="
+                  padding: 14px 18px;
+                  opacity: 0.4;
+                  text-align: center;
+                  font-size: 11px;
+                "
+              >
+                컴팩트 · 다음 컨텐츠 빠른 도달
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ D안 — Bento Card ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">D</span>
+            <h2>Bento Card</h2>
+            <p class="sub">이미지 + 텍스트 + 4 배지 타일 그리드</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="d-wrap">
+                <div class="d-grid">
+                  <div class="d-tile-img img-url"></div>
+                  <div class="d-tile-text">
+                    <div class="d-eyebrow">Special Matching</div>
+                    <h3 class="d-title">
+                      1:1 프리미엄<br /><strong>스페셜 맞선</strong>
+                    </h3>
+                    <p class="d-desc">
+                      노블홍이 엄선한 최상위 회원 대상 맞춤형 매칭. 대표가 직접
+                      관여하여 조율합니다.
+                    </p>
+                  </div>
+                  <div class="d-badge-tile">
+                    <span class="icon">👑</span>
+                    <span class="label">대표 직접<br />매칭</span>
+                  </div>
+                  <div class="d-badge-tile">
+                    <span class="icon">🔒</span>
+                    <span class="label">완벽한<br />프라이버시</span>
+                  </div>
+                  <div class="d-badge-tile">
+                    <span class="icon">✨</span>
+                    <span class="label">맞춤형<br />장소 세팅</span>
+                  </div>
+                  <div class="d-badge-tile">
+                    <span class="icon">💎</span>
+                    <span class="label">사전 호감도<br />검증</span>
+                  </div>
+                  <div class="d-cta-wrap">
+                    <a href="#" class="cta">스페셜 맞선 상담</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 비교 표 -->
+      <div class="compare">
+        <h3>4안 비교 — 1:1 프리미엄 스페셜 맞선</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 13%">기준</th>
+              <th>A · Hero Stack</th>
+              <th>B · Cinematic Overlay</th>
+              <th>C · Side Card</th>
+              <th>D · Bento Card</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>화면 차지</td>
+              <td>~520px</td>
+              <td class="ok">~480px</td>
+              <td class="ok">~280px (가장 작음)</td>
+              <td>~580px</td>
+            </tr>
+            <tr>
+              <td>이미지 임팩트</td>
+              <td class="ok">★★★★ 풀폭 16:10</td>
+              <td class="ok">★★★★★ 4:5 거의 풀스크린</td>
+              <td class="warn">★★ 38% 좁은 사진</td>
+              <td>★★★ 16:9</td>
+            </tr>
+            <tr>
+              <td>전문직/럭셔리 톤</td>
+              <td>★★★★ 클래식</td>
+              <td class="ok">★★★★★ 시네마틱 (가장 럭셔리)</td>
+              <td>★★★ 컴팩트</td>
+              <td>★★★★ 트렌디</td>
+            </tr>
+            <tr>
+              <td>가독성</td>
+              <td class="ok">★★★★★ 라이트 배경 + 다크 텍스트</td>
+              <td>★★★★ 다크 배경 + 라이트 텍스트</td>
+              <td>★★★ 작은 폰트</td>
+              <td class="ok">★★★★ 명확</td>
+            </tr>
+            <tr>
+              <td>4 배지 강조</td>
+              <td>★★★ 한 줄 wrap</td>
+              <td>★★★ 흩뿌려짐</td>
+              <td>★★★ 그룹화</td>
+              <td class="ok">★★★★★ 각 배지 타일 + 아이콘</td>
+            </tr>
+            <tr>
+              <td>비주얼 차별화</td>
+              <td>★★★ 표준</td>
+              <td class="ok">★★★★★ 가장 강렬 (포스터 느낌)</td>
+              <td>★★★ 평이</td>
+              <td class="ok">★★★★ 트렌디 그리드</td>
+            </tr>
+            <tr>
+              <td>다음 컨텐츠 도달</td>
+              <td>중간</td>
+              <td>중간</td>
+              <td class="ok">★ 빠름</td>
+              <td class="warn">느림</td>
+            </tr>
+            <tr>
+              <td>구현 비용</td>
+              <td class="ok">낮음</td>
+              <td class="ok">낮음 (그라디언트만)</td>
+              <td class="ok">낮음</td>
+              <td>중간 (배지 4 타일)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GP98TNL451"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GP98TNL451');
+  </script>
+  <link rel="canonical" href="https://www.noblehong.com/privacy" />
+  <meta name="twitter:image" content="https://www.noblehong.com/og-home.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:image" content="https://www.noblehong.com/og-home.jpg" />
+  <meta property="og:url" content="https://www.noblehong.com/privacy" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>개인정보처리방침 — 노블홍 결혼정보회사</title>
+    <meta name="description" content="노블홍 결혼정보회사 개인정보처리방침." />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon.ico"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-16x16.png"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fffefb;
+        --surface: #ffffff;
+        --surface-warm: #f9f6ef;
+        --border: #e8e0ce;
+        --border-gold: rgba(184, 154, 90, 0.25);
+        --text: #2c2820;
+        --text-secondary: #5c5040;
+        --text-muted: #8c8070;
+        --gold: #b89a5a;
+        --gold-light: #d4b870;
+        --gold-lighter: #d9c577;
+        --gold-dark: #8c7030;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+      }
+
+      /* GNB */
+      .gnb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: #fffefb;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+        transition: all 0.4s ease;
+      }
+      .gnb-border {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 10%,
+          var(--gold-light) 50%,
+          transparent 90%
+        );
+        opacity: 0.5;
+      }
+      .gnb-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        height: 88px;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-inner {
+        height: 64px;
+      }
+      .gnb-logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+      .gnb-logo img {
+        height: 72px;
+        width: auto;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-logo img {
+        height: 48px;
+      }
+      .gnb-menu {
+        display: flex;
+        gap: 40px;
+        list-style: none;
+      }
+      .gnb-menu a {
+        text-decoration: none;
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        padding: 8px 0;
+        position: relative;
+        background: linear-gradient(
+          135deg,
+          var(--gold-dark),
+          var(--gold),
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        transition: all 0.3s;
+      }
+      .gnb-menu a::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--gold-light),
+          var(--gold)
+        );
+        transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .gnb-menu a:hover {
+        filter: brightness(1.3);
+      }
+      .gnb-menu a:hover::after {
+        width: 100%;
+      }
+      .gnb-cta {
+        padding: 8px 20px;
+        border: 1px solid var(--gold-light);
+        background: linear-gradient(
+          135deg,
+          transparent,
+          rgba(196, 165, 90, 0.05)
+        );
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        border-radius: 1px;
+        text-decoration: none;
+        color: var(--gold);
+        transition: all 0.4s;
+      }
+      .gnb-cta:hover {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        border-color: var(--gold);
+        box-shadow: 0 4px 20px rgba(160, 128, 48, 0.2);
+      }
+
+      /* PAGE HEADER */
+      .page-header {
+        padding: 160px 40px 60px;
+        text-align: center;
+        background: linear-gradient(
+          180deg,
+          var(--surface-warm) 0%,
+          var(--bg) 100%
+        );
+        border-bottom: 1px solid var(--border);
+      }
+      .page-header-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 16px;
+      }
+      .page-header h1 {
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--text);
+      }
+
+      /* LEGAL CONTENT */
+      .legal-wrap {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 64px 40px 100px;
+      }
+      .legal-section {
+        margin-bottom: 48px;
+      }
+      .legal-section h2 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 16px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .legal-section p,
+      .legal-section li {
+        font-size: 14.5px;
+        line-height: 1.9;
+        color: var(--text-secondary);
+      }
+      .legal-section ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      .legal-section ul li {
+        padding-left: 16px;
+        position: relative;
+        margin-bottom: 4px;
+      }
+      .legal-section ul li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 12px;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--gold-light);
+      }
+      .legal-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        font-size: 13.5px;
+      }
+      .legal-table th {
+        background: var(--surface-warm);
+        font-weight: 600;
+        color: var(--text);
+        padding: 10px 14px;
+        text-align: left;
+        border: 1px solid var(--border);
+      }
+      .legal-table td {
+        padding: 10px 14px;
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+
+      /* FOOTER */
+      .footer {
+        padding: 56px 40px 40px;
+        background: linear-gradient(135deg, #f9f6ef 0%, #f2ece0 100%);
+        border-top: 2px solid var(--gold);
+      }
+      .footer-gold-line {
+        height: 1px;
+        margin-bottom: 56px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        opacity: 0.3;
+      }
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-logo {
+        margin-bottom: 16px;
+      }
+      .footer-logo img {
+        height: 52px;
+        width: auto;
+        opacity: 1;
+        filter: none;
+      }
+      .footer-info {
+        font-size: 13px;
+        color: #8c8070;
+        line-height: 1.9;
+      }
+      .footer-links {
+        display: flex;
+        gap: 28px;
+      }
+      .footer-links a {
+        font-size: 13px;
+        color: #8c8070;
+        text-decoration: none;
+        letter-spacing: 0.3px;
+        transition: color 0.3s;
+      }
+      .footer-links a:hover {
+        color: var(--gold);
+      }
+      .footer-links a.active {
+        color: var(--gold-lighter);
+        font-weight: 600;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 768px) {
+        .gnb-menu {
+          display: none;
+        }
+        .gnb-inner {
+          padding: 0 20px;
+          height: 64px;
+        }
+        .gnb-logo img {
+          height: 40px;
+        }
+        .page-header {
+          padding: 120px 20px 40px;
+        }
+        .page-header h1 {
+          font-size: 24px;
+        }
+        .legal-wrap {
+          padding: 40px 20px 80px;
+        }
+        .legal-section h2 {
+          font-size: 16px;
+        }
+        .footer-inner {
+          flex-direction: column;
+          gap: 32px;
+        }
+        .footer {
+          padding: 40px 20px 32px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="gnb" id="gnb">
+      <div class="gnb-inner">
+        <a href="/" class="gnb-logo"
+          ><img
+            src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+            alt="Noble HONG"
+        /></a>
+        <ul class="gnb-menu">
+          <li><a href="/about">노블홍</a></li>
+          <li><a href="/noblematching">노블매칭</a></li>
+          <li><a href="#">맞춤컨설팅</a></li>
+          <li><a href="#">차별화 시스템</a></li>
+          <li><a href="/campaign">결혼장려 공익캠페인</a></li>
+          <li><a href="#">상담문의</a></li>
+        </ul>
+        <a href="home_v3_motion.html#cta" class="gnb-cta"
+          >상담 시작</a
+        >
+      </div>
+      <div class="gnb-border"></div>
+    </nav>
+
+    <header class="page-header">
+      <div class="page-header-eyebrow">Privacy Policy</div>
+      <h1>개인정보처리방침</h1>
+    </header>
+
+    <main class="legal-wrap">
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 48px">
+        노블홍 결혼정보회사(이하 '회사'라고 함)는 『개인정보보호법』 및
+        『정보통신망 이용촉진 및 정보보호 등에 관한 법률』에 따라 이용자의
+        개인정보보호 및 권익을 보호하고 개인정보와 관련한 이용자의 고충을
+        원활하게 처리할 수 있도록 다음과 같은 취급(처리)방침을 두고 있습니다.
+      </p>
+
+      <section class="legal-section">
+        <h2>1. 수집하는 개인정보의 항목 및 수집방법</h2>
+        <p>① 회사는 다음의 개인정보를 수집하고 있습니다.</p>
+        <table class="legal-table">
+          <thead>
+            <tr>
+              <th>수집 및 이용 목적</th>
+              <th>수집 항목</th>
+              <th>활용</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>고객상담</td>
+              <td>이름, 성별, 생년월일, 이메일주소, 휴대폰번호</td>
+              <td>고객상담 의견에 응대</td>
+            </tr>
+            <tr>
+              <td>고객의견</td>
+              <td>이름, 성별, 생년월일, 이메일주소, 휴대폰번호</td>
+              <td>고객의 의견에 응대</td>
+            </tr>
+            <tr>
+              <td>결혼서비스 문의</td>
+              <td>
+                이름, 성별, 출생년도, 이메일주소, 휴대폰번호, 결혼경력,
+                거주지역, 최종학력, 직업, 상담내용
+              </td>
+              <td>문의내용 확인, 처리결과 통보</td>
+            </tr>
+            <tr>
+              <td>자동수집</td>
+              <td>쿠키, 접속 URL, 접속 IP, 브라우저 종류, 접속 일자</td>
+              <td>맞춤형 정보 제공</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>② 만 14세 미만자의 개인정보는 수집 및 관리하지 않습니다.</p>
+        <p>③ 장기 미사용자(2년)는 자동으로 회원 탈퇴 처리됩니다.</p>
+        <p>
+          ④ 회사는 홈페이지, 서면양식, 스마트폰, 이메일, 전화를 통해 개인정보를
+          수집합니다.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>2. 개인정보의 수집 및 이용목적</h2>
+        <p>
+          회사는 개인정보를 다음의 목적을 위해 처리합니다. 수집한 개인정보는
+          다음의 목적 이외의 용도로는 사용하지 않으며 이용 목적이 변경될 시에는
+          사전동의를 구하겠습니다.
+        </p>
+        <ul>
+          <li>
+            ① 서비스 제공에 관한 이행 및 서비스 이용 의사 확인: 콘텐츠 제공,
+            맞춤 서비스 제공, 테스트 결과 발송, 서비스 안내자료 발송
+          </li>
+          <li>
+            ② 고객문의 처리: 본인 확인, 요청/문의사항 확인, 사실조사를 위한
+            연락/통지, 처리결과 통보
+          </li>
+          <li>
+            ③ 마케팅 및 광고 활용: 결혼상담 및 미팅파티 서비스 이용 권유, 이벤트
+            등 광고성 정보 전달, 신규 서비스 개발, 접속 빈도 파악, 서비스 이용
+            통계
+          </li>
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>3. 개인정보의 제3자 제공에 관한 사항</h2>
+        <p>
+          ① 회사는 이용자들의 개인정보를 수집 및 이용목적에서 고지한 범위 내에서
+          사용하며, 이용자의 사전 동의 없이는 동 범위를 초과하여 이용하거나
+          원칙적으로 외부에 공개하지 않습니다. 다만, 아래의 경우에는 예외로
+          합니다.
+        </p>
+        <ul>
+          <li>이용자가 사전에 동의한 경우</li>
+          <li>
+            ② 법령의 규정에 의거하거나, 수사 목적으로 법령에 정해진 절차와
+            방법에 따라 수사기관의 요구가 있는 경우
+          </li>
+          <li>
+            ③ 이벤트 및 경품 당첨 등의 서비스를 이용하기 위하여 제휴사에 정보를
+            제공할 수 있으며, 이때 필요한 정보의 용도, 기간 등을 고지
+          </li>
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>4. 개인정보의 취급위탁</h2>
+        <p>
+          회사는 고객님의 동의 없이 개인정보를 외부에 위탁하여 처리하지
+          않습니다.
+        </p>
+        <ul>
+          <li>
+            ① 더 나은 서비스 제공을 위하여 개인정보의 처리를 위탁하는 경우에는
+            미리 그 사실을 고지 및 사전 동의를 받겠습니다.
+          </li>
+          <li>
+            ② 개인정보의 처리를 위탁하는 경우에는 위탁계약 등을 통하여
+            서비스제공자의 개인정보보호 관련 지시엄수, 비밀유지, 제3자 제공의
+            금지 및 사고시의 책임부담 등을 명확히 규정하고 당해 계약내용을 서면
+            또는 전자적으로 보관하겠습니다.
+          </li>
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>5. 개인정보의 처리 및 보유기간</h2>
+        <p>
+          ① 회사는 법령에 따른 개인정보 보유 및 이용기간 또는 이용자로부터
+          개인정보를 수집 시에 동의 받은 개인정보 보유 및 이용기간 내에서
+          개인정보를 처리 및 보유합니다.
+        </p>
+        <p>② 각각의 개인정보 처리 및 보유 기간은 다음과 같습니다.</p>
+        <table class="legal-table">
+          <thead>
+            <tr>
+              <th>항목</th>
+              <th>보존 이유</th>
+              <th>보존 기간</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>회원가입 정보</td>
+              <td>부정가입, 징계기록 등 비정상 서비스 이용 방지</td>
+              <td>회원탈퇴일로부터 2년</td>
+            </tr>
+            <tr>
+              <td>고객문의 정보</td>
+              <td>고객 요청 사항에 대한 피드백 모니터링</td>
+              <td>3년</td>
+            </tr>
+            <tr>
+              <td>웹사이트 방문기록</td>
+              <td>서비스 이용 혼선 방지, 수사협조</td>
+              <td>3개월</td>
+            </tr>
+            <tr>
+              <td>메일 발송기록</td>
+              <td>비정상 서비스 이용 증적 확보</td>
+              <td>6개월</td>
+            </tr>
+            <tr>
+              <td>계약/청약철회 기록</td>
+              <td>전자상거래법</td>
+              <td>5년</td>
+            </tr>
+            <tr>
+              <td>대금결제/재화공급 기록</td>
+              <td>전자상거래법</td>
+              <td>5년</td>
+            </tr>
+            <tr>
+              <td>소비자 불만/분쟁처리 기록</td>
+              <td>전자상거래법</td>
+              <td>3년</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="legal-section">
+        <h2>6. 이용자 및 법정대리인의 권리와 그 행사방법</h2>
+        <p>
+          ① 정보주체는 회사에 대해 언제든지 다음 각 호의 개인정보 보호 관련
+          권리를 행사할 수 있습니다.
+        </p>
+        <ul>
+          <li>개인정보 열람 요구</li>
+          <li>오류 등이 있을 경우 정정 요구</li>
+          <li>삭제 요구</li>
+          <li>처리정지 요구</li>
+        </ul>
+        <p>
+          ② 권리 행사는 서면, 전화, 전자우편, 모사전송(FAX) 등을 통하여 하실 수
+          있으며 회사는 이에 대해 지체 없이 조치하겠습니다.
+        </p>
+        <p>
+          ③ 정보주체가 개인정보의 오류 등에 대한 정정 또는 삭제를 요구한 경우,
+          회사는 정정 또는 삭제를 완료할 때까지 당해 개인정보를 이용하거나
+          제공하지 않습니다.
+        </p>
+        <p>
+          ④ 권리 행사는 정보주체의 법정대리인이나 위임을 받은 자 등 대리인을
+          통하여 하실 수 있습니다.
+        </p>
+        <p>
+          ⑤ 정보주체는 개인정보보호법 등 관계법령을 위반하여 회사가 처리하고
+          있는 정보주체 본인이나 타인의 개인정보 및 사생활을 침해하여서는 아니
+          됩니다.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>7. 개인정보 자동수집 장치의 설치/운영 및 거부에 관한 사항</h2>
+        <p>
+          ① 회사는 개인화되고 맞춤화된 서비스를 제공하기 위해서 이용자의 정보를
+          저장하고 수시로 불러오는 '쿠키(cookie)'를 사용합니다. 쿠키는
+          웹사이트를 운영하는데 이용되는 서버가 이용자의 브라우저에게 보내는
+          아주 작은 텍스트 파일로 이용자 컴퓨터의 하드디스크에 저장됩니다.
+        </p>
+        <p>
+          ② 회사는 이용자들이 방문한 각 서비스와 웹 사이트들에 대한 접속 및
+          이용형태, 보안접속 여부, 이용자 규모 등을 파악하여 이용자에게 최적화된
+          맞춤형 정보를 제공하기 위해 쿠키를 사용합니다.
+        </p>
+        <p>
+          ③ 이용자는 쿠키 설치에 대한 선택권을 가지고 있습니다. 웹 브라우저에서
+          옵션을 설정함으로써 모든 쿠키를 허용하거나, 쿠키가 저장될 때마다
+          확인을 거치거나, 모든 쿠키의 저장을 거부할 수 있습니다. 다만, 쿠키
+          설치를 거부하였을 경우 서비스 제공에 어려움이 있을 수 있습니다.
+        </p>
+      </section>
+
+      <section class="legal-section">
+        <h2>8. 개인정보 파기절차 및 방법</h2>
+        <p>
+          회사는 이용자의 개인정보를 원칙적으로 수집 및 이용목적이 달성되면 지체
+          없이 파기합니다.
+        </p>
+        <ul>
+          <li>
+            ① 파기절차: 이용자가 입력한 정보는 목적 달성 후 지체없이 파기되며,
+            관련 법령에 따라 보관되어야 할 경우 별도의 DB에 옮겨져 일정기간
+            저장된 후 파기됩니다.
+          </li>
+          <li>
+            ② 파기기한: 개인정보의 보유기간이 경과된 경우, 처리 목적 달성, 해당
+            서비스의 폐지, 사업의 종료 등 그 개인정보가 불필요하게 되었을 때에는
+            지체 없이 파기합니다.
+          </li>
+          <li>
+            ③ 파기방법: 종이 출력물은 분쇄기로 분쇄하거나 소각, 전자적 파일은
+            기록을 재생할 수 없는 기술적 방법을 사용합니다.
+          </li>
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>9. 개인정보의 안전성 확보 조치</h2>
+        <ul>
+          <li>① 정기적인 자체 감사 실시</li>
+          <li>② 내부관리계획의 수립 및 시행</li>
+          <li>
+            ③ 개인정보의 암호화: 법에서 요구하는 중요 개인정보는 암호화 되어
+            저장 및 관리
+          </li>
+          <li>
+            ④ 해킹 등에 대비한 기술적 대책: 보안프로그램 설치, 주기적 갱신/점검,
+            외부 접근 통제
+          </li>
+          <li>
+            ⑤ 개인정보에 대한 접근 제한: 데이터베이스시스템 접근권한 관리,
+            침입차단시스템 운영
+          </li>
+          <li>⑥ 접속기록의 보관 및 위변조 방지: 최소 6개월 이상 보관</li>
+          <li>⑦ 문서보안을 위한 잠금 장치 사용</li>
+          <li>⑧ 비인가자에 대한 출입 통제</li>
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>10. 개인정보 관리책임자 및 담당자의 연락처</h2>
+        <table class="legal-table">
+          <tbody>
+            <tr>
+              <th>이름</th>
+              <td>홍유진</td>
+            </tr>
+            <tr>
+              <th>소속/지위</th>
+              <td>대표</td>
+            </tr>
+            <tr>
+              <th>전화번호</th>
+              <td>1800-8194</td>
+            </tr>
+            <tr>
+              <th>E-mail</th>
+              <td>noblehong1004@naver.com</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="margin-top: 16px">
+          기타 개인정보 침해에 대한 신고나 상담이 필요하신 경우:
+        </p>
+        <ul>
+          <li>개인정보 침해 신고센터 (www.118.or.kr / 118)</li>
+          <li>대검찰청 첨단범죄수사과 (www.spo.go.kr / 02-3480-2000)</li>
+          <li>경찰청 사이버테러대응센터 (www.ctrc.go.kr / 02-392-0330)</li>
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>11. 개인정보 취급(처리)방침 변경</h2>
+        <p>
+          이 개인정보 취급(처리)방침은 시행일로부터 적용되며, 법령 및 방침에
+          따른 변경내용의 추가, 삭제 및 정정이 있는 경우에는 공지하겠습니다.
+        </p>
+      </section>
+
+      <section class="legal-section" id="legal-liability">
+        <h2>12. 허위 · 타인사칭 접수에 대한 법적 책임</h2>
+        <p>
+          회사는 허위 정보 또는 타인의 개인정보를 도용하여 상담 신청이
+          이루어지는 경우, 대한민국 국내 법령에 의거하여 민사 및 형사상 책임을
+          물을 수 있으며, 수사기관 등의 적법한 요청에 적극 협조합니다.
+        </p>
+
+        <p><strong>① 민사상 책임</strong></p>
+        <ul>
+          <li>
+            <strong>민법 제750조(불법행위의 내용)</strong> — 고의 또는 과실로
+            인한 위법행위로 타인에게 손해를 가한 자는 그 손해를 배상할 책임이
+            있습니다. 타인사칭 또는 허위 정보 제공으로 상담 업무 수행 및 정당한
+            서비스 제공에 지장을 초래한 경우 손해배상 청구의 대상이 됩니다.
+          </li>
+        </ul>
+
+        <p><strong>② 형사상 책임</strong></p>
+        <ul>
+          <li>
+            <strong>형법 제314조(업무방해)</strong> — 허위의 사실을 유포하거나
+            위계로써 사람의 업무를 방해한 자는 5년 이하의 징역 또는 1천500만원
+            이하의 벌금에 처합니다.
+          </li>
+          <li>
+            <strong>형법 제347조의2(컴퓨터등 사용사기)</strong> — 컴퓨터 등
+            정보처리장치에 허위의 정보 또는 부정한 명령을 입력하여 재산상의
+            이익을 취득한 자 또는 제3자로 하여금 취득하게 한 자는 10년 이하의
+            징역 또는 2천만원 이하의 벌금에 처합니다.
+          </li>
+          <li>
+            <strong
+              >정보통신망 이용촉진 및 정보보호 등에 관한 법률 제49조 ·
+              제71조</strong
+            >
+            — 정당한 접근권한 없이 또는 허용된 접근권한을 넘어 타인의 정보를
+            훼손·침해·도용한 자는 5년 이하의 징역 또는 5천만원 이하의 벌금에
+            처합니다.
+          </li>
+          <li>
+            <strong>개인정보 보호법 제71조(벌칙)</strong> — 정보주체의 동의를
+            받지 아니하고 개인정보를 제3자에게 제공한 자 및 그 사정을 알면서도
+            영리 또는 부정한 목적으로 제공받은 자는 5년 이하의 징역 또는 5천만원
+            이하의 벌금에 처합니다.
+          </li>
+          <li>
+            <strong>주민등록법 제37조(벌칙)</strong> — 다른 사람의 주민등록번호
+            등을 부정 사용한 자는 3년 이하의 징역 또는 3천만원 이하의 벌금에
+            처합니다.
+          </li>
+        </ul>
+
+        <p><strong>③ 접수자 정보 기록 · 보관</strong></p>
+        <p>
+          회사는 상담 신청 접수 시 접수자의 IP 주소, 접수 일시, 브라우저
+          정보(User-Agent), 유입 경로(Referrer) 등을 별도로 기록·보관하며, 위법
+          행위가 확인될 경우 수사기관 등의 적법한 요청에 따라 제공될 수
+          있습니다.
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-gold-line"></div>
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">
+            <img
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+              alt="Noble HONG"
+            />
+          </div>
+          <div class="footer-info">
+            (주)노블홍 결혼정보회사 &middot; 대표 홍유진<br />
+            서울시 강남구 강남대로 354 혜천빌딩 705, 706<br />
+            사업자등록번호 321-81-03029 &middot; 국내결혼중개업
+            서울-강남-국내-22-0012호<br />
+            대표전화 1800-8194
+          </div>
+          <div
+            style="
+              margin-top: 16px;
+              padding-top: 12px;
+              border-top: 1px solid var(--border);
+              font-size: 12px;
+              color: #8c8070;
+            "
+          >
+            <span>&copy; 2026 Noble Hong. All rights reserved.</span>
+            <span style="margin-left: 16px"
+              >Designed by
+              <a
+                href="https://polarad.co.kr"
+                target="_blank"
+                rel="noopener"
+                style="color: var(--gold); text-decoration: none"
+                >POLA</a
+              ></span
+            >
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="/privacy" class="active">개인정보처리방침</a>
+          <a href="/terms">이용약관</a>
+          <a href="/damages">손해배상절차</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const gnb = document.getElementById("gnb");
+      window.addEventListener("scroll", () => {
+        gnb.classList.toggle("scrolled", window.scrollY > 40);
+      });
+    </script>
+      <!-- GNB_ACTIVE_JS -->
+    <script>
+      (function () {
+        var pathname = location.pathname.replace(/\/$/, "");
+        var segment = pathname.split("/").pop() || "index";
+        segment = segment.replace(/\.html$/, "");
+        if (pathname === "" || pathname === "/") segment = "index";
+        document.querySelectorAll(".gnb-menu a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          var hrefSeg = href.split("#")[0].split("?")[0].split("/").pop().replace(/\.html$/, "");
+          if (hrefSeg === "" && href.indexOf("/") === 0) hrefSeg = "index";
+          if (hrefSeg === segment) a.classList.add("active");
+        });
+      })();
+    </script>
+  </body>
+</html>

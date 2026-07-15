@@ -1,0 +1,1113 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>매칭라운지 — 매거진 복합 UI 5안 (와이어프레임)</title>
+    <style>
+      :root {
+        --gold: #b89a5a;
+        --gold-dark: #8c7030;
+        --gold-light: #d4b870;
+        --espresso: #2a1d0a;
+        --ivory: #f4e8c8;
+        --ivory-soft: #faf3df;
+        --text: #2c2820;
+        --text-muted: #6e604a;
+        --text-secondary: #5c5040;
+        --bg: #fbf7ec;
+        --card: #ffffff;
+        --border: #e8dcb8;
+        --shadow: 0 4px 14px rgba(42, 29, 10, 0.08);
+        --yt-red: #ff0000;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: #1a1410;
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Pretendard",
+          system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .review-wrap {
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 32px 16px 80px;
+      }
+      .review-head {
+        text-align: center;
+        color: #f1e4c2;
+        margin-bottom: 36px;
+      }
+      .review-head h1 {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .review-head p {
+        margin-top: 8px;
+        font-size: 13px;
+        color: rgba(241, 228, 194, 0.65);
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 18px;
+      }
+      @media (max-width: 1280px) {
+        .options {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .options {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .options {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .option-label {
+        text-align: center;
+        color: #f1e4c2;
+      }
+      .option-label .tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .option-label h2 {
+        font-size: 16px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .option-label .sub {
+        font-size: 11px;
+        color: rgba(241, 228, 194, 0.6);
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+
+      .phone {
+        width: 360px;
+        max-width: 100%;
+        height: 720px;
+        background: var(--bg);
+        border: 12px solid #0c0905;
+        border-radius: 36px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 2px rgba(184, 154, 90, 0.3),
+          0 16px 40px rgba(0, 0, 0, 0.4);
+      }
+      .phone-inner {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: linear-gradient(180deg, #fbf7ec 0%, #f4e8c8 100%);
+        scrollbar-width: thin;
+      }
+      .phone-inner::-webkit-scrollbar {
+        width: 4px;
+      }
+      .phone-inner::-webkit-scrollbar-thumb {
+        background: rgba(140, 112, 48, 0.3);
+        border-radius: 2px;
+      }
+
+      .head {
+        padding: 16px 18px 6px;
+      }
+      .eyebrow {
+        font-size: 10.5px;
+        letter-spacing: 2px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .head h2 {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--espresso);
+        line-height: 1.2;
+        margin-top: 6px;
+      }
+      .head h2 strong {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* 공통 — 컨텐츠 type 라벨 */
+      .ctype {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 7px;
+        border-radius: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .ctype-video {
+        background: var(--yt-red);
+        color: #fff;
+      }
+      .ctype-shorts {
+        background: linear-gradient(135deg, #ff0000, #ff8800);
+        color: #fff;
+      }
+      .ctype-news {
+        background: rgba(184, 154, 90, 0.18);
+        color: var(--gold-dark);
+      }
+      .ctype-event {
+        background: rgba(184, 65, 65, 0.15);
+        color: #b04545;
+      }
+
+      .play-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.65);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .play-icon::after {
+        content: "";
+        width: 0;
+        height: 0;
+        border-left: 10px solid #fff;
+        border-top: 6px solid transparent;
+        border-bottom: 6px solid transparent;
+        margin-left: 3px;
+      }
+
+      /* ─────────────────────────────────────
+         A안 — Tabbed Magazine (탭 통합)
+      ───────────────────────────────────── */
+      .a-tabs {
+        display: flex;
+        gap: 6px;
+        padding: 6px 14px 12px;
+      }
+      .a-tab {
+        flex: 1;
+        padding: 7px 8px;
+        text-align: center;
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--text-muted);
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .a-tab.active {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        border-color: var(--gold);
+        color: var(--espresso);
+      }
+      .a-content {
+        padding: 0 14px 12px;
+      }
+      .a-video {
+        width: 100%;
+        aspect-ratio: 16/9;
+        border-radius: 12px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #2c2820, #5c5040);
+        position: relative;
+        margin-bottom: 8px;
+      }
+      .a-video::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          transparent 50%,
+          rgba(0, 0, 0, 0.55)
+        );
+      }
+      .a-video-meta {
+        position: absolute;
+        bottom: 10px;
+        left: 14px;
+        z-index: 2;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .a-video-meta .ctype {
+        margin-bottom: 4px;
+      }
+      .a-mini-row {
+        display: flex;
+        gap: 6px;
+        margin-top: 4px;
+      }
+      .a-mini {
+        flex: 1;
+        aspect-ratio: 16/9;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #d4bd7a, #b89a5a);
+        position: relative;
+      }
+
+      /* ─────────────────────────────────────
+         B안 — Vertical Stack (영상→쇼츠→소식)
+      ───────────────────────────────────── */
+      .b-block {
+        padding: 0 14px 14px;
+      }
+      .b-block + .b-block {
+        padding-top: 4px;
+      }
+      .b-block-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 8px;
+      }
+      .b-block-head h3 {
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--gold-dark);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .b-block-head .more {
+        font-size: 10.5px;
+        font-weight: 700;
+        color: var(--gold);
+      }
+      .b-video {
+        width: 100%;
+        aspect-ratio: 16/9;
+        border-radius: 12px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #2c2820, #5c5040);
+        position: relative;
+      }
+      .b-video::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          transparent 50%,
+          rgba(0, 0, 0, 0.55)
+        );
+      }
+      .b-video-title {
+        position: absolute;
+        bottom: 10px;
+        left: 14px;
+        right: 14px;
+        z-index: 2;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.3;
+      }
+      .b-shorts-row {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+      .b-shorts-row::-webkit-scrollbar {
+        display: none;
+      }
+      .b-short {
+        flex: 0 0 64px;
+        aspect-ratio: 9/16;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #ff0000, #cc0000);
+        position: relative;
+        overflow: hidden;
+      }
+      .b-short::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.2);
+      }
+      .b-news-list {
+      }
+      .b-news-item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 8px;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(196, 165, 90, 0.12);
+        align-items: center;
+      }
+      .b-news-item:last-child {
+        border-bottom: none;
+      }
+      .b-news-num {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--gold-dark);
+        width: 18px;
+        text-align: center;
+      }
+      .b-news-title {
+        font-size: 12px;
+        color: var(--text);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .b-news-date {
+        font-size: 10px;
+        color: var(--text-muted);
+      }
+
+      /* ─────────────────────────────────────
+         C안 — Mixed Carousel (3종 한 줄에 섞임)
+      ───────────────────────────────────── */
+      .c-cards-wrap {
+        display: flex;
+        gap: 10px;
+        padding: 6px 9% 14px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+      }
+      .c-cards-wrap::-webkit-scrollbar {
+        display: none;
+      }
+      .c-card {
+        flex: 0 0 82%;
+        scroll-snap-align: center;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px;
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .c-card.video-card {
+        padding: 0;
+        overflow: hidden;
+      }
+      .c-video-thumb {
+        width: 100%;
+        aspect-ratio: 16/9;
+        background: linear-gradient(135deg, #2c2820, #5c5040);
+        position: relative;
+      }
+      .c-card-body {
+        padding: 12px 14px;
+      }
+      .c-card-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 10.5px;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+      }
+      .c-card h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.4;
+        word-break: keep-all;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .c-shorts-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+      .c-short-mini {
+        aspect-ratio: 9/16;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #ff0000, #cc0000);
+        position: relative;
+        overflow: hidden;
+      }
+      .c-news-mini {
+        padding: 10px 0;
+      }
+      .c-news-mini-item {
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(196, 165, 90, 0.12);
+        font-size: 12px;
+        color: var(--text);
+      }
+      .c-news-mini-item:last-child {
+        border-bottom: none;
+      }
+      .c-progress {
+        display: flex;
+        gap: 4px;
+        padding: 0 18px;
+        max-width: 220px;
+        margin: 4px auto 0;
+      }
+      .c-progress .seg {
+        flex: 1;
+        height: 3px;
+        background: rgba(140, 112, 48, 0.22);
+        border-radius: 2px;
+      }
+      .c-progress .seg.active {
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+
+      /* ─────────────────────────────────────
+         D안 — Bento Grid (영상/쇼츠/소식 다양한 사이즈)
+      ───────────────────────────────────── */
+      .d-grid {
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(2, 1fr);
+        padding: 6px 14px 14px;
+      }
+      .d-tile {
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--card);
+        border: 1px solid var(--border);
+        position: relative;
+      }
+      .d-tile.tile-hero {
+        grid-column: 1 / -1;
+        aspect-ratio: 16/9;
+        background: linear-gradient(135deg, #2c2820, #5c5040);
+      }
+      .d-tile.tile-short {
+        aspect-ratio: 9/16;
+        background: linear-gradient(135deg, #ff0000, #cc0000);
+      }
+      .d-tile.tile-news {
+        padding: 12px 14px;
+        grid-column: 1 / -1;
+        background: var(--ivory-soft);
+      }
+      .d-tile.tile-news h5 {
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--gold-dark);
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+      }
+      .d-news-row {
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(196, 165, 90, 0.15);
+        font-size: 12px;
+        color: var(--text);
+        display: flex;
+        justify-content: space-between;
+      }
+      .d-news-row:last-child {
+        border-bottom: none;
+      }
+      .d-tile-body {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 10px 12px;
+        background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7));
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.3;
+      }
+      .d-tile-tag {
+        position: absolute;
+        top: 8px;
+        left: 10px;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+
+      /* ─────────────────────────────────────
+         E안 — Instagram Feed (세로 통합 피드)
+      ───────────────────────────────────── */
+      .e-feed {
+        padding: 6px 0 14px;
+      }
+      .e-card {
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        padding: 10px 14px 12px;
+      }
+      .e-card-head {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 8px;
+      }
+      .e-card-source {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--gold-dark);
+      }
+      .e-card-date {
+        font-size: 10px;
+        color: var(--text-muted);
+        margin-left: auto;
+      }
+      .e-card.video .e-media {
+        width: 100%;
+        aspect-ratio: 16/9;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #2c2820, #5c5040);
+        position: relative;
+        overflow: hidden;
+      }
+      .e-card.shorts .e-media-row {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .e-card.shorts .e-media-row::-webkit-scrollbar {
+        display: none;
+      }
+      .e-card.shorts .e-short {
+        flex: 0 0 90px;
+        aspect-ratio: 9/16;
+        border-radius: 6px;
+        background: linear-gradient(135deg, #ff0000, #cc0000);
+        position: relative;
+      }
+      .e-card-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.4;
+        margin-top: 8px;
+        word-break: keep-all;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .e-card.news .e-card-title {
+        margin-top: 0;
+      }
+
+      /* 비교 표 */
+      .compare {
+        margin: 56px auto 0;
+        max-width: 1400px;
+        background: rgba(241, 228, 194, 0.08);
+        border: 1px solid rgba(241, 228, 194, 0.2);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .compare h3 {
+        padding: 16px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #f1e4c2;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.15);
+        background: rgba(241, 228, 194, 0.04);
+      }
+      .compare table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #e3d8b6;
+        font-size: 12px;
+      }
+      .compare th,
+      .compare td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.07);
+        vertical-align: top;
+      }
+      .compare th {
+        background: rgba(241, 228, 194, 0.04);
+        color: #f1e4c2;
+        font-weight: 700;
+        font-size: 11px;
+      }
+      .compare tr:last-child td {
+        border-bottom: none;
+      }
+      .compare .ok {
+        color: #c4a55a;
+      }
+      .compare .warn {
+        color: #d68a5a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-wrap">
+      <div class="review-head">
+        <h1>매칭라운지 — 매거진 복합 UI 5안 (영상 + 쇼츠 + 소식)</h1>
+        <p>
+          360px 폰 viewport · 3 컨텐츠(YouTube 영상 / Shorts / 노블홍 소식)를 한
+          섹션에 압축하는 패턴
+        </p>
+      </div>
+
+      <div class="options">
+        <!-- ============ A안 — Tabbed Magazine ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">A</span>
+            <h2>Tabbed Magazine</h2>
+            <p class="sub">탭 전환 — 한 번에 1개 컨텐츠 종류</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head">
+                <div class="eyebrow">Latest Contents</div>
+                <h2>노블홍의 <strong>최신 콘텐츠</strong></h2>
+              </div>
+              <div class="a-tabs">
+                <div class="a-tab active">전체</div>
+                <div class="a-tab">영상</div>
+                <div class="a-tab">쇼츠</div>
+                <div class="a-tab">소식</div>
+              </div>
+              <div class="a-content">
+                <div class="a-video">
+                  <div class="play-icon"></div>
+                  <div class="a-video-meta">
+                    <span class="ctype ctype-video">▶ Video</span>
+                    <div>30년 매칭 노하우</div>
+                  </div>
+                </div>
+                <div class="a-mini-row">
+                  <div class="a-mini"></div>
+                  <div class="a-mini"></div>
+                  <div class="a-mini"></div>
+                </div>
+              </div>
+              <div style="padding: 0 14px">
+                <div
+                  style="
+                    font-size: 11px;
+                    color: var(--text-muted);
+                    text-align: center;
+                    opacity: 0.6;
+                    margin-bottom: 6px;
+                  "
+                >
+                  ↑ 영상 탭 활성
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ B안 — Vertical Stack ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">B</span>
+            <h2>Vertical Stack</h2>
+            <p class="sub">영상 → 쇼츠 → 소식 순 컴팩트 stack</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head">
+                <div class="eyebrow">Latest Contents</div>
+                <h2>노블홍의 <strong>최신 콘텐츠</strong></h2>
+              </div>
+              <div class="b-block">
+                <div class="b-block-head">
+                  <h3><span class="ctype ctype-video">▶ 영상</span></h3>
+                  <span class="more">전체 ›</span>
+                </div>
+                <div class="b-video">
+                  <div class="play-icon"></div>
+                  <div class="b-video-title">
+                    30년 매칭 노하우 · 홍유진 대표 인터뷰
+                  </div>
+                </div>
+              </div>
+              <div class="b-block">
+                <div class="b-block-head">
+                  <h3><span class="ctype ctype-shorts">⚡ 쇼츠</span></h3>
+                  <span class="more">전체 ›</span>
+                </div>
+                <div class="b-shorts-row">
+                  <div class="b-short"></div>
+                  <div class="b-short"></div>
+                  <div class="b-short"></div>
+                  <div class="b-short"></div>
+                </div>
+              </div>
+              <div class="b-block">
+                <div class="b-block-head">
+                  <h3>📰 노블홍 소식</h3>
+                  <span class="more">전체 ›</span>
+                </div>
+                <div class="b-news-list">
+                  <div class="b-news-item">
+                    <div class="b-news-num">01</div>
+                    <div class="b-news-title">2026년 봄 노블레스 파티</div>
+                    <div class="b-news-date">04.20</div>
+                  </div>
+                  <div class="b-news-item">
+                    <div class="b-news-num">02</div>
+                    <div class="b-news-title">홍유진 대표 매경 인터뷰</div>
+                    <div class="b-news-date">04.18</div>
+                  </div>
+                  <div class="b-news-item">
+                    <div class="b-news-num">03</div>
+                    <div class="b-news-title">5월 회원 신청 일정 안내</div>
+                    <div class="b-news-date">04.15</div>
+                  </div>
+                  <div class="b-news-item">
+                    <div class="b-news-num">04</div>
+                    <div class="b-news-title">조선일보 결혼 트렌드 기고</div>
+                    <div class="b-news-date">04.12</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ C안 — Mixed Carousel ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">C</span>
+            <h2>Mixed Carousel</h2>
+            <p class="sub">3종 컨텐츠 섞어서 좌우 슬라이드</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head">
+                <div class="eyebrow">Latest Contents</div>
+                <h2>노블홍의 <strong>최신 콘텐츠</strong></h2>
+              </div>
+              <div class="c-cards-wrap">
+                <div class="c-card video-card">
+                  <div class="c-video-thumb"><div class="play-icon"></div></div>
+                  <div class="c-card-body">
+                    <div class="c-card-meta">
+                      <span class="ctype ctype-video">▶ Video</span
+                      ><span>04.20</span>
+                    </div>
+                    <h4>30년 매칭 노하우 · 홍유진 대표 인터뷰</h4>
+                  </div>
+                </div>
+                <div class="c-card">
+                  <div class="c-card-meta">
+                    <span class="ctype ctype-shorts">⚡ Shorts</span
+                    ><span>최신 6개</span>
+                  </div>
+                  <div class="c-shorts-grid">
+                    <div class="c-short-mini"></div>
+                    <div class="c-short-mini"></div>
+                  </div>
+                  <h4
+                    style="
+                      margin-top: 6px;
+                      font-size: 12px;
+                      color: var(--text-muted);
+                      font-weight: 600;
+                    "
+                  >
+                    짧게 보는 결혼 이야기
+                  </h4>
+                </div>
+                <div class="c-card">
+                  <div class="c-card-meta">
+                    <span class="ctype ctype-news">📰 News</span
+                    ><span>최신 16개</span>
+                  </div>
+                  <div class="c-news-mini">
+                    <div class="c-news-mini-item">
+                      01 · 2026 봄 노블레스 파티
+                    </div>
+                    <div class="c-news-mini-item">02 · 매경 인터뷰</div>
+                    <div class="c-news-mini-item">03 · 5월 회원 신청</div>
+                  </div>
+                </div>
+              </div>
+              <div class="c-progress">
+                <div class="seg active"></div>
+                <div class="seg"></div>
+                <div class="seg"></div>
+              </div>
+              <div
+                style="
+                  text-align: center;
+                  font-size: 10px;
+                  color: var(--text-muted);
+                  margin: 6px 0;
+                  opacity: 0.6;
+                "
+              >
+                1 / 3 · 좌우 스와이프
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ D안 — Bento Grid ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">D</span>
+            <h2>Bento Grid</h2>
+            <p class="sub">큰 영상 + 쇼츠 2 + 소식 → 모자이크</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head">
+                <div class="eyebrow">Latest Contents</div>
+                <h2>노블홍의 <strong>최신 콘텐츠</strong></h2>
+              </div>
+              <div class="d-grid">
+                <div class="d-tile tile-hero">
+                  <span class="d-tile-tag ctype ctype-video">Video</span>
+                  <div class="play-icon"></div>
+                  <div class="d-tile-body">
+                    30년 매칭 노하우 · 홍유진 대표 인터뷰
+                  </div>
+                </div>
+                <div class="d-tile tile-short">
+                  <span class="d-tile-tag ctype ctype-shorts">Short</span>
+                </div>
+                <div class="d-tile tile-short">
+                  <span class="d-tile-tag ctype ctype-shorts">Short</span>
+                </div>
+                <div class="d-tile tile-news">
+                  <h5>📰 노블홍 소식</h5>
+                  <div class="d-news-row">
+                    <span>2026 봄 노블레스 파티</span
+                    ><span style="color: var(--text-muted); font-size: 10px"
+                      >04.20</span
+                    >
+                  </div>
+                  <div class="d-news-row">
+                    <span>매경 인터뷰</span
+                    ><span style="color: var(--text-muted); font-size: 10px"
+                      >04.18</span
+                    >
+                  </div>
+                  <div class="d-news-row">
+                    <span>5월 회원 신청 안내</span
+                    ><span style="color: var(--text-muted); font-size: 10px"
+                      >04.15</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ E안 — Instagram Feed ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">E</span>
+            <h2>Instagram Feed</h2>
+            <p class="sub">3종 컨텐츠가 시간순 세로 피드 (인스타 패턴)</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head">
+                <div class="eyebrow">Latest Contents</div>
+                <h2>노블홍의 <strong>최신 콘텐츠</strong></h2>
+              </div>
+              <div class="e-feed">
+                <div class="e-card video">
+                  <div class="e-card-head">
+                    <span class="ctype ctype-video">▶ Video</span
+                    ><span class="e-card-source">노블홍 YouTube</span
+                    ><span class="e-card-date">2시간 전</span>
+                  </div>
+                  <div class="e-media"><div class="play-icon"></div></div>
+                  <div class="e-card-title">
+                    30년 매칭 노하우 · 홍유진 대표 인터뷰
+                  </div>
+                </div>
+                <div class="e-card shorts">
+                  <div class="e-card-head">
+                    <span class="ctype ctype-shorts">⚡ Shorts</span
+                    ><span class="e-card-source">짧게 보는 결혼 이야기</span
+                    ><span class="e-card-date">5시간 전</span>
+                  </div>
+                  <div class="e-media-row">
+                    <div class="e-short"></div>
+                    <div class="e-short"></div>
+                    <div class="e-short"></div>
+                  </div>
+                </div>
+                <div class="e-card news">
+                  <div class="e-card-head">
+                    <span class="ctype ctype-news">📰 News</span
+                    ><span class="e-card-source">노블홍 소식</span
+                    ><span class="e-card-date">1일 전</span>
+                  </div>
+                  <div class="e-card-title">
+                    2026년 봄 노블레스 파티 모집 · 4/30까지 신청 가능
+                  </div>
+                </div>
+                <div class="e-card news">
+                  <div class="e-card-head">
+                    <span class="ctype ctype-event">🎉 이벤트</span
+                    ><span class="e-card-source">노블홍 소식</span
+                    ><span class="e-card-date">2일 전</span>
+                  </div>
+                  <div class="e-card-title">의사 전용 매칭 파티 후기</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 비교 표 -->
+      <div class="compare">
+        <h3>5안 비교 — 영상 + 쇼츠 + 소식 통합 처리</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 11%">기준</th>
+              <th>A · Tabbed Magazine</th>
+              <th>B · Vertical Stack</th>
+              <th>C · Mixed Carousel</th>
+              <th>D · Bento Grid</th>
+              <th>E · Instagram Feed</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>화면 차지</td>
+              <td class="ok">★★★★★ 가장 작음 (~330px)</td>
+              <td>~600px</td>
+              <td class="ok">★★★★ ~280px</td>
+              <td class="ok">~520px</td>
+              <td class="warn">~700px+</td>
+            </tr>
+            <tr>
+              <td>한 화면 인지성</td>
+              <td class="warn">1개 종류만</td>
+              <td class="ok">3개 종류 모두 노출</td>
+              <td class="ok">3개 종류 (스와이프 후)</td>
+              <td class="ok">★ 3개 종류 한 화면</td>
+              <td>스크롤 시 노출</td>
+            </tr>
+            <tr>
+              <td>컨텐츠 다양성 강조</td>
+              <td>★★ (한 종류씩)</td>
+              <td class="ok">★★★★ 명확 분리</td>
+              <td class="ok">★★★★ 카드별 분리</td>
+              <td class="ok">★★★★★ 비주얼 임팩트</td>
+              <td class="ok">★★★★★ 시간순 자연스러움</td>
+            </tr>
+            <tr>
+              <td>인터랙션</td>
+              <td>탭</td>
+              <td class="ok">스크롤만</td>
+              <td>좌우 스와이프</td>
+              <td class="ok">스크롤만</td>
+              <td class="ok">스크롤만</td>
+            </tr>
+            <tr>
+              <td>전문직/럭셔리 톤</td>
+              <td>★★★ 평이</td>
+              <td class="ok">★★★★ 클래식 매거진</td>
+              <td class="ok">★★★★ 모던</td>
+              <td class="ok">★★★★★ 트렌디 매거진</td>
+              <td>★★★ 친근 (SNS 톤)</td>
+            </tr>
+            <tr>
+              <td>구현 비용</td>
+              <td>중간 (탭 JS)</td>
+              <td class="ok">낮음</td>
+              <td>중간 (carousel)</td>
+              <td>낮음</td>
+              <td class="ok">낮음</td>
+            </tr>
+            <tr>
+              <td>비주얼 임팩트</td>
+              <td>★★★ 깔끔</td>
+              <td>★★★ 안정</td>
+              <td>★★★★</td>
+              <td class="ok">★★★★★ 가장 강렬</td>
+              <td>★★★ 정돈</td>
+            </tr>
+            <tr>
+              <td>다음 컨텐츠 도달</td>
+              <td class="ok">탭 전환만</td>
+              <td>스크롤 길음</td>
+              <td class="ok">★ 스와이프</td>
+              <td class="ok">한 화면</td>
+              <td class="warn">스크롤 매우 길음</td>
+            </tr>
+            <tr>
+              <td>모바일 표준 패턴</td>
+              <td>iOS Segmented Control</td>
+              <td class="ok">YouTube 홈</td>
+              <td class="ok">Apple News / 카카오</td>
+              <td class="ok">Apple Music / Bento Box</td>
+              <td class="ok">Instagram / TikTok</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1210 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>프로그램 안내 카드 — 모바일 5안 비교 (와이어프레임)</title>
+    <style>
+      :root {
+        --gold: #b89a5a;
+        --gold-dark: #8c7030;
+        --gold-light: #d4b870;
+        --espresso: #2a1d0a;
+        --ivory: #f4e8c8;
+        --ivory-soft: #faf3df;
+        --text: #2c2820;
+        --text-muted: #6e604a;
+        --text-secondary: #5c5040;
+        --bg: #fbf7ec;
+        --card: #ffffff;
+        --border: #e8dcb8;
+        --shadow: 0 4px 14px rgba(42, 29, 10, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: #1a1410;
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Pretendard",
+          system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+        text-size-adjust: 100%;
+      }
+
+      .review-wrap {
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 32px 16px 80px;
+      }
+      .review-head {
+        text-align: center;
+        color: #f1e4c2;
+        margin-bottom: 36px;
+      }
+      .review-head h1 {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .review-head p {
+        margin-top: 8px;
+        font-size: 13px;
+        color: rgba(241, 228, 194, 0.65);
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 20px;
+      }
+      @media (max-width: 1280px) {
+        .options {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .options {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .options {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .option-label {
+        text-align: center;
+        color: #f1e4c2;
+      }
+      .option-label .tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .option-label h2 {
+        font-size: 16px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .option-label .sub {
+        font-size: 11.5px;
+        color: rgba(241, 228, 194, 0.6);
+        margin-top: 4px;
+      }
+      .option-label .height-chip {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 2px 8px;
+        background: rgba(212, 184, 112, 0.15);
+        color: var(--gold-light);
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      .phone {
+        width: 360px;
+        max-width: 100%;
+        height: 720px;
+        background: #fbf7ec;
+        border: 12px solid #0c0905;
+        border-radius: 36px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 2px rgba(184, 154, 90, 0.3),
+          0 16px 40px rgba(0, 0, 0, 0.4);
+      }
+      .phone-inner {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: linear-gradient(180deg, #fbf7ec 0%, #f4e8c8 100%);
+        scrollbar-width: thin;
+        scrollbar-color: rgba(140, 112, 48, 0.3) transparent;
+      }
+      .phone-inner::-webkit-scrollbar {
+        width: 4px;
+      }
+      .phone-inner::-webkit-scrollbar-thumb {
+        background: rgba(140, 112, 48, 0.3);
+        border-radius: 2px;
+      }
+
+      .sec-pad {
+        padding: 22px 18px 14px;
+      }
+      .sec-eyebrow {
+        font-size: 10.5px;
+        letter-spacing: 2px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .sec-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--espresso);
+        line-height: 1.3;
+      }
+      .sec-title span {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .sec-desc {
+        font-size: 12.5px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        line-height: 1.6;
+        word-break: keep-all;
+      }
+
+      /* 공통 — 5등급 뱃지 */
+      .badges {
+        display: flex;
+        gap: 5px;
+        padding: 0 14px 12px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        scroll-snap-type: x mandatory;
+      }
+      .badges::-webkit-scrollbar {
+        display: none;
+      }
+      .badge {
+        flex: 0 0 auto;
+        padding: 6px 12px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--text-muted);
+        white-space: nowrap;
+        cursor: pointer;
+        scroll-snap-align: center;
+      }
+      .badge.active {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        border-color: var(--gold);
+        color: var(--espresso);
+      }
+
+      /* ========================================================
+         A안 — Compact Hero (히어로 압축)
+      ======================================================== */
+      .a-card {
+        margin: 0 18px 14px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+      .a-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+      .a-hero {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: end;
+        gap: 8px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .a-hero-left {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .a-brand {
+        font-size: 9.5px;
+        letter-spacing: 1.5px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .a-tier-en {
+        font-size: 10px;
+        color: var(--text-muted);
+        font-style: italic;
+        letter-spacing: 0.5px;
+      }
+      .a-tier-ko {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--espresso);
+        line-height: 1.1;
+        margin-top: 2px;
+        letter-spacing: -0.5px;
+      }
+      .a-hero-right {
+        text-align: right;
+      }
+      .a-price {
+        font-size: 22px;
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -1px;
+        line-height: 1;
+      }
+      .a-period {
+        font-size: 10px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .a-features {
+        padding: 10px 0 0;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .a-feature {
+        font-size: 11.5px;
+        color: var(--text-secondary);
+        display: flex;
+        gap: 6px;
+        align-items: flex-start;
+      }
+      .a-feature .ck {
+        color: var(--gold);
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .a-cta {
+        display: block;
+        margin-top: 12px;
+        padding: 11px;
+        text-align: center;
+        background: linear-gradient(135deg, var(--gold-dark), #6e5a24);
+        color: #fff;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      /* ========================================================
+         B안 — Collapsible Features (접힘식)
+      ======================================================== */
+      .b-card {
+        margin: 0 18px 14px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        position: relative;
+      }
+      .b-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+      .b-head {
+        padding: 16px 18px 14px;
+      }
+      .b-head-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 12px;
+      }
+      .b-head-left {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .b-head-right {
+        text-align: right;
+      }
+      .b-cta-row {
+        margin-top: 14px;
+      }
+      .b-cta {
+        display: block;
+        padding: 11px;
+        text-align: center;
+        background: linear-gradient(135deg, var(--gold-dark), #6e5a24);
+        color: #fff;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .b-toggle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 18px;
+        background: var(--ivory-soft);
+        border-top: 1px solid var(--border);
+        cursor: pointer;
+      }
+      .b-toggle .lbl {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--gold-dark);
+        letter-spacing: 0.5px;
+      }
+      .b-toggle .arrow {
+        color: var(--gold-dark);
+        font-size: 12px;
+        transition: transform 0.3s;
+      }
+      .b-card.open .b-toggle .arrow {
+        transform: rotate(180deg);
+      }
+      .b-body {
+        display: none;
+        padding: 14px 18px 18px;
+      }
+      .b-card.open .b-body {
+        display: block;
+      }
+      .b-body .row {
+        font-size: 12px;
+        color: var(--text-secondary);
+        padding: 5px 0;
+        display: flex;
+        gap: 6px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      }
+      .b-body .row:last-child {
+        border-bottom: none;
+      }
+      .b-body .ck {
+        color: var(--gold);
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      /* ========================================================
+         C안 — Two-Column Compact (2cols 유지)
+      ======================================================== */
+      .c-card {
+        margin: 0 18px 14px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px 14px;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 42% 1fr;
+        column-gap: 12px;
+      }
+      .c-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+      .c-left {
+        padding: 8px 4px 0 0;
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .c-brand {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .c-tier-en {
+        font-size: 10px;
+        color: var(--text-muted);
+        font-style: italic;
+      }
+      .c-tier-ko {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--espresso);
+        line-height: 1.1;
+        margin: 2px 0 6px;
+        letter-spacing: -0.5px;
+      }
+      .c-price {
+        font-size: 18px;
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.8px;
+        line-height: 1.1;
+      }
+      .c-period {
+        font-size: 9.5px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .c-cta {
+        display: block;
+        margin-top: 8px;
+        padding: 8px;
+        text-align: center;
+        background: linear-gradient(135deg, var(--gold-dark), #6e5a24);
+        color: #fff;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .c-right {
+        padding: 6px 0 0 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .c-features-title {
+        font-size: 10px;
+        letter-spacing: 1px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+      }
+      .c-feature {
+        font-size: 11px;
+        color: var(--text-secondary);
+        display: flex;
+        gap: 5px;
+        line-height: 1.4;
+      }
+      .c-feature .ck {
+        color: var(--gold);
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      /* ========================================================
+         D안 — Icon-Chip Features (아이콘 칩)
+      ======================================================== */
+      .d-card {
+        margin: 0 18px 14px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+      .d-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+      .d-row1 {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: end;
+        gap: 8px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .d-tier-ko {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--espresso);
+        letter-spacing: -0.5px;
+        line-height: 1.1;
+      }
+      .d-tier-en {
+        font-size: 10px;
+        color: var(--text-muted);
+        margin-top: 2px;
+        font-style: italic;
+      }
+      .d-price {
+        font-size: 20px;
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -1px;
+        line-height: 1;
+        text-align: right;
+      }
+      .d-period {
+        font-size: 10px;
+        color: var(--text-muted);
+        text-align: right;
+        margin-top: 2px;
+      }
+      .d-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        padding: 12px 0 12px;
+      }
+      .d-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 5px 10px;
+        background: var(--ivory);
+        border: 1px solid rgba(184, 154, 90, 0.3);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--gold-dark);
+      }
+      .d-chip .ic {
+        font-size: 10px;
+      }
+      .d-cta {
+        display: block;
+        padding: 11px;
+        text-align: center;
+        background: linear-gradient(135deg, var(--gold-dark), #6e5a24);
+        color: #fff;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .d-more {
+        display: inline-block;
+        margin-top: 8px;
+        font-size: 10.5px;
+        color: var(--gold-dark);
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      /* ========================================================
+         E안 — Stat Strip + Inline Features
+      ======================================================== */
+      .e-card {
+        margin: 0 18px 14px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px 18px;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+      .e-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+      .e-strip {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+        align-items: center;
+        padding: 10px;
+        background: var(--ivory-soft);
+        border-radius: 10px;
+        margin-bottom: 12px;
+      }
+      .e-strip-cell {
+        text-align: center;
+      }
+      .e-strip-cell .lbl {
+        font-size: 9px;
+        letter-spacing: 1px;
+        color: var(--gold-dark);
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      .e-strip-cell .val {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--espresso);
+        margin-top: 2px;
+        line-height: 1.1;
+      }
+      .e-strip-cell .val.gold {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .e-strip-cell .sub {
+        font-size: 9px;
+        color: var(--text-muted);
+        margin-top: 1px;
+      }
+      .e-strip-cell + .e-strip-cell {
+        border-left: 1px solid var(--border);
+      }
+      .e-features {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px 10px;
+        padding-bottom: 12px;
+      }
+      .e-feature {
+        font-size: 11px;
+        color: var(--text-secondary);
+        display: flex;
+        gap: 4px;
+        line-height: 1.4;
+      }
+      .e-feature .ck {
+        color: var(--gold);
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+      .e-cta {
+        display: block;
+        padding: 11px;
+        text-align: center;
+        background: linear-gradient(135deg, var(--gold-dark), #6e5a24);
+        color: #fff;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      /* 비교 표 */
+      .compare {
+        margin: 56px auto 0;
+        max-width: 1300px;
+        background: rgba(241, 228, 194, 0.08);
+        border: 1px solid rgba(241, 228, 194, 0.2);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .compare h3 {
+        padding: 16px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #f1e4c2;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.15);
+        background: rgba(241, 228, 194, 0.04);
+      }
+      .compare table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #e3d8b6;
+        font-size: 12px;
+      }
+      .compare th,
+      .compare td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.07);
+        vertical-align: top;
+      }
+      .compare th {
+        background: rgba(241, 228, 194, 0.04);
+        color: #f1e4c2;
+        font-weight: 700;
+        font-size: 11px;
+      }
+      .compare tr:last-child td {
+        border-bottom: none;
+      }
+      .compare .ok {
+        color: #c4a55a;
+      }
+      .compare .warn {
+        color: #d68a5a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-wrap">
+      <div class="review-head">
+        <h1>프로그램 안내 카드 — 모바일 5안 (세로 압축)</h1>
+        <p>
+          360px 모바일 viewport · 등급(모던) 1장 비교 · 데이터 동일 · 기존 카드
+          대비 세로 단축
+        </p>
+      </div>
+
+      <div class="options">
+        <!-- ============================================
+                  A안 — Compact Hero
+        ============================================ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">A</span>
+            <h2>Compact Hero</h2>
+            <p class="sub">등급+가격 좌우 헤더 + 5 features</p>
+            <span class="height-chip">~340px</span>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Program & Pricing</div>
+                <h2 class="sec-title">프로그램 <span>안내</span></h2>
+                <p class="sec-desc">맞춤 설계 · 무료 상담으로 시작하세요</p>
+              </div>
+              <div class="badges">
+                <div class="badge active">모던</div>
+                <div class="badge">클래식</div>
+                <div class="badge">노블레스</div>
+                <div class="badge">로얄</div>
+                <div class="badge">프리미엄</div>
+              </div>
+              <div class="a-card">
+                <div class="a-hero">
+                  <div class="a-hero-left">
+                    <div class="a-brand">Noble Hong</div>
+                    <div class="a-tier-en">Modern</div>
+                    <div class="a-tier-ko">모던</div>
+                  </div>
+                  <div class="a-hero-right">
+                    <div class="a-price">300만원</div>
+                    <div class="a-period">VAT 별도 / 1년</div>
+                  </div>
+                </div>
+                <div class="a-features">
+                  <div class="a-feature">
+                    <span class="ck">✓</span>전담 매니저 배정
+                  </div>
+                  <div class="a-feature">
+                    <span class="ck">✓</span>신원 검증 · 프로필 등록
+                  </div>
+                  <div class="a-feature">
+                    <span class="ck">✓</span>프로필 교환 후 만남 주선
+                  </div>
+                  <div class="a-feature">
+                    <span class="ck">✓</span>기본 교제 코칭
+                  </div>
+                  <div class="a-feature">
+                    <span class="ck">✓</span>12개월 계약
+                  </div>
+                </div>
+                <a href="#" class="a-cta">무료 상담 신청</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================
+                  B안 — Collapsible Features
+        ============================================ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">B</span>
+            <h2>Collapsible</h2>
+            <p class="sub">헤더 + features 접힘/펼침</p>
+            <span class="height-chip">~190px (접힘)</span>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Program & Pricing</div>
+                <h2 class="sec-title">프로그램 <span>안내</span></h2>
+                <p class="sec-desc">맞춤 설계 · 무료 상담으로 시작하세요</p>
+              </div>
+              <div class="badges">
+                <div class="badge active">모던</div>
+                <div class="badge">클래식</div>
+                <div class="badge">노블레스</div>
+                <div class="badge">로얄</div>
+                <div class="badge">프리미엄</div>
+              </div>
+              <div class="b-card">
+                <div class="b-head">
+                  <div class="b-head-row">
+                    <div class="b-head-left">
+                      <div class="a-brand">Noble Hong · Modern</div>
+                      <div class="a-tier-ko">모던</div>
+                    </div>
+                    <div class="b-head-right">
+                      <div class="a-price">300만원</div>
+                      <div class="a-period">VAT 별도 / 1년</div>
+                    </div>
+                  </div>
+                  <div class="b-cta-row">
+                    <a href="#" class="b-cta">무료 상담 신청</a>
+                  </div>
+                </div>
+                <div class="b-toggle" data-toggle="b">
+                  <span class="lbl">포함 사항 5가지</span>
+                  <span class="arrow">▾</span>
+                </div>
+                <div class="b-body">
+                  <div class="row">
+                    <span class="ck">✓</span>전담 매니저 배정
+                  </div>
+                  <div class="row">
+                    <span class="ck">✓</span>신원 검증 · 프로필 등록
+                  </div>
+                  <div class="row">
+                    <span class="ck">✓</span>프로필 교환 후 만남 주선
+                  </div>
+                  <div class="row"><span class="ck">✓</span>기본 교제 코칭</div>
+                  <div class="row"><span class="ck">✓</span>12개월 계약</div>
+                </div>
+              </div>
+              <div class="sec-pad" style="padding-top: 0; opacity: 0.6">
+                <p style="font-size: 11px">↑ 클릭하면 펼쳐집니다</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================
+                  C안 — Two-Column Compact
+        ============================================ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">C</span>
+            <h2>2-Col Compact</h2>
+            <p class="sub">데스크톱 2cols 그대로 모바일</p>
+            <span class="height-chip">~260px</span>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Program & Pricing</div>
+                <h2 class="sec-title">프로그램 <span>안내</span></h2>
+                <p class="sec-desc">맞춤 설계 · 무료 상담으로 시작하세요</p>
+              </div>
+              <div class="badges">
+                <div class="badge active">모던</div>
+                <div class="badge">클래식</div>
+                <div class="badge">노블레스</div>
+                <div class="badge">로얄</div>
+                <div class="badge">프리미엄</div>
+              </div>
+              <div class="c-card">
+                <div class="c-left">
+                  <div class="c-brand">Noble Hong</div>
+                  <div class="c-tier-en">Modern</div>
+                  <div class="c-tier-ko">모던</div>
+                  <div class="c-price">300만원</div>
+                  <div class="c-period">VAT 별도 / 1년</div>
+                  <a href="#" class="c-cta">상담 신청</a>
+                </div>
+                <div class="c-right">
+                  <div class="c-features-title">Included</div>
+                  <div class="c-feature">
+                    <span class="ck">✓</span>전담 매니저
+                  </div>
+                  <div class="c-feature">
+                    <span class="ck">✓</span>신원 검증·등록
+                  </div>
+                  <div class="c-feature">
+                    <span class="ck">✓</span>만남 주선
+                  </div>
+                  <div class="c-feature">
+                    <span class="ck">✓</span>기본 교제 코칭
+                  </div>
+                  <div class="c-feature">
+                    <span class="ck">✓</span>12개월 계약
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================
+                  D안 — Icon-Chip Features
+        ============================================ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">D</span>
+            <h2>Chip Features</h2>
+            <p class="sub">키워드 칩 + 핵심만 노출</p>
+            <span class="height-chip">~290px</span>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Program & Pricing</div>
+                <h2 class="sec-title">프로그램 <span>안내</span></h2>
+                <p class="sec-desc">맞춤 설계 · 무료 상담으로 시작하세요</p>
+              </div>
+              <div class="badges">
+                <div class="badge active">모던</div>
+                <div class="badge">클래식</div>
+                <div class="badge">노블레스</div>
+                <div class="badge">로얄</div>
+                <div class="badge">프리미엄</div>
+              </div>
+              <div class="d-card">
+                <div class="d-row1">
+                  <div>
+                    <div class="d-tier-ko">모던</div>
+                    <div class="d-tier-en">Noble Hong · Modern</div>
+                  </div>
+                  <div>
+                    <div class="d-price">300만원</div>
+                    <div class="d-period">VAT 별도 / 1년</div>
+                  </div>
+                </div>
+                <div class="d-chips">
+                  <span class="d-chip"
+                    ><span class="ic">👤</span>전담 매니저</span
+                  >
+                  <span class="d-chip"><span class="ic">✓</span>신원 검증</span>
+                  <span class="d-chip"
+                    ><span class="ic">💞</span>만남 주선</span
+                  >
+                  <span class="d-chip"
+                    ><span class="ic">📞</span>기본 코칭</span
+                  >
+                  <span class="d-chip"><span class="ic">📅</span>12개월</span>
+                </div>
+                <a href="#" class="d-cta">무료 상담 신청</a>
+                <span class="d-more">+ 자세히 보기</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================
+                  E안 — Stat Strip + 2-col Features
+        ============================================ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">E</span>
+            <h2>Stat Strip</h2>
+            <p class="sub">3분할 핵심 + 2cols features</p>
+            <span class="height-chip">~310px</span>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Program & Pricing</div>
+                <h2 class="sec-title">프로그램 <span>안내</span></h2>
+                <p class="sec-desc">맞춤 설계 · 무료 상담으로 시작하세요</p>
+              </div>
+              <div class="badges">
+                <div class="badge active">모던</div>
+                <div class="badge">클래식</div>
+                <div class="badge">노블레스</div>
+                <div class="badge">로얄</div>
+                <div class="badge">프리미엄</div>
+              </div>
+              <div class="e-card">
+                <div class="e-strip">
+                  <div class="e-strip-cell">
+                    <div class="lbl">Tier</div>
+                    <div class="val">모던</div>
+                    <div class="sub">Modern</div>
+                  </div>
+                  <div class="e-strip-cell">
+                    <div class="lbl">Price</div>
+                    <div class="val gold">300만원</div>
+                    <div class="sub">VAT 별도</div>
+                  </div>
+                  <div class="e-strip-cell">
+                    <div class="lbl">Period</div>
+                    <div class="val">12개월</div>
+                    <div class="sub">계약 기간</div>
+                  </div>
+                </div>
+                <div class="e-features">
+                  <div class="e-feature">
+                    <span class="ck">✓</span>전담 매니저
+                  </div>
+                  <div class="e-feature">
+                    <span class="ck">✓</span>신원 검증·등록
+                  </div>
+                  <div class="e-feature">
+                    <span class="ck">✓</span>프로필 교환
+                  </div>
+                  <div class="e-feature">
+                    <span class="ck">✓</span>만남 주선
+                  </div>
+                  <div class="e-feature" style="grid-column: 1 / -1">
+                    <span class="ck">✓</span>기본 교제 코칭
+                  </div>
+                </div>
+                <a href="#" class="e-cta">무료 상담 신청</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 비교 표 -->
+      <div class="compare">
+        <h3>5안 비교 — 어떤 안이 적합할까?</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 12%">기준</th>
+              <th>A · Compact Hero</th>
+              <th>B · Collapsible</th>
+              <th>C · 2-Col Compact</th>
+              <th>D · Chip Features</th>
+              <th>E · Stat Strip</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>예상 세로 높이</td>
+              <td>~340px</td>
+              <td class="ok">~190px (접힘 시)</td>
+              <td class="ok">~260px</td>
+              <td>~290px</td>
+              <td>~310px</td>
+            </tr>
+            <tr>
+              <td>한 화면 노출</td>
+              <td class="ok">5등급 비교 시 1.8개</td>
+              <td class="ok">★ 3+개 한 화면</td>
+              <td class="ok">★ 2.4개</td>
+              <td>2.1개</td>
+              <td>2.0개</td>
+            </tr>
+            <tr>
+              <td>정보 완전성</td>
+              <td class="ok">5 features 풀 노출</td>
+              <td class="warn">기본 hide (탭 필요)</td>
+              <td class="ok">5 features 노출</td>
+              <td class="warn">키워드만 (요약형)</td>
+              <td class="ok">5 features + stat</td>
+            </tr>
+            <tr>
+              <td>인터랙션</td>
+              <td class="ok">없음 (정적)</td>
+              <td class="warn">탭 토글</td>
+              <td class="ok">없음</td>
+              <td class="warn">+자세히 클릭</td>
+              <td class="ok">없음</td>
+            </tr>
+            <tr>
+              <td>시각 임팩트</td>
+              <td>★★★★ 큰 가격 + 깔끔</td>
+              <td>★★ 헤더 위주</td>
+              <td>★★★ 데스크톱 일관성</td>
+              <td class="ok">★★★★★ 가장 모던</td>
+              <td class="ok">★★★★ stat strip 강조</td>
+            </tr>
+            <tr>
+              <td>좁은 폭(360px) 친화도</td>
+              <td class="ok">★★★★ 1col 충분</td>
+              <td class="ok">★★★★★ 가장 컴팩트</td>
+              <td class="warn">★★ 42:58 좁음</td>
+              <td>★★★ chip wrap OK</td>
+              <td>★★★ 3분할 빡빡</td>
+            </tr>
+            <tr>
+              <td>구현 비용</td>
+              <td class="ok">낮음 (CSS only)</td>
+              <td>중간 (JS 토글)</td>
+              <td class="ok">낮음 (CSS only)</td>
+              <td>중간 (chip 매핑 + 모달)</td>
+              <td class="ok">낮음 (CSS only)</td>
+            </tr>
+            <tr>
+              <td>5등급 일관성</td>
+              <td class="ok">동일 구조 적용 쉬움</td>
+              <td class="ok">동일 구조</td>
+              <td class="ok">동일 구조</td>
+              <td class="warn">키워드 매핑 필요</td>
+              <td class="ok">동일 구조</td>
+            </tr>
+            <tr>
+              <td>변환 우선 추천</td>
+              <td class="ok">정보 완전 + 깔끔</td>
+              <td class="ok">★ 가장 컴팩트</td>
+              <td class="ok">데스크톱 호환</td>
+              <td>모던/스타일</td>
+              <td>핵심 강조</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll(".b-toggle").forEach((t) => {
+        t.addEventListener("click", () => {
+          t.parentElement.classList.toggle("open");
+        });
+      });
+    </script>
+  </body>
+</html>

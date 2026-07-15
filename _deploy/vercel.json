@@ -35,10 +35,10 @@
       "has": [
         {
           "type": "host",
-          "value": "noblehong.com"
+          "value": "www.noblehong.com"
         }
       ],
-      "destination": "https://www.noblehong.com/",
+      "destination": "https://noblehong.com/",
       "permanent": true
     },
     {
@@ -46,10 +46,10 @@
       "has": [
         {
           "type": "host",
-          "value": "noblehong.com"
+          "value": "www.noblehong.com"
         }
       ],
-      "destination": "https://www.noblehong.com/:path*",
+      "destination": "https://noblehong.com/:path*",
       "permanent": true
     }
   ],

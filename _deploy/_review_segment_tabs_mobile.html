@@ -1,0 +1,1191 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>맞춤컨설팅 — 6 Segment 탭 모바일 5안 (이미지 반영)</title>
+    <style>
+      :root {
+        --gold: #b89a5a;
+        --gold-dark: #8c7030;
+        --gold-light: #d4b870;
+        --espresso: #2a1d0a;
+        --ivory: #f4e8c8;
+        --ivory-soft: #faf3df;
+        --text: #2c2820;
+        --text-muted: #6e604a;
+        --text-secondary: #5c5040;
+        --bg: #fbf7ec;
+        --card: #ffffff;
+        --border: #e8dcb8;
+        --shadow: 0 4px 14px rgba(42, 29, 10, 0.08);
+        --shadow-strong: 0 10px 28px rgba(42, 29, 10, 0.16);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: #1a1410;
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Pretendard",
+          system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .review-wrap {
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 32px 16px 80px;
+      }
+      .review-head {
+        text-align: center;
+        color: #f1e4c2;
+        margin-bottom: 36px;
+      }
+      .review-head h1 {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .review-head p {
+        margin-top: 8px;
+        font-size: 13px;
+        color: rgba(241, 228, 194, 0.65);
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 18px;
+      }
+      @media (max-width: 1280px) {
+        .options {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .options {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .options {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .option-label {
+        text-align: center;
+        color: #f1e4c2;
+      }
+      .option-label .tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .option-label h2 {
+        font-size: 16px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .option-label .sub {
+        font-size: 11px;
+        color: rgba(241, 228, 194, 0.6);
+        margin-top: 4px;
+        line-height: 1.45;
+      }
+
+      .phone {
+        width: 360px;
+        max-width: 100%;
+        height: 720px;
+        background: var(--bg);
+        border: 12px solid #0c0905;
+        border-radius: 36px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 2px rgba(184, 154, 90, 0.3),
+          0 16px 40px rgba(0, 0, 0, 0.4);
+      }
+      .phone-inner {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: linear-gradient(180deg, #fbf7ec 0%, #f4e8c8 100%);
+        scrollbar-width: thin;
+        scrollbar-color: rgba(140, 112, 48, 0.3) transparent;
+      }
+      .phone-inner::-webkit-scrollbar {
+        width: 4px;
+      }
+      .phone-inner::-webkit-scrollbar-thumb {
+        background: rgba(140, 112, 48, 0.3);
+        border-radius: 2px;
+      }
+
+      .sec-pad {
+        padding: 22px 18px 6px;
+      }
+      .sec-eyebrow {
+        font-size: 10.5px;
+        letter-spacing: 2px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .sec-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--espresso);
+        line-height: 1.3;
+      }
+      .sec-title strong {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* 공통 — 6 segment 이미지 URL */
+
+      /* ─────────────────────────────────────
+         A안 — Pill + Avatar (한 줄 + 동그라미 썸네일)
+      ───────────────────────────────────── */
+      .a-tabs {
+        display: flex;
+        gap: 4px;
+        padding: 0 10px;
+        margin: 14px 0 6px;
+      }
+      .a-tab {
+        flex: 1 1 0;
+        min-width: 0;
+        text-align: center;
+        cursor: pointer;
+        padding: 6px 2px 8px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        font-size: 9.5px;
+        font-weight: 700;
+        color: var(--text-muted);
+        line-height: 1.15;
+        white-space: nowrap;
+      }
+      .a-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        margin: 0 auto 4px;
+        overflow: hidden;
+        background: var(--ivory);
+        border: 1.5px solid rgba(184, 154, 90, 0.3);
+      }
+      .a-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .a-tab.active {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        border-color: var(--gold);
+        color: var(--espresso);
+      }
+      .a-tab.active .a-avatar {
+        border-color: var(--espresso);
+        border-width: 2px;
+      }
+
+      /* ─────────────────────────────────────
+         B안 — Grid 3×2 with Image (셀 상단 이미지)
+      ───────────────────────────────────── */
+      .b-tabs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 0 14px;
+        margin: 14px 0 8px;
+      }
+      .b-tab {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+      }
+      .b-img {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+      }
+      .b-img::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          transparent 50%,
+          rgba(42, 29, 10, 0.45)
+        );
+      }
+      .b-body {
+        padding: 8px 6px 10px;
+        text-align: center;
+      }
+      .b-name {
+        font-size: 10.5px;
+        font-weight: 800;
+        color: var(--text);
+        line-height: 1.2;
+        word-break: keep-all;
+      }
+      .b-en {
+        display: block;
+        margin-top: 2px;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 9px;
+        font-style: italic;
+        color: var(--gold-dark);
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .b-tab.active {
+        border-color: var(--gold);
+        border-width: 2px;
+        box-shadow:
+          0 0 0 2px rgba(184, 154, 90, 0.18),
+          var(--shadow-strong);
+      }
+      .b-tab.active .b-img::after {
+        background: linear-gradient(
+          180deg,
+          transparent 30%,
+          rgba(42, 29, 10, 0.6)
+        );
+      }
+
+      /* ─────────────────────────────────────
+         C안 — Dropdown with Hero Image
+      ───────────────────────────────────── */
+      .c-select {
+        margin: 14px 14px 6px;
+        position: relative;
+        height: 80px;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 1px solid var(--gold);
+        box-shadow: 0 6px 18px rgba(42, 29, 10, 0.15);
+      }
+      .c-select-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+      }
+      .c-select-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(42, 29, 10, 0.85) 30%,
+          rgba(42, 29, 10, 0.55)
+        );
+      }
+      .c-select-inner {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .c-select-text {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .c-select-label {
+        font-size: 9.5px;
+        letter-spacing: 1.5px;
+        color: var(--gold-light);
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .c-select-name {
+        font-size: 17px;
+        font-weight: 800;
+        color: #fff;
+      }
+      .c-select-en {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 11px;
+        font-style: italic;
+        color: var(--gold-light);
+        opacity: 0.8;
+        margin-top: 1px;
+      }
+      .c-select-arrow {
+        color: var(--gold-light);
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .c-popup {
+        margin: 0 14px 8px;
+        background: var(--card);
+        border: 1px solid var(--gold);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 22px rgba(42, 29, 10, 0.18);
+      }
+      .c-popup-item {
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+      }
+      .c-popup-item:last-child {
+        border-bottom: none;
+      }
+      .c-popup-thumb {
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        overflow: hidden;
+        background-size: cover;
+        background-position: center;
+        flex-shrink: 0;
+      }
+      .c-popup-text {
+        flex: 1;
+      }
+      .c-popup-name {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .c-popup-en {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 10px;
+        font-style: italic;
+        color: var(--gold-dark);
+        opacity: 0.7;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .c-popup-item.active {
+        background: rgba(212, 184, 112, 0.1);
+      }
+      .c-popup-item.active .c-popup-name {
+        color: var(--espresso);
+        font-weight: 800;
+      }
+
+      /* ─────────────────────────────────────
+         D안 — Vertical List with Thumbnail
+      ───────────────────────────────────── */
+      .d-tabs {
+        margin: 14px 14px 8px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .d-tab {
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+      }
+      .d-tab:last-child {
+        border-bottom: none;
+      }
+      .d-thumb {
+        width: 52px;
+        height: 52px;
+        border-radius: 8px;
+        overflow: hidden;
+        background-size: cover;
+        background-position: center;
+        flex-shrink: 0;
+        border: 1px solid var(--border);
+      }
+      .d-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .d-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.2;
+      }
+      .d-en {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 10.5px;
+        font-style: italic;
+        color: var(--gold-dark);
+        opacity: 0.7;
+        margin-top: 2px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .d-arrow {
+        color: var(--gold-dark);
+        font-size: 14px;
+        opacity: 0.5;
+      }
+      .d-tab.active {
+        background: linear-gradient(
+          90deg,
+          rgba(212, 184, 112, 0.18),
+          rgba(212, 184, 112, 0.04)
+        );
+      }
+      .d-tab.active .d-thumb {
+        border-color: var(--gold);
+        border-width: 2px;
+      }
+      .d-tab.active .d-name {
+        color: var(--espresso);
+        font-weight: 800;
+      }
+      .d-tab.active .d-arrow {
+        color: var(--gold);
+        opacity: 1;
+      }
+
+      /* ─────────────────────────────────────
+         E안 — Hero Card Carousel (풀카드 스와이프)
+      ───────────────────────────────────── */
+      .e-carousel-wrap {
+        margin: 14px 0 6px;
+        padding: 0 14px;
+      }
+      .e-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      .e-meta-step {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--gold-dark);
+        letter-spacing: 1px;
+      }
+      .e-meta-arrows {
+        display: flex;
+        gap: 6px;
+      }
+      .e-meta-arrow {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--card);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold-dark);
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .e-card {
+        height: 180px;
+        border-radius: 14px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: var(--shadow-strong);
+      }
+      .e-card-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+      }
+      .e-card-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          transparent 30%,
+          rgba(42, 29, 10, 0.85) 100%
+        );
+      }
+      .e-card-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 14px 16px 16px;
+        z-index: 2;
+      }
+      .e-card-en {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 11px;
+        font-style: italic;
+        color: var(--gold-light);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+      .e-card-name {
+        font-size: 22px;
+        font-weight: 800;
+        color: #fff;
+        margin-top: 2px;
+        letter-spacing: -0.5px;
+      }
+      .e-progress {
+        display: flex;
+        gap: 4px;
+        margin-top: 10px;
+        max-width: 200px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .e-progress .seg {
+        flex: 1;
+        height: 3px;
+        border-radius: 2px;
+        background: rgba(140, 112, 48, 0.22);
+      }
+      .e-progress .seg.active {
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+
+      /* 비교 표 */
+      .compare {
+        margin: 56px auto 0;
+        max-width: 1400px;
+        background: rgba(241, 228, 194, 0.08);
+        border: 1px solid rgba(241, 228, 194, 0.2);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .compare h3 {
+        padding: 16px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #f1e4c2;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.15);
+        background: rgba(241, 228, 194, 0.04);
+      }
+      .compare table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #e3d8b6;
+        font-size: 12px;
+      }
+      .compare th,
+      .compare td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.07);
+        vertical-align: top;
+      }
+      .compare th {
+        background: rgba(241, 228, 194, 0.04);
+        color: #f1e4c2;
+        font-weight: 700;
+        font-size: 11px;
+      }
+      .compare tr:last-child td {
+        border-bottom: none;
+      }
+      .compare .ok {
+        color: #c4a55a;
+      }
+      .compare .warn {
+        color: #d68a5a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-wrap">
+      <div class="review-head">
+        <h1>맞춤컨설팅 — 6 Segment 탭 모바일 5안 (이미지 반영)</h1>
+        <p>
+          360px 폰 viewport · 가로 스크롤 제거 · 6 segment 이미지
+          (elite/corporate/vvip/premium/parents/remarriage)
+        </p>
+      </div>
+
+      <div class="options">
+        <!-- ============ A안 — Pill + Avatar ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">A</span>
+            <h2>Pill + Avatar</h2>
+            <p class="sub">한 줄 + 작은 동그라미 썸네일</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Custom Consulting</div>
+                <h2 class="sec-title">맞춤 <strong>컨설팅</strong></h2>
+              </div>
+              <div class="a-tabs">
+                <div class="a-tab active">
+                  <div class="a-avatar">
+                    <img
+                      src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/elite_professional.webp"
+                      alt="Elite"
+                    />
+                  </div>
+                  엘리트
+                </div>
+                <div class="a-tab">
+                  <div class="a-avatar">
+                    <img
+                      src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/corporate_university.webp"
+                      alt="Corp"
+                    />
+                  </div>
+                  대기업
+                </div>
+                <div class="a-tab">
+                  <div class="a-avatar">
+                    <img
+                      src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/vvip_wealthy.webp"
+                      alt="VVIP"
+                    />
+                  </div>
+                  VVIP
+                </div>
+                <div class="a-tab">
+                  <div class="a-avatar">
+                    <img
+                      src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/premium_wedding.webp"
+                      alt="Premium"
+                    />
+                  </div>
+                  명품
+                </div>
+                <div class="a-tab">
+                  <div class="a-avatar">
+                    <img
+                      src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/parents_consulting.webp"
+                      alt="Parents"
+                    />
+                  </div>
+                  자녀
+                </div>
+                <div class="a-tab">
+                  <div class="a-avatar">
+                    <img
+                      src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/special_remarriage.webp"
+                      alt="Remarriage"
+                    />
+                  </div>
+                  재혼
+                </div>
+              </div>
+              <div
+                style="
+                  padding: 16px 18px;
+                  opacity: 0.4;
+                  text-align: center;
+                  font-size: 12px;
+                "
+              >
+                ↓ 선택된 segment panel ↓
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ B안 — Grid 3×2 with Image ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">B</span>
+            <h2>Image Grid 3×2</h2>
+            <p class="sub">4:3 이미지 + 라벨 (하단)</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Custom Consulting</div>
+                <h2 class="sec-title">맞춤 <strong>컨설팅</strong></h2>
+              </div>
+              <div class="b-tabs">
+                <div class="b-tab active">
+                  <div
+                    class="b-img"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/elite_professional.webp&quot;);
+                    "
+                  ></div>
+                  <div class="b-body">
+                    <div class="b-name">전문직·엘리트</div>
+                    <span class="b-en">Elite</span>
+                  </div>
+                </div>
+                <div class="b-tab">
+                  <div
+                    class="b-img"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/corporate_university.webp&quot;);
+                    "
+                  ></div>
+                  <div class="b-body">
+                    <div class="b-name">대기업·명문대</div>
+                    <span class="b-en">Corporate</span>
+                  </div>
+                </div>
+                <div class="b-tab">
+                  <div
+                    class="b-img"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/vvip_wealthy.webp&quot;);
+                    "
+                  ></div>
+                  <div class="b-body">
+                    <div class="b-name">명문가·재력가</div>
+                    <span class="b-en">VVIP</span>
+                  </div>
+                </div>
+                <div class="b-tab">
+                  <div
+                    class="b-img"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/premium_wedding.webp&quot;);
+                    "
+                  ></div>
+                  <div class="b-body">
+                    <div class="b-name">명품결혼</div>
+                    <span class="b-en">Premium</span>
+                  </div>
+                </div>
+                <div class="b-tab">
+                  <div
+                    class="b-img"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/parents_consulting.webp&quot;);
+                    "
+                  ></div>
+                  <div class="b-body">
+                    <div class="b-name">자녀결혼</div>
+                    <span class="b-en">Parents</span>
+                  </div>
+                </div>
+                <div class="b-tab">
+                  <div
+                    class="b-img"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/special_remarriage.webp&quot;);
+                    "
+                  ></div>
+                  <div class="b-body">
+                    <div class="b-name">스페셜 재혼</div>
+                    <span class="b-en">Remarriage</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                style="
+                  padding: 12px 18px;
+                  opacity: 0.4;
+                  text-align: center;
+                  font-size: 12px;
+                "
+              >
+                ↓ 선택된 segment panel ↓
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ C안 — Dropdown with Hero ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">C</span>
+            <h2>Hero Dropdown</h2>
+            <p class="sub">선택된 segment 풀폭 hero · popup 썸네일</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Custom Consulting</div>
+                <h2 class="sec-title">맞춤 <strong>컨설팅</strong></h2>
+              </div>
+              <div class="c-select">
+                <div
+                  class="c-select-bg"
+                  style="
+                    background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/elite_professional.webp&quot;);
+                  "
+                ></div>
+                <div class="c-select-inner">
+                  <div class="c-select-text">
+                    <span class="c-select-label">SEGMENT</span>
+                    <span class="c-select-name">전문직·엘리트</span>
+                    <span class="c-select-en">Elite</span>
+                  </div>
+                  <span class="c-select-arrow">▾</span>
+                </div>
+              </div>
+              <div class="c-popup">
+                <div class="c-popup-item active">
+                  <div
+                    class="c-popup-thumb"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/elite_professional.webp&quot;);
+                    "
+                  ></div>
+                  <div class="c-popup-text">
+                    <div class="c-popup-name">전문직·엘리트</div>
+                    <div class="c-popup-en">Elite</div>
+                  </div>
+                </div>
+                <div class="c-popup-item">
+                  <div
+                    class="c-popup-thumb"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/corporate_university.webp&quot;);
+                    "
+                  ></div>
+                  <div class="c-popup-text">
+                    <div class="c-popup-name">대기업·명문대</div>
+                    <div class="c-popup-en">Corporate</div>
+                  </div>
+                </div>
+                <div class="c-popup-item">
+                  <div
+                    class="c-popup-thumb"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/vvip_wealthy.webp&quot;);
+                    "
+                  ></div>
+                  <div class="c-popup-text">
+                    <div class="c-popup-name">명문가·재력가</div>
+                    <div class="c-popup-en">VVIP</div>
+                  </div>
+                </div>
+                <div class="c-popup-item">
+                  <div
+                    class="c-popup-thumb"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/premium_wedding.webp&quot;);
+                    "
+                  ></div>
+                  <div class="c-popup-text">
+                    <div class="c-popup-name">명품결혼</div>
+                    <div class="c-popup-en">Premium</div>
+                  </div>
+                </div>
+                <div class="c-popup-item">
+                  <div
+                    class="c-popup-thumb"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/parents_consulting.webp&quot;);
+                    "
+                  ></div>
+                  <div class="c-popup-text">
+                    <div class="c-popup-name">자녀결혼</div>
+                    <div class="c-popup-en">Parents</div>
+                  </div>
+                </div>
+                <div class="c-popup-item">
+                  <div
+                    class="c-popup-thumb"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/special_remarriage.webp&quot;);
+                    "
+                  ></div>
+                  <div class="c-popup-text">
+                    <div class="c-popup-name">스페셜 재혼</div>
+                    <div class="c-popup-en">Remarriage</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ D안 — Vertical List with Thumbnail ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">D</span>
+            <h2>List + Thumbnail</h2>
+            <p class="sub">세로 리스트 · 좌측 52px 썸네일</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Custom Consulting</div>
+                <h2 class="sec-title">맞춤 <strong>컨설팅</strong></h2>
+              </div>
+              <div class="d-tabs">
+                <div class="d-tab active">
+                  <div
+                    class="d-thumb"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/elite_professional.webp&quot;);
+                    "
+                  ></div>
+                  <div class="d-text">
+                    <div class="d-name">전문직·엘리트</div>
+                    <div class="d-en">Elite</div>
+                  </div>
+                  <div class="d-arrow">›</div>
+                </div>
+                <div class="d-tab">
+                  <div
+                    class="d-thumb"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/corporate_university.webp&quot;);
+                    "
+                  ></div>
+                  <div class="d-text">
+                    <div class="d-name">대기업·명문대</div>
+                    <div class="d-en">Corporate</div>
+                  </div>
+                  <div class="d-arrow">›</div>
+                </div>
+                <div class="d-tab">
+                  <div
+                    class="d-thumb"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/vvip_wealthy.webp&quot;);
+                    "
+                  ></div>
+                  <div class="d-text">
+                    <div class="d-name">명문가·재력가</div>
+                    <div class="d-en">VVIP</div>
+                  </div>
+                  <div class="d-arrow">›</div>
+                </div>
+                <div class="d-tab">
+                  <div
+                    class="d-thumb"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/premium_wedding.webp&quot;);
+                    "
+                  ></div>
+                  <div class="d-text">
+                    <div class="d-name">명품결혼</div>
+                    <div class="d-en">Premium</div>
+                  </div>
+                  <div class="d-arrow">›</div>
+                </div>
+                <div class="d-tab">
+                  <div
+                    class="d-thumb"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/parents_consulting.webp&quot;);
+                    "
+                  ></div>
+                  <div class="d-text">
+                    <div class="d-name">자녀결혼</div>
+                    <div class="d-en">Parents</div>
+                  </div>
+                  <div class="d-arrow">›</div>
+                </div>
+                <div class="d-tab">
+                  <div
+                    class="d-thumb"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/special_remarriage.webp&quot;);
+                    "
+                  ></div>
+                  <div class="d-text">
+                    <div class="d-name">스페셜 재혼</div>
+                    <div class="d-en">Remarriage</div>
+                  </div>
+                  <div class="d-arrow">›</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ E안 — Hero Card Carousel ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">E</span>
+            <h2>Hero Carousel</h2>
+            <p class="sub">풀카드 1장 + 좌우 화살표 + progress</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Custom Consulting</div>
+                <h2 class="sec-title">맞춤 <strong>컨설팅</strong></h2>
+              </div>
+              <div class="e-carousel-wrap">
+                <div class="e-meta">
+                  <span class="e-meta-step">1 / 6</span>
+                  <div class="e-meta-arrows">
+                    <div class="e-meta-arrow">‹</div>
+                    <div class="e-meta-arrow">›</div>
+                  </div>
+                </div>
+                <div class="e-card">
+                  <div
+                    class="e-card-bg"
+                    style="
+                      background-image: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/output/thumbnails/elite_professional.webp&quot;);
+                    "
+                  ></div>
+                  <div class="e-card-content">
+                    <span class="e-card-en">ELITE</span>
+                    <div class="e-card-name">전문직·엘리트</div>
+                  </div>
+                </div>
+                <div class="e-progress">
+                  <div class="seg active"></div>
+                  <div class="seg"></div>
+                  <div class="seg"></div>
+                  <div class="seg"></div>
+                  <div class="seg"></div>
+                  <div class="seg"></div>
+                </div>
+              </div>
+              <div
+                style="
+                  padding: 16px 18px;
+                  opacity: 0.4;
+                  text-align: center;
+                  font-size: 12px;
+                "
+              >
+                ↓ 선택된 segment panel ↓
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 비교 표 -->
+      <div class="compare">
+        <h3>5안 비교 — 이미지 반영 6 segment 탭</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 12%">기준</th>
+              <th>A · Pill + Avatar</th>
+              <th>B · Image Grid 3×2</th>
+              <th>C · Hero Dropdown</th>
+              <th>D · List + Thumbnail</th>
+              <th>E · Hero Carousel</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>이미지 임팩트</td>
+              <td class="warn">★★ 28px 작음</td>
+              <td class="ok">★★★★ 셀당 풀 이미지</td>
+              <td class="ok">★★★★★ 80px hero</td>
+              <td class="ok">★★★★ 52px 썸네일</td>
+              <td class="ok">★★★★★ 180px 풀카드</td>
+            </tr>
+            <tr>
+              <td>화면 차지</td>
+              <td class="ok">~70px (가장 작음)</td>
+              <td>~190px</td>
+              <td>~90px (선택만, 닫힘 시)</td>
+              <td class="warn">~430px (6×72)</td>
+              <td>~280px</td>
+            </tr>
+            <tr>
+              <td>한 번에 노출</td>
+              <td class="ok">★ 6개 모두</td>
+              <td class="ok">★ 6개 모두</td>
+              <td class="warn">1개 (탭 시 6)</td>
+              <td class="ok">★ 6개 모두</td>
+              <td class="warn">1개 (스와이프 6)</td>
+            </tr>
+            <tr>
+              <td>가독성</td>
+              <td class="warn">★★ 9.5px</td>
+              <td>★★★ 10.5px</td>
+              <td class="ok">★★★★★ 17px</td>
+              <td class="ok">★★★★★ 13px + 큰 썸네일</td>
+              <td class="ok">★★★★★ 22px 큰 폰트</td>
+            </tr>
+            <tr>
+              <td>전문직 톤 적합도</td>
+              <td>★★ 평이</td>
+              <td class="ok">★★★★ 깔끔 그리드</td>
+              <td class="ok">★★★★★ 시네마틱</td>
+              <td class="ok">★★★★ 클래식 리스트</td>
+              <td class="ok">★★★★★ 인스타 풀카드</td>
+            </tr>
+            <tr>
+              <td>인터랙션</td>
+              <td class="ok">탭 1번</td>
+              <td class="ok">탭 1번</td>
+              <td class="warn">탭 2번 (열고-선택)</td>
+              <td class="ok">탭 1번</td>
+              <td>스와이프 + 탭</td>
+            </tr>
+            <tr>
+              <td>구현 비용</td>
+              <td class="ok">낮음</td>
+              <td class="ok">낮음</td>
+              <td>중간 (JS dropdown)</td>
+              <td class="ok">낮음</td>
+              <td>중간 (carousel JS)</td>
+            </tr>
+            <tr>
+              <td>모바일 표준 패턴</td>
+              <td>탭바 변형</td>
+              <td class="ok">앱 스토어/넷플릭스</td>
+              <td class="ok">iOS Picker 류</td>
+              <td class="ok">메일/메시지 앱</td>
+              <td class="ok">인스타 스토리/캐러셀</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

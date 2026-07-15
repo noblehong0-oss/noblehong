@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>상담문의 — D안 라이트 톤 (이름·휴대폰 split)</title>
+    <style>
+      :root {
+        --gold: #b89a5a;
+        --gold-dark: #8c7030;
+        --gold-light: #d4b870;
+        --espresso: #2a1d0a;
+        --ivory: #f4e8c8;
+        --ivory-soft: #faf3df;
+        --text: #2c2820;
+        --text-muted: #6e604a;
+        --text-secondary: #5c5040;
+        --bg: #fbf7ec;
+        --card: #ffffff;
+        --border: #e8dcb8;
+        --shadow: 0 4px 14px rgba(42, 29, 10, 0.08);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: #1a1410;
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Pretendard",
+          system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .review-wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 32px 16px 80px;
+      }
+      .review-head {
+        text-align: center;
+        color: #f1e4c2;
+        margin-bottom: 36px;
+      }
+      .review-head h1 {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .review-head p {
+        margin-top: 8px;
+        font-size: 13px;
+        color: rgba(241, 228, 194, 0.65);
+      }
+
+      .option-label {
+        text-align: center;
+        color: #f1e4c2;
+        margin-bottom: 14px;
+      }
+      .option-label .tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .option-label h2 {
+        font-size: 17px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .option-label .sub {
+        font-size: 11.5px;
+        color: rgba(241, 228, 194, 0.6);
+        margin-top: 4px;
+      }
+      .option-label .height-chip {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 2px 8px;
+        background: rgba(212, 184, 112, 0.15);
+        color: var(--gold-light);
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .phone-wrap {
+        display: flex;
+        justify-content: center;
+      }
+      .phone {
+        width: 360px;
+        max-width: 100%;
+        height: 720px;
+        background: var(--bg);
+        border: 12px solid #0c0905;
+        border-radius: 36px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 2px rgba(184, 154, 90, 0.3),
+          0 16px 40px rgba(0, 0, 0, 0.4);
+      }
+      .phone-inner {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: linear-gradient(180deg, #fbf7ec 0%, #f4e8c8 100%);
+        color: var(--text);
+        scrollbar-width: thin;
+      }
+      .phone-inner::-webkit-scrollbar {
+        width: 4px;
+      }
+      .phone-inner::-webkit-scrollbar-thumb {
+        background: rgba(140, 112, 48, 0.3);
+        border-radius: 2px;
+      }
+
+      /* head */
+      .head {
+        padding: 18px 16px 6px;
+      }
+      .eyebrow {
+        font-size: 10.5px;
+        letter-spacing: 2.5px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .head h2 {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--espresso);
+        margin-top: 6px;
+        line-height: 1.3;
+      }
+      .head h2 strong {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* notice */
+      .notice {
+        margin: 8px 14px 14px;
+        padding: 8px 12px;
+        background: rgba(184, 154, 90, 0.1);
+        border: 1px solid rgba(184, 154, 90, 0.3);
+        border-radius: 6px;
+        font-size: 10.5px;
+        color: var(--text-secondary);
+        line-height: 1.55;
+        text-align: center;
+      }
+      .notice strong {
+        color: var(--gold-dark);
+      }
+
+      /* form */
+      .form-wrap {
+        padding: 0 16px 18px;
+      }
+
+      /* D안 라이트 — 밑줄 인풋 미니멀 */
+      .d-row {
+        margin-bottom: 14px;
+      }
+      .d-label {
+        display: block;
+        font-size: 10px;
+        letter-spacing: 1.2px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--gold-dark);
+        margin-bottom: 4px;
+      }
+      .d-label .req {
+        color: #d24545;
+        margin-left: 2px;
+      }
+      .d-input {
+        width: 100%;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid rgba(140, 112, 48, 0.3);
+        color: var(--espresso);
+        font-size: 14px;
+        font-weight: 500;
+        padding: 7px 2px 6px;
+        border-radius: 0;
+      }
+      .d-input::placeholder {
+        color: rgba(108, 96, 74, 0.45);
+      }
+      .d-input:focus {
+        border-bottom-color: var(--gold-dark);
+        outline: none;
+      }
+
+      .d-radio-group {
+        display: flex;
+        gap: 6px;
+        padding: 4px 0 0;
+      }
+      .d-radio {
+        flex: 1;
+        padding: 8px 6px;
+        background: var(--card);
+        border: 1px solid rgba(140, 112, 48, 0.3);
+        color: var(--text-secondary);
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+        text-align: center;
+        cursor: pointer;
+      }
+      .d-radio.active {
+        background: linear-gradient(
+          135deg,
+          rgba(212, 184, 112, 0.2),
+          rgba(184, 154, 90, 0.08)
+        );
+        border-color: var(--gold);
+        color: var(--gold-dark);
+        font-weight: 700;
+      }
+
+      .d-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+      .d-split .d-row {
+        margin-bottom: 0;
+      }
+
+      .d-textarea {
+        width: 100%;
+        background: var(--card);
+        border: 1px solid rgba(140, 112, 48, 0.25);
+        color: var(--text);
+        font-size: 13px;
+        padding: 10px 12px;
+        border-radius: 6px;
+        min-height: 60px;
+        resize: vertical;
+      }
+      .d-textarea::placeholder {
+        color: rgba(108, 96, 74, 0.5);
+      }
+
+      /* 동의 */
+      .d-checkbox {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 5px 0;
+        font-size: 11.5px;
+        color: var(--text-secondary);
+      }
+      .d-check {
+        width: 16px;
+        height: 16px;
+        border: 1px solid rgba(140, 112, 48, 0.4);
+        border-radius: 3px;
+        flex-shrink: 0;
+        margin-top: 1px;
+        background: var(--card);
+      }
+      .d-checkbox a {
+        color: var(--gold-dark);
+        text-decoration: underline;
+      }
+
+      /* 제출 */
+      .d-submit {
+        width: 100%;
+        padding: 12px;
+        margin-top: 12px;
+        background: linear-gradient(135deg, var(--gold-dark), #6e5a24);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        border: none;
+        border-radius: 8px;
+        letter-spacing: 0.5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-wrap">
+      <div class="review-head">
+        <h1>상담문의 — D안 라이트 톤 (이름·휴대폰 split)</h1>
+        <p>
+          360px 폰 viewport · 밝은색 배경 + 골드 액센트 · 밑줄 인풋 미니멀 ·
+          이름/휴대폰 한 줄
+        </p>
+      </div>
+
+      <div class="option-label">
+        <span class="tag">D · 라이트</span>
+        <h2>Ultra Compact (Light)</h2>
+        <p class="sub">밑줄 인풋 + 골드 라디오 · 이름/휴대폰 split</p>
+        <span class="height-chip">~480px</span>
+      </div>
+
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="head">
+              <div class="eyebrow">Consultation Form</div>
+              <h2>온라인 <strong>상담 신청</strong></h2>
+            </div>
+            <div class="notice">
+              간단한 정보 입력 시
+              <strong>24시간 이내</strong> 연락드립니다<br />
+              · 비밀 보장 · 무료 상담
+            </div>
+            <div class="form-wrap">
+              <!-- 성별 + 혼인 (한 줄) -->
+              <div class="d-split">
+                <div class="d-row">
+                  <label class="d-label">성별 <span class="req">*</span></label>
+                  <div class="d-radio-group">
+                    <div class="d-radio active">남성</div>
+                    <div class="d-radio">여성</div>
+                  </div>
+                </div>
+                <div class="d-row">
+                  <label class="d-label">혼인 <span class="req">*</span></label>
+                  <div class="d-radio-group">
+                    <div class="d-radio">초혼</div>
+                    <div class="d-radio">재혼</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 출생년도 + 지역 (한 줄) -->
+              <div class="d-split">
+                <div class="d-row">
+                  <label class="d-label"
+                    >출생년도 <span class="req">*</span></label
+                  >
+                  <input class="d-input" placeholder="1990" />
+                </div>
+                <div class="d-row">
+                  <label class="d-label">지역 <span class="req">*</span></label>
+                  <input class="d-input" placeholder="서울" />
+                </div>
+              </div>
+
+              <!-- 이름 + 휴대폰 (한 줄) -->
+              <div class="d-split">
+                <div class="d-row">
+                  <label class="d-label">이름 <span class="req">*</span></label>
+                  <input class="d-input" placeholder="홍길동" />
+                </div>
+                <div class="d-row">
+                  <label class="d-label"
+                    >휴대폰 <span class="req">*</span></label
+                  >
+                  <input class="d-input" placeholder="010-0000-0000" />
+                </div>
+              </div>
+
+              <!-- 기타 문의사항 (풀폭) -->
+              <div class="d-row">
+                <label class="d-label">기타 문의사항</label>
+                <textarea
+                  class="d-textarea"
+                  placeholder="궁금한 점이 있으시면 자유롭게 입력해 주세요"
+                ></textarea>
+              </div>
+
+              <!-- 동의 -->
+              <div style="margin-top: 6px">
+                <div class="d-checkbox">
+                  <div class="d-check"></div>
+                  <span
+                    >개인정보 수집·이용 동의
+                    <strong style="color: var(--gold-dark)">(필수)</strong> ·
+                    <a href="#">자세히</a></span
+                  >
+                </div>
+                <div class="d-checkbox">
+                  <div class="d-check"></div>
+                  <span>마케팅 정보 수신 동의 (선택)</span>
+                </div>
+              </div>
+
+              <button class="d-submit">상담 신청하기 →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

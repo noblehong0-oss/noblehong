@@ -1,0 +1,1155 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>6단계 매칭 시스템 — 모바일 4안 비교 (와이어프레임)</title>
+    <style>
+      :root {
+        --gold: #b89a5a;
+        --gold-dark: #8c7030;
+        --gold-light: #d4b870;
+        --espresso: #2a1d0a;
+        --ivory: #f4e8c8;
+        --ivory-soft: #faf3df;
+        --text: #2c2820;
+        --text-muted: #6e604a;
+        --bg: #fbf7ec;
+        --card: #ffffff;
+        --border: #e8dcb8;
+        --shadow: 0 4px 14px rgba(42, 29, 10, 0.08);
+        --shadow-strong: 0 8px 28px rgba(42, 29, 10, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: #1a1410;
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Pretendard",
+          system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+        text-size-adjust: 100%;
+      }
+
+      .review-wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 32px 16px 80px;
+      }
+      .review-head {
+        text-align: center;
+        color: #f1e4c2;
+        margin-bottom: 36px;
+      }
+      .review-head h1 {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .review-head p {
+        margin-top: 8px;
+        font-size: 13px;
+        color: rgba(241, 228, 194, 0.65);
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+      }
+      @media (max-width: 1100px) {
+        .options {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 720px) {
+        .options {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .option-label {
+        text-align: center;
+        color: #f1e4c2;
+      }
+      .option-label .tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .option-label h2 {
+        font-size: 18px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .option-label .sub {
+        font-size: 12px;
+        color: rgba(241, 228, 194, 0.6);
+        margin-top: 4px;
+      }
+
+      .phone {
+        width: 375px;
+        max-width: 100%;
+        height: 720px;
+        background: #fbf7ec;
+        border: 12px solid #0c0905;
+        border-radius: 36px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 2px rgba(184, 154, 90, 0.3),
+          0 16px 40px rgba(0, 0, 0, 0.4);
+      }
+      .phone-inner {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: linear-gradient(180deg, #fbf7ec 0%, #f4e8c8 100%);
+        scrollbar-width: thin;
+        scrollbar-color: rgba(140, 112, 48, 0.3) transparent;
+      }
+      .phone-inner::-webkit-scrollbar {
+        width: 4px;
+      }
+      .phone-inner::-webkit-scrollbar-thumb {
+        background: rgba(140, 112, 48, 0.3);
+        border-radius: 2px;
+      }
+
+      /* ─── 공통 섹션 헤더 ─── */
+      .sec-pad {
+        padding: 24px 18px;
+      }
+      .sec-eyebrow {
+        font-size: 10.5px;
+        letter-spacing: 2px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .sec-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--espresso);
+        line-height: 1.3;
+      }
+      .sec-title span {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .sec-desc {
+        font-size: 12.5px;
+        color: var(--text-muted);
+        margin-top: 8px;
+        line-height: 1.6;
+        word-break: keep-all;
+      }
+
+      /* ──────────────────────────────────────────
+         A안 ─ Vertical Stepper (수직 타임라인)
+      ────────────────────────────────────────── */
+      .v-step {
+        position: relative;
+        padding-left: 56px;
+        padding-bottom: 28px;
+      }
+      .v-step:last-child {
+        padding-bottom: 0;
+      }
+      .v-step::before {
+        content: "";
+        position: absolute;
+        left: 19px;
+        top: 24px;
+        bottom: -8px;
+        width: 2px;
+        background: linear-gradient(
+          180deg,
+          var(--gold-light) 0%,
+          rgba(184, 154, 90, 0.25) 100%
+        );
+      }
+      .v-step:last-child::before {
+        display: none;
+      }
+      .v-step-dot {
+        position: absolute;
+        left: 4px;
+        top: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 800;
+        box-shadow:
+          0 0 0 4px var(--ivory-soft),
+          0 4px 10px rgba(140, 112, 48, 0.3);
+      }
+      .v-step-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px 16px;
+        box-shadow: var(--shadow);
+      }
+      .v-step-card .num {
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        color: var(--gold-dark);
+        font-weight: 700;
+      }
+      .v-step-card .name {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--espresso);
+        margin-top: 4px;
+      }
+      .v-step-card .desc {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        line-height: 1.55;
+        word-break: keep-all;
+      }
+      .v-step-card .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 10px;
+      }
+      .v-step-card .tag {
+        background: var(--ivory);
+        color: var(--gold-dark);
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+
+      /* ──────────────────────────────────────────
+         B안 ─ Accordion
+      ────────────────────────────────────────── */
+      .acc-item {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        margin-bottom: 8px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .acc-item.open {
+        border-color: var(--gold);
+      }
+      .acc-head {
+        display: grid;
+        grid-template-columns: 36px 1fr 16px;
+        gap: 10px;
+        align-items: center;
+        padding: 12px 14px;
+        cursor: pointer;
+      }
+      .acc-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--ivory);
+        color: var(--gold-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 800;
+        border: 1.5px solid rgba(184, 154, 90, 0.4);
+      }
+      .acc-item.open .acc-num {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        border-color: var(--gold);
+      }
+      .acc-head .acc-name {
+        font-size: 14.5px;
+        font-weight: 700;
+        color: var(--espresso);
+      }
+      .acc-head .acc-name .step-tag {
+        font-size: 9.5px;
+        color: var(--gold-dark);
+        font-weight: 600;
+        margin-right: 6px;
+        letter-spacing: 1.2px;
+      }
+      .acc-arrow {
+        color: var(--gold-dark);
+        font-size: 14px;
+        transition: transform 0.3s;
+      }
+      .acc-item.open .acc-arrow {
+        transform: rotate(180deg);
+      }
+      .acc-body {
+        display: none;
+        padding: 0 14px 14px;
+      }
+      .acc-item.open .acc-body {
+        display: block;
+      }
+      .acc-img {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(184, 154, 90, 0.15),
+            rgba(140, 112, 48, 0.05)
+          ),
+          repeating-linear-gradient(
+            45deg,
+            transparent 0,
+            transparent 8px,
+            rgba(184, 154, 90, 0.07) 8px,
+            rgba(184, 154, 90, 0.07) 16px
+          );
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold-dark);
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .acc-desc {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        word-break: keep-all;
+      }
+      .acc-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 10px;
+      }
+      .acc-tags .tag {
+        background: var(--ivory);
+        color: var(--gold-dark);
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+
+      /* ──────────────────────────────────────────
+         C안 ─ Horizontal Snap Cards (가로 풀카드)
+      ────────────────────────────────────────── */
+      .c-progress {
+        display: flex;
+        gap: 6px;
+        padding: 0 18px;
+        margin-bottom: 14px;
+      }
+      .c-progress .bar {
+        flex: 1;
+        height: 3px;
+        background: rgba(184, 154, 90, 0.2);
+        border-radius: 2px;
+      }
+      .c-progress .bar.active {
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+      .c-progress-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 18px;
+        margin-bottom: 8px;
+        font-size: 11px;
+        color: var(--gold-dark);
+        font-weight: 600;
+      }
+      .c-cards-wrap {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 12px;
+        padding: 0 18px 12px;
+        scrollbar-width: none;
+      }
+      .c-cards-wrap::-webkit-scrollbar {
+        display: none;
+      }
+      .c-card {
+        flex: 0 0 88%;
+        scroll-snap-align: center;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+      }
+      .c-card-img {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(184, 154, 90, 0.12),
+            rgba(140, 112, 48, 0.04)
+          ),
+          repeating-linear-gradient(
+            45deg,
+            transparent 0,
+            transparent 8px,
+            rgba(184, 154, 90, 0.06) 8px,
+            rgba(184, 154, 90, 0.06) 16px
+          );
+        position: relative;
+      }
+      .c-card-img::after {
+        content: attr(data-step);
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        background: var(--espresso);
+        color: var(--gold-light);
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+      }
+      .c-card-body {
+        padding: 16px 16px 18px;
+      }
+      .c-card-num {
+        font-size: 38px;
+        font-weight: 900;
+        line-height: 1;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -2px;
+      }
+      .c-card-name {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--espresso);
+        margin-top: 4px;
+      }
+      .c-card-desc {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        word-break: keep-all;
+        margin-top: 10px;
+      }
+      .c-card-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 12px;
+      }
+      .c-card-tags .tag {
+        background: var(--ivory);
+        color: var(--gold-dark);
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+      .c-hint {
+        text-align: center;
+        font-size: 10px;
+        color: var(--text-muted);
+        opacity: 0.6;
+        letter-spacing: 0.5px;
+        margin-top: 8px;
+      }
+
+      /* ──────────────────────────────────────────
+         D안 ─ Tab Pills + Detail (탭 + 상세)
+      ────────────────────────────────────────── */
+      .d-tabs {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        padding: 0 18px 4px;
+        scrollbar-width: none;
+        scroll-snap-type: x mandatory;
+      }
+      .d-tabs::-webkit-scrollbar {
+        display: none;
+      }
+      .d-tab {
+        flex: 0 0 auto;
+        padding: 8px 14px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--text-muted);
+        white-space: nowrap;
+        cursor: pointer;
+        scroll-snap-align: center;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .d-tab .num {
+        background: var(--ivory);
+        color: var(--gold-dark);
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        font-size: 10px;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .d-tab.active {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        border-color: var(--gold);
+        color: var(--espresso);
+      }
+      .d-tab.active .num {
+        background: var(--espresso);
+        color: var(--gold-light);
+      }
+      .d-detail {
+        margin: 14px 18px 0;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .d-detail-img {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(184, 154, 90, 0.12),
+            rgba(140, 112, 48, 0.04)
+          ),
+          repeating-linear-gradient(
+            45deg,
+            transparent 0,
+            transparent 8px,
+            rgba(184, 154, 90, 0.06) 8px,
+            rgba(184, 154, 90, 0.06) 16px
+          );
+      }
+      .d-detail-body {
+        padding: 16px 18px 20px;
+      }
+      .d-detail-step {
+        font-size: 10px;
+        letter-spacing: 1.5px;
+        color: var(--gold-dark);
+        font-weight: 700;
+      }
+      .d-detail-name {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--espresso);
+        margin-top: 4px;
+      }
+      .d-detail-desc {
+        font-size: 12.5px;
+        color: var(--text-muted);
+        margin-top: 10px;
+        line-height: 1.6;
+        word-break: keep-all;
+      }
+      .d-detail-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-top: 12px;
+      }
+      .d-detail-tags .tag {
+        background: var(--ivory);
+        color: var(--gold-dark);
+        font-size: 10px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-weight: 600;
+      }
+      .d-nav {
+        display: flex;
+        justify-content: space-between;
+        margin: 14px 18px 0;
+        gap: 8px;
+      }
+      .d-nav button {
+        flex: 1;
+        padding: 10px;
+        background: transparent;
+        border: 1px solid var(--gold-dark);
+        color: var(--gold-dark);
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .d-nav button.primary {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        border-color: var(--gold-dark);
+        color: var(--espresso);
+      }
+
+      /* 하단 비교 표 */
+      .compare {
+        margin: 56px auto 0;
+        max-width: 1100px;
+        background: rgba(241, 228, 194, 0.08);
+        border: 1px solid rgba(241, 228, 194, 0.2);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .compare h3 {
+        padding: 16px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #f1e4c2;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.15);
+        background: rgba(241, 228, 194, 0.04);
+      }
+      .compare table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #e3d8b6;
+        font-size: 12px;
+      }
+      .compare th,
+      .compare td {
+        padding: 10px 14px;
+        text-align: left;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.07);
+        vertical-align: top;
+      }
+      .compare th {
+        background: rgba(241, 228, 194, 0.04);
+        color: #f1e4c2;
+        font-weight: 700;
+        font-size: 11px;
+      }
+      .compare tr:last-child td {
+        border-bottom: none;
+      }
+      .compare .ok {
+        color: #c4a55a;
+      }
+      .compare .warn {
+        color: #d68a5a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-wrap">
+      <div class="review-head">
+        <h1>프리미엄 6단계 매칭 시스템 — 모바일 4안</h1>
+        <p>
+          375px 모바일 viewport · 노블홍 골드 톤 · 와이어프레임 · 데이터 동일
+        </p>
+      </div>
+
+      <div class="options">
+        <!-- ============================================
+                  A안 ─ Vertical Stepper
+        ============================================ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">A</span>
+            <h2>Vertical Stepper</h2>
+            <p class="sub">수직 타임라인 · 모두 펼침 · 스크롤만</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Matching Process</div>
+                <h2 class="sec-title">
+                  프리미엄 <span>6단계</span><br />매칭 시스템
+                </h2>
+                <p class="sec-desc">
+                  상담부터 성혼까지, 각 단계별 전문<br />프로세스로 최적의
+                  인연을 찾아드립니다
+                </p>
+              </div>
+              <div style="padding: 4px 18px 28px">
+                <div class="v-step">
+                  <div class="v-step-dot">01</div>
+                  <div class="v-step-card">
+                    <div class="num">STEP 01</div>
+                    <div class="name">초기 상담</div>
+                    <div class="desc">
+                      홍유진 대표가 직접 진행하는 1:1 심층 상담. 결혼관, 이상형,
+                      가치관까지 면밀히 파악합니다.
+                    </div>
+                    <div class="tags">
+                      <span class="tag">대표 직접 상담</span>
+                      <span class="tag">가치관 분석</span>
+                      <span class="tag">맞춤 전략</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="v-step">
+                  <div class="v-step-dot">02</div>
+                  <div class="v-step-card">
+                    <div class="num">STEP 02</div>
+                    <div class="name">회원 등록</div>
+                    <div class="desc">
+                      직업·학력·가족 관계 등 프로필 정보를 철저히 검증·등록.
+                      신원 확인으로 신뢰 보장.
+                    </div>
+                    <div class="tags">
+                      <span class="tag">신원 검증</span>
+                      <span class="tag">프로필 등록</span>
+                      <span class="tag">개인정보 보호</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="v-step">
+                  <div class="v-step-dot">03</div>
+                  <div class="v-step-card">
+                    <div class="num">STEP 03</div>
+                    <div class="name">맞춤 매칭</div>
+                    <div class="desc">
+                      30년 경험의 전문 커플매니저가 직접 분석. 외적 조건과
+                      호환성을 종합 평가.
+                    </div>
+                    <div class="tags">
+                      <span class="tag">전문가 분석</span>
+                      <span class="tag">호환성 평가</span>
+                      <span class="tag">다차원 매칭</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="v-step">
+                  <div class="v-step-dot">04</div>
+                  <div class="v-step-card">
+                    <div class="num">STEP 04</div>
+                    <div class="name">프로필 교환</div>
+                    <div class="desc">
+                      매칭된 상대 프로필을 상호 동의하에 소개. 매니저가 양측
+                      기대치를 조율합니다.
+                    </div>
+                    <div class="tags">
+                      <span class="tag">상호 동의</span>
+                      <span class="tag">기대치 조율</span>
+                      <span class="tag">매니저 코디</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="v-step">
+                  <div class="v-step-dot">05</div>
+                  <div class="v-step-card">
+                    <div class="num">STEP 05</div>
+                    <div class="name">만남 주선</div>
+                    <div class="desc">
+                      강남 프리미엄 라운지 기본. 장소·일정·분위기까지 세심하게
+                      코디네이트합니다.
+                    </div>
+                    <div class="tags">
+                      <span class="tag">프리미엄 장소</span>
+                      <span class="tag">일정 조율</span>
+                      <span class="tag">분위기 연출</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="v-step">
+                  <div class="v-step-dot">06</div>
+                  <div class="v-step-card">
+                    <div class="num">STEP 06</div>
+                    <div class="name">교제 · 성혼</div>
+                    <div class="desc">
+                      교제 과정 지속 관리, 연애 코칭. 갈등
+                      조율·프로포즈·상견례까지 토탈 케어.
+                    </div>
+                    <div class="tags">
+                      <span class="tag">연애 코칭</span>
+                      <span class="tag">갈등 조율</span>
+                      <span class="tag">성혼 지원</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================
+                  B안 ─ Accordion
+        ============================================ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">B</span>
+            <h2>Accordion</h2>
+            <p class="sub">컴팩트 · 탭 토글 · 전체 흐름 한눈에</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Matching Process</div>
+                <h2 class="sec-title">
+                  프리미엄 <span>6단계</span><br />매칭 시스템
+                </h2>
+                <p class="sec-desc">탭하여 각 단계 상세 정보를 확인하세요</p>
+              </div>
+              <div style="padding: 4px 18px 28px">
+                <div class="acc-item open">
+                  <div class="acc-head">
+                    <div class="acc-num">01</div>
+                    <div class="acc-name">
+                      <span class="step-tag">STEP 01</span>초기 상담
+                    </div>
+                    <div class="acc-arrow">▾</div>
+                  </div>
+                  <div class="acc-body">
+                    <div class="acc-img">[이미지: 초기 상담 16:9]</div>
+                    <div class="acc-desc">
+                      홍유진 대표가 직접 진행하는 1:1 심층 상담. 결혼관, 이상형,
+                      가치관까지 면밀히 파악합니다.
+                    </div>
+                    <div class="acc-tags">
+                      <span class="tag">대표 직접 상담</span>
+                      <span class="tag">가치관 분석</span>
+                      <span class="tag">맞춤 전략</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="acc-item">
+                  <div class="acc-head">
+                    <div class="acc-num">02</div>
+                    <div class="acc-name">
+                      <span class="step-tag">STEP 02</span>회원 등록
+                    </div>
+                    <div class="acc-arrow">▾</div>
+                  </div>
+                </div>
+                <div class="acc-item">
+                  <div class="acc-head">
+                    <div class="acc-num">03</div>
+                    <div class="acc-name">
+                      <span class="step-tag">STEP 03</span>맞춤 매칭
+                    </div>
+                    <div class="acc-arrow">▾</div>
+                  </div>
+                </div>
+                <div class="acc-item">
+                  <div class="acc-head">
+                    <div class="acc-num">04</div>
+                    <div class="acc-name">
+                      <span class="step-tag">STEP 04</span>프로필 교환
+                    </div>
+                    <div class="acc-arrow">▾</div>
+                  </div>
+                </div>
+                <div class="acc-item">
+                  <div class="acc-head">
+                    <div class="acc-num">05</div>
+                    <div class="acc-name">
+                      <span class="step-tag">STEP 05</span>만남 주선
+                    </div>
+                    <div class="acc-arrow">▾</div>
+                  </div>
+                </div>
+                <div class="acc-item">
+                  <div class="acc-head">
+                    <div class="acc-num">06</div>
+                    <div class="acc-name">
+                      <span class="step-tag">STEP 06</span>교제 · 성혼
+                    </div>
+                    <div class="acc-arrow">▾</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================
+                  C안 ─ Horizontal Snap Cards
+        ============================================ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">C</span>
+            <h2>Snap Card Slider</h2>
+            <p class="sub">가로 스냅 풀카드 · 시각 임팩트 강조</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Matching Process</div>
+                <h2 class="sec-title">
+                  프리미엄 <span>6단계</span><br />매칭 시스템
+                </h2>
+                <p class="sec-desc">좌우로 넘기며 각 단계를 확인하세요</p>
+              </div>
+              <div class="c-progress-meta">
+                <span>STEP 01 / 06</span>
+                <span style="color: var(--text-muted); opacity: 0.6"
+                  >초기 상담</span
+                >
+              </div>
+              <div class="c-progress">
+                <div class="bar active"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+              </div>
+              <div class="c-cards-wrap">
+                <div class="c-card">
+                  <div class="c-card-img" data-step="STEP 01"></div>
+                  <div class="c-card-body">
+                    <div class="c-card-num">01</div>
+                    <div class="c-card-name">초기 상담</div>
+                    <div class="c-card-desc">
+                      홍유진 대표가 직접 진행하는 1:1 심층 상담. 결혼관, 이상형,
+                      가치관을 면밀히 파악하여 맞춤 전략을 수립합니다.
+                    </div>
+                    <div class="c-card-tags">
+                      <span class="tag">대표 직접</span>
+                      <span class="tag">가치관 분석</span>
+                      <span class="tag">맞춤 전략</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="c-card">
+                  <div class="c-card-img" data-step="STEP 02"></div>
+                  <div class="c-card-body">
+                    <div class="c-card-num">02</div>
+                    <div class="c-card-name">회원 등록</div>
+                    <div class="c-card-desc">
+                      직업·학력·가족 관계 등 프로필을 철저히 검증·등록.
+                    </div>
+                  </div>
+                </div>
+                <div class="c-card">
+                  <div class="c-card-img" data-step="STEP 03"></div>
+                  <div class="c-card-body">
+                    <div class="c-card-num">03</div>
+                    <div class="c-card-name">맞춤 매칭</div>
+                  </div>
+                </div>
+              </div>
+              <div class="c-hint">← 좌우로 넘기기 →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================
+                  D안 ─ Tab Pills + Detail
+        ============================================ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">D</span>
+            <h2>Tab Pills</h2>
+            <p class="sub">상단 탭 + 단일 상세 · 데스크톱 동기화</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Matching Process</div>
+                <h2 class="sec-title">
+                  프리미엄 <span>6단계</span><br />매칭 시스템
+                </h2>
+                <p class="sec-desc">단계를 선택하여 상세 내용을 확인하세요</p>
+              </div>
+              <div class="d-tabs">
+                <div class="d-tab active">
+                  <span class="num">1</span>초기 상담
+                </div>
+                <div class="d-tab"><span class="num">2</span>회원 등록</div>
+                <div class="d-tab"><span class="num">3</span>맞춤 매칭</div>
+                <div class="d-tab"><span class="num">4</span>프로필 교환</div>
+                <div class="d-tab"><span class="num">5</span>만남 주선</div>
+                <div class="d-tab"><span class="num">6</span>교제 · 성혼</div>
+              </div>
+              <div class="d-detail">
+                <div class="d-detail-img"></div>
+                <div class="d-detail-body">
+                  <div class="d-detail-step">STEP 01</div>
+                  <div class="d-detail-name">초기 상담</div>
+                  <div class="d-detail-desc">
+                    홍유진 대표가 직접 진행하는 1:1 심층 상담. 결혼관, 이상형,
+                    라이프스타일, 가치관까지 면밀히 파악하여 최적의 매칭 전략을
+                    수립합니다.
+                  </div>
+                  <div class="d-detail-tags">
+                    <span class="tag">대표 직접 상담</span>
+                    <span class="tag">가치관 분석</span>
+                    <span class="tag">맞춤 전략 수립</span>
+                  </div>
+                </div>
+              </div>
+              <div class="d-nav">
+                <button>← 이전</button>
+                <button class="primary">다음 →</button>
+              </div>
+              <div style="height: 24px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 비교 표 -->
+      <div class="compare">
+        <h3>4안 비교 — 어떤 안이 적합할까?</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 12%">기준</th>
+              <th style="width: 22%">A · Vertical Stepper</th>
+              <th style="width: 22%">B · Accordion</th>
+              <th style="width: 22%">C · Snap Card Slider</th>
+              <th style="width: 22%">D · Tab Pills</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>한눈 인지성</td>
+              <td class="ok">★★★★ 6단계 흐름 한눈에</td>
+              <td class="ok">★★★★★ 컴팩트 6개 모두 보임</td>
+              <td class="warn">★★ 한번에 1단계만 보임</td>
+              <td class="ok">★★★★ 탭으로 전체 노출</td>
+            </tr>
+            <tr>
+              <td>인터랙션</td>
+              <td class="ok">스크롤만 (제로 마찰)</td>
+              <td class="warn">탭 토글 필요 (학습 필요 X)</td>
+              <td class="warn">스와이프 필요</td>
+              <td class="warn">탭 클릭 필요</td>
+            </tr>
+            <tr>
+              <td>페이지 길이</td>
+              <td class="warn">길어짐 (모든 정보 펼침)</td>
+              <td class="ok">컴팩트</td>
+              <td class="ok">가장 컴팩트</td>
+              <td class="ok">컴팩트</td>
+            </tr>
+            <tr>
+              <td>시각 임팩트</td>
+              <td>중간 (깔끔)</td>
+              <td>중간 (정돈)</td>
+              <td class="ok">★★★★★ 가장 강렬</td>
+              <td>중간</td>
+            </tr>
+            <tr>
+              <td>이미지 활용</td>
+              <td class="warn">텍스트 위주 (이미지 생략)</td>
+              <td class="ok">탭 시 풀 노출</td>
+              <td class="ok">★★★★★ 풀카드 이미지</td>
+              <td class="ok">상세에 풀 이미지</td>
+            </tr>
+            <tr>
+              <td>오버플로우 위험</td>
+              <td class="ok">없음</td>
+              <td class="ok">없음</td>
+              <td>가로 스크롤만 (안전)</td>
+              <td>탭 가로 스크롤만</td>
+            </tr>
+            <tr>
+              <td>데스크톱 동기화</td>
+              <td class="warn">완전히 다른 UI</td>
+              <td class="warn">완전히 다른 UI</td>
+              <td class="warn">완전히 다른 UI</td>
+              <td class="ok">★★★★ 데스크톱과 거의 동일</td>
+            </tr>
+            <tr>
+              <td>구현 비용</td>
+              <td class="ok">낮음 (정적 HTML/CSS)</td>
+              <td>중간 (JS 토글)</td>
+              <td>중간 (스크롤 동기화)</td>
+              <td class="ok">낮음 (기존 JS 재사용)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      // 데모용 — 비교 페이지에서 인터랙션 가볍게 흉내
+      document.querySelectorAll(".acc-head").forEach((head) => {
+        head.addEventListener("click", () => {
+          const item = head.parentElement;
+          item.classList.toggle("open");
+        });
+      });
+      document.querySelectorAll(".d-tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tab.parentElement
+            .querySelectorAll(".d-tab")
+            .forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>

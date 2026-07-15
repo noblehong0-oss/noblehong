@@ -1,0 +1,910 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>매칭전략연구소 — 4축 비교표 모바일 4안 (와이어프레임)</title>
+    <style>
+      :root {
+        --gold: #b89a5a;
+        --gold-dark: #8c7030;
+        --gold-light: #d4b870;
+        --gold-soft: #f6e27a;
+        --espresso: #2a1d0a;
+        --ivory: #f4e8c8;
+        --ivory-soft: #faf3df;
+        --text: #2c2820;
+        --text-muted: #6e604a;
+        --text-secondary: #5c5040;
+        --bg: #fbf7ec;
+        --card: #ffffff;
+        --border: #e8dcb8;
+        --shadow: 0 4px 14px rgba(42, 29, 10, 0.08);
+        --shadow-strong: 0 12px 32px rgba(42, 29, 10, 0.18);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: #1a1410;
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Pretendard",
+          system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .review-wrap {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 32px 16px 80px;
+      }
+      .review-head {
+        text-align: center;
+        color: #f1e4c2;
+        margin-bottom: 36px;
+      }
+      .review-head h1 {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .review-head p {
+        margin-top: 8px;
+        font-size: 13px;
+        color: rgba(241, 228, 194, 0.65);
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 22px;
+      }
+      @media (max-width: 1100px) {
+        .options {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .options {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .option-label {
+        text-align: center;
+        color: #f1e4c2;
+      }
+      .option-label .tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .option-label h2 {
+        font-size: 17px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .option-label .sub {
+        font-size: 11.5px;
+        color: rgba(241, 228, 194, 0.6);
+        margin-top: 4px;
+        line-height: 1.45;
+      }
+
+      .phone {
+        width: 360px;
+        max-width: 100%;
+        height: 720px;
+        background: var(--bg);
+        border: 12px solid #0c0905;
+        border-radius: 36px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 2px rgba(184, 154, 90, 0.3),
+          0 16px 40px rgba(0, 0, 0, 0.4);
+      }
+      .phone-inner {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: linear-gradient(180deg, #fbf7ec 0%, #f4e8c8 100%);
+        scrollbar-width: thin;
+      }
+      .phone-inner::-webkit-scrollbar {
+        width: 4px;
+      }
+      .phone-inner::-webkit-scrollbar-thumb {
+        background: rgba(140, 112, 48, 0.3);
+        border-radius: 2px;
+      }
+
+      .head {
+        padding: 18px 18px 14px;
+      }
+      .eyebrow {
+        font-size: 10.5px;
+        letter-spacing: 2.5px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .head h2 {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--espresso);
+        margin-top: 6px;
+        line-height: 1.3;
+      }
+      .head h2 em {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-style: italic;
+        color: var(--gold-dark);
+        font-weight: 600;
+      }
+
+      /* ─────────────────────────────────────
+         A안 — Vertical 2 Cards (일반 카드 + 우리 카드 stack)
+      ───────────────────────────────────── */
+      .a-cards {
+        padding: 0 14px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .a-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px 18px;
+        box-shadow: var(--shadow);
+      }
+      .a-card.us {
+        background: linear-gradient(135deg, #3a2a14, var(--espresso));
+        border-color: var(--gold);
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+      }
+      .a-card.us::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at top right,
+          rgba(212, 184, 112, 0.18),
+          transparent 60%
+        );
+        pointer-events: none;
+      }
+      .a-card-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 10px;
+      }
+      .a-card.us .a-card-head {
+        border-bottom-color: rgba(212, 184, 112, 0.3);
+      }
+      .a-card-tag {
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+      .a-card.us .a-card-tag {
+        color: var(--gold-light);
+      }
+      .a-card-name {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .a-card.us .a-card-name {
+        color: #fff;
+      }
+      .a-row {
+        display: grid;
+        grid-template-columns: 70px 1fr;
+        gap: 10px;
+        padding: 6px 0;
+        font-size: 12px;
+      }
+      .a-row .axis-label {
+        color: var(--gold-dark);
+        font-weight: 700;
+        font-size: 11px;
+      }
+      .a-card.us .a-row .axis-label {
+        color: var(--gold-light);
+      }
+      .a-row .axis-value {
+        color: var(--text-secondary);
+      }
+      .a-card.us .a-row .axis-value {
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      /* ─────────────────────────────────────
+         B안 — 2-col Compare Table (axis 행)
+      ───────────────────────────────────── */
+      .b-table {
+        padding: 0 14px 14px;
+      }
+      .b-head-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 6px;
+      }
+      .b-head-cell {
+        padding: 10px 12px;
+        border-radius: 10px 10px 0 0;
+        text-align: center;
+      }
+      .b-head-cell.other {
+        background: var(--ivory-soft);
+        border: 1px solid var(--border);
+        border-bottom: none;
+      }
+      .b-head-cell.us {
+        background: linear-gradient(135deg, var(--gold-dark), #6e5a24);
+        color: #fff;
+        border: 1px solid var(--gold);
+        border-bottom: none;
+      }
+      .b-head-cell .small {
+        font-size: 9.5px;
+        letter-spacing: 1px;
+        opacity: 0.7;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      .b-head-cell .big {
+        font-size: 12px;
+        font-weight: 800;
+        margin-top: 2px;
+        line-height: 1.2;
+      }
+      .b-row {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 6px;
+        overflow: hidden;
+      }
+      .b-row-axis {
+        text-align: center;
+        font-size: 9.5px;
+        letter-spacing: 1.5px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        padding: 6px;
+        background: var(--ivory-soft);
+        text-transform: uppercase;
+      }
+      .b-row-cells {
+        display: grid;
+        grid-template-columns: 1fr 1px 1fr;
+      }
+      .b-row-cell {
+        padding: 10px 8px;
+        font-size: 11px;
+        line-height: 1.4;
+        text-align: center;
+        word-break: keep-all;
+      }
+      .b-row-cell.other {
+        color: var(--text-muted);
+      }
+      .b-row-cell.us {
+        color: var(--espresso);
+        font-weight: 700;
+      }
+      .b-row-divider {
+        background: var(--border);
+      }
+
+      /* ─────────────────────────────────────
+         C안 — Stacked Axis Cards (4 axis × 좌우 split)
+      ───────────────────────────────────── */
+      .c-list {
+        padding: 0 14px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .c-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .c-axis-head {
+        background: linear-gradient(90deg, var(--ivory-soft), #fdf6e3);
+        padding: 8px 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-bottom: 1px solid var(--border);
+      }
+      .c-axis-num {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .c-axis-name {
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--gold-dark);
+        letter-spacing: 0.5px;
+      }
+      .c-split {
+        display: grid;
+        grid-template-columns: 1fr 1px 1fr;
+      }
+      .c-side {
+        padding: 12px 12px;
+      }
+      .c-side .lbl {
+        font-size: 9.5px;
+        letter-spacing: 1px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .c-side.other .lbl {
+        color: var(--text-muted);
+      }
+      .c-side.us .lbl {
+        color: var(--gold-dark);
+      }
+      .c-side .val {
+        font-size: 11.5px;
+        line-height: 1.4;
+        word-break: keep-all;
+      }
+      .c-side.other .val {
+        color: var(--text-muted);
+        text-decoration: line-through;
+        opacity: 0.65;
+      }
+      .c-side.us .val {
+        color: var(--espresso);
+        font-weight: 700;
+      }
+      .c-divider {
+        background: var(--border);
+      }
+
+      /* ─────────────────────────────────────
+         D안 — VS Battle Card (다크 vs 라이트 배지)
+      ───────────────────────────────────── */
+      .d-wrap {
+        padding: 0 14px 14px;
+      }
+      .d-card {
+        background: linear-gradient(135deg, #3a2a14, var(--espresso));
+        border-radius: 14px;
+        padding: 18px 16px;
+        position: relative;
+        overflow: hidden;
+      }
+      .d-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at top right,
+          rgba(212, 184, 112, 0.2),
+          transparent 60%
+        );
+      }
+      .d-vs-row {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr 28px 1fr;
+        gap: 6px;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(212, 184, 112, 0.18);
+      }
+      .d-vs-row:last-child {
+        border-bottom: none;
+      }
+      .d-vs-row .axis-label {
+        position: absolute;
+        top: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: var(--gold-light);
+        text-transform: uppercase;
+        background: var(--espresso);
+        padding: 0 6px;
+      }
+      .d-other {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.55);
+        text-align: right;
+        line-height: 1.35;
+        word-break: keep-all;
+      }
+      .d-vs-icon {
+        text-align: center;
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-style: italic;
+        font-size: 12px;
+        color: var(--gold-light);
+        font-weight: 700;
+      }
+      .d-us {
+        font-size: 11.5px;
+        color: var(--gold-light);
+        text-align: left;
+        font-weight: 700;
+        line-height: 1.35;
+        word-break: keep-all;
+      }
+      .d-header {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr 28px 1fr;
+        gap: 6px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(212, 184, 112, 0.3);
+        margin-bottom: 4px;
+      }
+      .d-header .h-other {
+        text-align: right;
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.5);
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .d-header .h-us {
+        text-align: left;
+        font-size: 11px;
+        color: var(--gold-light);
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      /* 비교 표 */
+      .compare {
+        margin: 56px auto 0;
+        max-width: 1300px;
+        background: rgba(241, 228, 194, 0.08);
+        border: 1px solid rgba(241, 228, 194, 0.2);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .compare h3 {
+        padding: 16px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #f1e4c2;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.15);
+        background: rgba(241, 228, 194, 0.04);
+      }
+      .compare table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #e3d8b6;
+        font-size: 12px;
+      }
+      .compare th,
+      .compare td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.07);
+        vertical-align: top;
+      }
+      .compare th {
+        background: rgba(241, 228, 194, 0.04);
+        color: #f1e4c2;
+        font-weight: 700;
+        font-size: 11px;
+      }
+      .compare tr:last-child td {
+        border-bottom: none;
+      }
+      .compare .ok {
+        color: #c4a55a;
+      }
+      .compare .warn {
+        color: #d68a5a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-wrap">
+      <div class="review-head">
+        <h1>매칭전략연구소 — 4축 비교표 모바일 4안</h1>
+        <p>
+          360px 폰 viewport · "일반 결혼정보회사" vs "매칭전략연구소"
+          4축(목적/방식/지원범위/접근법)
+        </p>
+      </div>
+
+      <div class="options">
+        <!-- ============ A안 — Vertical 2 Cards ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">A</span>
+            <h2>Vertical 2 Cards</h2>
+            <p class="sub">일반 / 우리 카드 세로 stack</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head">
+                <div class="eyebrow">Matching Strategy Lab</div>
+                <h2>우리는 왜 <em>결혼정보회사가 아닌가</em>.</h2>
+              </div>
+              <div class="a-cards">
+                <div class="a-card other">
+                  <div class="a-card-head">
+                    <span class="a-card-tag">Others</span>
+                    <span class="a-card-name">일반 결혼정보회사</span>
+                  </div>
+                  <div class="a-row">
+                    <span class="axis-label">목적</span
+                    ><span class="axis-value">결혼 상대 소개</span>
+                  </div>
+                  <div class="a-row">
+                    <span class="axis-label">방식</span
+                    ><span class="axis-value">조건 위주 매칭</span>
+                  </div>
+                  <div class="a-row">
+                    <span class="axis-label">지원 범위</span
+                    ><span class="axis-value">만남 주선</span>
+                  </div>
+                  <div class="a-row">
+                    <span class="axis-label">접근법</span
+                    ><span class="axis-value">정보 제공</span>
+                  </div>
+                </div>
+                <div class="a-card us">
+                  <div class="a-card-head">
+                    <span class="a-card-tag">Noble Hong</span>
+                    <span class="a-card-name">매칭전략연구소</span>
+                  </div>
+                  <div class="a-row">
+                    <span class="axis-label">목적</span
+                    ><span class="axis-value">연애 전 과정 + 결혼까지</span>
+                  </div>
+                  <div class="a-row">
+                    <span class="axis-label">방식</span
+                    ><span class="axis-value">성향·감정·전략 종합 분석</span>
+                  </div>
+                  <div class="a-row">
+                    <span class="axis-label">지원 범위</span
+                    ><span class="axis-value">만남 → 연애 → 결혼</span>
+                  </div>
+                  <div class="a-row">
+                    <span class="axis-label">접근법</span
+                    ><span class="axis-value">코칭 + 컨설팅 + 연구</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ B안 — 2-col Compare Table ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">B</span>
+            <h2>Compare Table</h2>
+            <p class="sub">2 cols 표 · axis별 row</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head">
+                <div class="eyebrow">Matching Strategy Lab</div>
+                <h2>우리는 왜 <em>결혼정보회사가 아닌가</em>.</h2>
+              </div>
+              <div class="b-table">
+                <div class="b-head-row">
+                  <div class="b-head-cell other">
+                    <div class="small">Others</div>
+                    <div class="big">일반 결혼정보회사</div>
+                  </div>
+                  <div class="b-head-cell us">
+                    <div class="small">Noble Hong</div>
+                    <div class="big">매칭전략연구소</div>
+                  </div>
+                </div>
+                <div class="b-row">
+                  <div class="b-row-axis">목적</div>
+                  <div class="b-row-cells">
+                    <div class="b-row-cell other">결혼 상대 소개</div>
+                    <div class="b-row-divider"></div>
+                    <div class="b-row-cell us">연애 전 과정 + 결혼</div>
+                  </div>
+                </div>
+                <div class="b-row">
+                  <div class="b-row-axis">방식</div>
+                  <div class="b-row-cells">
+                    <div class="b-row-cell other">조건 위주 매칭</div>
+                    <div class="b-row-divider"></div>
+                    <div class="b-row-cell us">성향·감정·전략 분석</div>
+                  </div>
+                </div>
+                <div class="b-row">
+                  <div class="b-row-axis">지원 범위</div>
+                  <div class="b-row-cells">
+                    <div class="b-row-cell other">만남 주선</div>
+                    <div class="b-row-divider"></div>
+                    <div class="b-row-cell us">만남 → 연애 → 결혼</div>
+                  </div>
+                </div>
+                <div class="b-row">
+                  <div class="b-row-axis">접근법</div>
+                  <div class="b-row-cells">
+                    <div class="b-row-cell other">정보 제공</div>
+                    <div class="b-row-divider"></div>
+                    <div class="b-row-cell us">코칭 + 컨설팅 + 연구</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ C안 — Stacked Axis Cards ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">C</span>
+            <h2>Axis Cards</h2>
+            <p class="sub">4 axis 세로 카드 · 좌우 비교</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head">
+                <div class="eyebrow">Matching Strategy Lab</div>
+                <h2>우리는 왜 <em>결혼정보회사가 아닌가</em>.</h2>
+              </div>
+              <div class="c-list">
+                <div class="c-card">
+                  <div class="c-axis-head">
+                    <div class="c-axis-num">01</div>
+                    <div class="c-axis-name">목적</div>
+                  </div>
+                  <div class="c-split">
+                    <div class="c-side other">
+                      <div class="lbl">Others</div>
+                      <div class="val">결혼 상대 소개</div>
+                    </div>
+                    <div class="c-divider"></div>
+                    <div class="c-side us">
+                      <div class="lbl">Noble Hong</div>
+                      <div class="val">연애 전 과정 + 결혼까지</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="c-card">
+                  <div class="c-axis-head">
+                    <div class="c-axis-num">02</div>
+                    <div class="c-axis-name">방식</div>
+                  </div>
+                  <div class="c-split">
+                    <div class="c-side other">
+                      <div class="lbl">Others</div>
+                      <div class="val">조건 위주 매칭</div>
+                    </div>
+                    <div class="c-divider"></div>
+                    <div class="c-side us">
+                      <div class="lbl">Noble Hong</div>
+                      <div class="val">성향·감정·전략 종합 분석</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="c-card">
+                  <div class="c-axis-head">
+                    <div class="c-axis-num">03</div>
+                    <div class="c-axis-name">지원 범위</div>
+                  </div>
+                  <div class="c-split">
+                    <div class="c-side other">
+                      <div class="lbl">Others</div>
+                      <div class="val">만남 주선</div>
+                    </div>
+                    <div class="c-divider"></div>
+                    <div class="c-side us">
+                      <div class="lbl">Noble Hong</div>
+                      <div class="val">만남 → 연애 → 결혼</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="c-card">
+                  <div class="c-axis-head">
+                    <div class="c-axis-num">04</div>
+                    <div class="c-axis-name">접근법</div>
+                  </div>
+                  <div class="c-split">
+                    <div class="c-side other">
+                      <div class="lbl">Others</div>
+                      <div class="val">정보 제공</div>
+                    </div>
+                    <div class="c-divider"></div>
+                    <div class="c-side us">
+                      <div class="lbl">Noble Hong</div>
+                      <div class="val">코칭 + 컨설팅 + 연구</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ D안 — VS Battle Card ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">D</span>
+            <h2>VS Battle</h2>
+            <p class="sub">다크 카드 · vs 격투 비교</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head">
+                <div class="eyebrow">Matching Strategy Lab</div>
+                <h2>우리는 왜 <em>결혼정보회사가 아닌가</em>.</h2>
+              </div>
+              <div class="d-wrap">
+                <div class="d-card">
+                  <div class="d-header">
+                    <div class="h-other">Others</div>
+                    <div></div>
+                    <div class="h-us">Noble Hong</div>
+                  </div>
+                  <div class="d-vs-row">
+                    <span class="axis-label">목적</span>
+                    <div class="d-other">결혼 상대 소개</div>
+                    <div class="d-vs-icon">VS</div>
+                    <div class="d-us">연애 전 과정<br />+ 결혼까지</div>
+                  </div>
+                  <div class="d-vs-row">
+                    <span class="axis-label">방식</span>
+                    <div class="d-other">조건 위주<br />매칭</div>
+                    <div class="d-vs-icon">VS</div>
+                    <div class="d-us">성향·감정·전략<br />종합 분석</div>
+                  </div>
+                  <div class="d-vs-row">
+                    <span class="axis-label">지원 범위</span>
+                    <div class="d-other">만남 주선</div>
+                    <div class="d-vs-icon">VS</div>
+                    <div class="d-us">만남 → 연애<br />→ 결혼</div>
+                  </div>
+                  <div class="d-vs-row">
+                    <span class="axis-label">접근법</span>
+                    <div class="d-other">정보 제공</div>
+                    <div class="d-vs-icon">VS</div>
+                    <div class="d-us">코칭 + 컨설팅<br />+ 연구</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 비교 표 -->
+      <div class="compare">
+        <h3>4안 비교 — 4축 비교표 모바일 처리</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 13%">기준</th>
+              <th>A · Vertical 2 Cards</th>
+              <th>B · Compare Table</th>
+              <th>C · Axis Cards</th>
+              <th>D · VS Battle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>화면 차지</td>
+              <td>~520px</td>
+              <td class="ok">~440px</td>
+              <td>~580px</td>
+              <td class="ok">~420px</td>
+            </tr>
+            <tr>
+              <td>한눈 비교</td>
+              <td class="warn">★★★ 카드 분리 (시선 이동)</td>
+              <td class="ok">★★★★★ 좌우 직접 비교</td>
+              <td class="ok">★★★★★ axis별 좌우 직접</td>
+              <td class="ok">★★★★★ VS 강조</td>
+            </tr>
+            <tr>
+              <td>전문직/럭셔리 톤</td>
+              <td>★★★★ 우리 카드 다크 강조</td>
+              <td>★★★★ 깔끔 표</td>
+              <td>★★★★ 라이트 정돈</td>
+              <td class="ok">★★★★★ 다크 럭셔리 (가장 강렬)</td>
+            </tr>
+            <tr>
+              <td>가독성</td>
+              <td class="ok">★★★★ 카드별 명확</td>
+              <td class="ok">★★★★ 표 정렬 명확</td>
+              <td class="ok">★★★★★ axis 라벨 강조</td>
+              <td>★★★ 다크 + 작은 폰트</td>
+            </tr>
+            <tr>
+              <td>"우리" 차별화 강조</td>
+              <td class="ok">★★★★★ 다크 vs 라이트</td>
+              <td>★★★★ 골드 헤더</td>
+              <td>★★★ 평이</td>
+              <td class="ok">★★★★★ 골드 강조</td>
+            </tr>
+            <tr>
+              <td>정보 밀도</td>
+              <td>★★★★ 풀 텍스트</td>
+              <td>★★★ 중간</td>
+              <td>★★★★ axis 분리</td>
+              <td>★★★ 컴팩트</td>
+            </tr>
+            <tr>
+              <td>구현 비용</td>
+              <td class="ok">낮음</td>
+              <td class="ok">낮음</td>
+              <td class="ok">낮음</td>
+              <td>중간 (axis label absolute)</td>
+            </tr>
+            <tr>
+              <td>모바일 표준 패턴</td>
+              <td>제품 비교</td>
+              <td class="ok">가격 비교 표</td>
+              <td>FAQ / 비교</td>
+              <td class="ok">스포츠 매치업</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

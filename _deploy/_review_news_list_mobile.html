@@ -1,0 +1,1114 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>매칭라운지 — 노블홍 소식 모바일 5안 (와이어프레임)</title>
+    <style>
+      :root {
+        --gold: #b89a5a;
+        --gold-dark: #8c7030;
+        --gold-light: #d4b870;
+        --espresso: #2a1d0a;
+        --ivory: #f4e8c8;
+        --ivory-soft: #faf3df;
+        --text: #2c2820;
+        --text-muted: #6e604a;
+        --text-secondary: #5c5040;
+        --bg: #fbf7ec;
+        --card: #ffffff;
+        --border: #e8dcb8;
+        --shadow: 0 4px 14px rgba(42, 29, 10, 0.08);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: #1a1410;
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Pretendard",
+          system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .review-wrap {
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 32px 16px 80px;
+      }
+      .review-head {
+        text-align: center;
+        color: #f1e4c2;
+        margin-bottom: 36px;
+      }
+      .review-head h1 {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .review-head p {
+        margin-top: 8px;
+        font-size: 13px;
+        color: rgba(241, 228, 194, 0.65);
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 18px;
+      }
+      @media (max-width: 1280px) {
+        .options {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .options {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .options {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .option-label {
+        text-align: center;
+        color: #f1e4c2;
+      }
+      .option-label .tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .option-label h2 {
+        font-size: 16px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .option-label .sub {
+        font-size: 11px;
+        color: rgba(241, 228, 194, 0.6);
+        margin-top: 4px;
+      }
+      .option-label .height-chip {
+        display: inline-block;
+        margin-top: 6px;
+        padding: 2px 8px;
+        background: rgba(212, 184, 112, 0.15);
+        color: var(--gold-light);
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 700;
+      }
+
+      .phone {
+        width: 360px;
+        max-width: 100%;
+        height: 720px;
+        background: var(--bg);
+        border: 12px solid #0c0905;
+        border-radius: 36px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 2px rgba(184, 154, 90, 0.3),
+          0 16px 40px rgba(0, 0, 0, 0.4);
+      }
+      .phone-inner {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: linear-gradient(180deg, #fbf7ec 0%, #f4e8c8 100%);
+        scrollbar-width: thin;
+      }
+      .phone-inner::-webkit-scrollbar {
+        width: 4px;
+      }
+      .phone-inner::-webkit-scrollbar-thumb {
+        background: rgba(140, 112, 48, 0.3);
+        border-radius: 2px;
+      }
+
+      .head {
+        padding: 16px 18px 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        border-bottom: 1px solid var(--border);
+      }
+      .head h3 {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--gold-dark);
+        letter-spacing: -0.3px;
+      }
+      .head .more {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--gold);
+        cursor: pointer;
+      }
+
+      /* 카테고리 색 */
+      .cat-news {
+        background: rgba(140, 128, 112, 0.18);
+        color: #5c5040;
+      }
+      .cat-event {
+        background: rgba(184, 65, 65, 0.15);
+        color: #b04545;
+      }
+      .cat-notice {
+        background: rgba(184, 154, 90, 0.18);
+        color: var(--gold-dark);
+      }
+      .cat-press {
+        background: rgba(45, 90, 156, 0.15);
+        color: #2d5a9c;
+      }
+      .dot-news {
+        background: #8c8070;
+      }
+      .dot-event {
+        background: #b04545;
+      }
+      .dot-notice {
+        background: var(--gold);
+      }
+      .dot-press {
+        background: #2d5a9c;
+      }
+
+      /* ─────────────────────────────────────
+         A안 — Compact 1col (16개 컴팩트 풀노출)
+      ───────────────────────────────────── */
+      .a-list {
+        padding: 0 14px;
+      }
+      .a-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 4px;
+        border-bottom: 1px solid rgba(196, 165, 90, 0.12);
+      }
+      .a-item:last-child {
+        border-bottom: none;
+      }
+      .a-num {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text-muted);
+        width: 22px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+      .a-tag {
+        font-size: 9px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 3px;
+        flex-shrink: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .a-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .a-date {
+        font-size: 10px;
+        color: var(--text-muted);
+        flex-shrink: 0;
+      }
+
+      /* ─────────────────────────────────────
+         B안 — Top 5 + 더보기
+      ───────────────────────────────────── */
+      .b-list {
+        padding: 6px 14px 12px;
+      }
+      .b-item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+        align-items: center;
+        padding: 12px 6px;
+        border-bottom: 1px solid rgba(196, 165, 90, 0.12);
+        cursor: pointer;
+      }
+      .b-item:last-child {
+        border-bottom: none;
+      }
+      .b-tag-wrap {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: nowrap;
+      }
+      .b-tag {
+        font-size: 9.5px;
+        font-weight: 700;
+        padding: 3px 7px;
+        border-radius: 3px;
+        flex-shrink: 0;
+      }
+      .b-content {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .b-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.35;
+        word-break: keep-all;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .b-date {
+        font-size: 10.5px;
+        color: var(--text-muted);
+      }
+      .b-arrow {
+        color: var(--gold-dark);
+        font-size: 14px;
+        opacity: 0.5;
+        flex-shrink: 0;
+      }
+      .b-more {
+        text-align: center;
+        padding: 12px;
+        margin: 6px 14px 0;
+        background: linear-gradient(
+          135deg,
+          rgba(212, 184, 112, 0.12),
+          rgba(140, 112, 48, 0.04)
+        );
+        border: 1px solid rgba(184, 154, 90, 0.25);
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--gold-dark);
+        cursor: pointer;
+      }
+
+      /* ─────────────────────────────────────
+         C안 — 가로 Snap Carousel (3개씩)
+      ───────────────────────────────────── */
+      .c-cards-wrap {
+        display: flex;
+        gap: 10px;
+        padding: 12px 9% 14px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        touch-action: pan-x pan-y;
+      }
+      .c-cards-wrap::-webkit-scrollbar {
+        display: none;
+      }
+      .c-card {
+        flex: 0 0 82%;
+        scroll-snap-align: center;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 16px;
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+      }
+      .c-tag-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .c-tag {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 3px;
+      }
+      .c-card .c-num {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 13px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        opacity: 0.7;
+      }
+      .c-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.4;
+        word-break: keep-all;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .c-date {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .c-progress {
+        display: flex;
+        gap: 4px;
+        padding: 0 18px;
+        max-width: 240px;
+        margin: 8px auto 0;
+      }
+      .c-progress .seg {
+        flex: 1;
+        height: 3px;
+        background: rgba(140, 112, 48, 0.22);
+        border-radius: 2px;
+      }
+      .c-progress .seg.active {
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+
+      /* ─────────────────────────────────────
+         D안 — 카테고리 탭 + Top 3
+      ───────────────────────────────────── */
+      .d-tabs {
+        display: flex;
+        gap: 4px;
+        padding: 12px 14px 8px;
+      }
+      .d-tab {
+        flex: 1;
+        padding: 6px 4px;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-muted);
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        cursor: pointer;
+      }
+      .d-tab.active {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        border-color: var(--gold);
+        color: var(--espresso);
+      }
+      .d-list {
+        padding: 0 14px;
+      }
+      .d-item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+        align-items: center;
+        padding: 12px 4px;
+        border-bottom: 1px solid rgba(196, 165, 90, 0.12);
+      }
+      .d-item:last-child {
+        border-bottom: none;
+      }
+      .d-num {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--gold);
+        line-height: 1;
+        width: 28px;
+        text-align: center;
+      }
+      .d-content {
+        min-width: 0;
+      }
+      .d-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.35;
+        word-break: keep-all;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .d-date {
+        font-size: 10.5px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .d-arrow {
+        color: var(--gold-dark);
+        opacity: 0.5;
+      }
+      .d-more {
+        text-align: center;
+        padding: 10px;
+        margin: 6px 14px 0;
+        background: transparent;
+        border: 1px solid rgba(184, 154, 90, 0.3);
+        border-radius: 6px;
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--gold-dark);
+      }
+
+      /* ─────────────────────────────────────
+         E안 — Numbered Dot 컴팩트 (16개 풀)
+      ───────────────────────────────────── */
+      .e-list {
+        padding: 4px 0;
+      }
+      .e-item {
+        display: grid;
+        grid-template-columns: 18px 8px 1fr auto;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 16px;
+        border-bottom: 1px solid rgba(196, 165, 90, 0.08);
+        cursor: pointer;
+      }
+      .e-item:last-child {
+        border-bottom: none;
+      }
+      .e-num {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-align: right;
+      }
+      .e-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+      .e-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .e-date {
+        font-size: 10px;
+        color: var(--text-muted);
+        flex-shrink: 0;
+      }
+      .e-legend {
+        display: flex;
+        gap: 10px;
+        padding: 8px 16px;
+        flex-wrap: wrap;
+        font-size: 10px;
+        color: var(--text-muted);
+        border-bottom: 1px solid rgba(196, 165, 90, 0.12);
+      }
+      .e-legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .e-legend .ldot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+
+      /* 비교 표 */
+      .compare {
+        margin: 56px auto 0;
+        max-width: 1400px;
+        background: rgba(241, 228, 194, 0.08);
+        border: 1px solid rgba(241, 228, 194, 0.2);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .compare h3 {
+        padding: 16px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #f1e4c2;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.15);
+        background: rgba(241, 228, 194, 0.04);
+      }
+      .compare table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #e3d8b6;
+        font-size: 12px;
+      }
+      .compare th,
+      .compare td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.07);
+        vertical-align: top;
+      }
+      .compare th {
+        background: rgba(241, 228, 194, 0.04);
+        color: #f1e4c2;
+        font-weight: 700;
+        font-size: 11px;
+      }
+      .compare tr:last-child td {
+        border-bottom: none;
+      }
+      .compare .ok {
+        color: #c4a55a;
+      }
+      .compare .warn {
+        color: #d68a5a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-wrap">
+      <div class="review-head">
+        <h1>매칭라운지 — 노블홍 소식 모바일 5안</h1>
+        <p>
+          360px 폰 viewport · 16개 소식 아이템 길이 압축 ·
+          카테고리(news/event/notice/press)
+        </p>
+      </div>
+
+      <div class="options">
+        <!-- ============ A안 — Compact 1col ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">A</span>
+            <h2>Compact 1col</h2>
+            <p class="sub">
+              16개 풀 노출 · 한 줄 ellipsis · 가장 정보 밀도 높음
+            </p>
+            <span class="height-chip">~640px</span>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head">
+                <h3>노블홍 소식</h3>
+                <span class="more">전체 보기 ›</span>
+              </div>
+              <div class="a-list">
+                <div class="a-item">
+                  <div class="a-num">01</div>
+                  <span class="a-tag cat-event">이벤트</span>
+                  <div class="a-title">2026년 봄 노블레스 파티 모집</div>
+                  <div class="a-date">04.20</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">02</div>
+                  <span class="a-tag cat-news">소식</span>
+                  <div class="a-title">홍유진 대표 매경 인터뷰</div>
+                  <div class="a-date">04.18</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">03</div>
+                  <span class="a-tag cat-notice">공지</span>
+                  <div class="a-title">5월 회원 신청 일정 안내</div>
+                  <div class="a-date">04.15</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">04</div>
+                  <span class="a-tag cat-press">언론</span>
+                  <div class="a-title">조선일보 결혼 트렌드 기고</div>
+                  <div class="a-date">04.12</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">05</div>
+                  <span class="a-tag cat-event">이벤트</span>
+                  <div class="a-title">의사 전용 매칭 파티 후기</div>
+                  <div class="a-date">04.10</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">06</div>
+                  <span class="a-tag cat-news">소식</span>
+                  <div class="a-title">상반기 성혼 커플 200쌍 돌파</div>
+                  <div class="a-date">04.08</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">07</div>
+                  <span class="a-tag cat-notice">공지</span>
+                  <div class="a-title">강남 라운지 주말 예약 안내</div>
+                  <div class="a-date">04.05</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">08</div>
+                  <span class="a-tag cat-press">언론</span>
+                  <div class="a-title">SBS 모닝와이드 출연</div>
+                  <div class="a-date">04.02</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">09</div>
+                  <span class="a-tag cat-event">이벤트</span>
+                  <div class="a-title">변호사 전용 미팅 라운지</div>
+                  <div class="a-date">03.30</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">10</div>
+                  <span class="a-tag cat-news">소식</span>
+                  <div class="a-title">홍유진 대표 신년 인사</div>
+                  <div class="a-date">03.28</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">11</div>
+                  <span class="a-tag cat-notice">공지</span>
+                  <div class="a-title">개인정보 처리방침 개정</div>
+                  <div class="a-date">03.25</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">12</div>
+                  <span class="a-tag cat-press">언론</span>
+                  <div class="a-title">동아일보 우먼라이프 인터뷰</div>
+                  <div class="a-date">03.22</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">13</div>
+                  <span class="a-tag cat-event">이벤트</span>
+                  <div class="a-title">CEO 자제 미팅 라운지</div>
+                  <div class="a-date">03.20</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">14</div>
+                  <span class="a-tag cat-news">소식</span>
+                  <div class="a-title">2025 베스트 결혼정보 1위</div>
+                  <div class="a-date">03.18</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">15</div>
+                  <span class="a-tag cat-notice">공지</span>
+                  <div class="a-title">신규 매니저 영입 공지</div>
+                  <div class="a-date">03.15</div>
+                </div>
+                <div class="a-item">
+                  <div class="a-num">16</div>
+                  <span class="a-tag cat-press">언론</span>
+                  <div class="a-title">월간 LIVING 매거진 커버</div>
+                  <div class="a-date">03.10</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ B안 — Top 5 + 더보기 ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">B</span>
+            <h2>Top 5 + 더보기</h2>
+            <p class="sub">상위 5개 큰 폰트 · 클릭 시 expand</p>
+            <span class="height-chip">~340px</span>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head"><h3>노블홍 소식</h3></div>
+              <div class="b-list">
+                <div class="b-item">
+                  <span class="b-tag cat-event">이벤트</span>
+                  <div class="b-content">
+                    <div class="b-title">2026년 봄 노블레스 파티 모집</div>
+                    <div class="b-date">04.20</div>
+                  </div>
+                  <span class="b-arrow">›</span>
+                </div>
+                <div class="b-item">
+                  <span class="b-tag cat-news">소식</span>
+                  <div class="b-content">
+                    <div class="b-title">홍유진 대표 매경 인터뷰</div>
+                    <div class="b-date">04.18</div>
+                  </div>
+                  <span class="b-arrow">›</span>
+                </div>
+                <div class="b-item">
+                  <span class="b-tag cat-notice">공지</span>
+                  <div class="b-content">
+                    <div class="b-title">5월 회원 신청 일정 안내</div>
+                    <div class="b-date">04.15</div>
+                  </div>
+                  <span class="b-arrow">›</span>
+                </div>
+                <div class="b-item">
+                  <span class="b-tag cat-press">언론</span>
+                  <div class="b-content">
+                    <div class="b-title">조선일보 결혼 트렌드 기고</div>
+                    <div class="b-date">04.12</div>
+                  </div>
+                  <span class="b-arrow">›</span>
+                </div>
+                <div class="b-item">
+                  <span class="b-tag cat-event">이벤트</span>
+                  <div class="b-content">
+                    <div class="b-title">의사 전용 매칭 파티 후기</div>
+                    <div class="b-date">04.10</div>
+                  </div>
+                  <span class="b-arrow">›</span>
+                </div>
+              </div>
+              <div class="b-more">+ 11개 더 보기</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ C안 — 가로 Snap Carousel ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">C</span>
+            <h2>Snap Carousel</h2>
+            <p class="sub">가로 슬라이드 카드 · progress bar</p>
+            <span class="height-chip">~190px</span>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head">
+                <h3>노블홍 소식</h3>
+                <span class="more">전체 ›</span>
+              </div>
+              <div class="c-cards-wrap">
+                <div class="c-card">
+                  <div class="c-tag-row">
+                    <span class="c-tag cat-event">이벤트</span
+                    ><span class="c-num">01</span>
+                  </div>
+                  <div class="c-title">2026년 봄 노블레스 파티 모집</div>
+                  <div class="c-date">04.20</div>
+                </div>
+                <div class="c-card">
+                  <div class="c-tag-row">
+                    <span class="c-tag cat-news">소식</span
+                    ><span class="c-num">02</span>
+                  </div>
+                  <div class="c-title">
+                    홍유진 대표 매경 인터뷰 · 30년 매칭 노하우 공개
+                  </div>
+                  <div class="c-date">04.18</div>
+                </div>
+                <div class="c-card">
+                  <div class="c-tag-row">
+                    <span class="c-tag cat-notice">공지</span
+                    ><span class="c-num">03</span>
+                  </div>
+                  <div class="c-title">5월 회원 신청 일정 안내</div>
+                  <div class="c-date">04.15</div>
+                </div>
+              </div>
+              <div class="c-progress">
+                <div class="seg active"></div>
+                <div class="seg"></div>
+                <div class="seg"></div>
+                <div class="seg"></div>
+                <div class="seg"></div>
+              </div>
+              <div
+                style="
+                  text-align: center;
+                  font-size: 10px;
+                  color: var(--text-muted);
+                  margin: 6px 0;
+                  opacity: 0.6;
+                "
+              >
+                1 / 16 · 좌우 스와이프
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ D안 — 카테고리 탭 + Top 3 ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">D</span>
+            <h2>Tab + Top 3</h2>
+            <p class="sub">카테고리별 분류 · 각 Top 3</p>
+            <span class="height-chip">~330px</span>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head"><h3>노블홍 소식</h3></div>
+              <div class="d-tabs">
+                <div class="d-tab active">전체</div>
+                <div class="d-tab">이벤트</div>
+                <div class="d-tab">소식</div>
+                <div class="d-tab">공지</div>
+                <div class="d-tab">언론</div>
+              </div>
+              <div class="d-list">
+                <div class="d-item">
+                  <div class="d-num">01</div>
+                  <div class="d-content">
+                    <div class="d-title">2026년 봄 노블레스 파티 모집</div>
+                    <div class="d-date">이벤트 · 04.20</div>
+                  </div>
+                  <span class="d-arrow">›</span>
+                </div>
+                <div class="d-item">
+                  <div class="d-num">02</div>
+                  <div class="d-content">
+                    <div class="d-title">홍유진 대표 매경 인터뷰</div>
+                    <div class="d-date">소식 · 04.18</div>
+                  </div>
+                  <span class="d-arrow">›</span>
+                </div>
+                <div class="d-item">
+                  <div class="d-num">03</div>
+                  <div class="d-content">
+                    <div class="d-title">5월 회원 신청 일정 안내</div>
+                    <div class="d-date">공지 · 04.15</div>
+                  </div>
+                  <span class="d-arrow">›</span>
+                </div>
+              </div>
+              <div class="d-more">전체 16개 보기 ›</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ E안 — Numbered Dot Compact ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">E</span>
+            <h2>Dot Compact</h2>
+            <p class="sub">16개 풀 노출 · 카테고리 컬러 dot · 가장 짧음</p>
+            <span class="height-chip">~480px</span>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="head">
+                <h3>노블홍 소식</h3>
+                <span class="more">전체 ›</span>
+              </div>
+              <div class="e-legend">
+                <span><span class="ldot dot-event"></span>이벤트</span>
+                <span><span class="ldot dot-news"></span>소식</span>
+                <span><span class="ldot dot-notice"></span>공지</span>
+                <span><span class="ldot dot-press"></span>언론</span>
+              </div>
+              <div class="e-list">
+                <div class="e-item">
+                  <span class="e-num">01</span
+                  ><span class="e-dot dot-event"></span
+                  ><span class="e-title">2026년 봄 노블레스 파티 모집</span
+                  ><span class="e-date">04.20</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">02</span
+                  ><span class="e-dot dot-news"></span
+                  ><span class="e-title">홍유진 대표 매경 인터뷰</span
+                  ><span class="e-date">04.18</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">03</span
+                  ><span class="e-dot dot-notice"></span
+                  ><span class="e-title">5월 회원 신청 일정 안내</span
+                  ><span class="e-date">04.15</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">04</span
+                  ><span class="e-dot dot-press"></span
+                  ><span class="e-title">조선일보 결혼 트렌드 기고</span
+                  ><span class="e-date">04.12</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">05</span
+                  ><span class="e-dot dot-event"></span
+                  ><span class="e-title">의사 전용 매칭 파티 후기</span
+                  ><span class="e-date">04.10</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">06</span
+                  ><span class="e-dot dot-news"></span
+                  ><span class="e-title">상반기 성혼 커플 200쌍 돌파</span
+                  ><span class="e-date">04.08</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">07</span
+                  ><span class="e-dot dot-notice"></span
+                  ><span class="e-title">강남 라운지 주말 예약 안내</span
+                  ><span class="e-date">04.05</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">08</span
+                  ><span class="e-dot dot-press"></span
+                  ><span class="e-title">SBS 모닝와이드 출연</span
+                  ><span class="e-date">04.02</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">09</span
+                  ><span class="e-dot dot-event"></span
+                  ><span class="e-title">변호사 전용 미팅 라운지</span
+                  ><span class="e-date">03.30</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">10</span
+                  ><span class="e-dot dot-news"></span
+                  ><span class="e-title">홍유진 대표 신년 인사</span
+                  ><span class="e-date">03.28</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">11</span
+                  ><span class="e-dot dot-notice"></span
+                  ><span class="e-title">개인정보 처리방침 개정</span
+                  ><span class="e-date">03.25</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">12</span
+                  ><span class="e-dot dot-press"></span
+                  ><span class="e-title">동아일보 우먼라이프 인터뷰</span
+                  ><span class="e-date">03.22</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">13</span
+                  ><span class="e-dot dot-event"></span
+                  ><span class="e-title">CEO 자제 미팅 라운지</span
+                  ><span class="e-date">03.20</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">14</span
+                  ><span class="e-dot dot-news"></span
+                  ><span class="e-title">2025 베스트 결혼정보 1위</span
+                  ><span class="e-date">03.18</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">15</span
+                  ><span class="e-dot dot-notice"></span
+                  ><span class="e-title">신규 매니저 영입 공지</span
+                  ><span class="e-date">03.15</span>
+                </div>
+                <div class="e-item">
+                  <span class="e-num">16</span
+                  ><span class="e-dot dot-press"></span
+                  ><span class="e-title">월간 LIVING 매거진 커버</span
+                  ><span class="e-date">03.10</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 비교 표 -->
+      <div class="compare">
+        <h3>5안 비교 — 노블홍 소식 16개 처리</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 11%">기준</th>
+              <th>A · Compact 1col</th>
+              <th>B · Top 5 + 더보기</th>
+              <th>C · Snap Carousel</th>
+              <th>D · Tab + Top 3</th>
+              <th>E · Dot Compact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>예상 세로 높이</td>
+              <td class="warn">~640px (16개 × 40)</td>
+              <td class="ok">~340px ★</td>
+              <td class="ok">~190px ★★</td>
+              <td>~330px</td>
+              <td>~480px</td>
+            </tr>
+            <tr>
+              <td>16개 모두 노출</td>
+              <td class="ok">★ 풀</td>
+              <td class="warn">5개만 (탭 시 더)</td>
+              <td class="warn">스와이프 시 풀</td>
+              <td class="warn">3개만 + 더보기</td>
+              <td class="ok">★ 풀 (가장 컴팩트)</td>
+            </tr>
+            <tr>
+              <td>인터랙션</td>
+              <td class="ok">스크롤만</td>
+              <td>탭 (더보기)</td>
+              <td>스와이프 + 탭</td>
+              <td>탭 (카테고리 + 더보기)</td>
+              <td class="ok">스크롤만</td>
+            </tr>
+            <tr>
+              <td>가독성</td>
+              <td>★★★ 12px</td>
+              <td class="ok">★★★★ 13px</td>
+              <td class="ok">★★★★ 14px</td>
+              <td class="ok">★★★★ 13px + 큰 번호</td>
+              <td>★★★ 12px</td>
+            </tr>
+            <tr>
+              <td>카테고리 인지</td>
+              <td>tag (chip)</td>
+              <td>tag (chip)</td>
+              <td>tag (chip) + 큰 폰트</td>
+              <td class="ok">★★★★★ 탭으로 필터링</td>
+              <td class="ok">★★★★ dot 컬러</td>
+            </tr>
+            <tr>
+              <td>전문직/럭셔리 톤</td>
+              <td>★★★ 평이</td>
+              <td>★★★ 평이</td>
+              <td class="ok">★★★★ 모던</td>
+              <td>★★★</td>
+              <td class="ok">★★★★★ 가장 미니멀/럭셔리</td>
+            </tr>
+            <tr>
+              <td>구현 비용</td>
+              <td class="ok">낮음</td>
+              <td>중간 (expand JS)</td>
+              <td>중간 (carousel + JS)</td>
+              <td>중간 (필터 JS)</td>
+              <td class="ok">낮음</td>
+            </tr>
+            <tr>
+              <td>다음 컨텐츠 노출</td>
+              <td class="warn">스크롤 멀음</td>
+              <td class="ok">바로 도달</td>
+              <td class="ok">★ 가장 빠름</td>
+              <td class="ok">바로 도달</td>
+              <td>중간</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

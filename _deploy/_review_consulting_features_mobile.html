@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>맞춤컨설팅 — 전문직 features 모바일 4안 (와이어프레임)</title>
+    <style>
+      :root {
+        --gold: #b89a5a;
+        --gold-dark: #8c7030;
+        --gold-light: #d4b870;
+        --gold-soft: #f6e27a;
+        --espresso: #2a1d0a;
+        --ivory: #f4e8c8;
+        --ivory-soft: #faf3df;
+        --text: #2c2820;
+        --text-muted: #6e604a;
+        --text-secondary: #5c5040;
+        --bg: #fbf7ec;
+        --card: #ffffff;
+        --border: #e8dcb8;
+        --shadow: 0 4px 14px rgba(42, 29, 10, 0.08);
+        --shadow-strong: 0 10px 28px rgba(42, 29, 10, 0.16);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: #1a1410;
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Pretendard",
+          system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .review-wrap {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 32px 16px 80px;
+      }
+      .review-head {
+        text-align: center;
+        color: #f1e4c2;
+        margin-bottom: 36px;
+      }
+      .review-head h1 {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .review-head p {
+        margin-top: 8px;
+        font-size: 13px;
+        color: rgba(241, 228, 194, 0.65);
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 22px;
+      }
+      @media (max-width: 1280px) {
+        .options {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 700px) {
+        .options {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .option-label {
+        text-align: center;
+        color: #f1e4c2;
+      }
+      .option-label .tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .option-label h2 {
+        font-size: 17px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .option-label .sub {
+        font-size: 11.5px;
+        color: rgba(241, 228, 194, 0.6);
+        margin-top: 4px;
+        line-height: 1.45;
+      }
+
+      .phone {
+        width: 360px;
+        max-width: 100%;
+        height: 720px;
+        background: var(--bg);
+        border: 12px solid #0c0905;
+        border-radius: 36px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 2px rgba(184, 154, 90, 0.3),
+          0 16px 40px rgba(0, 0, 0, 0.4);
+      }
+      .phone-inner {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: linear-gradient(180deg, #fbf7ec 0%, #f4e8c8 100%);
+        scrollbar-width: thin;
+        scrollbar-color: rgba(140, 112, 48, 0.3) transparent;
+      }
+      .phone-inner::-webkit-scrollbar {
+        width: 4px;
+      }
+      .phone-inner::-webkit-scrollbar-thumb {
+        background: rgba(140, 112, 48, 0.3);
+        border-radius: 2px;
+      }
+
+      .sec-pad {
+        padding: 22px 18px 8px;
+      }
+      .sec-eyebrow {
+        font-size: 10.5px;
+        letter-spacing: 2px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .sec-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--espresso);
+        line-height: 1.3;
+      }
+      .sec-title strong {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .swipe-hint {
+        display: flex;
+        gap: 8px;
+        padding: 10px 18px;
+        align-items: center;
+        justify-content: center;
+        font-size: 10.5px;
+        color: var(--gold-dark);
+        font-weight: 600;
+        opacity: 0.6;
+      }
+      .progress-dots {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        margin: 12px 0 0;
+      }
+      .progress-dots .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: rgba(140, 112, 48, 0.25);
+      }
+      .progress-dots .dot.active {
+        width: 22px;
+        border-radius: 4px;
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+      .meta {
+        text-align: center;
+        font-size: 10.5px;
+        color: var(--text-muted);
+        margin: 6px 0 0;
+        letter-spacing: 0.5px;
+      }
+
+      .icon-base {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .icon-base svg {
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* ─────────────────────────────────────
+         A안 — Standard Snap (단정한 골드라인 카드)
+      ───────────────────────────────────── */
+      .a-cards-wrap {
+        display: flex;
+        gap: 12px;
+        padding: 4px 9% 12px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+      }
+      .a-cards-wrap::-webkit-scrollbar {
+        display: none;
+      }
+      .a-card {
+        flex: 0 0 82%;
+        scroll-snap-align: center;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 22px 18px;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+      .a-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+      .a-card .icon-base {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(
+          135deg,
+          rgba(184, 154, 90, 0.16),
+          rgba(140, 112, 48, 0.06)
+        );
+        border: 1px solid rgba(184, 154, 90, 0.3);
+        border-radius: 12px;
+        color: var(--gold-dark);
+        margin-bottom: 14px;
+      }
+      .a-card h4 {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--espresso);
+        margin-bottom: 8px;
+      }
+      .a-card p {
+        font-size: 12.5px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        word-break: keep-all;
+      }
+
+      /* ─────────────────────────────────────
+         B안 — Numbered Big (좌측 큰 골드 번호 + 미니멀 카드)
+      ───────────────────────────────────── */
+      .b-cards-wrap {
+        display: flex;
+        gap: 10px;
+        padding: 4px 9% 12px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+      }
+      .b-cards-wrap::-webkit-scrollbar {
+        display: none;
+      }
+      .b-card {
+        flex: 0 0 82%;
+        scroll-snap-align: center;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 22px 20px;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+      .b-num {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-size: 64px;
+        font-weight: 700;
+        line-height: 0.9;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 4px;
+        letter-spacing: -2px;
+      }
+      .b-divider {
+        width: 36px;
+        height: 1px;
+        background: linear-gradient(90deg, var(--gold), transparent);
+        margin: 0 0 14px;
+      }
+      .b-card h4 {
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--espresso);
+        margin-bottom: 8px;
+        letter-spacing: -0.3px;
+      }
+      .b-card p {
+        font-size: 12.5px;
+        color: var(--text-secondary);
+        line-height: 1.65;
+        word-break: keep-all;
+      }
+      .b-card .seg-en {
+        font-size: 10.5px;
+        font-style: italic;
+        color: var(--gold-dark);
+        opacity: 0.7;
+        letter-spacing: 1px;
+        margin-top: 12px;
+        text-transform: uppercase;
+      }
+
+      /* ─────────────────────────────────────
+         C안 — Dark Glass (다크 에스프레소 + 골드 글로우)
+      ───────────────────────────────────── */
+      .c-cards-wrap {
+        display: flex;
+        gap: 12px;
+        padding: 4px 9% 12px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+      }
+      .c-cards-wrap::-webkit-scrollbar {
+        display: none;
+      }
+      .c-card {
+        flex: 0 0 82%;
+        scroll-snap-align: center;
+        background: linear-gradient(135deg, #3a2a14 0%, #2a1d0a 100%);
+        border: 1px solid rgba(212, 184, 112, 0.3);
+        border-radius: 16px;
+        padding: 22px 20px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 10px 28px rgba(42, 29, 10, 0.25);
+      }
+      .c-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at 30% 20%,
+          rgba(212, 184, 112, 0.18),
+          transparent 65%
+        );
+        pointer-events: none;
+      }
+      .c-icon {
+        width: 56px;
+        height: 56px;
+        background: linear-gradient(
+          135deg,
+          rgba(212, 184, 112, 0.2),
+          rgba(140, 112, 48, 0.08)
+        );
+        border: 1px solid rgba(212, 184, 112, 0.4);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold-light);
+        margin-bottom: 16px;
+        position: relative;
+        z-index: 1;
+      }
+      .c-icon svg {
+        width: 24px;
+        height: 24px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.6;
+      }
+      .c-card h4 {
+        font-size: 17px;
+        font-weight: 800;
+        color: #f1e4c2;
+        margin-bottom: 10px;
+        letter-spacing: -0.3px;
+        position: relative;
+        z-index: 1;
+      }
+      .c-card p {
+        font-size: 12.5px;
+        color: rgba(241, 228, 194, 0.72);
+        line-height: 1.65;
+        word-break: keep-all;
+        position: relative;
+        z-index: 1;
+      }
+      .c-card .gold-tag {
+        display: inline-block;
+        margin-top: 14px;
+        padding: 4px 10px;
+        background: rgba(212, 184, 112, 0.15);
+        border: 1px solid rgba(212, 184, 112, 0.35);
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--gold-light);
+        letter-spacing: 1px;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ─────────────────────────────────────
+         D안 — Vertical Half Card (이미지 상단 + 텍스트 하단)
+      ───────────────────────────────────── */
+      .d-cards-wrap {
+        display: flex;
+        gap: 12px;
+        padding: 4px 9% 12px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+      }
+      .d-cards-wrap::-webkit-scrollbar {
+        display: none;
+      }
+      .d-card {
+        flex: 0 0 82%;
+        scroll-snap-align: center;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+      }
+      .d-visual {
+        height: 110px;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(184, 154, 90, 0.15),
+            rgba(140, 112, 48, 0.05)
+          ),
+          repeating-linear-gradient(
+            45deg,
+            transparent 0,
+            transparent 8px,
+            rgba(184, 154, 90, 0.06) 8px,
+            rgba(184, 154, 90, 0.06) 16px
+          );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .d-visual .icon-big {
+        width: 60px;
+        height: 60px;
+        background: var(--card);
+        border: 2px solid var(--gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold-dark);
+        box-shadow: 0 6px 16px rgba(184, 154, 90, 0.25);
+      }
+      .d-visual .icon-big svg {
+        width: 28px;
+        height: 28px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+      }
+      .d-visual .step-tag {
+        position: absolute;
+        top: 12px;
+        left: 14px;
+        font-size: 10.5px;
+        font-weight: 700;
+        color: var(--gold-dark);
+        letter-spacing: 2px;
+      }
+      .d-body {
+        padding: 18px 20px 22px;
+      }
+      .d-body h4 {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--espresso);
+        margin-bottom: 8px;
+      }
+      .d-body p {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 1.65;
+        word-break: keep-all;
+      }
+
+      /* 비교 표 */
+      .compare {
+        margin: 56px auto 0;
+        max-width: 1300px;
+        background: rgba(241, 228, 194, 0.08);
+        border: 1px solid rgba(241, 228, 194, 0.2);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .compare h3 {
+        padding: 16px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #f1e4c2;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.15);
+        background: rgba(241, 228, 194, 0.04);
+      }
+      .compare table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #e3d8b6;
+        font-size: 12px;
+      }
+      .compare th,
+      .compare td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.07);
+        vertical-align: top;
+      }
+      .compare th {
+        background: rgba(241, 228, 194, 0.04);
+        color: #f1e4c2;
+        font-weight: 700;
+        font-size: 11px;
+      }
+      .compare tr:last-child td {
+        border-bottom: none;
+      }
+      .compare .ok {
+        color: #c4a55a;
+      }
+      .compare .warn {
+        color: #d68a5a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-wrap">
+      <div class="review-head">
+        <h1>맞춤컨설팅 — 전문직 Features 모바일 4안</h1>
+        <p>
+          360px 폰 viewport · 카드 좌우 슬라이드 구조 · 데이터 동일 · 디자인
+          변형
+        </p>
+      </div>
+
+      <div class="options">
+        <!-- ============ A안 — Standard Snap (골드 라인) ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">A</span>
+            <h2>Standard Snap</h2>
+            <p class="sub">단정한 골드 라인 카드 · 6단계와 동일 패턴</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">
+                  Elite Matching · For Professionals
+                </div>
+                <h2 class="sec-title">
+                  전문직의 시간은<br /><strong>다르게 흐릅니다</strong>
+                </h2>
+              </div>
+              <div class="swipe-hint">
+                <span>←</span><span>좌우로 넘기기</span><span>→</span>
+              </div>
+              <div class="a-cards-wrap">
+                <div class="a-card">
+                  <div class="icon-base">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                  </div>
+                  <h4>비공개 회원 관리</h4>
+                  <p>
+                    신원 정보의 철저한 보안 관리. 사회적 지위에 맞는
+                    프라이버시를 보장합니다.
+                  </p>
+                </div>
+                <div class="a-card">
+                  <div class="icon-base">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  </div>
+                  <h4>전담 매니저 배정</h4>
+                  <p>
+                    가정환경과 경제력을 세심하게 고려한 1:1 맞춤형 매칭 컨설팅.
+                  </p>
+                </div>
+                <div class="a-card">
+                  <div class="icon-base">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                    </svg>
+                  </div>
+                  <h4>전문직 전용 파티</h4>
+                  <p>
+                    Doctor Party, Professional Party 등 같은 수준의 회원만
+                    참석합니다.
+                  </p>
+                </div>
+              </div>
+              <div class="progress-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+              <div class="meta">1 / 3</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ B안 — Numbered Big (큰 골드 번호) ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">B</span>
+            <h2>Numbered Big</h2>
+            <p class="sub">큰 골드 번호 + 세리프 + 미니멀 텍스트</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">
+                  Elite Matching · For Professionals
+                </div>
+                <h2 class="sec-title">
+                  전문직의 시간은<br /><strong>다르게 흐릅니다</strong>
+                </h2>
+              </div>
+              <div class="swipe-hint">
+                <span>←</span><span>좌우로 넘기기</span><span>→</span>
+              </div>
+              <div class="b-cards-wrap">
+                <div class="b-card">
+                  <div class="b-num">01</div>
+                  <div class="b-divider"></div>
+                  <h4>비공개 회원 관리</h4>
+                  <p>
+                    신원 정보의 철저한 보안 관리. 사회적 지위에 맞는
+                    프라이버시를 보장합니다.
+                  </p>
+                  <div class="seg-en">Privacy First</div>
+                </div>
+                <div class="b-card">
+                  <div class="b-num">02</div>
+                  <div class="b-divider"></div>
+                  <h4>전담 매니저 배정</h4>
+                  <p>
+                    가정환경과 경제력을 세심하게 고려한 1:1 맞춤형 매칭 컨설팅.
+                  </p>
+                  <div class="seg-en">Dedicated Concierge</div>
+                </div>
+                <div class="b-card">
+                  <div class="b-num">03</div>
+                  <div class="b-divider"></div>
+                  <h4>전문직 전용 파티</h4>
+                  <p>
+                    Doctor Party, Professional Party 등 같은 수준의 회원만
+                    참석합니다.
+                  </p>
+                  <div class="seg-en">Exclusive Events</div>
+                </div>
+              </div>
+              <div class="progress-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+              <div class="meta">01 / 03</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ C안 — Dark Glass (다크 + 골드 글로우) ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">C</span>
+            <h2>Dark Glass</h2>
+            <p class="sub">에스프레소 카드 + 골드 글로우 + 럭셔리</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">
+                  Elite Matching · For Professionals
+                </div>
+                <h2 class="sec-title">
+                  전문직의 시간은<br /><strong>다르게 흐릅니다</strong>
+                </h2>
+              </div>
+              <div class="swipe-hint">
+                <span>←</span><span>좌우로 넘기기</span><span>→</span>
+              </div>
+              <div class="c-cards-wrap">
+                <div class="c-card">
+                  <div class="c-icon">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                  </div>
+                  <h4>비공개 회원 관리</h4>
+                  <p>
+                    신원 정보의 철저한 보안 관리. 사회적 지위에 맞는
+                    프라이버시를 보장합니다.
+                  </p>
+                  <span class="gold-tag">PRIVACY</span>
+                </div>
+                <div class="c-card">
+                  <div class="c-icon">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  </div>
+                  <h4>전담 매니저 배정</h4>
+                  <p>
+                    가정환경과 경제력을 세심하게 고려한 1:1 맞춤형 매칭 컨설팅.
+                  </p>
+                  <span class="gold-tag">CONCIERGE</span>
+                </div>
+                <div class="c-card">
+                  <div class="c-icon">
+                    <svg viewBox="0 0 24 24">
+                      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                      <circle cx="9" cy="7" r="4" />
+                    </svg>
+                  </div>
+                  <h4>전문직 전용 파티</h4>
+                  <p>
+                    Doctor Party, Professional Party 등 같은 수준의 회원만
+                    참석합니다.
+                  </p>
+                  <span class="gold-tag">EXCLUSIVE</span>
+                </div>
+              </div>
+              <div class="progress-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+              <div class="meta">1 / 3 · 비공개 회원 관리</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ D안 — Vertical Half (상단 비주얼 + 하단 텍스트) ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">D</span>
+            <h2>Visual Header</h2>
+            <p class="sub">상단 비주얼 영역 + 하단 텍스트 (포스터형)</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">
+                  Elite Matching · For Professionals
+                </div>
+                <h2 class="sec-title">
+                  전문직의 시간은<br /><strong>다르게 흐릅니다</strong>
+                </h2>
+              </div>
+              <div class="swipe-hint">
+                <span>←</span><span>좌우로 넘기기</span><span>→</span>
+              </div>
+              <div class="d-cards-wrap">
+                <div class="d-card">
+                  <div class="d-visual">
+                    <span class="step-tag">01</span>
+                    <div class="icon-big">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="d-body">
+                    <h4>비공개 회원 관리</h4>
+                    <p>
+                      신원 정보의 철저한 보안 관리. 사회적 지위에 맞는
+                      프라이버시를 보장합니다.
+                    </p>
+                  </div>
+                </div>
+                <div class="d-card">
+                  <div class="d-visual">
+                    <span class="step-tag">02</span>
+                    <div class="icon-big">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="d-body">
+                    <h4>전담 매니저 배정</h4>
+                    <p>
+                      가정환경과 경제력을 세심하게 고려한 1:1 맞춤형 매칭
+                      컨설팅.
+                    </p>
+                  </div>
+                </div>
+                <div class="d-card">
+                  <div class="d-visual">
+                    <span class="step-tag">03</span>
+                    <div class="icon-big">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="d-body">
+                    <h4>전문직 전용 파티</h4>
+                    <p>
+                      Doctor Party, Professional Party 등 같은 수준의 회원만
+                      참석합니다.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="progress-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+              <div class="meta">STEP 01 / 03</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 비교 표 -->
+      <div class="compare">
+        <h3>4안 비교 — 전문직 카드 디자인</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 12%">기준</th>
+              <th>A · Standard Snap</th>
+              <th>B · Numbered Big</th>
+              <th>C · Dark Glass</th>
+              <th>D · Visual Header</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>톤 & 무드</td>
+              <td>★★★ 깔끔 / 안정</td>
+              <td class="ok">★★★★ 클래식 / 럭셔리</td>
+              <td class="ok">★★★★★ 가장 럭셔리 / 무게감</td>
+              <td>★★★★ 친근 / 명확</td>
+            </tr>
+            <tr>
+              <td>전문직 톤 적합도</td>
+              <td>★★★</td>
+              <td class="ok">★★★★ 큰 번호로 권위감</td>
+              <td class="ok">★★★★★ 다크 = 프리미엄</td>
+              <td>★★★ 중립적</td>
+            </tr>
+            <tr>
+              <td>다른 페이지와 일관성</td>
+              <td class="ok">★★★★★ 기존 슬라이드와 동일</td>
+              <td>★★★★ 약간 다른 톤</td>
+              <td class="warn">★★ 모바일 다른 카드는 라이트</td>
+              <td>★★★★ 6단계 패턴 응용</td>
+            </tr>
+            <tr>
+              <td>구현 비용</td>
+              <td class="ok">낮음</td>
+              <td class="ok">낮음 (Cormorant Garamond 폰트)</td>
+              <td>중간 (다크/글로우)</td>
+              <td>중간 (visual 헤더 + 아이콘)</td>
+            </tr>
+            <tr>
+              <td>시각 임팩트</td>
+              <td>★★★</td>
+              <td class="ok">★★★★ 큰 번호 강조</td>
+              <td class="ok">★★★★★ 다크 콘트라스트</td>
+              <td class="ok">★★★★ 비주얼 영역 명시</td>
+            </tr>
+            <tr>
+              <td>적용 가능 segment</td>
+              <td class="ok">6개 segment 모두</td>
+              <td class="ok">6개 segment 모두</td>
+              <td>전문직(이번)에만</td>
+              <td class="ok">6개 segment 모두</td>
+            </tr>
+            <tr>
+              <td>읽힘 (가독성)</td>
+              <td class="ok">★★★★★ 라이트 배경 + 다크 텍스트</td>
+              <td class="ok">★★★★★ 큰 폰트</td>
+              <td class="warn">★★★ 다크 + 옅은 텍스트</td>
+              <td class="ok">★★★★ 분리된 영역 명확</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

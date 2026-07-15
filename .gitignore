@@ -1,9 +1,22 @@
-# Environment variables
+# Environment variables (CRITICAL — never commit)
 .env
 .env.*
 
 # Dependencies
 node_modules/
+
+# Cloudflare Wrangler local state/cache (D1 캐시·.dev.vars 포함 가능)
+.wrangler/
+**/.wrangler/
+
+# Codex / Ouroboros 작업 캐시 (logs/metrics/state)
+.omx/
+
+# 세션 핸드오프 노트 (로컬 작업용, 실수로 토큰이 섞일 수 있음)
+NEXT_SESSION_*.md
+
+# 배포 백업 폴더 (시점별 dump, 커밋 불필요)
+_deploy_backup_*/
 
 # Large media files (not for git)
 *.safetensors
@@ -16,6 +29,29 @@ node_modules/
 
 # Keep specific tracked images via git add -f if needed
 # assets/ directory images will be managed separately
+
+# ── _deploy = 실제 배포되는 노블홍 사이트. 백업 위해 웹 자산은 추적한다 ──
+# 위 *.jpg/*.png 전역차단 때문에 OG·파비콘·D1이 참조하는 이미지까지 빠지므로 되살림.
+# (D1 content_press/awards/mou 가 _deploy/images/ 로컬 경로를 참조 중 — 빼면 화면 깨짐)
+!_deploy/**/*.jpg
+!_deploy/**/*.jpeg
+!_deploy/**/*.png
+!_deploy/**/*.webp
+!_deploy/**/*.gif
+!_deploy/**/*.ico
+!_deploy/**/*.svg
+
+# 단, 브라우저가 렌더링조차 못 하는 디자인 원본은 계속 제외 (76MB)
+_deploy/**/*.psd
+_deploy/**/*.ai
+_deploy/**/*.mp4
+
+# 윈도우 예약어 파일 (실수로 생성된 것, 체크아웃 불가)
+_deploy/nul
+
+# 작업 중 생긴 백업 잔재
+*.bak_*
+*.bak
 
 # AI generation scripts & outputs
 gen_*.py
@@ -39,3 +75,8 @@ out/
 
 # Claude
 .claude/
+
+.vercel
+
+# Legacy forms reference (읽기전용 참조용, git에 올리지 말 것)
+_legacy_forms_ref/

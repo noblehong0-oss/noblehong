@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GP98TNL451"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GP98TNL451');
+  </script>
+  <link rel="canonical" href="https://www.noblehong.com/column_detail" />
+  <meta name="twitter:image" content="https://www.noblehong.com/og-home.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:image" content="https://www.noblehong.com/og-home.jpg" />
+  <meta property="og:url" content="https://www.noblehong.com/column_detail" />
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev" crossorigin>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>러브 칼럼 — 노블홍 결혼정보회사</title>
+    <meta
+      name="description"
+      content="홍유진 대표의 러브 칼럼. 30년 경력의 커플매니저가 전하는 사랑과 결혼 이야기."
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon.ico"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-16x16.png"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #fffefb;
+        --surface: #ffffff;
+        --surface-light: #f9f6ef;
+        --border: #e8e0ce;
+        --border-hover: rgba(184, 154, 90, 0.2);
+        --gold: #b89a5a;
+        --gold-light: #d4b870;
+        --gold-dark: #8c7030;
+        --gold-bg: rgba(184, 154, 90, 0.06);
+        --text-primary: #2c2820;
+        --text-body: #5c5040;
+        --text-secondary: #8c8070;
+        --text-muted: #b0a898;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          "Pretendard",
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text-body);
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+      ::selection {
+        background: rgba(184, 154, 90, 0.2);
+        color: var(--text-primary);
+      }
+
+      /* GNB */
+      .gnb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: rgba(255, 254, 251, 0.95);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(184, 154, 90, 0.1);
+      }
+      .gnb-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        height: 72px;
+      }
+      .gnb-logo img {
+        height: 52px;
+        opacity: 1;
+      }
+      .gnb-menu {
+        display: flex;
+        gap: 36px;
+        list-style: none;
+      }
+      .gnb-menu a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        letter-spacing: 0.3px;
+        transition: color 0.25s;
+      }
+      .gnb-menu a:hover {
+        color: var(--gold);
+      }
+      .gnb-cta {
+        padding: 8px 20px;
+        border: 1px solid rgba(184, 154, 90, 0.3);
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 6px;
+        text-decoration: none;
+        color: var(--gold);
+        transition: all 0.25s;
+      }
+      .gnb-cta:hover {
+        background: var(--gold);
+        color: #fff;
+        border-color: var(--gold);
+      }
+
+      /* Hero */
+      .detail-hero {
+        padding: 140px 0 0;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+      .detail-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 32px;
+      }
+      .detail-breadcrumb a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .detail-breadcrumb a:hover {
+        color: var(--gold);
+      }
+      .detail-breadcrumb .sep {
+        color: var(--text-muted);
+      }
+      .detail-cat {
+        display: inline-block;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 500;
+        background: var(--gold-bg);
+        color: var(--gold);
+        border: 1px solid rgba(184, 154, 90, 0.2);
+        margin-bottom: 20px;
+      }
+      .detail-title {
+        font-size: clamp(28px, 4vw, 40px);
+        font-weight: 800;
+        color: var(--text-primary);
+        line-height: 1.35;
+        margin-bottom: 20px;
+        letter-spacing: -0.5px;
+      }
+      .detail-meta {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--text-muted);
+        padding-bottom: 32px;
+        border-bottom: 1px solid rgba(184, 154, 90, 0.15);
+      }
+      .detail-meta .dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: var(--text-muted);
+      }
+
+      /* Layout */
+      .detail-layout {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 64px;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 48px 40px 100px;
+      }
+
+      /* Main content */
+      .detail-body {
+        font-size: 1.125rem;
+        line-height: 1.85;
+        color: var(--text-body);
+        word-break: keep-all;
+      }
+      .detail-body p {
+        margin-bottom: 1.5rem;
+      }
+      .detail-body strong {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      /* 이미지 영역 */
+      .detail-img {
+        box-shadow: 0 0 24px rgba(184, 154, 90, 0.06);
+        margin: 2.5rem 0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--surface);
+        aspect-ratio: 16/9;
+        border: 1px solid rgba(184, 154, 90, 0.15);
+      }
+      .detail-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* 인용 블록 */
+      .detail-quote {
+        box-shadow: 0 0 20px rgba(184, 154, 90, 0.05);
+        margin: 2rem 0;
+        padding: 1.5rem 2rem;
+        background: var(--surface-light);
+        border-left: 4px solid var(--gold);
+        border-radius: 0 0.75rem 0.75rem 0;
+        font-size: 1.125rem;
+        color: #ccc;
+        line-height: 1.8;
+        font-style: italic;
+      }
+
+      /* Sidebar */
+      .detail-sidebar {
+        position: sticky;
+        top: 96px;
+        align-self: start;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .sidebar-box {
+        box-shadow: 0 0 20px rgba(184, 154, 90, 0.06);
+        background: var(--surface);
+        border: 1px solid rgba(184, 154, 90, 0.15);
+        border-radius: 12px;
+        padding: 24px;
+      }
+      .sidebar-box-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      .sidebar-info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(184, 154, 90, 0.15);
+        font-size: 13px;
+      }
+      .sidebar-info-row:last-child {
+        border-bottom: none;
+      }
+      .sidebar-info-label {
+        color: var(--text-muted);
+      }
+      .sidebar-info-value {
+        color: var(--text-body);
+      }
+
+      /* 관련 글 */
+      .sidebar-related a {
+        display: block;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(184, 154, 90, 0.15);
+        text-decoration: none;
+        font-size: 13px;
+        color: var(--text-body);
+        transition: color 0.2s;
+        line-height: 1.5;
+      }
+      .sidebar-related a:last-child {
+        border-bottom: none;
+      }
+      .sidebar-related a:hover {
+        color: var(--gold);
+      }
+
+      /* 목록 버튼 */
+      .sidebar-back {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        border: 1px solid rgba(184, 154, 90, 0.15);
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        transition: all 0.25s;
+        justify-content: center;
+      }
+      .sidebar-back:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+
+      /* 이전/다음 글 */
+      .detail-nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 64px;
+        padding-top: 32px;
+        border-top: 1px solid rgba(184, 154, 90, 0.15);
+      }
+      .nav-item {
+        padding: 20px;
+        border: 1px solid rgba(184, 154, 90, 0.15);
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all 0.25s;
+      }
+      .nav-item:hover {
+        box-shadow: 0 0 24px rgba(184, 154, 90, 0.12);
+        border-color: rgba(184, 154, 90, 0.3);
+        background: var(--surface);
+      }
+      .nav-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .nav-title {
+        font-size: 14px;
+        color: var(--text-body);
+        font-weight: 500;
+        line-height: 1.5;
+      }
+      .nav-item:hover .nav-title {
+        color: var(--gold);
+      }
+      .nav-item.next {
+        text-align: right;
+      }
+      .nav-item.next .nav-label {
+        justify-content: flex-end;
+      }
+
+      /* Footer */
+      .footer {
+        padding: 56px 40px 40px;
+        background: var(--surface);
+        border-top: 1px solid rgba(184, 154, 90, 0.15);
+      }
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-logo img {
+        height: 48px;
+        opacity: 1;
+        margin-bottom: 16px;
+      }
+      .footer-info {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.9;
+      }
+      .footer-links {
+        display: flex;
+        gap: 28px;
+      }
+      .footer-links a {
+        font-size: 13px;
+        color: var(--text-muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-links a:hover {
+        color: var(--gold);
+      }
+      .footer-copy {
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(184, 154, 90, 0.15);
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      .footer-copy a {
+        color: rgba(184, 154, 90, 0.5);
+        text-decoration: none;
+      }
+
+      /* Loading */
+      .loading {
+        text-align: center;
+        padding: 200px 40px;
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 768px) {
+        .detail-layout {
+          grid-template-columns: 1fr;
+          gap: 32px;
+        }
+        .detail-sidebar {
+          position: static;
+        }
+        .detail-hero {
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+        .detail-layout {
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+        .detail-nav {
+          grid-template-columns: 1fr;
+        }
+        .gnb-menu {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ====== LOADING OVERLAY (self-contained) ====== -->
+    <div
+      id="loading-overlay"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: #0d0b08;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.6s ease;
+      "
+    >
+      <canvas
+        id="loading-cv"
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%"
+      ></canvas>
+      <div
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          pointer-events: none;
+          z-index: 2;
+        "
+      >
+        <div
+          id="loading-msg"
+          style="
+            font-family: &quot;Noto Serif KR&quot;, serif;
+            font-size: 18px;
+            font-weight: 300;
+            color: #3d3425;
+            letter-spacing: 4px;
+            transform: translateY(55px);
+          "
+        >
+          당신의 인연을 매칭하는 중<span
+            id="loading-dots"
+            style="
+              display: inline-block;
+              width: 2em;
+              text-align: left;
+              letter-spacing: 2px;
+            "
+          ></span>
+        </div>
+        <div
+          style="
+            font-family: &quot;Cormorant Garamond&quot;, serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(140, 112, 48, 0.9);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            transform: translateY(65px);
+            margin-top: 8px;
+          "
+        >
+          Noble Hong Premium Matching
+        </div>
+      </div>
+      <script>
+        (function () {
+          var overlay = document.getElementById("loading-overlay");
+          var cv = document.getElementById("loading-cv");
+          var ctx = cv.getContext("2d");
+          var dpr = window.devicePixelRatio || 1;
+          var W, H, cxL, cyL;
+          function rs() {
+            W = window.innerWidth;
+            H = window.innerHeight;
+            cv.width = W * dpr;
+            cv.height = H * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            cv.style.width = W + "px";
+            cv.style.height = H + "px";
+            cxL = W / 2;
+            cyL = H / 2;
+          }
+          rs();
+          window.addEventListener("resize", function () {
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            rs();
+          });
+          var dotsEl = document.getElementById("loading-dots");
+          var dc = 0;
+          var dotIv = setInterval(function () {
+            dc = (dc + 1) % 4;
+            dotsEl.textContent = ".".repeat(dc);
+          }, 500);
+          var ambients = [];
+          for (var i = 0; i < 30; i++) {
+            ambients.push({
+              x: Math.random() * 2 - 1,
+              y: Math.random() * 2 - 1,
+              vx: (Math.random() - 0.5) * 0.2,
+              vy: (Math.random() - 0.5) * 0.2,
+              size: 0.5 + Math.random() * 1.5,
+              phase: Math.random() * Math.PI * 2,
+            });
+          }
+          var trail1 = [],
+            trail2 = [],
+            TRAIL_MAX = 50;
+          var t = 0,
+            lastTime = performance.now(),
+            stopped = false;
+          function glow(co, bl) {
+            ctx.shadowColor = co;
+            ctx.shadowBlur = bl;
+          }
+          function noGlow() {
+            ctx.shadowBlur = 0;
+          }
+          function sm(x) {
+            return x * x * (3 - 2 * x);
+          }
+          function lerp(a, b, t) {
+            return a + (b - a) * t;
+          }
+          function getPhase(time) {
+            if (time < 6) return { id: 0, local: time / 6 };
+            if (time < 9) return { id: 1, local: (time - 6) / 3 };
+            if (time < 10.5) return { id: 2, local: (time - 9) / 1.5 };
+            if (time < 12) return { id: 3, local: (time - 10.5) / 1.5 };
+            return { id: 4, local: (time - 12) / 2 };
+          }
+          function draw(now) {
+            if (stopped) return;
+            var dt = Math.min(50, now - lastTime) / 1000;
+            lastTime = now;
+            t += dt;
+            var loopT = t % 14,
+              phase = getPhase(loopT);
+            ctx.clearRect(0, 0, W, H);
+            ambients.forEach(function (p) {
+              p.x += p.vx * dt;
+              p.y += p.vy * dt;
+              if (Math.abs(p.x) > 1.2) p.vx *= -1;
+              if (Math.abs(p.y) > 1.2) p.vy *= -1;
+              var px = cxL + p.x * cxL * 0.8,
+                py = cyL + p.y * cyL * 0.8,
+                tw = 0.3 + Math.sin(t * 2 + p.phase) * 0.3;
+              ctx.beginPath();
+              ctx.arc(px, py, p.size, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(201,169,78," + tw * 0.08 + ")";
+              ctx.fill();
+            });
+            var baseR = Math.min(W, H) * 0.18,
+              R1,
+              R2,
+              tilt1,
+              tilt2,
+              spd1,
+              spd2;
+            if (phase.id === 0) {
+              R1 = baseR;
+              R2 = baseR;
+              tilt1 = 0.35;
+              tilt2 = -0.35;
+              spd1 = 1.8;
+              spd2 = 1.8;
+            } else if (phase.id === 1) {
+              var e = sm(phase.local);
+              R1 = lerp(baseR, baseR * 0.25, e);
+              R2 = R1;
+              tilt1 = lerp(0.35, 0.1, e);
+              tilt2 = lerp(-0.35, -0.1, e);
+              spd1 = lerp(1.8, 2.5, e);
+              spd2 = spd1;
+            } else if (phase.id === 2) {
+              var e2 = sm(phase.local);
+              R1 = lerp(baseR * 0.25, baseR * 0.05, e2);
+              R2 = R1;
+              tilt1 = 0.1;
+              tilt2 = -0.1;
+              spd1 = lerp(2.5, 3.5, e2);
+              spd2 = spd1;
+            } else {
+              R1 = 0;
+              R2 = 0;
+              tilt1 = 0;
+              tilt2 = 0;
+              spd1 = 0;
+              spd2 = 0;
+            }
+            if (phase.id <= 2) {
+              var pa = phase.id === 2 ? 0.06 * (1 - phase.local) : 0.06;
+              ctx.beginPath();
+              for (var i = 0; i <= 100; i++) {
+                var a = (i / 100) * Math.PI * 2,
+                  px = cxL + Math.cos(a) * R1,
+                  py =
+                    cyL +
+                    Math.sin(a) * R1 * 0.4 * Math.cos(tilt1) +
+                    Math.cos(a) * R1 * 0.1 * Math.sin(tilt1);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+              }
+              ctx.closePath();
+              ctx.strokeStyle = "rgba(201,169,78," + pa + ")";
+              ctx.lineWidth = 1;
+              ctx.stroke();
+              ctx.beginPath();
+              for (var j = 0; j <= 100; j++) {
+                var a2 = (j / 100) * Math.PI * 2,
+                  px2 = cxL + Math.cos(a2) * R2 * Math.cos(tilt2 * 2),
+                  py2 = cyL + Math.sin(a2) * R2 * 0.4;
+                if (j === 0) ctx.moveTo(px2, py2);
+                else ctx.lineTo(px2, py2);
+              }
+              ctx.closePath();
+              ctx.strokeStyle = "rgba(201,169,78," + pa + ")";
+              ctx.stroke();
+              var ang1 = t * spd1,
+                ang2 = t * spd2 + Math.PI;
+              var x1 = cxL + Math.cos(ang1) * R1,
+                y1 =
+                  cyL +
+                  Math.sin(ang1) * R1 * 0.4 * Math.cos(tilt1) +
+                  Math.cos(ang1) * R1 * 0.1 * Math.sin(tilt1);
+              var x2 = cxL + Math.cos(ang2) * R2 * Math.cos(tilt2 * 2),
+                y2 = cyL + Math.sin(ang2) * R2 * 0.4;
+              trail1.push({ x: x1, y: y1 });
+              if (trail1.length > TRAIL_MAX) trail1.shift();
+              trail2.push({ x: x2, y: y2 });
+              if (trail2.length > TRAIL_MAX) trail2.shift();
+              trail1.forEach(function (p, i) {
+                var al = i / trail1.length;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3 * al, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(201,169,78," + al * 0.35 + ")";
+                ctx.fill();
+              });
+              trail2.forEach(function (p, i) {
+                var al = i / trail2.length;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3 * al, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(232,201,106," + al * 0.35 + ")";
+                ctx.fill();
+              });
+              var bs = phase.id === 2 ? lerp(6, 8, sm(phase.local)) : 6;
+              ctx.beginPath();
+              ctx.arc(x1, y1, bs, 0, Math.PI * 2);
+              glow("rgba(201,169,78,.6)", 20);
+              ctx.fillStyle = "rgba(201,169,78,.9)";
+              ctx.fill();
+              noGlow();
+              ctx.beginPath();
+              ctx.arc(x1, y1, bs * 0.4, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(255,240,200,.8)";
+              ctx.fill();
+              ctx.beginPath();
+              ctx.arc(x2, y2, bs, 0, Math.PI * 2);
+              glow("rgba(232,201,106,.6)", 20);
+              ctx.fillStyle = "rgba(232,201,106,.9)";
+              ctx.fill();
+              noGlow();
+              ctx.beginPath();
+              ctx.arc(x2, y2, bs * 0.4, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(255,245,210,.8)";
+              ctx.fill();
+              var dist = Math.hypot(x1 - x2, y1 - y2);
+              if (dist < baseR * 0.6) {
+                var str = 1 - dist / (baseR * 0.6);
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                glow("rgba(232,201,106," + str * 0.3 + ")", 8);
+                ctx.strokeStyle = "rgba(232,201,106," + str * 0.5 + ")";
+                ctx.lineWidth = 1 + str * 2;
+                ctx.stroke();
+                noGlow();
+              }
+              if (phase.id === 2 && phase.local > 0.5) {
+                var sp = (phase.local - 0.5) / 0.5,
+                  mx = (x1 + x2) / 2,
+                  my = (y1 + y2) / 2;
+                for (var si = 0; si < 16; si++) {
+                  var sa = (si * Math.PI) / 8 + t * 5,
+                    sd = sp * 35 + Math.sin(t * 8 + si) * 5,
+                    sz = 2 * (1 - sp * 0.5);
+                  ctx.beginPath();
+                  ctx.arc(
+                    mx + Math.cos(sa) * sd,
+                    my + Math.sin(sa) * sd,
+                    sz,
+                    0,
+                    Math.PI * 2,
+                  );
+                  glow("rgba(232,201,106,.3)", 4);
+                  ctx.fillStyle =
+                    "rgba(232,201,106," + (1 - sp * 0.3) * 0.7 + ")";
+                  ctx.fill();
+                  noGlow();
+                }
+              }
+            }
+            if (phase.id === 3) {
+              trail1.length = 0;
+              trail2.length = 0;
+              var e3 = sm(phase.local),
+                oR = lerp(8, 20, e3);
+              var grd = ctx.createRadialGradient(cxL, cyL, 0, cxL, cyL, oR * 3);
+              grd.addColorStop(0, "rgba(255,245,210," + (0.3 + e3 * 0.4) + ")");
+              grd.addColorStop(
+                0.3,
+                "rgba(232,201,106," + (0.2 + e3 * 0.3) + ")",
+              );
+              grd.addColorStop(1, "transparent");
+              ctx.fillStyle = grd;
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR * 3, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR, 0, Math.PI * 2);
+              glow("rgba(255,240,200,.8)", 30 + e3 * 20);
+              ctx.fillStyle = "rgba(255,245,220," + (0.7 + e3 * 0.3) + ")";
+              ctx.fill();
+              noGlow();
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR * 0.5, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(255,252,240,.9)";
+              ctx.fill();
+              for (var ri = 0; ri < 12; ri++) {
+                var ra = (ri * Math.PI) / 6 + t * 0.5,
+                  rl = (40 + e3 * 60) * (0.7 + Math.sin(t * 3 + ri) * 0.3);
+                ctx.beginPath();
+                ctx.moveTo(cxL + Math.cos(ra) * oR, cyL + Math.sin(ra) * oR);
+                ctx.lineTo(cxL + Math.cos(ra) * rl, cyL + Math.sin(ra) * rl);
+                ctx.strokeStyle =
+                  "rgba(232,201,106," +
+                  (0.1 + e3 * 0.15) * (0.5 + Math.sin(t * 4 + ri) * 0.5) +
+                  ")";
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+              }
+              var rR = oR + e3 * 80;
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, rR, 0, Math.PI * 2);
+              ctx.strokeStyle = "rgba(201,169,78," + (1 - e3) * 0.3 + ")";
+              ctx.lineWidth = 1.5;
+              ctx.stroke();
+            }
+            if (phase.id === 4) {
+              var pu = 0.5 + Math.sin(t * 2) * 0.1;
+              var grd2 = ctx.createRadialGradient(cxL, cyL, 0, cxL, cyL, 60);
+              grd2.addColorStop(0, "rgba(255,245,210," + 0.15 * pu + ")");
+              grd2.addColorStop(0.5, "rgba(232,201,106," + 0.08 * pu + ")");
+              grd2.addColorStop(1, "transparent");
+              ctx.fillStyle = grd2;
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, 60, 0, Math.PI * 2);
+              ctx.fill();
+              var oR2 = 14 + Math.sin(t * 1.5) * 2;
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR2, 0, Math.PI * 2);
+              glow("rgba(232,201,106,.5)", 25);
+              ctx.fillStyle = "rgba(255,245,220,.7)";
+              ctx.fill();
+              noGlow();
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR2 * 0.4, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(255,252,240,.85)";
+              ctx.fill();
+            }
+            requestAnimationFrame(draw);
+          }
+          requestAnimationFrame(draw);
+          var loadStart = Date.now();
+          window.addEventListener("load", function () {
+            var elapsed = Date.now() - loadStart;
+            var remain = Math.max(0, 1000 - elapsed);
+            setTimeout(function () {
+              overlay.style.opacity = "0";
+              setTimeout(function () {
+                stopped = true;
+                clearInterval(dotIv);
+                overlay.remove();
+              }, 600);
+            }, remain);
+          });
+        })();
+      </script>
+    </div>
+    <!-- ====== END LOADING OVERLAY ====== -->
+    <!-- GNB -->
+    <nav class="gnb">
+      <div class="gnb-inner">
+        <a href="/" class="gnb-logo"
+          ><img
+            src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+            alt="노블홍"
+        /></a>
+        <ul class="gnb-menu">
+          <li><a href="/about">노블홍</a></li>
+          <li><a href="/noblematching">노블매칭</a></li>
+          <li><a href="/consulting">맞춤컨설팅</a></li>
+          <li><a href="/matchinglounge">차별화 시스템</a></li>
+          <li><a href="/campaign">결혼장려 공익캠페인</a></li>
+          <li><a href="/contact#form">상담문의</a></li>
+        </ul>
+        <a href="/contact#form" class="gnb-cta">상담 시작</a>
+      </div>
+    </nav>
+
+    <div id="content" class="loading">칼럼을 불러오는 중...</div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">
+            <img
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+              alt="노블홍"
+            />
+          </div>
+          <div class="footer-info">
+            (주)노블홍결혼정보회사 | 대표: 홍유진<br />
+            서울특별시 강남구 강남대로 354 혜천빌딩 705, 706호<br />
+            대표번호: 1800-8194
+          </div>
+          <div class="footer-copy">
+            &copy; 2024 Noble HONG. All rights reserved. Designed by
+            <a href="https://polarad.co.kr" target="_blank">POLA</a>
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="/privacy">개인정보처리방침</a>
+          <a href="/terms">이용약관</a>
+          <a href="/damages">손해배상</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const DATA_URL = "data/columns.json";
+
+      async function init() {
+        const params = new URLSearchParams(location.search);
+        const id = parseInt(params.get("id"), 10);
+        if (!id) {
+          document.getElementById("content").textContent = "잘못된 접근입니다.";
+          return;
+        }
+
+        const res = await fetch(DATA_URL);
+        const columns = await res.json();
+        const idx = columns.findIndex((c) => c.id === id);
+        if (idx === -1) {
+          document.getElementById("content").textContent =
+            "칼럼을 찾을 수 없습니다.";
+          return;
+        }
+
+        const col = columns[idx];
+        const prev = idx > 0 ? columns[idx - 1] : null;
+        const next = idx < columns.length - 1 ? columns[idx + 1] : null;
+
+        document.title = col.title + " — 러브 칼럼 | 노블홍";
+
+        const bodyHtml = col.body
+          .split("\n\n")
+          .map((p) => {
+            if (p.startsWith("—"))
+              return '<div class="detail-quote">' + p + "</div>";
+            if (p.startsWith('"') || p.startsWith('"'))
+              return '<div class="detail-quote">' + p + "</div>";
+            return "<p>" + p + "</p>";
+          })
+          .join("");
+
+        const relatedHtml = columns
+          .filter((c) => c.id !== id)
+          .map(
+            (c) =>
+              '<a href="/column_detail?id=' +
+              c.id +
+              '">' +
+              c.title +
+              "</a>",
+          )
+          .join("");
+
+        let navHtml = '<div class="detail-nav">';
+        if (prev) {
+          navHtml +=
+            '<a class="nav-item prev" href="/column_detail?id=' +
+            prev.id +
+            '"><div class="nav-label"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 이전 글</div><div class="nav-title">' +
+            prev.title +
+            "</div></a>";
+        } else {
+          navHtml += "<div></div>";
+        }
+        if (next) {
+          navHtml +=
+            '<a class="nav-item next" href="/column_detail?id=' +
+            next.id +
+            '"><div class="nav-label">다음 글 <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div><div class="nav-title">' +
+            next.title +
+            "</div></a>";
+        }
+        navHtml += "</div>";
+
+        document.getElementById("content").className = "";
+        document.getElementById("content").innerHTML =
+          '<div class="detail-hero">' +
+          '<div class="detail-breadcrumb"><a href="/matchinglounge">차별화 시스템</a><span class="sep">/</span><a href="/matchinglounge#column">러브 칼럼</a><span class="sep">/</span><span>상세</span></div>' +
+          '<span class="detail-cat">' +
+          col.category +
+          "</span>" +
+          '<h1 class="detail-title">' +
+          col.title +
+          "</h1>" +
+          '<div class="detail-meta"><span>홍유진 대표</span><span class="dot"></span><span>' +
+          (col.source || "노블홍") +
+          "</span></div>" +
+          "</div>" +
+          '<div class="detail-layout">' +
+          "<div>" +
+          '<div class="detail-img"><img src="' +
+          col.image +
+          '" alt="' +
+          col.title +
+          '" /></div>' +
+          '<div class="detail-body">' +
+          bodyHtml +
+          "</div>" +
+          navHtml +
+          "</div>" +
+          '<aside class="detail-sidebar">' +
+          '<a href="/matchinglounge#column" class="sidebar-back"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> 칼럼 목록</a>' +
+          '<div class="sidebar-box"><div class="sidebar-box-title">다른 칼럼</div><div class="sidebar-related">' +
+          relatedHtml +
+          "</div></div>" +
+          '<div class="sidebar-box"><div class="sidebar-box-title">출처</div><div class="sidebar-info-row"><span class="sidebar-info-label">저서</span><span class="sidebar-info-value">당신에게 연애가 어려운 이유</span></div><div class="sidebar-info-row"><span class="sidebar-info-label">저자</span><span class="sidebar-info-value">홍유진</span></div></div>' +
+          "</aside>" +
+          "</div>";
+      }
+
+      init();
+    </script>
+      <!-- GNB_ACTIVE_JS -->
+    <script>
+      (function () {
+        var pathname = location.pathname.replace(/\/$/, "");
+        var segment = pathname.split("/").pop() || "index";
+        segment = segment.replace(/\.html$/, "");
+        if (pathname === "" || pathname === "/") segment = "index";
+        document.querySelectorAll(".gnb-menu a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          var hrefSeg = href.split("#")[0].split("?")[0].split("/").pop().replace(/\.html$/, "");
+          if (hrefSeg === "" && href.indexOf("/") === 0) hrefSeg = "index";
+          if (hrefSeg === segment) a.classList.add("active");
+        });
+      })();
+    </script>
+  </body>
+</html>

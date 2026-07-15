@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>프로그램 카드 좌우 이동 — 5안 비교 (와이어프레임)</title>
+    <style>
+      :root {
+        --gold: #b89a5a;
+        --gold-dark: #8c7030;
+        --gold-light: #d4b870;
+        --espresso: #2a1d0a;
+        --ivory: #f4e8c8;
+        --ivory-soft: #faf3df;
+        --text: #2c2820;
+        --text-muted: #6e604a;
+        --text-secondary: #5c5040;
+        --bg: #fbf7ec;
+        --card: #ffffff;
+        --border: #e8dcb8;
+        --shadow: 0 4px 14px rgba(42, 29, 10, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: #1a1410;
+        color: var(--text);
+        font-family:
+          -apple-system, BlinkMacSystemFont, "SF Pro Display", "Pretendard",
+          system-ui, sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .review-wrap {
+        max-width: 1480px;
+        margin: 0 auto;
+        padding: 32px 16px 80px;
+      }
+      .review-head {
+        text-align: center;
+        color: #f1e4c2;
+        margin-bottom: 36px;
+      }
+      .review-head h1 {
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .review-head p {
+        margin-top: 8px;
+        font-size: 13px;
+        color: rgba(241, 228, 194, 0.65);
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 18px;
+      }
+      @media (max-width: 1280px) {
+        .options {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .options {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 600px) {
+        .options {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .option-label {
+        text-align: center;
+        color: #f1e4c2;
+      }
+      .option-label .tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        color: var(--espresso);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .option-label h2 {
+        font-size: 16px;
+        font-weight: 800;
+        margin-top: 8px;
+      }
+      .option-label .sub {
+        font-size: 11px;
+        color: rgba(241, 228, 194, 0.6);
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+
+      .phone {
+        width: 360px;
+        max-width: 100%;
+        height: 720px;
+        background: #fbf7ec;
+        border: 12px solid #0c0905;
+        border-radius: 36px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 2px rgba(184, 154, 90, 0.3),
+          0 16px 40px rgba(0, 0, 0, 0.4);
+      }
+      .phone-inner {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: linear-gradient(180deg, #fbf7ec 0%, #f4e8c8 100%);
+        scrollbar-width: thin;
+        scrollbar-color: rgba(140, 112, 48, 0.3) transparent;
+      }
+      .phone-inner::-webkit-scrollbar {
+        width: 4px;
+      }
+      .phone-inner::-webkit-scrollbar-thumb {
+        background: rgba(140, 112, 48, 0.3);
+        border-radius: 2px;
+      }
+
+      .sec-pad {
+        padding: 22px 18px 14px;
+      }
+      .sec-eyebrow {
+        font-size: 10.5px;
+        letter-spacing: 2px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .sec-title {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--espresso);
+        line-height: 1.3;
+      }
+      .sec-title span {
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* ─ 공통 뱃지 ─ */
+      .badges {
+        display: flex;
+        gap: 4px;
+        padding: 0 8px;
+        margin: 12px 0 14px;
+      }
+      .badge {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 6px 4px;
+        text-align: center;
+        background: rgba(42, 29, 10, 0.55);
+        border: 1px solid rgba(212, 184, 112, 0.35);
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        white-space: nowrap;
+      }
+      .badge.active {
+        background: linear-gradient(135deg, var(--gold-dark), #6e5a24);
+        border-color: var(--gold);
+        box-shadow: 0 4px 14px rgba(140, 112, 48, 0.35);
+      }
+
+      /* 공통 카드 (Compact Hero / A안) */
+      .card {
+        margin: 0 18px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+      .hero-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: end;
+        gap: 8px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .h-brand {
+        font-size: 9.5px;
+        letter-spacing: 1.5px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .h-tier-en {
+        font-size: 10px;
+        color: var(--text-muted);
+        font-style: italic;
+      }
+      .h-tier-ko {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--espresso);
+        line-height: 1.1;
+        margin-top: 2px;
+      }
+      .h-price {
+        font-size: 22px;
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-align: right;
+      }
+      .h-period {
+        font-size: 10px;
+        color: var(--text-muted);
+        text-align: right;
+        margin-top: 2px;
+      }
+      .features {
+        padding: 10px 0 0;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .feature {
+        font-size: 11.5px;
+        color: var(--text-secondary);
+        display: flex;
+        gap: 6px;
+      }
+      .feature .ck {
+        color: var(--gold);
+        font-weight: 700;
+      }
+      .cta {
+        display: block;
+        margin-top: 12px;
+        padding: 11px;
+        text-align: center;
+        background: linear-gradient(135deg, var(--gold-dark), #6e5a24);
+        color: #fff;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      /* ──────────────────────────────────────
+         A안 — 뱃지 ONLY (현재 적용 상태)
+      ────────────────────────────────────── */
+      /* 공통 카드/뱃지만 사용. 추가 컨트롤 없음 */
+
+      /* ──────────────────────────────────────
+         B안 — 카드 하단 ‹ dots › 컴팩트 컨트롤
+      ────────────────────────────────────── */
+      .b-control {
+        display: grid;
+        grid-template-columns: 32px 1fr 32px;
+        align-items: center;
+        gap: 10px;
+        margin: 14px 18px 0;
+      }
+      .b-arrow {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--card);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold-dark);
+        font-size: 14px;
+        font-weight: 700;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+      }
+      .b-dots {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        align-items: center;
+      }
+      .b-dots .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: rgba(140, 112, 48, 0.25);
+        transition:
+          width 0.3s,
+          background 0.3s;
+      }
+      .b-dots .dot.active {
+        width: 22px;
+        border-radius: 4px;
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+      .b-counter {
+        text-align: center;
+        font-size: 10px;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin: 6px 0 0;
+        letter-spacing: 0.5px;
+      }
+
+      /* ──────────────────────────────────────
+         C안 — 카드 양 옆 큰 floating ‹/›
+      ────────────────────────────────────── */
+      .c-card-frame {
+        position: relative;
+        margin: 0;
+        padding: 0 12px;
+      }
+      .c-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gold-dark);
+        font-size: 18px;
+        font-weight: 700;
+        box-shadow: 0 4px 14px rgba(42, 29, 10, 0.18);
+        cursor: pointer;
+        z-index: 5;
+      }
+      .c-arrow.left {
+        left: -2px;
+      }
+      .c-arrow.right {
+        right: -2px;
+      }
+      .c-counter {
+        text-align: center;
+        font-size: 11px;
+        color: var(--gold-dark);
+        font-weight: 700;
+        margin: 14px 0 0;
+      }
+
+      /* ──────────────────────────────────────
+         D안 — 가로 스와이프 + 하단 dot 인디케이터 (6단계 동일 패턴)
+      ────────────────────────────────────── */
+      .d-swipe-hint {
+        display: flex;
+        gap: 8px;
+        padding: 0 18px;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        color: var(--gold-dark);
+        font-weight: 600;
+        margin: 0 0 8px;
+        opacity: 0.7;
+      }
+      .d-swipe-hint .arrow-icon {
+        font-size: 13px;
+      }
+      .d-cards {
+        display: flex;
+        overflow-x: auto;
+        gap: 12px;
+        padding: 0 9% 8px;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+      }
+      .d-cards::-webkit-scrollbar {
+        display: none;
+      }
+      .d-cards .card {
+        flex: 0 0 82%;
+        scroll-snap-align: center;
+        margin: 0;
+      }
+      .d-progress-bar {
+        display: flex;
+        gap: 4px;
+        padding: 0 18px;
+        max-width: 220px;
+        margin: 14px auto 0;
+      }
+      .d-progress-bar .seg {
+        flex: 1;
+        height: 3px;
+        border-radius: 2px;
+        background: rgba(140, 112, 48, 0.2);
+      }
+      .d-progress-bar .seg.active {
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+      }
+      .d-meta {
+        text-align: center;
+        font-size: 10.5px;
+        color: var(--text-muted);
+        margin: 8px 0 0;
+        letter-spacing: 0.5px;
+      }
+
+      /* ──────────────────────────────────────
+         E안 — 뱃지를 progress bar 형태로 (6단계 시스템 통일)
+      ────────────────────────────────────── */
+      .e-badges-bar {
+        display: flex;
+        gap: 4px;
+        padding: 0 18px;
+        margin: 0 0 14px;
+      }
+      .e-bar-item {
+        flex: 1 1 0;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .e-bar-track {
+        width: 100%;
+        height: 3px;
+        background: rgba(140, 112, 48, 0.22);
+        border-radius: 2px;
+        transition: background 0.3s;
+      }
+      .e-bar-item.active .e-bar-track {
+        background: linear-gradient(90deg, var(--gold-light), var(--gold-dark));
+        box-shadow: 0 0 8px rgba(184, 154, 90, 0.5);
+      }
+      .e-bar-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-align: center;
+        white-space: nowrap;
+      }
+      .e-bar-item.active .e-bar-label {
+        color: var(--gold-dark);
+      }
+      .e-meta {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 18px;
+        font-size: 10.5px;
+        color: var(--gold-dark);
+        font-weight: 600;
+        margin: 0 0 12px;
+      }
+      .e-meta .name {
+        color: var(--text-secondary);
+        font-weight: 600;
+      }
+
+      /* 비교 표 */
+      .compare {
+        margin: 56px auto 0;
+        max-width: 1400px;
+        background: rgba(241, 228, 194, 0.08);
+        border: 1px solid rgba(241, 228, 194, 0.2);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .compare h3 {
+        padding: 16px 20px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #f1e4c2;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.15);
+        background: rgba(241, 228, 194, 0.04);
+      }
+      .compare table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #e3d8b6;
+        font-size: 12px;
+      }
+      .compare th,
+      .compare td {
+        padding: 10px 12px;
+        text-align: left;
+        border-bottom: 1px solid rgba(241, 228, 194, 0.07);
+        vertical-align: top;
+      }
+      .compare th {
+        background: rgba(241, 228, 194, 0.04);
+        color: #f1e4c2;
+        font-weight: 700;
+        font-size: 11px;
+      }
+      .compare tr:last-child td {
+        border-bottom: none;
+      }
+      .compare .ok {
+        color: #c4a55a;
+      }
+      .compare .warn {
+        color: #d68a5a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="review-wrap">
+      <div class="review-head">
+        <h1>프로그램 카드 좌우 이동 컨트롤 — 5안 비교</h1>
+        <p>
+          360px 모바일 viewport · 같은 카드(모던 등급) · 어떤 컨트롤이
+          "넘어간다"를 가장 잘 전달할까?
+        </p>
+      </div>
+
+      <div class="options">
+        <!-- ============ A안 — 뱃지 ONLY ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">A</span>
+            <h2>뱃지 ONLY (현재)</h2>
+            <p class="sub">5뱃지 클릭만 · 추가 컨트롤 없음</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Program & Pricing</div>
+                <h2 class="sec-title">프로그램 <span>안내</span></h2>
+              </div>
+              <div class="badges">
+                <div class="badge active">모던</div>
+                <div class="badge">클래식</div>
+                <div class="badge">노블레스</div>
+                <div class="badge">로얄</div>
+                <div class="badge">프리미엄</div>
+              </div>
+              <div class="card">
+                <div class="hero-row">
+                  <div>
+                    <div class="h-brand">Noble Hong</div>
+                    <div class="h-tier-en">Modern</div>
+                    <div class="h-tier-ko">모던</div>
+                  </div>
+                  <div>
+                    <div class="h-price">300만원</div>
+                    <div class="h-period">VAT 별도 / 1년</div>
+                  </div>
+                </div>
+                <div class="features">
+                  <div class="feature">
+                    <span class="ck">✓</span>전담 매니저 배정
+                  </div>
+                  <div class="feature">
+                    <span class="ck">✓</span>신원 검증·등록
+                  </div>
+                  <div class="feature"><span class="ck">✓</span>만남 주선</div>
+                  <div class="feature">
+                    <span class="ck">✓</span>기본 교제 코칭
+                  </div>
+                  <div class="feature">
+                    <span class="ck">✓</span>12개월 계약
+                  </div>
+                </div>
+                <a href="#" class="cta">무료 상담 신청</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ B안 — 카드 하단 컨트롤 바 ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">B</span>
+            <h2>하단 컨트롤 바</h2>
+            <p class="sub">‹ ●○○○○ › + 1/5 카운터</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Program & Pricing</div>
+                <h2 class="sec-title">프로그램 <span>안내</span></h2>
+              </div>
+              <div class="badges">
+                <div class="badge active">모던</div>
+                <div class="badge">클래식</div>
+                <div class="badge">노블레스</div>
+                <div class="badge">로얄</div>
+                <div class="badge">프리미엄</div>
+              </div>
+              <div class="card">
+                <div class="hero-row">
+                  <div>
+                    <div class="h-brand">Noble Hong</div>
+                    <div class="h-tier-en">Modern</div>
+                    <div class="h-tier-ko">모던</div>
+                  </div>
+                  <div>
+                    <div class="h-price">300만원</div>
+                    <div class="h-period">VAT 별도 / 1년</div>
+                  </div>
+                </div>
+                <div class="features">
+                  <div class="feature">
+                    <span class="ck">✓</span>전담 매니저 배정
+                  </div>
+                  <div class="feature">
+                    <span class="ck">✓</span>신원 검증·등록
+                  </div>
+                  <div class="feature"><span class="ck">✓</span>만남 주선</div>
+                  <div class="feature">
+                    <span class="ck">✓</span>기본 교제 코칭
+                  </div>
+                  <div class="feature">
+                    <span class="ck">✓</span>12개월 계약
+                  </div>
+                </div>
+                <a href="#" class="cta">무료 상담 신청</a>
+              </div>
+              <div class="b-control">
+                <div class="b-arrow">‹</div>
+                <div class="b-dots">
+                  <span class="dot active"></span>
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                  <span class="dot"></span>
+                </div>
+                <div class="b-arrow">›</div>
+              </div>
+              <div class="b-counter">1 / 5</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ C안 — 측면 큰 ‹/› ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">C</span>
+            <h2>측면 큰 화살표</h2>
+            <p class="sub">카드 좌우에 floating ‹/›</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Program & Pricing</div>
+                <h2 class="sec-title">프로그램 <span>안내</span></h2>
+              </div>
+              <div class="badges">
+                <div class="badge active">모던</div>
+                <div class="badge">클래식</div>
+                <div class="badge">노블레스</div>
+                <div class="badge">로얄</div>
+                <div class="badge">프리미엄</div>
+              </div>
+              <div class="c-card-frame">
+                <div class="c-arrow left">‹</div>
+                <div class="c-arrow right">›</div>
+                <div class="card" style="margin: 0">
+                  <div class="hero-row">
+                    <div>
+                      <div class="h-brand">Noble Hong</div>
+                      <div class="h-tier-en">Modern</div>
+                      <div class="h-tier-ko">모던</div>
+                    </div>
+                    <div>
+                      <div class="h-price">300만원</div>
+                      <div class="h-period">VAT 별도 / 1년</div>
+                    </div>
+                  </div>
+                  <div class="features">
+                    <div class="feature">
+                      <span class="ck">✓</span>전담 매니저 배정
+                    </div>
+                    <div class="feature">
+                      <span class="ck">✓</span>신원 검증·등록
+                    </div>
+                    <div class="feature">
+                      <span class="ck">✓</span>만남 주선
+                    </div>
+                    <div class="feature">
+                      <span class="ck">✓</span>기본 교제 코칭
+                    </div>
+                    <div class="feature">
+                      <span class="ck">✓</span>12개월 계약
+                    </div>
+                  </div>
+                  <a href="#" class="cta">무료 상담 신청</a>
+                </div>
+              </div>
+              <div class="c-counter">1 / 5 · 모던</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ D안 — 가로 스와이프 + 진행바 ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">D</span>
+            <h2>가로 스와이프 (6단계 동일)</h2>
+            <p class="sub">손가락으로 넘김 + progress bar</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Program & Pricing</div>
+                <h2 class="sec-title">프로그램 <span>안내</span></h2>
+              </div>
+              <div class="badges">
+                <div class="badge active">모던</div>
+                <div class="badge">클래식</div>
+                <div class="badge">노블레스</div>
+                <div class="badge">로얄</div>
+                <div class="badge">프리미엄</div>
+              </div>
+              <div class="d-swipe-hint">
+                <span class="arrow-icon">←</span>
+                <span>좌우로 넘기기</span>
+                <span class="arrow-icon">→</span>
+              </div>
+              <div class="d-cards">
+                <div class="card">
+                  <div class="hero-row">
+                    <div>
+                      <div class="h-brand">Noble Hong</div>
+                      <div class="h-tier-en">Modern</div>
+                      <div class="h-tier-ko">모던</div>
+                    </div>
+                    <div>
+                      <div class="h-price">300만원</div>
+                      <div class="h-period">VAT 별도 / 1년</div>
+                    </div>
+                  </div>
+                  <div class="features">
+                    <div class="feature">
+                      <span class="ck">✓</span>전담 매니저 배정
+                    </div>
+                    <div class="feature">
+                      <span class="ck">✓</span>신원 검증·등록
+                    </div>
+                    <div class="feature">
+                      <span class="ck">✓</span>만남 주선
+                    </div>
+                    <div class="feature">
+                      <span class="ck">✓</span>기본 교제 코칭
+                    </div>
+                    <div class="feature">
+                      <span class="ck">✓</span>12개월 계약
+                    </div>
+                  </div>
+                  <a href="#" class="cta">무료 상담 신청</a>
+                </div>
+                <div class="card" style="opacity: 0.6">
+                  <div class="hero-row">
+                    <div>
+                      <div class="h-brand">Noble Hong</div>
+                      <div class="h-tier-en">Classic</div>
+                      <div class="h-tier-ko">클래식</div>
+                    </div>
+                    <div>
+                      <div class="h-price">500만원</div>
+                      <div class="h-period">VAT 별도 / 1년</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-progress-bar">
+                <div class="seg active"></div>
+                <div class="seg"></div>
+                <div class="seg"></div>
+                <div class="seg"></div>
+                <div class="seg"></div>
+              </div>
+              <div class="d-meta">1 / 5 · 모던</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============ E안 — 뱃지를 progress bar로 ============ -->
+        <div class="option">
+          <div class="option-label">
+            <span class="tag">E</span>
+            <h2>뱃지 → Progress Bar</h2>
+            <p class="sub">5단계 시각화 + 위에 단계명</p>
+          </div>
+          <div class="phone">
+            <div class="phone-inner">
+              <div class="sec-pad">
+                <div class="sec-eyebrow">Program & Pricing</div>
+                <h2 class="sec-title">프로그램 <span>안내</span></h2>
+              </div>
+              <div class="e-meta">
+                <span>STEP 1 / 5</span>
+                <span class="name">모던 (Modern)</span>
+              </div>
+              <div class="e-badges-bar">
+                <div class="e-bar-item active">
+                  <div class="e-bar-track"></div>
+                  <div class="e-bar-label">모던</div>
+                </div>
+                <div class="e-bar-item">
+                  <div class="e-bar-track"></div>
+                  <div class="e-bar-label">클래식</div>
+                </div>
+                <div class="e-bar-item">
+                  <div class="e-bar-track"></div>
+                  <div class="e-bar-label">노블레스</div>
+                </div>
+                <div class="e-bar-item">
+                  <div class="e-bar-track"></div>
+                  <div class="e-bar-label">로얄</div>
+                </div>
+                <div class="e-bar-item">
+                  <div class="e-bar-track"></div>
+                  <div class="e-bar-label">프리미엄</div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="hero-row">
+                  <div>
+                    <div class="h-brand">Noble Hong</div>
+                    <div class="h-tier-en">Modern</div>
+                    <div class="h-tier-ko">모던</div>
+                  </div>
+                  <div>
+                    <div class="h-price">300만원</div>
+                    <div class="h-period">VAT 별도 / 1년</div>
+                  </div>
+                </div>
+                <div class="features">
+                  <div class="feature">
+                    <span class="ck">✓</span>전담 매니저 배정
+                  </div>
+                  <div class="feature">
+                    <span class="ck">✓</span>신원 검증·등록
+                  </div>
+                  <div class="feature"><span class="ck">✓</span>만남 주선</div>
+                  <div class="feature">
+                    <span class="ck">✓</span>기본 교제 코칭
+                  </div>
+                  <div class="feature">
+                    <span class="ck">✓</span>12개월 계약
+                  </div>
+                </div>
+                <a href="#" class="cta">무료 상담 신청</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 비교 표 -->
+      <div class="compare">
+        <h3>5안 비교 — 어떤 컨트롤이 "넘어간다"를 가장 잘 전달할까?</h3>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 11%">기준</th>
+              <th>A · 뱃지 ONLY</th>
+              <th>B · 하단 컨트롤 바</th>
+              <th>C · 측면 큰 ‹/›</th>
+              <th>D · 가로 스와이프</th>
+              <th>E · 뱃지 → Progress Bar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>"넘어간다" 어포던스</td>
+              <td class="warn">★★ 약함</td>
+              <td class="ok">★★★★ 명확 (dots+arrows)</td>
+              <td class="ok">★★★★★ 가장 명확</td>
+              <td class="ok">★★★★★ 손가락 자연스러움</td>
+              <td class="ok">★★★★ 진행 시각화</td>
+            </tr>
+            <tr>
+              <td>현재 위치 시각화</td>
+              <td>뱃지 active</td>
+              <td class="ok">dot 늘어남 + 1/5</td>
+              <td>1/5 카운터</td>
+              <td class="ok">progress bar 5칸</td>
+              <td class="ok">★ progress bar + 단계명</td>
+            </tr>
+            <tr>
+              <td>인터랙션 방식</td>
+              <td>뱃지 클릭만</td>
+              <td>화살표 + 뱃지 (이중)</td>
+              <td>측면 화살표 + 뱃지</td>
+              <td class="ok">스와이프 + 뱃지 (자연)</td>
+              <td>progress bar 클릭</td>
+            </tr>
+            <tr>
+              <td>화면 차지</td>
+              <td class="ok">최소</td>
+              <td>+50px (컨트롤 + 카운터)</td>
+              <td class="ok">최소 (카드 외부 floating)</td>
+              <td>+30px (hint + bar)</td>
+              <td>+30px (bar + meta)</td>
+            </tr>
+            <tr>
+              <td>좁은 폰(360px) 친화도</td>
+              <td class="ok">★★★★★</td>
+              <td class="ok">★★★★ (32px 화살표 작음)</td>
+              <td class="warn">★★ 화살표가 카드 가림</td>
+              <td class="ok">★★★★ (스냅 안정)</td>
+              <td class="ok">★★★★ (5단계 균등)</td>
+            </tr>
+            <tr>
+              <td>구현 비용</td>
+              <td class="ok">0 (이미 적용)</td>
+              <td>낮음 (CSS+JS 화살표 클릭)</td>
+              <td>낮음 (CSS absolute 화살표)</td>
+              <td>중간 (가로 스냅 + 동기화)</td>
+              <td>낮음 (뱃지 디자인 변경)</td>
+            </tr>
+            <tr>
+              <td>6단계 시스템과 통일성</td>
+              <td>다름</td>
+              <td>다름</td>
+              <td>다름</td>
+              <td class="ok">★★★★★ 동일 패턴</td>
+              <td class="ok">★★★★★ 동일 패턴</td>
+            </tr>
+            <tr>
+              <td>중복도</td>
+              <td class="ok">없음</td>
+              <td class="warn">뱃지 + 컨트롤 (중복)</td>
+              <td>뱃지 + 화살표 (약함)</td>
+              <td>뱃지 + 스와이프 (보완)</td>
+              <td class="ok">뱃지 = progress bar (통합)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

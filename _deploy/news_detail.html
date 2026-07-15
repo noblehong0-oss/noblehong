@@ -1,0 +1,904 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GP98TNL451"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GP98TNL451');
+  </script>
+  <link rel="canonical" href="https://www.noblehong.com/news_detail" />
+  <meta name="twitter:image" content="https://www.noblehong.com/og-home.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:image" content="https://www.noblehong.com/og-home.jpg" />
+  <meta property="og:url" content="https://www.noblehong.com/news_detail" />
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev" crossorigin>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>노블홍 소식 — 노블홍 결혼정보회사</title>
+    <meta
+      name="description"
+      content="노블홍 결혼정보회사의 최신 소식과 공지사항."
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon.ico"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-16x16.png"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* 프로덕션 (about.html) 토큰 동일 */
+        --bg: #fffefb;
+        --surface: #ffffff;
+        --surface-warm: #f9f6ef;
+        --surface-cream: #f2ece0;
+        --border: #e8e0ce;
+        --border-gold: rgba(184, 154, 90, 0.25);
+        --text: #2c2820;
+        --text-secondary: #5c5040;
+        --text-muted: #8c8070;
+        --gold: #b89a5a;
+        --gold-light: #d4b870;
+        --gold-lighter: #d9c577;
+        --gold-dark: #8c7030;
+        --gold-bg: rgba(184, 154, 90, 0.04);
+        /* 호환 alias (기존 detail-* 스타일에서 사용) */
+        --text-primary: var(--text);
+        --text-body: var(--text-secondary);
+        --surface-light: var(--surface-warm);
+        --border-hover: var(--border-gold);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          "Pretendard",
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text-body);
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+      ::selection {
+        background: rgba(201, 169, 98, 0.3);
+        color: var(--text-primary);
+      }
+
+      /* ===== GNB (프로덕션 about.html과 동일) ===== */
+      .gnb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: #fffefb;
+        box-shadow: 0 1px 0 rgba(184, 154, 90, 0.1);
+        transition: all 0.4s ease;
+        padding-top: env(safe-area-inset-top);
+      }
+      .gnb-border {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 10%,
+          var(--gold-light) 50%,
+          transparent 90%
+        );
+        opacity: 0.5;
+      }
+      .gnb-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        height: 88px;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-inner {
+        height: 64px;
+      }
+      .gnb-logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+      .gnb-logo img {
+        height: 72px;
+        width: auto;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-logo img {
+        height: 48px;
+      }
+      .gnb-menu {
+        display: flex;
+        gap: 40px;
+        list-style: none;
+      }
+      .gnb-menu a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        padding: 8px 0;
+        position: relative;
+        color: #1a1714;
+        transition: color 0.3s;
+      }
+      .gnb-menu a::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--gold-dark),
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .gnb-menu a:hover,
+      .gnb-menu a.active {
+        color: var(--gold-dark);
+      }
+      .gnb-menu a:hover::after,
+      .gnb-menu a.active::after {
+        width: 100%;
+      }
+      .gnb-cta {
+        padding: 10px 24px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #a8854a;
+        background: linear-gradient(
+          135deg,
+          #d4bd7a 0%,
+          #b8924a 55%,
+          #a8854a 100%
+        );
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-radius: 2px;
+        text-decoration: none;
+        color: #ffffff;
+        transition: all 0.3s;
+        white-space: nowrap;
+        box-shadow: 0 2px 10px rgba(168, 133, 74, 0.2);
+      }
+      .gnb-cta:hover {
+        background: linear-gradient(
+          135deg,
+          #e0c888 0%,
+          #c99a52 55%,
+          #b8924a 100%
+        );
+        border-color: #b8924a;
+        color: #ffffff;
+        box-shadow: 0 6px 20px rgba(168, 133, 74, 0.38);
+        transform: translateY(-1px);
+      }
+      @media (max-width: 600px) {
+        .gnb-menu {
+          display: none;
+        }
+        .gnb-cta {
+          display: none;
+        }
+      }
+
+      /* Hero */
+      .detail-hero {
+        padding: 140px 0 0;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+      .detail-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 32px;
+      }
+      .detail-breadcrumb a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .detail-breadcrumb a:hover {
+        color: var(--gold);
+      }
+      .detail-breadcrumb .sep {
+        color: var(--text-muted);
+      }
+      .detail-cat {
+        display: inline-block;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 500;
+        background: var(--gold-bg);
+        color: var(--gold);
+        border: 1px solid rgba(201, 169, 98, 0.2);
+        margin-bottom: 20px;
+      }
+      .detail-title {
+        font-size: clamp(28px, 4vw, 40px);
+        font-weight: 800;
+        color: var(--text-primary);
+        line-height: 1.35;
+        margin-bottom: 20px;
+        letter-spacing: -0.5px;
+      }
+      .detail-meta {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 13px;
+        color: var(--text-muted);
+        padding-bottom: 32px;
+        border-bottom: 1px solid rgba(201, 169, 98, 0.15);
+      }
+      .detail-meta .dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: var(--text-muted);
+      }
+
+      /* Layout */
+      .detail-layout {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 64px;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 48px 40px 100px;
+      }
+
+      /* Main content */
+      .detail-body {
+        font-size: 1.125rem;
+        line-height: 1.85;
+        color: var(--text-body);
+        word-break: keep-all;
+      }
+      .detail-body p {
+        margin-bottom: 1.5rem;
+      }
+      .detail-body strong {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      /* 인용 블록 */
+      .detail-quote {
+        box-shadow: 0 0 20px rgba(201, 169, 98, 0.05);
+        margin: 2rem 0;
+        padding: 1.5rem 2rem;
+        background: var(--surface-light);
+        border-left: 4px solid var(--gold);
+        border-radius: 0 0.75rem 0.75rem 0;
+        font-size: 1.125rem;
+        color: #ccc;
+        line-height: 1.8;
+        font-style: italic;
+      }
+
+      /* 이미지 영역 */
+      .detail-img {
+        box-shadow:
+          0 0 24px rgba(201, 169, 98, 0.06),
+          0 0 6px rgba(201, 169, 98, 0.03);
+        margin: 2.5rem 0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--surface);
+        aspect-ratio: 16/9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        font-size: 13px;
+        border: 1px solid rgba(201, 169, 98, 0.15);
+      }
+
+      /* Sidebar */
+      .detail-sidebar {
+        position: sticky;
+        top: 96px;
+        align-self: start;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .sidebar-box {
+        box-shadow:
+          0 0 20px rgba(201, 169, 98, 0.06),
+          0 0 4px rgba(201, 169, 98, 0.03);
+        background: var(--surface);
+        border: 1px solid rgba(201, 169, 98, 0.15);
+        border-radius: 12px;
+        padding: 24px;
+      }
+      .sidebar-box-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      .sidebar-info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(201, 169, 98, 0.15);
+        font-size: 13px;
+      }
+      .sidebar-info-row:last-child {
+        border-bottom: none;
+      }
+      .sidebar-info-label {
+        color: var(--text-muted);
+      }
+      .sidebar-info-value {
+        color: var(--text-body);
+      }
+
+      /* 공유 버튼 */
+      .share-btns {
+        display: flex;
+        gap: 8px;
+      }
+      .share-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: var(--surface-light);
+        border: 1px solid rgba(201, 169, 98, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.25s;
+        color: var(--text-secondary);
+      }
+      .share-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .share-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* 관련 글 */
+      .sidebar-related a {
+        display: block;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(201, 169, 98, 0.15);
+        text-decoration: none;
+        font-size: 13px;
+        color: var(--text-body);
+        transition: color 0.2s;
+        line-height: 1.5;
+      }
+      .sidebar-related a:last-child {
+        border-bottom: none;
+      }
+      .sidebar-related a:hover {
+        color: var(--gold);
+      }
+      .sidebar-related .r-date {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      /* 목록 버튼 */
+      .sidebar-back {
+        box-shadow: 0 0 12px rgba(201, 169, 98, 0.04);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        border: 1px solid rgba(201, 169, 98, 0.15);
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        transition: all 0.25s;
+        justify-content: center;
+      }
+      .sidebar-back:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+
+      /* 이전/다음 글 */
+      .detail-nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 64px;
+        padding-top: 32px;
+        border-top: 1px solid rgba(201, 169, 98, 0.15);
+      }
+      .nav-item {
+        box-shadow: 0 0 16px rgba(201, 169, 98, 0.05);
+        padding: 20px;
+        border: 1px solid rgba(201, 169, 98, 0.15);
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all 0.25s;
+      }
+      .nav-item:hover {
+        box-shadow: 0 0 24px rgba(201, 169, 98, 0.12);
+        border-color: rgba(201, 169, 98, 0.3);
+        background: var(--surface);
+      }
+      .nav-label {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .nav-title {
+        font-size: 14px;
+        color: var(--text-body);
+        font-weight: 500;
+        line-height: 1.5;
+      }
+      .nav-item:hover .nav-title {
+        color: var(--gold);
+      }
+      .nav-item.next {
+        text-align: right;
+      }
+      .nav-item.next .nav-label {
+        justify-content: flex-end;
+      }
+
+      /* ===== Footer (프로덕션 about.html과 동일) ===== */
+      .footer {
+        padding: 56px 40px 40px;
+        background: linear-gradient(135deg, #f9f6ef 0%, #f2ece0 100%);
+        border-top: 2px solid var(--gold);
+      }
+      .footer-gold-line {
+        height: 1px;
+        margin-bottom: 56px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        opacity: 0.3;
+      }
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-logo {
+        margin-bottom: 16px;
+      }
+      .footer-logo img {
+        height: 52px;
+        width: auto;
+        opacity: 1;
+      }
+      .footer-info {
+        font-size: 13px;
+        color: #8c8070;
+        line-height: 1.9;
+      }
+      .footer-links {
+        display: flex;
+        gap: 28px;
+      }
+      .footer-links a {
+        font-size: 14px;
+        color: var(--gold);
+        text-decoration: none;
+        letter-spacing: 0.3px;
+        transition: color 0.3s;
+        min-height: 44px;
+        padding: 12px 8px;
+        display: inline-flex;
+        align-items: center;
+      }
+      .footer-links a:hover {
+        color: var(--gold-dark);
+      }
+      .footer-copy {
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: #8c8070;
+      }
+      .footer-copy a {
+        color: var(--gold);
+        text-decoration: none;
+      }
+      @media (max-width: 960px) {
+        .footer-inner {
+          flex-direction: column;
+          gap: 24px;
+        }
+      }
+
+      /* Mock label */
+      .mock {
+        text-align: center;
+        margin: 64px 40px 0;
+        padding: 20px;
+        font-size: 12px;
+        color: var(--text-muted);
+        border: 1px dashed rgba(201, 169, 98, 0.15);
+        border-radius: 8px;
+        max-width: 1100px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      @media (max-width: 768px) {
+        .detail-layout {
+          grid-template-columns: 1fr;
+          gap: 32px;
+        }
+        .detail-sidebar {
+          position: static;
+        }
+        .detail-hero {
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+        .detail-layout {
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+        .detail-nav {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- GNB (프로덕션 동일) -->
+    <nav class="gnb" id="gnb">
+      <div class="gnb-inner">
+        <a href="index.html" class="gnb-logo">
+          <img
+            src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+            alt="노블홍"
+          />
+        </a>
+        <ul class="gnb-menu">
+          <li><a href="about.html">노블홍</a></li>
+          <li><a href="noblematching.html">노블매칭</a></li>
+          <li><a href="consulting.html">맞춤컨설팅</a></li>
+          <li><a href="matchinglounge.html">차별화 시스템</a></li>
+          <li><a href="campaign.html">결혼장려 공익캠페인</a></li>
+          <li><a href="matchinglab.html">매칭전략연구소</a></li>
+          <li><a href="contact.html#form">상담문의</a></li>
+        </ul>
+        <a href="contact.html#form" class="gnb-cta">상담 시작</a>
+      </div>
+      <div class="gnb-border"></div>
+    </nav>
+
+    <div
+      id="content"
+      style="
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        font-size: 14px;
+        padding-top: 100px;
+      "
+    >
+      소식을 불러오는 중...
+    </div>
+
+    <!-- Footer (프로덕션 동일) -->
+    <footer class="footer">
+      <div class="footer-gold-line"></div>
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+              alt="Noble HONG"
+            />
+          </div>
+          <div class="footer-info">
+            (주)노블홍 결혼정보회사 &middot; 대표 홍유진<br />
+            서울시 강남구 강남대로 354 혜천빌딩 705, 706<br />
+            사업자등록번호 321-81-03029 &middot; 국내결혼중개업
+            서울-강남-국내-22-0012호<br />
+            대표전화 1800-8194
+          </div>
+          <div class="footer-copy">
+            <span>&copy; 2026 Noble Hong. All rights reserved.</span>
+            <span style="margin-left: 16px"
+              >Designed by
+              <a
+                href="https://polarad.co.kr"
+                target="_blank"
+                rel="noopener"
+                style="color: var(--gold); text-decoration: none"
+                >POLA</a
+              ></span
+            >
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="privacy.html">개인정보처리방침</a>
+          <a href="terms.html">이용약관</a>
+          <a href="damages.html">손해배상절차</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      (async function () {
+        const API = "https://noblehong-api.noblehong0.workers.dev";
+        const params = new URLSearchParams(location.search);
+        const rawId = params.get("id") || "";
+
+        // 1) D1 우선: /api/content?module=notice → 클라이언트에서 ID 매칭
+        async function loadFromD1() {
+          try {
+            const r = await fetch(API + "/api/content?module=notice&limit=50");
+            const d = await r.json();
+            if (!d.ok || !Array.isArray(d.records)) return null;
+            // D1 shape → 공통 shape 정규화 (게시일 내림차순)
+            const items = d.records
+              .map((rec) => {
+                const f = rec.fields || {};
+                return {
+                  id: rec.id,
+                  title: f["제목"] || "",
+                  body: f["본문"] || "",
+                  date: f["게시일"] || "",
+                  category: f["카테고리"] || "공지",
+                  source: f["출처"] || "",
+                };
+              })
+              .sort((a, b) => (a.date < b.date ? 1 : -1));
+            return items;
+          } catch (e) {
+            return null;
+          }
+        }
+
+        // 2) Fallback: data/news.json (D1 실패 또는 ID 매칭 실패 시)
+        async function loadFromJson() {
+          try {
+            const r = await fetch("data/news.json");
+            const arr = await r.json();
+            return arr.map((n) => ({
+              id: String(n.id),
+              title: n.title || "",
+              body: n.body || "",
+              date: n.date || "",
+              category: n.category || "소식",
+              source: n.source || "",
+            }));
+          } catch (e) {
+            return [];
+          }
+        }
+
+        let news = await loadFromD1();
+        let usedD1 = !!news;
+        if (!news || !news.length) {
+          news = await loadFromJson();
+          usedD1 = false;
+        }
+
+        if (!news.length) {
+          document.getElementById("content").textContent =
+            "소식을 불러올 수 없습니다.";
+          return;
+        }
+
+        // ID 매칭 — D1(rec...) 또는 news.json(숫자) 둘 다 시도
+        let idx = -1;
+        if (rawId) {
+          idx = news.findIndex((n) => String(n.id) === rawId);
+          // D1 첫 시도 실패 → news.json 폴백 한 번 더
+          if (idx < 0 && usedD1) {
+            const jsonNews = await loadFromJson();
+            const jIdx = jsonNews.findIndex((n) => String(n.id) === rawId);
+            if (jIdx >= 0) {
+              news = jsonNews;
+              idx = jIdx;
+              usedD1 = false;
+            }
+          }
+        }
+        if (idx < 0) idx = 0; // ID 없거나 매칭 실패 시 최신글
+
+        const item = news[idx];
+        if (!item) {
+          document.getElementById("content").textContent =
+            "소식을 찾을 수 없습니다.";
+          return;
+        }
+        const prev = idx > 0 ? news[idx - 1] : null;
+        const next = idx < news.length - 1 ? news[idx + 1] : null;
+
+        document.title = item.title + " — 노블홍 소식";
+
+        const bodyHtml =
+          item.body.split("\\n\\n").length > 1
+            ? item.body
+                .split("\\n\\n")
+                .map((p) => "<p>" + p.replace(/\\n/g, "<br>") + "</p>")
+                .join("")
+            : item.body
+                .split("\n\n")
+                .map((p) => "<p>" + p.replace(/\n/g, "<br>") + "</p>")
+                .join("");
+
+        const relatedHtml = news
+          .filter((n) => n.id !== item.id)
+          .slice(0, 3)
+          .map(
+            (n) =>
+              '<a href="news_detail.html?id=' +
+              n.id +
+              '">' +
+              n.title +
+              '<div class="r-date">' +
+              n.date +
+              "</div></a>",
+          )
+          .join("");
+
+        let navHtml = '<div class="detail-nav">';
+        if (prev)
+          navHtml +=
+            '<a class="nav-item prev" href="news_detail.html?id=' +
+            prev.id +
+            '"><div class="nav-label">&larr; 이전 글</div><div class="nav-title">' +
+            prev.title +
+            "</div></a>";
+        else navHtml += "<div></div>";
+        if (next)
+          navHtml +=
+            '<a class="nav-item next" href="news_detail.html?id=' +
+            next.id +
+            '"><div class="nav-label">다음 글 &rarr;</div><div class="nav-title">' +
+            next.title +
+            "</div></a>";
+        navHtml += "</div>";
+
+        document.getElementById("content").style = "";
+        document.getElementById("content").innerHTML =
+          '<div class="detail-hero">' +
+          '<div class="detail-breadcrumb"><a href="/matchinglounge">매칭라운지</a><span class="sep">/</span><a href="/matchinglounge#feed">노블홍 소식</a><span class="sep">/</span><span>상세</span></div>' +
+          '<span class="detail-cat">' +
+          (item.category || "소식") +
+          "</span>" +
+          '<h1 class="detail-title">' +
+          item.title +
+          "</h1>" +
+          '<div class="detail-meta"><span>' +
+          item.date +
+          '</span><span class="dot"></span><span>' +
+          (item.source || "노블홍") +
+          "</span></div>" +
+          "</div>" +
+          '<div class="detail-layout">' +
+          '<div class="detail-main">' +
+          '<div class="detail-body">' +
+          bodyHtml +
+          "</div>" +
+          navHtml +
+          "</div>" +
+          '<aside class="detail-sidebar">' +
+          '<div class="sidebar-box"><div class="sidebar-box-title">글 정보</div>' +
+          '<div class="sidebar-info-row"><span class="sidebar-info-label">카테고리</span><span class="sidebar-info-value">' +
+          (item.category || "소식") +
+          "</span></div>" +
+          '<div class="sidebar-info-row"><span class="sidebar-info-label">작성일</span><span class="sidebar-info-value">' +
+          item.date +
+          "</span></div>" +
+          (item.source
+            ? '<div class="sidebar-info-row"><span class="sidebar-info-label">출처</span><span class="sidebar-info-value">' +
+              item.source +
+              "</span></div>"
+            : "") +
+          "</div>" +
+          '<div class="sidebar-box"><div class="sidebar-box-title">관련 소식</div><div class="sidebar-related">' +
+          relatedHtml +
+          "</div></div>" +
+          '<a href="/matchinglounge#feed" class="sidebar-back">&larr; 목록으로 돌아가기</a>' +
+          "</aside>" +
+          "</div>";
+      })();
+    </script>
+
+    <!-- GNB scroll 효과 (프로덕션 동일) -->
+    <script>
+      (function () {
+        var gnb = document.getElementById("gnb");
+        if (!gnb) return;
+        window.addEventListener("scroll", function () {
+          gnb.classList.toggle("scrolled", window.scrollY > 50);
+        });
+      })();
+    </script>
+
+    <!-- GNB_ACTIVE_JS -->
+    <script>
+      (function () {
+        var pathname = location.pathname.replace(/\/$/, "");
+        var segment = pathname.split("/").pop() || "index";
+        segment = segment.replace(/\.html$/, "");
+        if (pathname === "" || pathname === "/") segment = "index";
+        document.querySelectorAll(".gnb-menu a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          var hrefSeg = href
+            .split("#")[0]
+            .split("?")[0]
+            .split("/")
+            .pop()
+            .replace(/\.html$/, "");
+          if (hrefSeg === "" && href.indexOf("/") === 0) hrefSeg = "index";
+          if (hrefSeg === segment) a.classList.add("active");
+        });
+      })();
+    </script>
+  </body>
+</html>

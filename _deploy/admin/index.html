@@ -1,0 +1,2692 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>노블홍 관리자</title>
+    <link rel="icon" href="/favicon.ico" />
+    <style>
+      :root {
+        --bg: #f7f6f2;
+        --card: #ffffff;
+        --border: #e6e2d6;
+        --ink: #1a1207;
+        --ink-2: #5c5040;
+        --gold: #b8924a;
+        --gold-2: #d4bd7a;
+        --gold-soft: #f1e6c9;
+        --espresso: #2a1d0a;
+        --bad: #b84040;
+        --good: #3a8860;
+        --warn: #b8894a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          Pretendard,
+          "Noto Sans KR",
+          "Malgun Gothic",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      button {
+        font-family: inherit;
+        font-size: inherit;
+        cursor: pointer;
+      }
+      input,
+      select,
+      textarea {
+        font-family: inherit;
+        font-size: inherit;
+      }
+
+      /* ─── LOGIN ────────────────────────────────── */
+      .login-shell {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .login-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 32px 28px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+      }
+      .login-brand {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+      .login-brand .eyebrow {
+        color: var(--gold);
+        font-size: 11px;
+        letter-spacing: 3px;
+        font-weight: 600;
+      }
+      .login-brand .title {
+        margin-top: 6px;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--espresso);
+      }
+      .login-card label {
+        display: block;
+        font-size: 12px;
+        color: var(--ink-2);
+        margin: 14px 0 6px;
+        font-weight: 600;
+      }
+      .login-card input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        letter-spacing: 4px;
+        font-size: 18px;
+        text-align: center;
+      }
+      .login-card input:focus {
+        outline: none;
+        border-color: var(--gold);
+      }
+      .login-btn {
+        width: 100%;
+        margin-top: 18px;
+        padding: 12px;
+        background: linear-gradient(135deg, var(--gold-2), var(--gold));
+        color: var(--espresso);
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+      .login-btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+      .login-hint {
+        margin-top: 14px;
+        font-size: 12px;
+        color: var(--ink-2);
+        text-align: center;
+        line-height: 1.6;
+      }
+      .login-status {
+        margin-top: 14px;
+        padding: 10px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        line-height: 1.5;
+        display: none;
+      }
+      .login-status.ok {
+        display: block;
+        background: rgba(58, 136, 96, 0.1);
+        color: var(--good);
+        border: 1px solid rgba(58, 136, 96, 0.3);
+      }
+      .login-status.err {
+        display: block;
+        background: rgba(184, 64, 64, 0.1);
+        color: var(--bad);
+        border: 1px solid rgba(184, 64, 64, 0.3);
+      }
+
+      /* ─── DASHBOARD ────────────────────────────── */
+      .app {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        min-height: 100vh;
+        min-width: 0;
+      }
+      .sidebar {
+        background: var(--espresso);
+        color: #e7d9b8;
+        padding: 24px 16px;
+        border-right: 1px solid #1a1207;
+        position: sticky;
+        top: 0;
+        align-self: start;
+        max-height: 100vh;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(231, 217, 184, 0.18) transparent;
+      }
+      .sidebar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(231, 217, 184, 0.18);
+        border-radius: 3px;
+      }
+      .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .sidebar .brand {
+        padding: 6px 10px 20px;
+        border-bottom: 1px solid rgba(231, 217, 184, 0.15);
+        margin-bottom: 16px;
+      }
+      .sidebar .brand .eyebrow {
+        color: var(--gold-2);
+        font-size: 10px;
+        letter-spacing: 2.5px;
+        font-weight: 600;
+      }
+      .sidebar .brand .title {
+        margin-top: 4px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .mobile-menu-toggle {
+        display: none;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 12px;
+        margin-bottom: 2px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        color: #e7d9b8;
+        user-select: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-break: keep-all;
+      }
+      .nav-item:hover {
+        background: rgba(231, 217, 184, 0.08);
+      }
+      .nav-item.active {
+        background: linear-gradient(135deg, var(--gold), var(--gold-2));
+        color: var(--espresso);
+        font-weight: 700;
+      }
+      .nav-item.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .nav-item.disabled:hover {
+        background: transparent;
+      }
+      .nav-section {
+        margin-top: 16px;
+        padding: 6px 10px 4px;
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: rgba(231, 217, 184, 0.45);
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .sidebar-footer {
+        position: sticky;
+        bottom: 0;
+        padding-top: 20px;
+        border-top: 1px solid rgba(231, 217, 184, 0.15);
+        margin-top: 24px;
+      }
+      .logout-btn {
+        width: 100%;
+        padding: 8px;
+        background: transparent;
+        color: #e7d9b8;
+        border: 1px solid rgba(231, 217, 184, 0.25);
+        border-radius: 6px;
+        font-size: 12px;
+      }
+      .logout-btn:hover {
+        background: rgba(231, 217, 184, 0.08);
+      }
+
+      .main {
+        padding: 24px 32px;
+        overflow-x: hidden;
+      }
+      .page-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--border);
+      }
+      .page-head .eyebrow {
+        color: var(--gold);
+        font-size: 11px;
+        letter-spacing: 3px;
+        font-weight: 600;
+      }
+      .page-head .title {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--espresso);
+        margin-top: 4px;
+      }
+      .page-head .count {
+        font-size: 13px;
+        color: var(--ink-2);
+      }
+
+      /* 필터 바 */
+      .filter-bar {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .filter-bar select,
+      .filter-bar input {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: #fff;
+        font-size: 13px;
+      }
+      .filter-bar input[type="search"] {
+        flex: 1;
+        min-width: 200px;
+      }
+      .filter-bar button {
+        padding: 8px 14px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: #fff;
+        color: var(--ink-2);
+        font-size: 13px;
+      }
+      .filter-bar button.primary {
+        background: var(--espresso);
+        color: #e7d9b8;
+        border-color: var(--espresso);
+      }
+
+      /* 테이블 */
+      .table-wrap {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      thead {
+        background: #faf7ef;
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        text-align: left;
+        padding: 10px 14px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: var(--ink-2);
+        white-space: nowrap;
+      }
+      td {
+        padding: 12px 14px;
+        border-bottom: 1px solid #f0ebdf;
+        font-size: 13px;
+        vertical-align: middle;
+      }
+      tbody tr:hover {
+        background: #fbf9f3;
+      }
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .badge {
+        display: inline-block;
+        padding: 3px 9px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+      }
+      .badge.src-full {
+        background: rgba(60, 100, 180, 0.12);
+        color: #2f5aa0;
+        border: 1px solid rgba(60, 100, 180, 0.28);
+      }
+      .badge.src-quick {
+        background: rgba(184, 146, 74, 0.15);
+        color: #8c6a32;
+        border: 1px solid rgba(184, 146, 74, 0.35);
+      }
+      .badge.src-bar {
+        background: rgba(58, 136, 96, 0.13);
+        color: #2a6345;
+        border: 1px solid rgba(58, 136, 96, 0.3);
+      }
+      .badge.src-meta {
+        background: rgba(42, 29, 10, 0.1);
+        color: var(--espresso);
+        border: 1px solid rgba(42, 29, 10, 0.25);
+      }
+      .badge.src-unknown {
+        background: #f0ebdf;
+        color: var(--ink-2);
+      }
+      .status-select {
+        padding: 4px 8px;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: #fff;
+        font-size: 12px;
+      }
+      .status-tag {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .status-tag.st-접수 {
+        background: #fef3d6;
+        color: #8c6a32;
+      }
+      .status-tag.st-상담중 {
+        background: #d6e9ef;
+        color: #3474a0;
+      }
+      .status-tag.st-완료 {
+        background: #d6efd9;
+        color: #2a6345;
+      }
+      .status-tag.st-거절 {
+        background: #efd6d6;
+        color: #8c3232;
+      }
+      .status-tag.st-보류 {
+        background: #efe4d6;
+        color: #806034;
+      }
+
+      .loader {
+        padding: 60px;
+        text-align: center;
+        color: var(--ink-2);
+        font-size: 13px;
+      }
+      .empty {
+        padding: 40px;
+        text-align: center;
+        color: var(--ink-2);
+        font-size: 13px;
+      }
+      .pagination {
+        display: flex;
+        justify-content: center;
+        padding: 14px;
+        border-top: 1px solid var(--border);
+        background: #faf7ef;
+      }
+      .pagination button {
+        padding: 8px 16px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: #fff;
+        color: var(--ink);
+        font-size: 13px;
+      }
+      .pagination button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* 상세 모달 */
+      .modal-back {
+        position: fixed;
+        inset: 0;
+        background: rgba(26, 18, 7, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        padding: 20px;
+      }
+      .modal-back.open {
+        display: flex;
+      }
+      .modal {
+        background: #fff;
+        width: 100%;
+        max-width: 560px;
+        border-radius: 12px;
+        overflow: hidden;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .modal-head {
+        background: var(--espresso);
+        color: #e7d9b8;
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .modal-body {
+        padding: 20px;
+        overflow-y: auto;
+      }
+      .modal-body dl {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        row-gap: 10px;
+        column-gap: 16px;
+        margin: 0 0 16px;
+      }
+      .modal-body dt {
+        font-size: 11px;
+        color: var(--gold);
+        font-weight: 700;
+        letter-spacing: 1px;
+        padding-top: 3px;
+      }
+      .modal-body dd {
+        margin: 0;
+        font-size: 13px;
+        color: var(--ink);
+        word-break: break-word;
+      }
+      .modal-body textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-family: inherit;
+        font-size: 13px;
+        resize: vertical;
+      }
+      .modal-foot {
+        padding: 14px 20px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+      .modal-foot .spacer {
+        flex: 1;
+      }
+      .modal-foot button {
+        padding: 9px 18px;
+        border-radius: 6px;
+        font-size: 13px;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--ink);
+      }
+      .modal-foot button.primary {
+        background: var(--espresso);
+        color: #e7d9b8;
+        border-color: var(--espresso);
+        font-weight: 600;
+      }
+      .modal-foot button.danger {
+        color: #9a3636;
+        border-color: #e2b7b7;
+      }
+      .modal-foot button.danger:hover {
+        background: #fff3f3;
+        border-color: #c96c6c;
+      }
+      .close-x {
+        background: transparent;
+        color: #e7d9b8;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      @media (max-width: 900px) {
+        .app {
+          grid-template-columns: 1fr;
+          padding-bottom: 96px;
+        }
+        .sidebar {
+          position: fixed;
+          top: auto;
+          right: 12px;
+          bottom: calc(12px + env(safe-area-inset-bottom));
+          left: 12px;
+          z-index: 90;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 8px;
+          max-height: calc(72vh - env(safe-area-inset-bottom));
+          padding: 10px;
+          border: 1px solid rgba(231, 217, 184, 0.2);
+          border-radius: 18px;
+          box-shadow: 0 16px 46px rgba(26, 18, 7, 0.28);
+          overflow: hidden;
+          scrollbar-width: thin;
+          -webkit-overflow-scrolling: touch;
+        }
+        .sidebar.mobile-open {
+          overflow-y: auto;
+        }
+        .sidebar .brand {
+          grid-column: 1;
+          margin: 0;
+          padding: 0 8px 0 2px;
+          border-bottom: 0;
+          min-width: 0;
+        }
+        .sidebar .brand .eyebrow {
+          display: block;
+          font-size: 9px;
+          letter-spacing: 1.6px;
+        }
+        .sidebar .brand .title {
+          margin: 0;
+          font-size: 13px;
+          line-height: 1.2;
+        }
+        .mobile-menu-toggle {
+          grid-column: 2;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 72px;
+          min-height: 40px;
+          padding: 9px 14px;
+          border: 1px solid rgba(231, 217, 184, 0.28);
+          border-radius: 12px;
+          background: linear-gradient(135deg, var(--gold), var(--gold-2));
+          color: var(--espresso);
+          font-size: 12px;
+          font-weight: 800;
+          white-space: nowrap;
+        }
+        .nav-section {
+          display: none;
+        }
+        .nav-item {
+          display: none;
+        }
+        .sidebar.mobile-open .nav-section {
+          grid-column: 1 / -1;
+          display: block;
+          margin: 8px 4px 0;
+          padding: 10px 2px 2px;
+        }
+        .sidebar.mobile-open .nav-item {
+          grid-column: 1 / -1;
+          display: flex;
+          width: 100%;
+          min-height: 42px;
+          max-width: none;
+          margin: 0;
+          padding: 10px 12px;
+          border: 1px solid rgba(231, 217, 184, 0.18);
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.06);
+          font-size: 13px;
+        }
+        .sidebar.mobile-open .nav-item.active {
+          border-color: rgba(231, 217, 184, 0.28);
+          background: linear-gradient(135deg, var(--gold), var(--gold-2));
+          color: var(--espresso);
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+        }
+        .sidebar-footer {
+          display: none;
+        }
+        .sidebar.mobile-open .sidebar-footer {
+          grid-column: 1 / -1;
+          position: static;
+          display: block;
+          margin: 8px 0 0;
+          padding: 8px 0 0;
+          border-top: 1px solid rgba(231, 217, 184, 0.15);
+        }
+        .logout-btn {
+          width: 100%;
+          min-height: 42px;
+          padding: 9px 12px;
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.06);
+          white-space: nowrap;
+        }
+        .main {
+          padding: 18px 14px 116px;
+        }
+        table {
+          font-size: 12px;
+        }
+        .table-wrap {
+          overflow-x: auto;
+        }
+      }
+      @media (max-width: 420px) {
+        .sidebar {
+          right: 8px;
+          bottom: calc(8px + env(safe-area-inset-bottom));
+          left: 8px;
+          padding: 8px;
+          border-radius: 16px;
+        }
+        .nav-item {
+          max-width: 132px;
+        }
+        .main {
+          padding-bottom: 108px;
+        }
+      }
+
+      /* === 콘텐츠 모듈 공통 === */
+      .tab-panel[hidden] {
+        display: none;
+      }
+      /* 콘텐츠 리스트 — 4열(PC) / 2열(모바일) 반응형 그리드 */
+      .content-list {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        background: #0f0e0d;
+        border: 1px solid #2a2620;
+        border-radius: 8px;
+        min-height: 200px;
+        padding: 16px;
+        margin-top: 16px;
+      }
+      @media (max-width: 768px) {
+        .content-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px;
+          padding: 12px;
+        }
+      }
+      .content-list .loader {
+        grid-column: 1 / -1;
+      }
+      /* YouTube 영상/쇼츠 분리 헤더 */
+      .yt-section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 24px 0 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #2a2620;
+      }
+      .yt-section-header h3 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: #d4af6e;
+        letter-spacing: 0.3px;
+      }
+      .yt-count {
+        background: rgba(212, 175, 110, 0.12);
+        border: 1px solid rgba(212, 175, 110, 0.4);
+        color: #d4af6e;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        min-width: 30px;
+        text-align: center;
+      }
+
+      /* 콘텐츠 카드 — 썸네일 풀폭 + 좌상단 번호(클릭 편집) + 우상단 그립(드래그) */
+      .content-card {
+        position: relative;
+        background: #1a1612;
+        border: 1px solid #2a2620;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        transition:
+          border-color 0.12s,
+          box-shadow 0.12s;
+      }
+      .content-card:hover {
+        border-color: rgba(212, 175, 110, 0.5);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+      }
+      .content-card.card-ghost {
+        opacity: 0.4;
+        background: rgba(212, 175, 110, 0.08);
+        transition: none !important;
+      }
+      .content-card.card-chosen {
+        border-color: rgba(212, 175, 110, 0.95);
+        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55);
+        transition: none !important;
+      }
+      .sortable-drag {
+        opacity: 0.95 !important;
+        transform: rotate(1.5deg);
+        cursor: grabbing !important;
+      }
+      .card-order {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        z-index: 3;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: rgba(14, 12, 10, 0.88);
+        border: 1px solid rgba(212, 175, 110, 0.35);
+        color: #d4af6e;
+        font-size: 19px;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        user-select: none;
+        transition:
+          background 0.15s,
+          color 0.15s,
+          border-color 0.15s,
+          transform 0.15s;
+        backdrop-filter: blur(4px);
+      }
+      .card-order:hover {
+        background: #d4af6e;
+        color: #1a1612;
+        border-color: #d4af6e;
+        transform: scale(1.08);
+      }
+      .card-order.editing {
+        background: #d4af6e;
+        color: #1a1612;
+        cursor: text;
+      }
+      .card-order input {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        border: 0;
+        color: inherit;
+        font: inherit;
+        font-weight: 800;
+        text-align: center;
+        outline: none;
+        padding: 0;
+        -moz-appearance: textfield;
+      }
+      .card-order input::-webkit-outer-spin-button,
+      .card-order input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      .card-grip {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 3;
+        width: 34px;
+        height: 34px;
+        border-radius: 6px;
+        background: rgba(14, 12, 10, 0.88);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        color: #8a7e60;
+        font-size: 16px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: grab;
+        user-select: none;
+        backdrop-filter: blur(4px);
+        transition:
+          color 0.15s,
+          background 0.15s,
+          border-color 0.15s;
+      }
+      .card-grip:hover {
+        color: #d4af6e;
+        background: rgba(212, 175, 110, 0.18);
+        border-color: rgba(212, 175, 110, 0.4);
+      }
+      .card-grip:active {
+        cursor: grabbing;
+      }
+      .card-thumb {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        background: #0e0c0a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      .card-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .card-thumb-empty {
+        font-size: 12px;
+        color: #5a5040;
+      }
+      .image-load-fallback {
+        width: 100%;
+        height: 100%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        color: #5a5040;
+        font-size: 12px;
+        text-align: center;
+        background: #0e0c0a;
+      }
+      .modal-image-preview {
+        width: 180px;
+        height: 120px;
+        margin-bottom: 10px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        overflow: hidden;
+        background: #0e0c0a;
+      }
+      .modal-image-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .card-info {
+        padding: 10px 12px 12px;
+        min-width: 0;
+      }
+      .card-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #e5ddc8;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-all;
+      }
+      .card-meta {
+        font-size: 11px;
+        color: #8a7e60;
+        margin-top: 6px;
+      }
+      @media (max-width: 768px) {
+        .card-order {
+          width: 34px;
+          height: 34px;
+          font-size: 16px;
+          top: 6px;
+          left: 6px;
+        }
+        .card-grip {
+          width: 30px;
+          height: 30px;
+          font-size: 14px;
+          top: 6px;
+          right: 6px;
+        }
+        .card-info {
+          padding: 8px 10px 10px;
+        }
+        .card-title {
+          font-size: 12px;
+        }
+      }
+      .row-title {
+        font-size: 14px;
+        color: #e5ddc8;
+      }
+      .row-meta {
+        font-size: 12px;
+        color: #8a7e60;
+      }
+      .page-head .primary,
+      .page-head button {
+        padding: 8px 14px;
+        font-size: 13px;
+        cursor: pointer;
+        background: #1a1814;
+        border: 1px solid #2a2620;
+        color: #e5ddc8;
+        border-radius: 6px;
+      }
+      .page-head .primary {
+        background: linear-gradient(180deg, #d4af6e 0%, #a8824a 100%);
+        color: #1a1410;
+        border-color: #8a6b3a;
+        font-weight: 600;
+      }
+      .page-head .primary:hover {
+        filter: brightness(1.1);
+      }
+
+      /* ─── 상담 카드 리스트 ─── */
+      .card-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .date-group {
+        margin-top: 22px;
+      }
+      .date-group:first-child {
+        margin-top: 0;
+      }
+      .date-header {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        padding: 0 4px 10px;
+        border-bottom: 1px solid #e8e0d0;
+        margin-bottom: 12px;
+      }
+      .date-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: #5c4a2a;
+        letter-spacing: 0.5px;
+      }
+      .date-label .date-chip {
+        display: inline-block;
+        margin-right: 6px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #d4af6e, #a8824a);
+        color: #1a1410;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .date-count {
+        font-size: 11px;
+        color: #8a7e60;
+        letter-spacing: 1px;
+      }
+      .consult-card {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 16px;
+        align-items: center;
+        padding: 14px 18px;
+        background: #fff;
+        border: 1px solid #e8e0d0;
+        border-radius: 10px;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s,
+          transform 0.1s;
+        cursor: pointer;
+      }
+      .consult-card:hover {
+        border-color: #d4af6e;
+        box-shadow: 0 4px 14px rgba(212, 175, 110, 0.12);
+      }
+      .consult-card:active {
+        transform: translateY(1px);
+      }
+      .consult-card-main {
+        min-width: 0;
+      }
+      .consult-card-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 4px;
+        flex-wrap: wrap;
+      }
+      .consult-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: #1a1410;
+      }
+      .consult-card-meta {
+        font-size: 13px;
+        color: #5c5040;
+        line-height: 1.5;
+        word-break: keep-all;
+      }
+      .consult-phone {
+        color: var(--espresso, #2a1d0a);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .consult-phone:hover {
+        text-decoration: underline;
+      }
+      .consult-meta-dot {
+        margin: 0 6px;
+        color: #c9bfa5;
+      }
+      .consult-card-memo {
+        margin-top: 6px;
+        font-size: 12.5px;
+        color: #6b5d40;
+        line-height: 1.5;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+      .consult-card-side {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+      .consult-time {
+        font-size: 11px;
+        color: #8a7e60;
+        font-family: "SF Mono", Consolas, monospace;
+        letter-spacing: 0.5px;
+      }
+      .consult-card-side .status-select {
+        font-size: 12px;
+        padding: 5px 10px;
+        border: 1px solid #d4c9a8;
+        border-radius: 6px;
+        background: #faf7f0;
+        cursor: pointer;
+        min-width: 80px;
+      }
+      .consult-card-actions {
+        display: flex;
+        gap: 6px;
+      }
+      .consult-card-side .detail-btn,
+      .consult-card-side .delete-btn {
+        font-size: 11px;
+        padding: 4px 10px;
+        border: 1px solid #d4c9a8;
+        border-radius: 5px;
+        background: #fff;
+        cursor: pointer;
+        color: #5c5040;
+      }
+      .consult-card-side .detail-btn:hover {
+        background: #faf7f0;
+        border-color: #d4af6e;
+      }
+      .consult-card-side .delete-btn {
+        color: #9a3636;
+        border-color: #e2b7b7;
+      }
+      .consult-card-side .delete-btn:hover {
+        background: #fff3f3;
+        border-color: #c96c6c;
+      }
+      @media (max-width: 700px) {
+        .consult-card {
+          grid-template-columns: 1fr;
+        }
+        .consult-card-side {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+        }
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  </head>
+
+  <body>
+    <!-- 로그인 화면 -->
+    <div id="loginShell" class="login-shell" style="display: none">
+      <div class="login-card">
+        <div class="login-brand">
+          <div class="eyebrow">NOBLE HONG</div>
+          <div class="title">관리자 로그인</div>
+        </div>
+        <div id="stepRequest">
+          <div class="login-hint">
+            텔레그램 관리자 채팅으로 6자리 OTP를 전송합니다.
+          </div>
+          <button id="btnRequest" class="login-btn">OTP 발송</button>
+        </div>
+        <div id="stepVerify" style="display: none">
+          <label for="otpInput">OTP 6자리</label>
+          <input
+            id="otpInput"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            autocomplete="one-time-code"
+            placeholder="------"
+          />
+          <button id="btnVerify" class="login-btn">로그인</button>
+          <div class="login-hint">
+            <a href="#" id="btnResend" style="color: var(--gold)">OTP 재발송</a>
+          </div>
+        </div>
+        <div id="loginStatus" class="login-status"></div>
+      </div>
+    </div>
+
+    <!-- 대시보드 -->
+    <div id="app" class="app" style="display: none">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="eyebrow">ADMIN</div>
+          <div class="title">노블홍 관리</div>
+        </div>
+        <button
+          id="btnMobileMenu"
+          class="mobile-menu-toggle"
+          type="button"
+          aria-expanded="false"
+        >
+          메뉴
+        </button>
+        <div class="nav-item active" data-page="consultations">
+          상담 접수 관리
+        </div>
+        <div class="nav-section">콘텐츠 관리</div>
+        <div class="nav-item" data-page="press">언론에 비친 노블홍</div>
+        <div class="nav-item" data-page="campaign">결혼장려 공익캠페인</div>
+        <div class="nav-item" data-page="awards">수상내역</div>
+        <div class="nav-item" data-page="notice">공지사항</div>
+        <div class="nav-item" data-page="mou">MOU 체결</div>
+        <div class="nav-item" data-page="lovecol">러브칼럼</div>
+        <div class="nav-item" data-page="youtube">홍유진 TV</div>
+        <div class="nav-item" data-page="instagram">인스타그램</div>
+        <div class="nav-item" data-page="blog">네이버 블로그</div>
+        <div class="sidebar-footer">
+          <button id="btnLogout" class="logout-btn">로그아웃</button>
+        </div>
+      </aside>
+
+      <main class="main">
+        <!-- 상담 접수 패널 -->
+        <section class="tab-panel" data-page-panel="consultations">
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">CONSULTATION</div>
+              <div class="title">상담 접수 관리</div>
+            </div>
+            <div id="countLabel" class="count">—</div>
+          </div>
+
+          <div class="filter-bar">
+            <select id="filterSource">
+              <option value="">출처 전체</option>
+              <option value="상담문의">상담문의</option>
+              <option value="간편상담신청">간편상담신청</option>
+              <option value="하단바">하단바</option>
+              <option value="Meta">Meta</option>
+            </select>
+            <select id="filterStatus">
+              <option value="">상태 전체</option>
+              <option value="접수">접수</option>
+              <option value="상담중">상담중</option>
+              <option value="완료">완료</option>
+              <option value="거절">거절</option>
+              <option value="보류">보류</option>
+            </select>
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="이름 · 연락처 · 문의내용 검색"
+            />
+            <button id="btnFilter" class="primary">조회</button>
+            <button id="btnReset">초기화</button>
+          </div>
+
+          <div id="rowsBody" class="consult-groups">
+            <div class="loader">불러오는 중...</div>
+          </div>
+          <div class="pagination" style="margin-top: 16px; text-align: center">
+            <button id="btnLoadMore" style="display: none">더 보기</button>
+          </div>
+        </section>
+        <!-- /상담 접수 패널 -->
+
+        <!-- 콘텐츠 모듈 9종 패널 (구조 뼈대) -->
+        <section class="tab-panel" data-page-panel="press" hidden>
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">PRESS</div>
+              <div class="title">언론에 비친 노블홍</div>
+            </div>
+            <button class="primary" data-action="new" data-module="press">
+              + 새 항목
+            </button>
+          </div>
+          <div class="content-list" data-list="press">
+            <div class="loader">불러오는 중...</div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-page-panel="campaign" hidden>
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">CAMPAIGN</div>
+              <div class="title">결혼장려 공익캠페인</div>
+            </div>
+            <button class="primary" data-action="new" data-module="campaign">
+              + 새 항목
+            </button>
+          </div>
+          <div class="content-list" data-list="campaign">
+            <div class="loader">불러오는 중...</div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-page-panel="awards" hidden>
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">AWARDS</div>
+              <div class="title">수상내역</div>
+            </div>
+            <button class="primary" data-action="new" data-module="awards">
+              + 새 항목
+            </button>
+          </div>
+          <div class="content-list" data-list="awards">
+            <div class="loader">불러오는 중...</div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-page-panel="notice" hidden>
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">NOTICE</div>
+              <div class="title">공지사항</div>
+            </div>
+            <button class="primary" data-action="new" data-module="notice">
+              + 새 항목
+            </button>
+          </div>
+          <div class="content-list" data-list="notice">
+            <div class="loader">불러오는 중...</div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-page-panel="mou" hidden>
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">MOU</div>
+              <div class="title">MOU 체결</div>
+            </div>
+            <button class="primary" data-action="new" data-module="mou">
+              + 새 항목
+            </button>
+          </div>
+          <div class="content-list" data-list="mou">
+            <div class="loader">불러오는 중...</div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-page-panel="lovecol" hidden>
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">LOVE COLUMN</div>
+              <div class="title">러브칼럼</div>
+            </div>
+            <button class="primary" data-action="new" data-module="lovecol">
+              + 새 항목
+            </button>
+          </div>
+          <div class="content-list" data-list="lovecol">
+            <div class="loader">불러오는 중...</div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-page-panel="youtube" hidden>
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">YOUTUBE</div>
+              <div class="title">홍유진 TV</div>
+            </div>
+            <div style="display: flex; gap: 8px">
+              <button data-action="sync" data-module="youtube">
+                YouTube 동기화
+              </button>
+              <button class="primary" data-action="new" data-module="youtube">
+                + 새 항목
+              </button>
+            </div>
+          </div>
+          <div class="yt-section-header">
+            <h3>📹 영상 (홍유진TV)</h3>
+            <span class="yt-count" data-yt-count="long">—</span>
+          </div>
+          <div
+            class="content-list"
+            data-list="youtube-long"
+            data-video-type="홍유진TV"
+          >
+            <div class="loader">불러오는 중...</div>
+          </div>
+          <div class="yt-section-header" style="margin-top: 32px">
+            <h3>⚡ 쇼츠 (짧은결혼이야기)</h3>
+            <span class="yt-count" data-yt-count="shorts">—</span>
+          </div>
+          <div
+            class="content-list"
+            data-list="youtube-shorts"
+            data-video-type="짧은결혼이야기"
+          >
+            <div class="loader">불러오는 중...</div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-page-panel="instagram" hidden>
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">INSTAGRAM</div>
+              <div class="title">인스타그램</div>
+            </div>
+            <button class="primary" data-action="new" data-module="instagram">
+              + 새 항목
+            </button>
+          </div>
+          <div class="content-list" data-list="instagram">
+            <div class="loader">불러오는 중...</div>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-page-panel="blog" hidden>
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">NAVER BLOG</div>
+              <div class="title">네이버 블로그</div>
+            </div>
+            <button class="primary" data-action="new" data-module="blog">
+              + 새 항목
+            </button>
+          </div>
+          <div class="content-list" data-list="blog">
+            <div class="loader">불러오는 중...</div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- 상세 모달 -->
+    <div id="modalBack" class="modal-back">
+      <div class="modal">
+        <div class="modal-head">
+          <div>
+            <div
+              style="font-size: 10px; color: var(--gold-2); letter-spacing: 2px"
+            >
+              DETAIL
+            </div>
+            <div style="font-size: 15px; font-weight: 700; margin-top: 2px">
+              상담 상세
+            </div>
+          </div>
+          <button class="close-x" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <dl id="modalDl"></dl>
+          <label
+            style="
+              font-size: 11px;
+              color: var(--ink-2);
+              font-weight: 600;
+              display: block;
+              margin-bottom: 6px;
+            "
+            >관리자 메모</label
+          >
+          <textarea
+            id="modalMemo"
+            rows="3"
+            placeholder="관리자 메모 (선택)"
+          ></textarea>
+        </div>
+        <div class="modal-foot">
+          <button class="danger" id="btnDeleteDetail">삭제</button>
+          <span class="spacer"></span>
+          <button onclick="closeModal()">닫기</button>
+          <button class="primary" id="btnSaveDetail">저장</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 콘텐츠 편집 모달 (9개 모듈 공유) -->
+    <div id="contentModalBack" class="modal-back">
+      <div class="modal">
+        <div class="modal-head">
+          <div>
+            <div
+              style="font-size: 10px; color: var(--gold-2); letter-spacing: 2px"
+            >
+              CONTENT
+            </div>
+            <div
+              id="contentModalTitle"
+              style="font-size: 15px; font-weight: 700; margin-top: 2px"
+            >
+              콘텐츠
+            </div>
+          </div>
+          <button class="close-x" onclick="closeContentModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <div id="contentModalForm"></div>
+        </div>
+        <div class="modal-foot">
+          <button
+            class="danger"
+            id="btnDeleteContent"
+            onclick="deleteContent()"
+            style="display: none"
+          >
+            삭제
+          </button>
+          <span class="spacer"></span>
+          <button onclick="closeContentModal()">닫기</button>
+          <button class="primary" onclick="saveContent()">저장</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ───────── 인증 / 라우팅 ─────────
+      const state = {
+        records: [],
+        offset: null,
+        filter: { source: "", status: "", q: "" },
+        currentId: null,
+      };
+
+      async function api(path, opts = {}) {
+        const res = await fetch(path, {
+          credentials: "same-origin",
+          ...opts,
+          headers: {
+            "Content-Type": "application/json",
+            ...(opts.headers || {}),
+          },
+        });
+        let json = {};
+        try {
+          json = await res.json();
+        } catch (e) {}
+        return { ok: res.ok, status: res.status, json };
+      }
+
+      function showLogin() {
+        document.getElementById("loginShell").style.display = "flex";
+        document.getElementById("app").style.display = "none";
+      }
+
+      function showApp() {
+        document.getElementById("loginShell").style.display = "none";
+        document.getElementById("app").style.display = "grid";
+        const urlId = new URLSearchParams(location.search).get("id");
+        loadConsultations().then(() => {
+          if (urlId && /^rec[a-zA-Z0-9]{14}$/.test(urlId)) {
+            const found = state.records.find((x) => x.id === urlId);
+            if (found) openModal(urlId);
+            else
+              alert(
+                "해당 접수 건(" +
+                  urlId +
+                  ")을 현재 페이지에서 찾지 못했습니다. 필터를 해제하거나 더 로드를 눌러주세요.",
+              );
+          }
+        });
+      }
+
+      function setLoginStatus(msg, kind) {
+        const el = document.getElementById("loginStatus");
+        el.className = "login-status " + (kind || "");
+        el.textContent = msg || "";
+      }
+
+      async function checkAuth() {
+        const r = await api("/api/admin/me");
+        if (r.ok) showApp();
+        else showLogin();
+      }
+
+      // ───────── 로그인 플로우 ─────────
+      document
+        .getElementById("btnRequest")
+        .addEventListener("click", async () => {
+          const btn = document.getElementById("btnRequest");
+          btn.disabled = true;
+          btn.textContent = "전송 중...";
+          setLoginStatus("", "");
+          const r = await api("/api/admin/otp/request", { method: "POST" });
+          if (r.ok) {
+            document.getElementById("stepRequest").style.display = "none";
+            document.getElementById("stepVerify").style.display = "block";
+            setLoginStatus(
+              "텔레그램 관리자 채팅에서 OTP를 확인하세요. 5분 내 입력.",
+              "ok",
+            );
+            setTimeout(() => document.getElementById("otpInput").focus(), 50);
+          } else {
+            setLoginStatus(
+              r.json.error || "OTP 발송 실패. 네트워크 확인 후 재시도.",
+              "err",
+            );
+          }
+          btn.disabled = false;
+          btn.textContent = "OTP 발송";
+        });
+
+      document
+        .getElementById("btnResend")
+        .addEventListener("click", async (e) => {
+          e.preventDefault();
+          setLoginStatus("OTP 재발송 중...", "ok");
+          const r = await api("/api/admin/otp/request", { method: "POST" });
+          if (r.ok)
+            setLoginStatus("새 OTP가 텔레그램으로 발송되었습니다.", "ok");
+          else setLoginStatus(r.json.error || "재발송 실패", "err");
+        });
+
+      document
+        .getElementById("btnVerify")
+        .addEventListener("click", async () => {
+          const otp = (document.getElementById("otpInput").value || "").trim();
+          if (!/^\d{6}$/.test(otp)) {
+            setLoginStatus("6자리 숫자를 입력하세요.", "err");
+            return;
+          }
+          const btn = document.getElementById("btnVerify");
+          btn.disabled = true;
+          btn.textContent = "확인 중...";
+          const r = await api("/api/admin/otp/verify", {
+            method: "POST",
+            body: JSON.stringify({ otp }),
+          });
+          btn.disabled = false;
+          btn.textContent = "로그인";
+          if (r.ok) {
+            setLoginStatus("로그인 성공. 대시보드 로딩...", "ok");
+            setTimeout(showApp, 300);
+          } else {
+            setLoginStatus(r.json.error || "OTP가 일치하지 않습니다.", "err");
+          }
+        });
+
+      document.getElementById("otpInput").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") document.getElementById("btnVerify").click();
+      });
+
+      // ───────── 로그아웃 ─────────
+      document
+        .getElementById("btnLogout")
+        .addEventListener("click", async () => {
+          await api("/api/admin/logout", { method: "POST" });
+          location.reload();
+        });
+
+      // ───────── 상담 접수 목록 ─────────
+      function badgeFor(source) {
+        const map = {
+          상담문의: "src-full",
+          간편상담신청: "src-quick",
+          하단바: "src-bar",
+          Meta: "src-meta",
+        };
+        const cls = map[source] || "src-unknown";
+        const label = source || "(미지정)";
+        return '<span class="badge ' + cls + '">' + esc(label) + "</span>";
+      }
+
+      function esc(s) {
+        return String(s || "").replace(
+          /[<>&"']/g,
+          (c) =>
+            ({
+              "<": "&lt;",
+              ">": "&gt;",
+              "&": "&amp;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      function fmtDate(iso) {
+        if (!iso) return "";
+        const d = new Date(iso);
+        if (isNaN(d)) return "";
+        const pad = (n) => String(n).padStart(2, "0");
+        return (
+          d.getFullYear().toString().slice(2) +
+          "." +
+          pad(d.getMonth() + 1) +
+          "." +
+          pad(d.getDate()) +
+          " " +
+          pad(d.getHours()) +
+          ":" +
+          pad(d.getMinutes())
+        );
+      }
+
+      // 한국 시간 기준 YYYY-MM-DD
+      function ymdKST(ts) {
+        return new Date(ts).toLocaleDateString("sv-SE", {
+          timeZone: "Asia/Seoul",
+        });
+      }
+      // 한국 시간 HH:MM
+      function hmKST(ts) {
+        return new Date(ts).toLocaleTimeString("ko-KR", {
+          timeZone: "Asia/Seoul",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        });
+      }
+      function dateLabel(ymd) {
+        const today = ymdKST(Date.now());
+        const yest = ymdKST(Date.now() - 86400000);
+        const d = new Date(ymd + "T00:00:00+09:00");
+        const wd = ["일", "월", "화", "수", "목", "금", "토"][d.getDay()];
+        if (ymd === today)
+          return `<span class="date-chip">오늘</span>${ymd} (${wd})`;
+        if (ymd === yest)
+          return `<span class="date-chip">어제</span>${ymd} (${wd})`;
+        return `${ymd} (${wd})`;
+      }
+
+      function renderCard(r) {
+        const f = r.fields || {};
+        const ts = f["제출일시"] || r.createdTime;
+        const hm = hmKST(ts);
+        const source = f["출처"] || "";
+        const name = f["이름"] || "";
+        const phone = f["연락처"] || "";
+        const gender = f["성별"] || "";
+        const marriage = f["혼인여부"] || "";
+        const birthYear = f["출생연도"] || "";
+        const address = [f["주소"], f["상세주소"]].filter(Boolean).join(" ");
+        const memo = f["문의내용"] || "";
+        const status = f["상태"] || "접수";
+
+        const metaParts = [];
+        if (phone) {
+          metaParts.push(
+            `<a class="consult-phone" href="tel:${esc(phone)}" onclick="event.stopPropagation()">${esc(phone)}</a>`,
+          );
+        }
+        const demo = [gender, birthYear ? birthYear + "년생" : "", marriage]
+          .filter(Boolean)
+          .join(" · ");
+        if (demo) {
+          metaParts.push(`<span class="consult-meta-dot">·</span>${esc(demo)}`);
+        }
+        if (address) {
+          metaParts.push(
+            `<span class="consult-meta-dot">·</span>${esc(address)}`,
+          );
+        }
+
+        const memoHtml = memo
+          ? `<div class="consult-card-memo">${esc(memo)}</div>`
+          : "";
+
+        const statusOptions = ["접수", "상담중", "완료", "거절", "보류"]
+          .map(
+            (s) =>
+              `<option value="${s}"${s === status ? " selected" : ""}>${s}</option>`,
+          )
+          .join("");
+
+        return (
+          `<div class="consult-card" data-id="${esc(r.id)}">` +
+          `<div class="consult-card-main">` +
+          `<div class="consult-card-head">` +
+          `<span class="consult-name">${esc(name || "(이름없음)")}</span>` +
+          badgeFor(source) +
+          `</div>` +
+          `<div class="consult-card-meta">${metaParts.join(" ")}</div>` +
+          memoHtml +
+          `</div>` +
+          `<div class="consult-card-side" onclick="event.stopPropagation()">` +
+          `<span class="consult-time">${esc(hm)}</span>` +
+          `<select class="status-select" data-id="${esc(r.id)}">${statusOptions}</select>` +
+          `<div class="consult-card-actions">` +
+          `<button class="detail-btn" data-id="${esc(r.id)}">상세</button>` +
+          `<button class="delete-btn" data-id="${esc(r.id)}">삭제</button>` +
+          `</div>` +
+          `</div>` +
+          `</div>`
+        );
+      }
+
+      function groupByDate(records) {
+        const map = new Map();
+        for (const r of records) {
+          const ts = r.fields?.["제출일시"] || r.createdTime;
+          const key = ymdKST(ts);
+          if (!map.has(key)) map.set(key, []);
+          map.get(key).push(r);
+        }
+        // 날짜 역순 정렬
+        return Array.from(map.entries()).sort((a, b) => (a[0] < b[0] ? 1 : -1));
+      }
+
+      function renderGroups(records) {
+        const groups = groupByDate(records);
+        return groups
+          .map(([ymd, recs]) => {
+            return (
+              `<div class="date-group">` +
+              `<div class="date-header">` +
+              `<div class="date-label">${dateLabel(ymd)}</div>` +
+              `<div class="date-count">${recs.length}건</div>` +
+              `</div>` +
+              `<div class="card-list">${recs.map(renderCard).join("")}</div>` +
+              `</div>`
+            );
+          })
+          .join("");
+      }
+
+      async function loadConsultations(append = false) {
+        const params = new URLSearchParams();
+        if (state.filter.source) params.set("source", state.filter.source);
+        if (state.filter.status) params.set("status", state.filter.status);
+        if (state.filter.q) params.set("q", state.filter.q);
+        if (append && state.offset) params.set("offset", state.offset);
+
+        const body = document.getElementById("rowsBody");
+        if (!append)
+          body.innerHTML = `<div class="loader">불러오는 중...</div>`;
+
+        const r = await api("/api/admin/consultations/list?" + params);
+        if (!r.ok) {
+          if (r.status === 401) {
+            showLogin();
+            return;
+          }
+          body.innerHTML = `<div class="empty">불러오기 실패: ${esc(r.json.error || "")}</div>`;
+          return;
+        }
+
+        if (append) state.records = state.records.concat(r.json.records || []);
+        else state.records = r.json.records || [];
+        state.offset = r.json.offset || null;
+
+        if (state.records.length === 0) {
+          body.innerHTML = `<div class="empty" style="padding:40px;text-align:center;color:#8a7e60">조건에 맞는 접수 내역이 없습니다.</div>`;
+        } else {
+          body.innerHTML = renderGroups(state.records);
+        }
+        document.getElementById("countLabel").textContent =
+          "총 " +
+          state.records.length +
+          "건" +
+          (state.offset ? " (더 있음)" : "");
+        document.getElementById("btnLoadMore").style.display = state.offset
+          ? "inline-block"
+          : "none";
+
+        // 카드 전체 클릭 → 상세 모달 / 사이드 버튼은 stopPropagation
+        body.querySelectorAll(".consult-card").forEach((card) => {
+          card.addEventListener("click", (e) => {
+            if (e.target.closest(".consult-card-side")) return;
+            openModal(card.dataset.id);
+          });
+        });
+        body.querySelectorAll(".detail-btn").forEach((b) => {
+          b.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openModal(b.dataset.id);
+          });
+        });
+        body.querySelectorAll(".delete-btn").forEach((b) => {
+          b.addEventListener("click", async (e) => {
+            e.stopPropagation();
+            await deleteConsultation(b.dataset.id);
+          });
+        });
+        body.querySelectorAll(".status-select").forEach((sel) => {
+          sel.addEventListener("click", (e) => e.stopPropagation());
+          sel.addEventListener("change", async () => {
+            const id = sel.dataset.id;
+            const newStatus = sel.value;
+            sel.disabled = true;
+            const u = await api("/api/admin/consultations/update", {
+              method: "POST",
+              body: JSON.stringify({ id, status: newStatus }),
+            });
+            sel.disabled = false;
+            if (!u.ok) {
+              alert("상태 변경 실패: " + (u.json.error || ""));
+              loadConsultations();
+            } else {
+              const rec = state.records.find((x) => x.id === id);
+              if (rec) rec.fields["상태"] = newStatus;
+            }
+          });
+        });
+      }
+
+      async function deleteConsultation(id) {
+        const rec = state.records.find((x) => x.id === id);
+        if (!rec) return;
+        const f = rec.fields || {};
+        const name = f["이름"] || "(이름없음)";
+        const phone = f["연락처"] || "";
+        const label = phone ? `${name} / ${phone}` : name;
+        if (
+          !confirm(
+            `접수정보를 삭제하시겠습니까?\n\n${label}\n\n삭제 후에는 관리자 화면에서 복구할 수 없습니다.`,
+          )
+        ) {
+          return;
+        }
+
+        const u = await api("/api/admin/consultations/delete", {
+          method: "POST",
+          body: JSON.stringify({ id }),
+        });
+        if (!u.ok) {
+          alert("삭제 실패: " + (u.json.error || ""));
+          return;
+        }
+        state.records = state.records.filter((x) => x.id !== id);
+        if (state.currentId === id) closeModal();
+        loadConsultations();
+      }
+
+      // 필터
+      document.getElementById("btnFilter").addEventListener("click", () => {
+        state.filter.source = document.getElementById("filterSource").value;
+        state.filter.status = document.getElementById("filterStatus").value;
+        state.filter.q = document.getElementById("searchInput").value.trim();
+        loadConsultations();
+      });
+      document.getElementById("btnReset").addEventListener("click", () => {
+        document.getElementById("filterSource").value = "";
+        document.getElementById("filterStatus").value = "";
+        document.getElementById("searchInput").value = "";
+        state.filter = { source: "", status: "", q: "" };
+        loadConsultations();
+      });
+      document
+        .getElementById("searchInput")
+        .addEventListener("keydown", (e) => {
+          if (e.key === "Enter") document.getElementById("btnFilter").click();
+        });
+      document.getElementById("btnLoadMore").addEventListener("click", () => {
+        loadConsultations(true);
+      });
+
+      // 상세 모달
+      function openModal(id) {
+        const rec = state.records.find((x) => x.id === id);
+        if (!rec) return;
+        state.currentId = id;
+        const f = rec.fields || {};
+        const fields = [
+          ["접수일시", fmtDate(f["제출일시"] || rec.createdTime)],
+          ["출처", f["출처"] || "(미지정)"],
+          ["이름", f["이름"] || ""],
+          ["연락처", f["연락처"] || ""],
+          ["성별", f["성별"] || ""],
+          ["혼인", f["혼인여부"] || ""],
+          ["출생연도", f["출생연도"] || ""],
+          ["주소", [f["주소"], f["상세주소"]].filter(Boolean).join(" ")],
+          ["문의내용", f["문의내용"] || ""],
+          ["개인정보", f["개인정보동의"] ? "동의" : "미동의"],
+          ["마케팅", f["마케팅동의"] ? "동의" : "미동의"],
+          ["IP", f["IP"] || ""],
+          ["상태", f["상태"] || "접수"],
+        ];
+        document.getElementById("modalDl").innerHTML = fields
+          .filter(([, v]) => v !== "" && v !== null && v !== undefined)
+          .map(([k, v]) => "<dt>" + esc(k) + "</dt><dd>" + esc(v) + "</dd>")
+          .join("");
+        document.getElementById("modalMemo").value = f["관리자메모"] || "";
+        document.getElementById("modalBack").classList.add("open");
+      }
+
+      function closeModal() {
+        document.getElementById("modalBack").classList.remove("open");
+        state.currentId = null;
+      }
+      window.closeModal = closeModal;
+
+      document
+        .getElementById("btnSaveDetail")
+        .addEventListener("click", async () => {
+          const memo = document.getElementById("modalMemo").value.trim();
+          const id = state.currentId;
+          if (!id) return;
+          const u = await api("/api/admin/consultations/update", {
+            method: "POST",
+            body: JSON.stringify({ id, memo }),
+          });
+          if (u.ok) {
+            const rec = state.records.find((x) => x.id === id);
+            if (rec) rec.fields["관리자메모"] = memo;
+            closeModal();
+          } else {
+            alert("저장 실패: " + (u.json.error || ""));
+          }
+        });
+
+      document
+        .getElementById("btnDeleteDetail")
+        .addEventListener("click", async () => {
+          if (!state.currentId) return;
+          await deleteConsultation(state.currentId);
+        });
+
+      document.getElementById("modalBack").addEventListener("click", (e) => {
+        if (e.target.id === "modalBack") closeModal();
+      });
+
+      // === 탭 전환 + 콘텐츠 모듈 목록 (구조 뼈대) ===
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      const contentLoaded = new Set();
+      async function loadContentList(moduleKey) {
+        // youtube는 영상/쇼츠 분리 표시 (영상타입 기반)
+        if (moduleKey === "youtube") return loadYoutubeLists();
+        if (contentLoaded.has(moduleKey)) return;
+        contentLoaded.add(moduleKey);
+        const listEl = document.querySelector(
+          `.content-list[data-list="${moduleKey}"]`,
+        );
+        if (!listEl) return;
+        try {
+          const r = await api(
+            `/api/admin/content?action=list&module=${moduleKey}&limit=100`,
+          );
+          if (!r.ok) {
+            listEl.innerHTML = `<div class="loader">로드 실패: ${escapeHtml(r.json.error || r.status)}</div>`;
+            contentLoaded.delete(moduleKey);
+            return;
+          }
+          const records = r.json.records || [];
+          if (!records.length) {
+            listEl.innerHTML = `<div class="loader">등록된 항목이 없습니다. "+ 새 항목" 버튼으로 추가하세요.</div>`;
+            return;
+          }
+          renderContentCards(listEl, moduleKey, records);
+        } catch (e) {
+          listEl.innerHTML = `<div class="loader">네트워크 오류</div>`;
+          contentLoaded.delete(moduleKey);
+        }
+      }
+
+      async function loadYoutubeLists() {
+        if (contentLoaded.has("youtube")) return;
+        contentLoaded.add("youtube");
+        const longEl = document.querySelector(
+          `.content-list[data-list="youtube-long"]`,
+        );
+        const shortsEl = document.querySelector(
+          `.content-list[data-list="youtube-shorts"]`,
+        );
+        const longCount = document.querySelector('[data-yt-count="long"]');
+        const shortsCount = document.querySelector('[data-yt-count="shorts"]');
+        if (!longEl || !shortsEl) return;
+        try {
+          const r = await api(
+            `/api/admin/content?action=list&module=youtube&limit=100`,
+          );
+          if (!r.ok) {
+            const msg = `<div class="loader">로드 실패: ${escapeHtml(r.json.error || r.status)}</div>`;
+            longEl.innerHTML = msg;
+            shortsEl.innerHTML = msg;
+            contentLoaded.delete("youtube");
+            return;
+          }
+          const records = r.json.records || [];
+          const longRecords = records.filter(
+            (rec) => (rec.fields?.["영상타입"] || "홍유진TV") === "홍유진TV",
+          );
+          const shortsRecords = records.filter(
+            (rec) => rec.fields?.["영상타입"] === "짧은결혼이야기",
+          );
+          if (longCount) longCount.textContent = longRecords.length;
+          if (shortsCount) shortsCount.textContent = shortsRecords.length;
+          if (!longRecords.length) {
+            longEl.innerHTML = `<div class="loader">등록된 영상이 없습니다. "YouTube 동기화" 버튼을 눌러 채널 영상을 가져오세요.</div>`;
+          } else {
+            renderContentCards(longEl, "youtube", longRecords);
+          }
+          if (!shortsRecords.length) {
+            shortsEl.innerHTML = `<div class="loader">등록된 쇼츠가 없습니다.</div>`;
+          } else {
+            renderContentCards(shortsEl, "youtube", shortsRecords);
+          }
+        } catch (e) {
+          const msg = `<div class="loader">네트워크 오류</div>`;
+          longEl.innerHTML = msg;
+          shortsEl.innerHTML = msg;
+          contentLoaded.delete("youtube");
+        }
+      }
+
+      const R2_BASE = "https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/";
+      const SITE_ASSET_BASE = "https://www.noblehong.com/";
+      const IMAGE_FIELD_CANDIDATES = [
+        "썸네일",
+        "사진",
+        "증빙이미지",
+        "표지이미지",
+        "첨부이미지",
+      ];
+      function normalizeImageValue(raw) {
+        if (!raw) return "";
+        if (Array.isArray(raw)) return normalizeImageValue(raw[0]);
+        if (typeof raw === "object") {
+          return normalizeImageValue(
+            raw.url ||
+              raw.thumbnails?.large?.url ||
+              raw.thumbnails?.full?.url ||
+              raw.thumbnails?.small?.url ||
+              "",
+          );
+        }
+        const value = String(raw).trim();
+        if (!value) return "";
+        if (value.startsWith("{") || value.startsWith("[")) {
+          try {
+            return normalizeImageValue(JSON.parse(value));
+          } catch {
+            return value;
+          }
+        }
+        return value;
+      }
+      function encodeAssetPath(path) {
+        return encodeURI(path).replace(/#/g, "%23");
+      }
+      function toAdminImageUrl(raw) {
+        const value = normalizeImageValue(raw);
+        if (!value) return "";
+        if (/^(https?:|data:image\/|blob:)/i.test(value)) return value;
+        if (value.startsWith("//")) return "https:" + value;
+        const clean = value.replace(/^\.?\//, "");
+        if (/^(images|assets)\//i.test(clean)) {
+          return SITE_ASSET_BASE + encodeAssetPath(clean);
+        }
+        if (value.startsWith("/")) return value;
+        return R2_BASE + encodeAssetPath(clean);
+      }
+      function firstContentImage(fields) {
+        for (const key of IMAGE_FIELD_CANDIDATES) {
+          if (fields?.[key]) return fields[key];
+        }
+        return "";
+      }
+      function showImageFallback(img) {
+        img.style.display = "none";
+        const fallback = img.nextElementSibling;
+        if (fallback) fallback.style.display = "flex";
+      }
+      function renderContentCards(listEl, moduleKey, records) {
+        listEl.innerHTML = records
+          .map((rec, i) => {
+            const f = rec.fields || {};
+            const order = i + 1;
+            const title = f["제목"] || f["제휴사"] || "(제목 없음)";
+            const status = f["상태"] || "—";
+            const pinned = f["pinned"];
+            const thumb = toAdminImageUrl(firstContentImage(f));
+            const date = f["게시일"] || f["수상일"] || f["체결일"] || "";
+            const meta =
+              escapeHtml(status) + (date ? " · " + escapeHtml(date) : "");
+            return `<div class="content-card" data-id="${rec.id}">
+              <div class="card-order">${order}</div>
+              <div class="card-thumb">${
+                thumb
+                  ? `<img src="${escapeHtml(thumb)}" alt="${escapeHtml(title)}" loading="lazy" onerror="showImageFallback(this)"><div class="image-load-fallback">이미지 오류</div>`
+                  : `<div class="card-thumb-empty">—</div>`
+              }</div>
+              <div class="card-info">
+                <div class="card-title">${pinned ? "📌 " : ""}${escapeHtml(title)}</div>
+                <div class="card-meta">${meta}</div>
+              </div>
+              <div class="card-grip" title="드래그하여 순서 변경">⋮⋮</div>
+            </div>`;
+          })
+          .join("");
+        listEl.querySelectorAll(".content-card").forEach((card) => {
+          card.addEventListener("click", (e) => {
+            if (
+              e.target.closest(".card-grip") ||
+              e.target.closest(".card-order")
+            )
+              return;
+            openContentModal(moduleKey, card.dataset.id);
+          });
+        });
+        attachOrderEdit(listEl, moduleKey);
+        if (window.Sortable) {
+          Sortable.create(listEl, {
+            animation: 120,
+            handle: ".card-grip",
+            draggable: ".content-card",
+            ghostClass: "card-ghost",
+            chosenClass: "card-chosen",
+            dragClass: "sortable-drag",
+            onEnd: async (e) => {
+              if (e.oldIndex === e.newIndex) return;
+              renumberCards(listEl);
+              await persistOrder(listEl, moduleKey);
+            },
+          });
+        } else {
+          console.warn("[sortable] window.Sortable not loaded");
+        }
+      }
+
+      function renumberCards(listEl) {
+        listEl
+          .querySelectorAll(".content-card .card-order")
+          .forEach((el, idx) => {
+            el.textContent = idx + 1;
+          });
+      }
+
+      async function persistOrder(listEl, moduleKey) {
+        const ids = Array.from(listEl.querySelectorAll(".content-card")).map(
+          (el) => el.dataset.id,
+        );
+        const r = await api("/api/admin/content", {
+          method: "POST",
+          body: JSON.stringify({
+            action: "reorder",
+            module: moduleKey,
+            ids,
+          }),
+        });
+        if (!r.ok) {
+          alert("순서 저장 실패: " + (r.json.error || r.status));
+          contentLoaded.delete(moduleKey);
+          loadContentList(moduleKey);
+        }
+      }
+
+      // 번호 클릭 → 인라인 input → 위치 이동 + reorder API
+      function attachOrderEdit(listEl, moduleKey) {
+        listEl.querySelectorAll(".card-order").forEach((el) => {
+          el.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (el.classList.contains("editing")) return;
+            const card = el.closest(".content-card");
+            const cards = Array.from(listEl.querySelectorAll(".content-card"));
+            const currentIdx = cards.indexOf(card);
+            const total = cards.length;
+            const oldText = el.textContent;
+            el.classList.add("editing");
+            el.innerHTML = `<input type="number" min="1" max="${total}" value="${currentIdx + 1}" />`;
+            const input = el.querySelector("input");
+            input.focus();
+            input.select();
+            let done = false;
+            const cancel = () => {
+              if (done) return;
+              done = true;
+              el.classList.remove("editing");
+              el.textContent = oldText;
+            };
+            const apply = async () => {
+              if (done) return;
+              done = true;
+              const newPos = parseInt(input.value, 10);
+              el.classList.remove("editing");
+              if (
+                !newPos ||
+                newPos < 1 ||
+                newPos > total ||
+                newPos === currentIdx + 1
+              ) {
+                el.textContent = oldText;
+                return;
+              }
+              const newIdx = newPos - 1;
+              const refList = Array.from(
+                listEl.querySelectorAll(".content-card"),
+              );
+              if (newIdx < currentIdx) {
+                listEl.insertBefore(card, refList[newIdx]);
+              } else if (newIdx + 1 < refList.length) {
+                listEl.insertBefore(card, refList[newIdx + 1]);
+              } else {
+                listEl.appendChild(card);
+              }
+              renumberCards(listEl);
+              await persistOrder(listEl, moduleKey);
+            };
+            input.addEventListener("keydown", (e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                input.blur();
+              } else if (e.key === "Escape") {
+                e.preventDefault();
+                cancel();
+              }
+            });
+            input.addEventListener("blur", apply);
+          });
+        });
+      }
+
+      function switchTab(page) {
+        document.querySelectorAll(".nav-item[data-page]").forEach((n) => {
+          n.classList.toggle("active", n.dataset.page === page);
+        });
+        document.querySelectorAll(".tab-panel").forEach((p) => {
+          p.hidden = p.dataset.pagePanel !== page;
+        });
+        if (page !== "consultations") {
+          loadContentList(page);
+        }
+      }
+
+      document.querySelectorAll(".nav-item[data-page]").forEach((n) => {
+        n.addEventListener("click", () => {
+          switchTab(n.dataset.page);
+          setMobileMenu(false);
+        });
+      });
+      const sidebarEl = document.querySelector(".sidebar");
+      const mobileMenuBtn = document.getElementById("btnMobileMenu");
+      function setMobileMenu(open) {
+        if (!sidebarEl || !mobileMenuBtn) return;
+        sidebarEl.classList.toggle("mobile-open", !!open);
+        mobileMenuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        mobileMenuBtn.textContent = open ? "닫기" : "메뉴";
+      }
+      mobileMenuBtn?.addEventListener("click", () => {
+        setMobileMenu(!sidebarEl.classList.contains("mobile-open"));
+      });
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 900) setMobileMenu(false);
+      });
+
+      document.querySelectorAll("[data-action='new']").forEach((b) => {
+        b.addEventListener("click", () =>
+          openContentModal(b.dataset.module, null),
+        );
+      });
+      document.querySelectorAll("[data-action='sync']").forEach((b) => {
+        b.addEventListener("click", async () => {
+          const moduleKey = b.dataset.module;
+          if (moduleKey !== "youtube") {
+            alert("현재 동기화는 YouTube만 지원됩니다.");
+            return;
+          }
+          if (
+            !confirm(
+              "YouTube 채널의 최근 영상 50개를 D1에 동기화합니다.\n진행하시겠습니까?",
+            )
+          )
+            return;
+          const oldText = b.textContent;
+          b.disabled = true;
+          b.textContent = "동기화 중...";
+          try {
+            const r = await api("/api/admin/youtube/sync", { method: "POST" });
+            if (r.ok) {
+              alert(
+                `동기화 완료\n· 신규 등록: ${r.json.inserted}건\n· 갱신: ${r.json.updated}건\n· 총: ${r.json.total}건`,
+              );
+              contentLoaded.delete("youtube");
+              loadContentList("youtube");
+            } else {
+              alert(
+                "동기화 실패: " + (r.json.error || r.json.detail || r.status),
+              );
+            }
+          } catch (e) {
+            alert("네트워크 오류: " + e.message);
+          } finally {
+            b.disabled = false;
+            b.textContent = oldText;
+          }
+        });
+      });
+
+      // ───────── 콘텐츠 모듈 정의 + create/edit 모달 ─────────
+      const CONTENT_MODULES = {
+        press: {
+          name: "언론기사",
+          primary: "제목",
+          columns: ["제목", "매체", "링크", "게시일", "썸네일"],
+          imageCols: ["썸네일"],
+        },
+        campaign: {
+          name: "공익캠페인",
+          primary: "제목",
+          columns: ["제목", "본문", "게시일", "썸네일"],
+          imageCols: ["썸네일"],
+        },
+        awards: {
+          name: "수상내역",
+          primary: "제목",
+          columns: ["제목", "기관", "수상일", "증빙이미지"],
+          imageCols: ["증빙이미지"],
+        },
+        notice: {
+          name: "공지사항",
+          primary: "제목",
+          columns: ["제목", "본문", "게시일", "첨부이미지"],
+          imageCols: ["첨부이미지"],
+        },
+        mou: {
+          name: "MOU",
+          primary: "제휴사",
+          columns: ["제휴사", "체결일", "사진", "설명"],
+          imageCols: ["사진"],
+        },
+        lovecol: {
+          name: "러브칼럼",
+          primary: "제목",
+          columns: ["제목", "본문", "저자", "게시일", "썸네일"],
+          imageCols: ["썸네일"],
+        },
+        youtube: {
+          name: "유튜브영상",
+          primary: "제목",
+          columns: [
+            "제목",
+            "영상타입",
+            "YouTubeURL",
+            "설명",
+            "썸네일",
+            "게시일",
+            "자동수집",
+          ],
+          imageCols: ["썸네일"],
+          boolCols: ["자동수집"],
+          selectCols: { 영상타입: ["홍유진TV", "짧은결혼이야기"] },
+        },
+        instagram: {
+          name: "인스타그램",
+          primary: "제목",
+          columns: ["제목", "표지이미지", "게시글링크", "짧은내용", "게시일"],
+          imageCols: ["표지이미지"],
+        },
+        blog: {
+          name: "네이버블로그",
+          primary: "제목",
+          columns: ["제목", "표지이미지", "게시글링크", "짧은내용", "게시일"],
+          imageCols: ["표지이미지"],
+        },
+      };
+      let _curMod = null;
+      let _curId = null;
+
+      async function openContentModal(moduleKey, recordId) {
+        const mod = CONTENT_MODULES[moduleKey];
+        if (!mod) return;
+        _curMod = moduleKey;
+        _curId = recordId || null;
+        document.getElementById("contentModalTitle").textContent =
+          (recordId ? "편집" : "새 항목") + " · " + mod.name;
+        document.getElementById("btnDeleteContent").style.display = recordId
+          ? "inline-block"
+          : "none";
+        let fields = {};
+        if (recordId) {
+          const r = await api(
+            `/api/admin/content?action=get&module=${moduleKey}&id=${encodeURIComponent(recordId)}`,
+          );
+          if (r.ok && r.json.fields) fields = r.json.fields;
+        }
+        buildContentForm(mod, fields);
+        document.getElementById("contentModalBack").classList.add("open");
+      }
+
+      function closeContentModal() {
+        document.getElementById("contentModalBack").classList.remove("open");
+        _curMod = null;
+        _curId = null;
+      }
+
+      function buildContentForm(mod, fields) {
+        const longCols = ["본문", "설명", "짧은내용"];
+        const dateCols = ["게시일", "수상일", "체결일"];
+        const inpCss =
+          "width:100%;padding:8px;background:var(--bg-2);color:var(--ink);border:1px solid var(--border);border-radius:6px;font-family:inherit";
+        const html = mod.columns
+          .map((col) => {
+            const v = fields[col] ?? "";
+            const isImg = (mod.imageCols || []).includes(col);
+            const isBool = (mod.boolCols || []).includes(col);
+            const isLong = longCols.includes(col);
+            const isDate = dateCols.includes(col);
+            const isSelect = mod.selectCols && mod.selectCols[col];
+            const previewUrl = isImg ? toAdminImageUrl(v) : "";
+            let input;
+            if (isSelect) {
+              input =
+                `<select data-field="${col}" style="${inpCss}">` +
+                `<option value="">선택</option>` +
+                mod.selectCols[col]
+                  .map(
+                    (o) =>
+                      `<option ${o === v ? "selected" : ""}>${escapeHtml(o)}</option>`,
+                  )
+                  .join("") +
+                `</select>`;
+            } else if (isBool) {
+              input = `<label style="display:flex;align-items:center;gap:6px;color:var(--ink)"><input type="checkbox" data-field="${col}" ${v ? "checked" : ""}> ${col} 활성화</label>`;
+            } else if (isImg) {
+              const labelText = v ? "이미지 변경" : "이미지 업로드";
+              input =
+                (previewUrl
+                  ? `<div class="modal-image-preview"><img src="${escapeHtml(previewUrl)}" alt="${escapeHtml(col)} 미리보기" onerror="showImageFallback(this)"><div class="image-load-fallback">이미지 오류</div></div>`
+                  : `<div style="margin-bottom:10px;width:180px;height:120px;border:1px dashed var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--ink-2);font-size:12px;background:rgba(0,0,0,0.2)">미리보기</div>`) +
+                `<input type="hidden" data-field="${col}" value="${escapeHtml(v)}">` +
+                `<label style="display:inline-block;padding:8px 14px;background:#d4af6e;color:#1a1612;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">${labelText}<input type="file" accept="image/*" onchange="uploadContentImage(this,'${col}')" style="display:none"></label>` +
+                (v
+                  ? ` <button type="button" onclick="removeContentImage('${col}')" style="padding:8px 12px;background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--ink-2);font-size:12px;cursor:pointer;margin-left:6px">삭제</button>`
+                  : "");
+            } else if (isLong) {
+              input = `<textarea data-field="${col}" rows="3" style="${inpCss}">${escapeHtml(v)}</textarea>`;
+            } else {
+              input = `<input type="text" data-field="${col}" value="${escapeHtml(v)}" ${isDate ? 'placeholder="YYYY-MM-DD"' : ""} style="${inpCss}">`;
+            }
+            return `<div style="margin-bottom:14px"><label style="font-size:11px;color:var(--ink-2);font-weight:600;display:block;margin-bottom:4px">${col}</label>${input}</div>`;
+          })
+          .join("");
+        const common =
+          `<hr style="border:0;border-top:1px solid var(--border);margin:18px 0">` +
+          `<div style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink)"><input type="checkbox" data-field="pinned" ${fields.pinned ? "checked" : ""}> 상단 고정 (📌 pinned)</label></div>` +
+          `<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">` +
+          `<div><label style="font-size:11px;color:var(--ink-2);font-weight:600;display:block;margin-bottom:4px">정렬 순서</label><input type="number" data-field="정렬" value="${Number(fields["정렬"] || 0)}" style="${inpCss}"></div>` +
+          `<div><label style="font-size:11px;color:var(--ink-2);font-weight:600;display:block;margin-bottom:4px">상태</label><select data-field="상태" style="${inpCss}"><option ${(fields["상태"] || "공개") === "공개" ? "selected" : ""}>공개</option><option ${fields["상태"] === "숨김" ? "selected" : ""}>숨김</option></select></div>` +
+          `</div>`;
+        document.getElementById("contentModalForm").innerHTML = html + common;
+      }
+
+      function collectContentFields() {
+        const fields = {};
+        document
+          .querySelectorAll("#contentModalForm [data-field]")
+          .forEach((el) => {
+            const col = el.dataset.field;
+            if (el.type === "checkbox") fields[col] = el.checked;
+            else if (el.type === "number") fields[col] = Number(el.value) || 0;
+            else fields[col] = el.value;
+          });
+        return fields;
+      }
+
+      // Canvas 기반 WebP 변환 + 리사이즈
+      async function convertToWebP(file, quality = 0.85, maxWidth = 1920) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            let { naturalWidth: width, naturalHeight: height } = img;
+            if (width > maxWidth) {
+              height = Math.round((maxWidth / width) * height);
+              width = maxWidth;
+            }
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+            canvas.toBlob(
+              (blob) =>
+                blob ? resolve(blob) : reject(new Error("toBlob failed")),
+              "image/webp",
+              quality,
+            );
+          };
+          img.onerror = () => reject(new Error("image load failed"));
+          img.src = URL.createObjectURL(file);
+        });
+      }
+
+      function removeContentImage(col) {
+        const fieldsNow = collectContentFields();
+        fieldsNow[col] = "";
+        buildContentForm(CONTENT_MODULES[_curMod], fieldsNow);
+      }
+
+      async function uploadContentImage(fileInput, col) {
+        const file = fileInput.files[0];
+        if (!file) return;
+        if (file.size > 10 * 1024 * 1024) {
+          alert("이미지가 10MB를 초과합니다.");
+          fileInput.value = "";
+          return;
+        }
+        // GIF는 애니메이션 보존 위해 원본 유지, 그 외는 WebP 변환
+        let blob, mime, filename;
+        if (file.type === "image/gif") {
+          blob = file;
+          mime = file.type;
+          filename = file.name;
+        } else {
+          try {
+            blob = await convertToWebP(file);
+            mime = "image/webp";
+            filename = file.name.replace(/\.[^.]+$/, "") + ".webp";
+            console.log(
+              `[upload] WebP 변환: ${file.name} ${(file.size / 1024).toFixed(1)}KB → ${(blob.size / 1024).toFixed(1)}KB (${Math.round((blob.size / file.size) * 100)}%)`,
+            );
+          } catch (e) {
+            console.warn("[upload] WebP 변환 실패, 원본 사용", e);
+            blob = file;
+            mime = file.type;
+            filename = file.name;
+          }
+        }
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const base64 = reader.result.split(",")[1];
+          const r = await api("/api/admin/upload", {
+            method: "POST",
+            body: JSON.stringify({
+              module: _curMod,
+              filename,
+              mime,
+              base64,
+            }),
+          });
+          if (r.ok && r.json.url) {
+            const fieldsNow = collectContentFields();
+            fieldsNow[col] = r.json.url;
+            buildContentForm(CONTENT_MODULES[_curMod], fieldsNow);
+          } else {
+            alert("업로드 실패: " + (r.json.error || r.status));
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+
+      async function saveContent() {
+        if (!_curMod) return;
+        const fields = collectContentFields();
+        const action = _curId ? "update" : "create";
+        const body = { action, module: _curMod, fields };
+        if (_curId) body.id = _curId;
+        const r = await api("/api/admin/content", {
+          method: "POST",
+          body: JSON.stringify(body),
+        });
+        if (r.ok) {
+          const m = _curMod;
+          closeContentModal();
+          contentLoaded.delete(m);
+          loadContentList(m);
+        } else {
+          alert("저장 실패: " + (r.json.error || r.status));
+        }
+      }
+
+      async function deleteContent() {
+        if (!_curMod || !_curId) return;
+        if (!confirm("정말 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."))
+          return;
+        const r = await api("/api/admin/content", {
+          method: "POST",
+          body: JSON.stringify({
+            action: "delete",
+            module: _curMod,
+            id: _curId,
+          }),
+        });
+        if (r.ok) {
+          const m = _curMod;
+          closeContentModal();
+          contentLoaded.delete(m);
+          loadContentList(m);
+        } else {
+          alert("삭제 실패: " + (r.json.error || r.status));
+        }
+      }
+
+      // 부팅
+      checkAuth();
+    </script>
+  </body>
+</html>
