@@ -1,0 +1,1854 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GP98TNL451"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GP98TNL451');
+  </script>
+  <link rel="canonical" href="https://www.noblehong.com/campaign" />
+  <meta name="twitter:image" content="https://www.noblehong.com/og-home.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:url" content="https://www.noblehong.com/campaign" />
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev" crossorigin>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>결혼장려 공익캠페인 — 노블홍 결혼정보회사</title>
+    <meta property="og:title" content="결혼장려 공익캠페인 — 노블홍" />
+    <meta
+      property="og:description"
+      content="지자체 협력과 사회공헌 활동을 통해 결혼문화 확산에 앞장서는 노블홍의 공익 캠페인."
+    />
+    <meta property="og:image" content="https://www.noblehong.com/og-home.jpg" />
+    <meta property="og:type" content="website" />
+    <meta
+      name="description"
+      content="지자체 협력과 사회공헌 활동을 통해 결혼문화 확산에 앞장서는 노블홍의 공익 캠페인."
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon.ico"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-16x16.png"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <style>
+      :root {
+        --bg: #fffefb;
+        --surface: #ffffff;
+        --surface-warm: #f9f6ef;
+        --surface-cream: #f2ece0;
+        --border: #e8e0ce;
+        --text: #2c2820;
+        --text-secondary: #5c5040;
+        --text-muted: #8c8070;
+        --gold: #b89a5a;
+        --gold-light: #d4b870;
+        --gold-dark: #8c7030;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+      }
+
+      /* ===== GNB ===== */
+      .gnb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: #fffefb;
+        box-shadow: 0 1px 0 rgba(184, 154, 90, 0.1);
+        transition: all 0.4s ease;
+        padding-top: env(safe-area-inset-top);
+      }
+      .gnb-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        height: 88px;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-inner {
+        height: 64px;
+      }
+      .gnb-logo img {
+        height: 72px;
+        width: auto;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-logo img {
+        height: 48px;
+      }
+      .gnb-menu {
+        display: flex;
+        gap: 32px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .gnb-menu a {
+        color: #1a1714;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        padding: 8px 0;
+        position: relative;
+        transition: color 0.3s;
+      }
+      .gnb-menu a::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--gold-dark),
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .gnb-menu a:hover,
+      .gnb-menu a.active {
+        color: var(--gold-dark);
+      }
+      .gnb-menu a:hover::after,
+      .gnb-menu a.active::after {
+        width: 100%;
+      }
+      .gnb-cta {
+        padding: 10px 24px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #a8854a;
+        background: linear-gradient(
+          135deg,
+          #d4bd7a 0%,
+          #b8924a 55%,
+          #a8854a 100%
+        );
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-radius: 2px;
+        transition: all 0.3s;
+        white-space: nowrap;
+        box-shadow: 0 2px 10px rgba(168, 133, 74, 0.2);
+      }
+      .gnb-cta:hover {
+        background: linear-gradient(
+          135deg,
+          #e0c888 0%,
+          #c99a52 55%,
+          #b8924a 100%
+        );
+        border-color: #b8924a;
+        color: #ffffff;
+        box-shadow: 0 6px 20px rgba(168, 133, 74, 0.38);
+        transform: translateY(-1px);
+      }
+      .gnb-border {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 10%,
+          var(--gold-light) 50%,
+          transparent 90%
+        );
+        opacity: 0.5;
+      }
+
+      /* ===== HERO ===== */
+      .page-hero {
+        position: relative;
+        padding: 160px 40px 80px;
+        background:
+          radial-gradient(
+            circle at 15% 30%,
+            rgba(184, 154, 90, 0.1) 0%,
+            transparent 40%
+          ),
+          radial-gradient(
+            circle at 85% 70%,
+            rgba(184, 154, 90, 0.08) 0%,
+            transparent 40%
+          ),
+          var(--surface-warm);
+        text-align: center;
+        overflow: hidden;
+      }
+      .page-hero::before {
+        content: "";
+        position: absolute;
+        inset: 40px;
+        border: 1px solid rgba(184, 154, 90, 0.18);
+        pointer-events: none;
+      }
+      .page-hero-inner {
+        position: relative;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        color: var(--gold-dark);
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        font-weight: 500;
+        margin-bottom: 24px;
+      }
+      .hero-eyebrow::before,
+      .hero-eyebrow::after {
+        content: "";
+        width: 40px;
+        height: 1px;
+        background: var(--gold);
+      }
+      .hero-title {
+        font-size: clamp(40px, 5vw, 56px);
+        font-weight: 300;
+        line-height: 1.2;
+        letter-spacing: -1px;
+        margin-bottom: 24px;
+        color: var(--text);
+      }
+      .hero-title strong {
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          var(--gold-dark),
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .hero-sub {
+        font-size: 17px;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        margin-bottom: 32px;
+        max-width: 640px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .hero-meta {
+        display: inline-flex;
+        align-items: center;
+        gap: 28px;
+        padding: 14px 32px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-size: 13px;
+        color: var(--text-secondary);
+      }
+      .hero-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .hero-meta-item strong {
+        color: var(--gold-dark);
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+      }
+      .hero-meta-item.accent strong {
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        font-weight: 500;
+        font-size: 30px;
+        line-height: 1;
+        letter-spacing: -0.5px;
+      }
+      .hero-meta-divider {
+        width: 1px;
+        height: 20px;
+        background: var(--border);
+      }
+
+      /* ===== CAMPAIGN GRID ===== */
+      .campaign-section {
+        padding: 80px 40px 100px;
+        background: var(--bg);
+      }
+      .section-header {
+        max-width: 1200px;
+        margin: 0 auto 48px;
+        text-align: center;
+      }
+      .section-label {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        color: var(--gold-dark);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        font-weight: 500;
+        margin-bottom: 12px;
+      }
+      .section-title {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--text);
+      }
+      .grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        transition:
+          transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+          box-shadow 0.4s;
+      }
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(60, 44, 20, 0.1);
+      }
+      .card-img {
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+      }
+      .card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .card-caption {
+        padding: 14px 16px;
+        font-size: 13px;
+        color: var(--text-secondary);
+        font-weight: 500;
+        line-height: 1.5;
+        text-align: center;
+      }
+
+      /* ===== ANIMATIONS ===== */
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      /* ===== FOOTER ===== */
+      .footer {
+        background: var(--surface-warm);
+        padding: 60px 40px 40px;
+        position: relative;
+      }
+      .footer-gold-line {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 10%,
+          var(--gold-light) 50%,
+          transparent 90%
+        );
+        opacity: 0.4;
+      }
+      .footer-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        gap: 32px;
+        flex-wrap: wrap;
+      }
+      .footer-logo img {
+        height: 44px;
+        margin-bottom: 16px;
+      }
+      .footer-info {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.8;
+      }
+      .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .footer-links a {
+        font-size: 14px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        min-height: 44px;
+        padding: 12px 8px;
+        display: inline-flex;
+        align-items: center;
+      }
+      .footer-links a:hover {
+        color: var(--gold-dark);
+      }
+
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .gnb-menu {
+          display: none;
+        }
+      }
+      @media (max-width: 600px) {
+        .grid {
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+        }
+        .hero-meta {
+          flex-direction: column;
+          gap: 10px;
+        }
+        .hero-meta-divider {
+          display: none;
+        }
+      }
+
+      /* ===== BOTTOM INQUIRY BAR (Espresso + Gold Frame) ===== */
+      .bottom-inquiry-bar {
+        position: fixed;
+        left: 20px;
+        right: 20px;
+        bottom: 16px;
+        z-index: 99;
+        background: #2a1d0a;
+        border: 1px solid #b89a5a;
+        outline: 1px solid rgba(184, 146, 74, 0.45);
+        outline-offset: 3px;
+        border-radius: 2px;
+        padding: 18px 22px;
+        box-shadow: 0 14px 36px rgba(20, 14, 6, 0.4);
+      }
+      .bib-row-main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .bib-head {
+        flex-shrink: 0;
+        padding-right: 16px;
+        border-right: 1px solid rgba(184, 146, 74, 0.3);
+      }
+      .bib-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12px;
+        font-style: italic;
+        letter-spacing: 3px;
+        color: #d4bd7a;
+        text-transform: uppercase;
+      }
+      .bib-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: #f4dd96;
+        letter-spacing: -0.2px;
+        white-space: nowrap;
+      }
+      .bib-fields {
+        display: flex;
+        gap: 7px;
+      }
+      .bib-input,
+      .bib-select {
+        padding: 14px 14px;
+        font-size: 14px;
+        border-radius: 2px;
+        border: 1px solid rgba(212, 189, 122, 0.35);
+        background: rgba(244, 221, 150, 0.06);
+        color: #ffffff;
+        min-width: 0;
+        font-family: inherit;
+      }
+      .bib-input::placeholder {
+        color: rgba(244, 236, 212, 0.4);
+      }
+      .bib-select option {
+        background: #ffffff;
+        color: #1a1207;
+        font-weight: 500;
+      }
+      .bib-input.w-name {
+        flex: 0 0 100px;
+      }
+      .bib-input.w-phone {
+        flex: 0 0 130px;
+      }
+      .bib-select.w-gender {
+        flex: 0 0 85px;
+      }
+      .bib-select.w-marital {
+        flex: 0 0 110px;
+      }
+      .bib-select.w-year {
+        flex: 0 0 110px;
+      }
+      .bib-submit {
+        padding: 14px 28px;
+        background: linear-gradient(135deg, #d4bd7a, #b8924a);
+        color: #1a1207;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+        border: 1px solid #d4bd7a;
+        border-radius: 2px;
+        cursor: pointer;
+        white-space: nowrap;
+        font-family: inherit;
+        transition: all 0.3s;
+      }
+      .bib-submit:hover {
+        background: linear-gradient(135deg, #e8c572, #c99a52);
+      }
+      .bib-row-consent {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 10px;
+        padding-top: 8px;
+      }
+      .bib-check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: rgba(244, 236, 212, 0.72);
+        cursor: pointer;
+        min-height: 44px;
+        padding: 6px 4px;
+      }
+      .bib-check strong {
+        color: #d4bd7a;
+      }
+      .bib-check input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        accent-color: #b89a5a;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      /* ===== SIDE INQUIRY BAR (Vertical Form Card) ===== */
+      .side-inquiry-bar {
+        position: fixed;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 220px;
+        z-index: 95;
+        background: #1a1207;
+        border: 1px solid #b89a5a;
+        outline: 1px solid rgba(184, 146, 74, 0.4);
+        outline-offset: 3px;
+        border-radius: 2px;
+        padding: 18px 16px;
+        box-shadow: 0 14px 36px rgba(20, 14, 6, 0.4);
+      }
+      .sib-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 10.5px;
+        font-style: italic;
+        letter-spacing: 3px;
+        color: #d4bd7a;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 6px;
+      }
+      .sib-title {
+        font-size: 13px;
+        font-weight: 800;
+        color: #f4dd96;
+        text-align: center;
+        margin-bottom: 12px;
+      }
+      .sib-input {
+        width: 100%;
+        padding: 9px 11px;
+        background: rgba(244, 221, 150, 0.06);
+        border: 1px solid rgba(212, 189, 122, 0.3);
+        color: #ffffff;
+        font-size: 12px;
+        border-radius: 2px;
+        margin-bottom: 8px;
+        font-family: inherit;
+      }
+      .sib-input::placeholder {
+        color: rgba(244, 236, 212, 0.4);
+      }
+      .sib-submit {
+        width: 100%;
+        padding: 10px;
+        background: linear-gradient(135deg, #d4bd7a, #b8924a);
+        color: #1a1207;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.3s;
+      }
+      .sib-submit:hover {
+        background: linear-gradient(135deg, #e8c572, #c99a52);
+      }
+      .sib-phone {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(184, 146, 74, 0.2);
+        text-align: center;
+        color: #d4bd7a;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+      }
+      .sib-phone strong {
+        color: #f4dd96;
+        font-size: 14px;
+        font-weight: 800;
+      }
+      @media (max-width: 1280px) {
+        .side-inquiry-bar {
+          display: none;
+        }
+      }
+      @media (max-width: 960px) {
+        .bib-input.w-name,
+        .bib-input.w-phone,
+        .bib-select.w-gender,
+        .bib-select.w-marital,
+        .bib-select.w-year {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+        .bib-head {
+          display: none;
+        }
+      }
+      @media (max-width: 720px) {
+        .bottom-inquiry-bar {
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-radius: 0;
+          padding: 10px 14px calc(10px + env(safe-area-inset-bottom)) 14px;
+        }
+        .bib-row-main {
+          flex-wrap: wrap;
+        }
+        .bib-fields {
+          flex-wrap: wrap;
+        }
+        .bib-submit {
+          width: 100%;
+          margin-top: 8px;
+        }
+      }
+
+      /* ===== MOBILE NAV INJECTED v1 — 분리형 하단(메뉴바 + 접수바 토글) + GNB 로고 가운데 ===== */
+      .mobile-bottom-nav,
+      .bib-trigger-mobile,
+      .bib-close-mobile {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        /* GNB 헤더 — 로고 가운데 + CTA 우측 + 72px 고정 */
+        .gnb-inner {
+          position: relative;
+        }
+        .gnb-logo {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          margin: 0;
+        }
+        .gnb-logo img,
+        .gnb.scrolled .gnb-logo img {
+          height: 56px !important;
+          width: auto;
+        }
+        .gnb-cta {
+          margin-left: auto;
+          padding: 8px 14px !important;
+          font-size: 12px !important;
+          letter-spacing: 0.2px !important;
+          min-height: 40px !important;
+        }
+
+        /* 페이지 콘텐츠 하단 여유 (메뉴바 88px + trigger 44px + safe-area) */
+        body {
+          padding-bottom: calc(132px + env(safe-area-inset-bottom));
+        }
+
+        /* 모바일 하단 메뉴바 — 3x2 grid, 항상 visible */
+        .mobile-bottom-nav {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-auto-rows: 44px;
+          background: #fffefb;
+          border-top: 1px solid rgba(184, 154, 90, 0.2);
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          z-index: 95;
+          padding-bottom: env(safe-area-inset-bottom);
+          box-shadow: 0 -2px 8px rgba(44, 40, 32, 0.06);
+        }
+        .mbn-item {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #2c2820;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.2px;
+          text-decoration: none;
+          border-right: 1px solid rgba(184, 154, 90, 0.15);
+          border-bottom: 1px solid rgba(184, 154, 90, 0.15);
+          transition:
+            background 0.2s,
+            color 0.2s;
+        }
+        .mbn-item:nth-child(3n) {
+          border-right: none;
+        }
+        .mbn-item:nth-last-child(-n + 3) {
+          border-bottom: none;
+        }
+        .mbn-item:active,
+        .mbn-item.active {
+          background: linear-gradient(135deg, #d4bd7a 0%, #b8924a 100%);
+          color: #fff;
+        }
+
+        /* 접수바 trigger 버튼 — 메뉴바 위 */
+        .bib-trigger-mobile {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: calc(88px + env(safe-area-inset-bottom));
+          height: 44px;
+          background: linear-gradient(
+            135deg,
+            #d4bd7a 0%,
+            #b8924a 55%,
+            #a8854a 100%
+          );
+          color: #fff;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.4px;
+          border: none;
+          border-top: 1px solid #a8854a;
+          cursor: pointer;
+          z-index: 96;
+          box-shadow: 0 -1px 4px rgba(44, 40, 32, 0.08);
+        }
+        .bib-trigger-mobile-arrow {
+          display: inline-block;
+          width: 0;
+          height: 0;
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-bottom: 6px solid #fff;
+          transition: transform 0.3s;
+        }
+        body.bib-open .bib-trigger-mobile {
+          display: none;
+        }
+
+        /* 기존 bottom-inquiry-bar 모바일 동작 — 접힘 → 슬라이드 업 */
+        .bottom-inquiry-bar {
+          left: 0 !important;
+          right: 0 !important;
+          bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+          border-radius: 0 !important;
+          transform: translateY(110%);
+          transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+          z-index: 97;
+          max-height: 75vh;
+          overflow-y: auto;
+        }
+        body.bib-open .bottom-inquiry-bar {
+          transform: translateY(0);
+        }
+
+        /* 모바일에서 접수바 안에 닫기 버튼 노출 */
+        .bib-close-mobile {
+          display: flex;
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          width: 36px;
+          height: 36px;
+          align-items: center;
+          justify-content: center;
+          background: transparent;
+          border: 1px solid rgba(244, 236, 212, 0.32);
+          border-radius: 50%;
+          color: #f4ecd4;
+          font-size: 16px;
+          cursor: pointer;
+          z-index: 2;
+        }
+
+        /* 접수바 backdrop (열림 시) */
+        .bib-backdrop {
+          display: none;
+          position: fixed;
+          inset: 0;
+          background: rgba(20, 14, 6, 0.5);
+          z-index: 96;
+        }
+        body.bib-open .bib-backdrop {
+          display: block;
+        }
+      }
+      /* ===== END MOBILE NAV INJECTED v1 ===== */
+
+      /* MOBILE NAV PATCH v2 — 접수바 모바일 hide (trigger + form 모두), 메뉴바만 노출 */
+      @media (max-width: 768px) {
+        body {
+          padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+        }
+        .bib-trigger-mobile,
+        .bib-backdrop,
+        .bottom-inquiry-bar {
+          display: none !important;
+        }
+      }
+
+      /* MOTION STABILITY PATCH v3 — 카운터 흔들림 방지 */
+      .stat-num,
+      .ceo-stat-num,
+      .stat-num-glow {
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+      }
+      .stat-item,
+      .ceo-stat-item {
+        contain: layout style;
+      }
+      /* ===== END MOTION STABILITY PATCH v3 ===== */
+
+      /* HERO MOBILE PATCH v4 — CTA 버튼 + 한글 고아텍스트 방지 */
+      .hero-title,
+      .hero-sub,
+      .page-hero h1,
+      .page-hero p,
+      .hero-strong,
+      .hero-eyebrow {
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        text-wrap: pretty;
+      }
+
+      @media (max-width: 768px) {
+        .hero-cta-group,
+        .page-hero-cta-group {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+          padding: 0 24px;
+          max-width: 360px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .hero-cta-group .btn,
+        .page-hero-cta-group .btn,
+        .hero-cta-group a,
+        .page-hero-cta-group a {
+          width: 100%;
+          padding: 14px 18px !important;
+          font-size: 15px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0 !important;
+          justify-content: center;
+          gap: 6px;
+          min-height: 48px;
+          white-space: nowrap;
+        }
+        .hero-cta-group svg,
+        .page-hero-cta-group svg {
+          width: 18px;
+          height: 18px;
+        }
+        .hero-sub,
+        .page-hero p {
+          font-size: 14px !important;
+          line-height: 1.6 !important;
+          padding: 0 16px;
+          max-width: 100%;
+        }
+      }
+      /* ===== END HERO MOBILE PATCH v4 ===== */
+
+      /* MOTION ANTI-SHAKE PATCH v6 — 모바일 흔들림 완전 차단 */
+      @media (max-width: 768px) {
+        /* 1) reveal 대상 transform 무력화 (opacity fade만 남김) */
+        .stat-item,
+        .ceo-stat-item,
+        .ceo-stats-bar,
+        .chart-card,
+        .ceo-image-wrap,
+        .ceo-content,
+        .reveal,
+        .reveal-up,
+        .qualify-card,
+        .qualify-card-media,
+        .ceo-bg-cell,
+        .strength-card,
+        .why-block,
+        .program-card,
+        .yt-card,
+        .lovecol-item,
+        .news-item,
+        .blog-card,
+        .insta-card,
+        .award-item,
+        .mou-item,
+        .notice-item,
+        .press-item {
+          transform: none !important;
+          transition-property: opacity !important;
+        }
+
+        /* SplitText chars — stagger 무력화 (한 번에 페이드) */
+        .svc-line1 .char,
+        .svc-line2 .char,
+        .char {
+          transform: none !important;
+          opacity: 1 !important;
+        }
+
+        /* 2) 카운터 width 잠금 */
+        .stat-num,
+        .ceo-stat-num,
+        .stat-num-glow {
+          display: inline-block !important;
+          min-width: 4em;
+          text-align: center !important;
+          font-variant-numeric: tabular-nums !important;
+          contain: layout style;
+        }
+        /* stat-num은 block로 부모에 width 100% — 자식 inline-block 처럼 동작 */
+        .stat-num {
+          display: block !important;
+          min-width: 0;
+          width: 100%;
+        }
+        .ceo-stat-num {
+          display: block !important;
+          min-width: 0;
+          width: 100%;
+        }
+
+        /* 3) 고정 요소 GPU layer 강제 (스크롤 시 repaint 최소화) */
+        .gnb,
+        .mobile-bottom-nav,
+        .bottom-inquiry-bar,
+        .side-inquiry-bar {
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
+          will-change: transform;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+        }
+
+        /* 4) hero 진입 직후 안정화 (이미지 fixed bg는 모바일에서 attachment scroll로) */
+        .hero-bg,
+        .stats-bg,
+        [data-bg-fixed] {
+          background-attachment: scroll !important;
+        }
+
+        /* 5) 카운팅 섹션 컨테이너에 paint 격리 */
+        .stats-grid,
+        .ceo-stats-bar,
+        .chart-section {
+          contain: layout style paint;
+        }
+      }
+      /* ===== END MOTION ANTI-SHAKE PATCH v6 ===== */
+
+      /* ORPHAN PROTECTION v7 — 한국어 고아텍스트/단어 wrap 차단 */
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      .qualify-title,
+      .qualify-desc,
+      .qualify-label,
+      .stat-label,
+      .stat-sub,
+      .stat-note,
+      .ceo-stat-label,
+      .ceo-quote,
+      .ceo-bio,
+      .ceo-name,
+      .ceo-role,
+      .ceo-meaning-note,
+      .ceo-card .bio-list,
+      .ceo-card .bio-list li,
+      .ceo-card-heading,
+      .why-block-sub,
+      .strength-card strong,
+      .strength-card p,
+      .lovecol-item-title,
+      .lovecol-item-desc,
+      .yt-card-title,
+      .news-item-title,
+      .blog-card-title,
+      .insta-card-caption,
+      .program-card-title,
+      .program-card-desc,
+      .award-name,
+      .award-detail,
+      .mou-item-name,
+      .notice-item-title,
+      .press-item-title,
+      .section-title,
+      .section-desc,
+      .page-hero h1,
+      .page-hero p,
+      .hero-strong,
+      .qualify-card strong,
+      .qualify-card p,
+      .reveal strong,
+      .reveal p {
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        text-wrap: pretty;
+      }
+
+      @media (max-width: 768px) {
+        .qualify-title {
+          font-size: 22px !important;
+          line-height: 1.35 !important;
+          letter-spacing: -0.3px !important;
+        }
+        .qualify-desc {
+          font-size: 13px !important;
+          line-height: 1.6 !important;
+          padding: 0 12px;
+        }
+        .stat-label {
+          font-size: 14px !important;
+        }
+        .stat-sub,
+        .stat-note {
+          font-size: 12px !important;
+        }
+        .ceo-stat-label {
+          font-size: 11px !important;
+          line-height: 1.3 !important;
+        }
+        /* why-noble 카드 모바일에서 1열로 (가로 영역 확보) */
+        section#whyNoble
+          > div
+          > div[style*="grid-template-columns:repeat(2,1fr)"],
+        section#whyNoble
+          > div
+          > div[style*="grid-template-columns: repeat(2, 1fr)"] {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 12px !important;
+        }
+      }
+      /* ===== END ORPHAN PROTECTION v7 ===== */
+
+      /* LAYOUT REFINE v8 — CEO 재배치 + events 슬라이드 + CTA 버튼 모바일 */
+      @media (max-width: 768px) {
+        /* 1) CEO 프로필 모바일 — 이미지+상단정보 가로분할, bio 이하 풀폭 */
+        .ceo-top {
+          display: grid !important;
+          grid-template-columns: 120px 1fr !important;
+          grid-template-areas:
+            "img badge"
+            "img quote"
+            "img name"
+            "img role"
+            "bio bio"
+            "note note"
+            "stats stats" !important;
+          column-gap: 14px !important;
+          row-gap: 6px !important;
+          align-items: start !important;
+        }
+        .ceo-content {
+          display: contents !important;
+        }
+        .ceo-image-wrap {
+          grid-area: img;
+          align-self: start;
+        }
+        .ceo-title-badge {
+          grid-area: badge;
+          align-self: end;
+          margin-bottom: 0 !important;
+        }
+        .ceo-quote {
+          grid-area: quote;
+        }
+        .ceo-name {
+          grid-area: name;
+        }
+        .ceo-role {
+          grid-area: role;
+          align-self: start;
+        }
+        .ceo-bio {
+          grid-area: bio;
+          margin-top: 18px !important;
+        }
+        .ceo-meaning-note {
+          grid-area: note;
+        }
+        .ceo-stats-bar {
+          grid-area: stats;
+          margin-top: 12px !important;
+        }
+
+        /* 2) events-grid 모바일 horizontal scroll snap */
+        .events-grid {
+          display: flex !important;
+          grid-template-columns: none !important;
+          overflow-x: auto;
+          overflow-y: hidden;
+          scroll-snap-type: x mandatory;
+          gap: 12px !important;
+          padding: 4px 16px 12px !important;
+          margin: 0 -16px !important;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+        }
+        .events-grid::-webkit-scrollbar {
+          display: none;
+        }
+        .events-grid > .event-card {
+          flex: 0 0 240px;
+          min-width: 240px;
+          scroll-snap-align: start;
+          padding: 32px 24px !important;
+        }
+        .events-grid > .event-card .event-icon svg,
+        .events-grid > .event-card .event-icon img {
+          width: 48px !important;
+          height: 48px !important;
+        }
+        .events-grid > .event-card .event-name {
+          font-size: 15px !important;
+        }
+        .events-grid > .event-card .event-desc {
+          font-size: 12px !important;
+        }
+
+        /* 3) CTA 버튼 모바일 — hero 패턴과 통일 */
+        .cta-buttons {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px !important;
+          padding: 0 24px;
+          max-width: 360px;
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+        .cta-buttons .btn,
+        .cta-buttons a {
+          width: 100%;
+          padding: 14px 18px !important;
+          font-size: 15px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0 !important;
+          justify-content: center;
+          gap: 6px;
+          min-height: 48px;
+        }
+        .cta-buttons svg {
+          width: 18px;
+          height: 18px;
+        }
+        .cta-note {
+          font-size: 13px !important;
+          line-height: 1.7 !important;
+          padding: 0 16px;
+          word-break: keep-all;
+        }
+        .cta-note strong {
+          font-size: 14px !important;
+          display: inline-block;
+          margin-top: 4px;
+        }
+      }
+      /* ===== END LAYOUT REFINE v8 ===== */
+
+      /* LAYOUT v9 — CEO meaning heading + events-header 모바일 */
+      .ceo-meaning-heading {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--gold-dark);
+        margin: 18px 0 6px;
+        letter-spacing: -0.2px;
+        word-break: keep-all;
+        position: relative;
+        padding-left: 12px;
+      }
+      .ceo-meaning-heading::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 4px;
+        bottom: 4px;
+        width: 3px;
+        background: linear-gradient(
+          180deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        border-radius: 2px;
+      }
+
+      @media (max-width: 768px) {
+        /* CEO meaning heading 풀폭 */
+        .ceo-meaning-heading {
+          grid-column: 1 / -1;
+          font-size: 13px !important;
+          margin: 14px 0 6px !important;
+        }
+
+        /* events-header 모바일 — column stack */
+        .events-header {
+          flex-direction: column !important;
+          align-items: center !important;
+          gap: 14px !important;
+          text-align: center;
+        }
+        .events-header > div:first-child {
+          width: 100%;
+        }
+        .events-title-wrap {
+          justify-content: center;
+        }
+        .events-title-wrap #eventsTitle,
+        .events-title-wrap .qualify-title {
+          font-size: 22px !important;
+          white-space: nowrap;
+        }
+        .events-title-wrap .ceo-title-badge-line {
+          flex: 0 0 24px;
+          max-width: 24px;
+        }
+        .events-header-right {
+          width: 100%;
+          text-align: center;
+        }
+        .events-header-right a {
+          display: inline-block;
+          padding: 10px 14px;
+          font-size: 14px !important;
+          min-height: 44px;
+          line-height: 24px;
+        }
+      }
+      /* ===== END LAYOUT v9 ===== */
+
+      /* FOOTER MOBILE v10 — 링크 vertical 위, 브랜드 아래 */
+      @media (max-width: 768px) {
+        .footer {
+          padding: 16px 20px 24px !important;
+        }
+        .footer-inner {
+          flex-direction: column-reverse !important;
+          align-items: stretch !important;
+          gap: 12px !important;
+        }
+        .footer-links {
+          flex-direction: column !important;
+          align-items: stretch !important;
+          gap: 0 !important;
+          padding: 0 0 8px 0 !important;
+          margin: 0 !important;
+          border-bottom: 1px solid #e8e0ce;
+        }
+        .footer-links a {
+          display: block !important;
+          width: 100% !important;
+          padding: 12px 4px !important;
+          border-bottom: 1px solid rgba(184, 154, 90, 0.2);
+          min-height: 44px;
+          font-size: 14px !important;
+        }
+        .footer-links a:last-child {
+          border-bottom: none;
+        }
+        .footer-info {
+          font-size: 12px !important;
+          line-height: 1.8 !important;
+          word-break: keep-all;
+        }
+        .footer-logo {
+          margin-bottom: 8px !important;
+        }
+        .footer-logo img {
+          height: 32px;
+          width: auto;
+        }
+      }
+      /* ===== END FOOTER MOBILE v10 ===== */
+
+      /* MOBILE NAV C-FLOATING v11 — 떠 있는 둥근 카드 */
+      @media (max-width: 768px) {
+        body {
+          padding-bottom: calc(110px + env(safe-area-inset-bottom)) !important;
+        }
+        .mobile-bottom-nav {
+          position: fixed !important;
+          bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+          left: 12px !important;
+          right: 12px !important;
+          background: linear-gradient(
+            180deg,
+            #2a1d0a 0%,
+            #1a1208 100%
+          ) !important;
+          border: 1px solid #b89a5a !important;
+          outline: 1px solid rgba(184, 146, 74, 0.45);
+          outline-offset: 2px;
+          border-radius: 16px !important;
+          box-shadow:
+            0 12px 32px rgba(20, 14, 6, 0.35),
+            0 4px 12px rgba(212, 184, 112, 0.18);
+          display: grid !important;
+          grid-template-columns: repeat(3, 1fr);
+          grid-auto-rows: 44px;
+          overflow: hidden;
+          padding-bottom: 0 !important;
+          z-index: 95;
+        }
+        .mbn-item {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          color: #d4bd7a !important;
+          font-size: 11px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.1px !important;
+          text-decoration: none !important;
+          border-right: 1px solid rgba(184, 154, 90, 0.18) !important;
+          border-bottom: 1px solid rgba(184, 154, 90, 0.18) !important;
+          background: transparent !important;
+          transition: all 0.2s;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding: 0 4px;
+        }
+        .mbn-item:nth-child(3n) {
+          border-right: none !important;
+        }
+        .mbn-item:nth-last-child(-n + 3) {
+          border-bottom: none !important;
+        }
+        .mbn-item:active,
+        .mbn-item.active {
+          background: linear-gradient(
+            135deg,
+            #d4bd7a 0%,
+            #b8924a 100%
+          ) !important;
+          color: #1a1208 !important;
+        }
+      }
+      /* ===== END MOBILE NAV C-FLOATING v11 ===== */
+    </style>
+  </head>
+  <body>
+    <!-- GNB -->
+    <nav class="gnb" id="gnb">
+      <div class="gnb-inner">
+        <a href="index.html" class="gnb-logo">
+          <img
+            src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+            alt="노블홍"
+          />
+        </a>
+        <ul class="gnb-menu">
+          <li><a href="about.html">노블홍</a></li>
+          <li><a href="noblematching.html">노블매칭</a></li>
+          <li><a href="consulting.html">맞춤컨설팅</a></li>
+          <li><a href="matchinglounge.html">차별화 시스템</a></li>
+          <li>
+            <a href="campaign.html" class="active">결혼장려 공익캠페인</a>
+          </li>
+          <li>
+            <a href="matchinglab.html">매칭전략연구소</a>
+          </li>
+          <li><a href="contact.html#form">상담문의</a></li>
+        </ul>
+        <a href="contact.html#form" class="gnb-cta">상담 시작</a>
+      </div>
+      <div class="gnb-border"></div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="page-hero">
+      <div class="page-hero-inner">
+        <div class="hero-eyebrow">Social Contribution</div>
+        <h1 class="hero-title">결혼장려 <strong>공익캠페인</strong></h1>
+        <p class="hero-sub">
+          결혼율을 높여야 출산율도 함께 오릅니다. 30년간 결혼정보업계를 지켜온
+          선도기업으로서 전국 지자체·국회·협회와 긴밀히 협력하며, 저출생·고령화
+          해소를 위한 실효성 있는 정책 제안과 청년·어르신 가입비 지원 프로그램을
+          꾸준히 이어가며 건강한 결혼 문화 확산에 앞장서고 있습니다.
+        </p>
+        <div class="hero-meta">
+          <div class="hero-meta-item accent">
+            <strong>10+</strong><span>지자체·국회 미팅</span>
+          </div>
+          <div class="hero-meta-divider"></div>
+          <div class="hero-meta-item">
+            <strong>28세 이하·65세 이상</strong><span>가입비 우대</span>
+          </div>
+          <div class="hero-meta-divider"></div>
+          <div class="hero-meta-item">
+            <strong>공익 사명</strong><span>저출생·고령화 대응</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAMPAIGN GRID -->
+    <section class="campaign-section">
+      <div class="section-header">
+        <div class="section-label">Campaign Archive</div>
+        <h2 class="section-title">노블홍이 걸어온 공익 활동</h2>
+      </div>
+      <div
+        class="grid"
+        data-content-module="campaign"
+        data-limit="50"
+        data-render="campaignArchiveCard"
+      >
+        <div class="card reveal">
+          <div class="card-img">
+            <img
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/강남구청장 미팅.webp"
+              alt=""
+            />
+          </div>
+          <div class="card-caption">강남구청장 결혼장려 협력 미팅</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-img">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/경북도지사 미팅.webp"
+              alt=""
+            />
+          </div>
+          <div class="card-caption">경북도지사 저출생 대응 협력 미팅</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-img">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/계룡시장 미팅.webp"
+              alt=""
+            />
+          </div>
+          <div class="card-caption">계룡시장 결혼문화 확산 미팅</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-img">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/이천시장 미팅.webp"
+              alt=""
+            />
+          </div>
+          <div class="card-caption">이천시장 지자체 협력 미팅</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-img">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/김예지국회의원 미팅.webp"
+              alt=""
+            />
+          </div>
+          <div class="card-caption">김예지 국회의원 저출생 정책 미팅</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-img">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/서초구청 직원들과의 미팅.webp"
+              alt=""
+            />
+          </div>
+          <div class="card-caption">서초구청 결혼장려사업 협력 미팅</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-img">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/도봉구청 직원들과의 미팅.webp"
+              alt=""
+            />
+          </div>
+          <div class="card-caption">도봉구청 결혼지원 협력 미팅</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-img">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/청주시의회의장 미팅.webp"
+              alt=""
+            />
+          </div>
+          <div class="card-caption">청주시의회의장 저출생 대응 미팅</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-img">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/OBS사장님과의 미팅.webp"
+              alt=""
+            />
+          </div>
+          <div class="card-caption">OBS 방송 협력 미팅</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-img">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/저출생관련사진.webp"
+              alt=""
+            />
+          </div>
+          <div class="card-caption">저출생 문제 해결 공익 캠페인</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-img">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/좌담회최종수정.webp"
+              alt=""
+            />
+          </div>
+          <div class="card-caption">결혼문화 활성화 좌담회</div>
+        </div>
+        <div class="card reveal">
+          <div class="card-img">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/mou/메인01.webp"
+              alt=""
+            />
+          </div>
+          <div class="card-caption">노블홍 결혼장려 공익캠페인</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-gold-line"></div>
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+              alt="Noble HONG"
+            />
+          </div>
+          <div class="footer-info">
+            (주)노블홍 결혼정보회사 &middot; 대표 홍유진<br />
+            서울시 강남구 강남대로 354 혜천빌딩 705, 706<br />
+            사업자등록번호 321-81-03029 &middot; 국내결혼중개업
+            서울-강남-국내-22-0012호<br />
+            대표전화 1800-8194
+          </div>
+          <div
+            style="
+              margin-top: 16px;
+              padding-top: 12px;
+              border-top: 1px solid var(--border);
+              font-size: 12px;
+              color: #8c8070;
+            "
+          >
+            <span>&copy; 2026 Noble Hong. All rights reserved.</span>
+            <span style="margin-left: 16px"
+              >Designed by
+              <a
+                href="https://polarad.co.kr"
+                target="_blank"
+                rel="noopener"
+                style="color: var(--gold); text-decoration: none"
+                >POLA</a
+              ></span
+            >
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="privacy.html">개인정보처리방침</a>
+          <a href="terms.html">이용약관</a>
+          <a href="damages.html">손해배상절차</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      const gnb = document.getElementById("gnb");
+      window.addEventListener("scroll", () => {
+        gnb.classList.toggle("scrolled", window.scrollY > 50);
+      });
+      gsap.registerPlugin(ScrollTrigger);
+
+      /* MOTION STABILITY PATCH v3 — iOS URL bar 무시 */
+      if (typeof ScrollTrigger !== "undefined" && ScrollTrigger.config) {
+        ScrollTrigger.config({
+          ignoreMobileResize: true,
+          autoRefreshEvents: "visibilitychange,DOMContentLoaded,load",
+        });
+      }
+
+      gsap.utils.toArray(".reveal").forEach((el) => {
+        gsap.to(el, {
+          scrollTrigger: { trigger: el, start: "top 92%", once: true },
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power2.out",
+        });
+      });
+    </script>
+
+    <!-- Bottom Inquiry Bar (A-3 · Espresso Gold Frame) -->
+    <div class="bottom-inquiry-bar">
+      <div class="bib-row-main">
+        <div class="bib-head">
+          <div class="bib-eyebrow">Consultation</div>
+          <div class="bib-title">지금 상담</div>
+        </div>
+        <div class="bib-fields">
+          <input class="bib-input w-name" placeholder="이름" />
+          <input class="bib-input w-phone" placeholder="연락처" />
+          <select class="bib-select w-gender">
+            <option value="">성별</option>
+            <option>남성</option>
+            <option>여성</option>
+          </select>
+          <select class="bib-select w-marital">
+            <option value="">혼인여부</option>
+            <option>미혼</option>
+            <option>재혼</option>
+          </select>
+          <select class="bib-select w-year" id="bibYearSelect">
+            <option value="">출생연도</option>
+          </select>
+        </div>
+        <button class="bib-submit">상담 신청 →</button>
+      </div>
+      <div class="bib-row-consent">
+        <label class="bib-check"
+          ><input type="checkbox" /> 개인정보 수집·이용 동의
+          <strong>(필수)</strong></label
+        >
+        <label class="bib-check"
+          ><input type="checkbox" /> 마케팅 활용 동의
+          <strong>(선택)</strong></label
+        >
+      </div>
+    </div>
+
+    <!-- Side Inquiry Bar (B-1 · Vertical Form Card) -->
+    <div class="side-inquiry-bar">
+      <div class="sib-eyebrow">Consultation</div>
+      <div class="sib-title">간편 상담 신청</div>
+      <input class="sib-input" placeholder="이름" />
+      <input class="sib-input" placeholder="연락처" />
+      <button class="sib-submit">상담 신청 →</button>
+      <div class="sib-phone">전화 상담 <strong>1800-8194</strong></div>
+    </div>
+
+    <script>
+      (function () {
+        var sel = document.getElementById("bibYearSelect");
+        if (!sel) return;
+        var curr = new Date().getFullYear();
+        for (var y = curr - 20; y >= 1942; y--) {
+          var opt = document.createElement("option");
+          opt.value = y;
+          opt.textContent = y;
+          sel.appendChild(opt);
+        }
+      })();
+    </script>
+    <!-- GNB_ACTIVE_JS -->
+    <script>
+      (function () {
+        var pathname = location.pathname.replace(/\/$/, "");
+        var segment = pathname.split("/").pop() || "index";
+        segment = segment.replace(/\.html$/, "");
+        if (pathname === "" || pathname === "/") segment = "index";
+        document.querySelectorAll(".gnb-menu a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          var hrefSeg = href
+            .split("#")[0]
+            .split("?")[0]
+            .split("/")
+            .pop()
+            .replace(/\.html$/, "");
+          if (hrefSeg === "" && href.indexOf("/") === 0) hrefSeg = "index";
+          if (hrefSeg === segment) a.classList.add("active");
+        });
+      })();
+    </script>
+    <script src="assets/js/inquiry-bars.js" defer></script>
+    <script src="assets/content-loader.js" defer></script>
+
+    <!-- MOBILE NAV INJECTED v1 -->
+    <div class="bib-backdrop" aria-hidden="true"></div>
+    <button
+      type="button"
+      class="bib-trigger-mobile"
+      aria-label="무료 상담 신청 열기"
+      data-action="bib-open"
+    >
+      🔔 무료 상담 신청 받기
+      <span class="bib-trigger-mobile-arrow"></span>
+    </button>
+    <nav class="mobile-bottom-nav" aria-label="모바일 메뉴">
+      <a href="/about" class="mbn-item" data-mbn="about">노블홍</a>
+      <a href="/noblematching" class="mbn-item" data-mbn="noblematching"
+        >노블매칭</a
+      >
+      <a href="/consulting" class="mbn-item" data-mbn="consulting"
+        >맞춤컨설팅</a
+      >
+      <a href="/matchinglounge" class="mbn-item" data-mbn="matchinglounge"
+        >차별화 시스템</a
+      >
+      <a href="/campaign" class="mbn-item" data-mbn="campaign"
+        >결혼장려캠페인</a
+      >
+      <a href="/matchinglab" class="mbn-item" data-mbn="matchinglab"
+        >매칭전략연구소</a
+      >
+    </nav>
+    <script>
+      (function () {
+        var body = document.body;
+        var trigger = document.querySelector(".bib-trigger-mobile");
+        var backdrop = document.querySelector(".bib-backdrop");
+        var bib = document.querySelector(".bottom-inquiry-bar");
+        if (!body || !trigger || !backdrop || !bib) return;
+
+        // 모바일 닫기 버튼 주입 (한 번만)
+        if (!bib.querySelector(".bib-close-mobile")) {
+          var close = document.createElement("button");
+          close.type = "button";
+          close.className = "bib-close-mobile";
+          close.setAttribute("aria-label", "닫기");
+          close.textContent = "✕";
+          bib.insertBefore(close, bib.firstChild);
+          close.addEventListener("click", function () {
+            body.classList.remove("bib-open");
+          });
+        }
+
+        trigger.addEventListener("click", function () {
+          body.classList.add("bib-open");
+        });
+        backdrop.addEventListener("click", function () {
+          body.classList.remove("bib-open");
+        });
+
+        // 현재 페이지 mbn-item active
+        var path = (location.pathname || "")
+          .replace(/\.html$/, "")
+          .replace(/\/$/, "");
+        var slug = (path.split("/").pop() || "").toLowerCase();
+        document.querySelectorAll(".mbn-item").forEach(function (a) {
+          if (a.dataset.mbn === slug) a.classList.add("active");
+        });
+      })();
+    </script>
+    <!-- END MOBILE NAV INJECTED v1 -->
+
+    <script src="assets/visual-viewport.js" defer></script>
+  </body>
+</html>

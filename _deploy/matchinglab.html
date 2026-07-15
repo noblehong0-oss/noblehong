@@ -1,0 +1,5842 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-GP98TNL451"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-GP98TNL451");
+    </script>
+    <link rel="canonical" href="https://www.noblehong.com/matchinglab" />
+    <meta
+      name="twitter:image"
+      content="https://www.noblehong.com/og-lounge.jpg"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:url" content="https://www.noblehong.com/matchinglab" />
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev" crossorigin>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>매칭전략연구소 — 노블홍 결혼정보회사</title>
+    <meta property="og:title" content="매칭전략연구소 — 노블홍 결혼정보회사" />
+    <meta
+      property="og:description"
+      content="30년 매칭 노하우 · 8,000명 성혼 데이터 기반 과학적 매칭 전략 연구소."
+    />
+    <meta
+      property="og:image"
+      content="https://www.noblehong.com/og-lounge.jpg"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      name="description"
+      content="30년 매칭 노하우와 8,000명 성혼 데이터 기반 과학적 매칭 전략 연구소."
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon.ico"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-16x16.png"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <style>
+      :root {
+        --bg: #fffefb;
+        --surface: #ffffff;
+        --surface-warm: #f9f6ef;
+        --surface-cream: #f2ece0;
+        --border: #e8e0ce;
+        --border-gold: rgba(184, 154, 90, 0.25);
+        --text: #2c2820;
+        --text-secondary: #5c5040;
+        --text-muted: #8c8070;
+        --gold: #b89a5a;
+        --gold-light: #d4b870;
+        --gold-lighter: #d9c577;
+        --gold-dark: #8c7030;
+        --gold-bg: rgba(184, 154, 90, 0.04);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* ===== GNB ===== */
+      .gnb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: #fffefb;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+        transition: all 0.4s ease;
+        padding-top: env(safe-area-inset-top);
+      }
+      .gnb-border {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 10%,
+          var(--gold-light) 50%,
+          transparent 90%
+        );
+        opacity: 0.5;
+      }
+      .gnb-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        height: 88px;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-inner {
+        height: 64px;
+      }
+      .gnb-logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+      .gnb-logo img {
+        height: 72px;
+        width: auto;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-logo img {
+        height: 48px;
+      }
+      .gnb-menu {
+        display: flex;
+        gap: 40px;
+        list-style: none;
+      }
+      @media (max-width: 768px) {
+        .gnb-menu {
+          display: none;
+        }
+      }
+      .gnb-menu a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        padding: 8px 0;
+        position: relative;
+        color: #1a1714;
+        transition: color 0.3s;
+      }
+      .gnb-menu a::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--gold-dark),
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .gnb-menu a:hover,
+      .gnb-menu a.active {
+        color: var(--gold-dark);
+      }
+      .gnb-menu a:hover::after,
+      .gnb-menu a.active::after {
+        width: 100%;
+      }
+      .gnb-cta {
+        padding: 10px 24px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #a8854a;
+        background: linear-gradient(
+          135deg,
+          #d4bd7a 0%,
+          #b8924a 55%,
+          #a8854a 100%
+        );
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-radius: 2px;
+        text-decoration: none;
+        color: #ffffff;
+        transition: all 0.3s;
+        white-space: nowrap;
+        box-shadow: 0 2px 10px rgba(168, 133, 74, 0.2);
+      }
+      .gnb-cta:hover {
+        background: linear-gradient(
+          135deg,
+          #e0c888 0%,
+          #c99a52 55%,
+          #b8924a 100%
+        );
+        border-color: #b8924a;
+        color: #ffffff;
+        box-shadow: 0 6px 20px rgba(168, 133, 74, 0.38);
+        transform: translateY(-1px);
+      }
+
+      /* ===== ORNAMENTS ===== */
+      .ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 40px 0;
+      }
+      .ornament-line {
+        width: 80px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+      }
+      .ornament-diamond {
+        width: 8px;
+        height: 8px;
+        border: 1px solid var(--gold-light);
+        transform: rotate(45deg);
+      }
+
+      /* ===== REVEAL ===== */
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      /* ===== HERO ===== */
+      .page-hero {
+        padding-top: 88px;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        background: #fffefb;
+      }
+      .page-hero-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .page-hero-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.8s ease;
+      }
+      .page-hero-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(249, 246, 239, 0.75);
+        pointer-events: none;
+      }
+      .page-hero-pattern {
+        position: absolute;
+        inset: 0;
+        opacity: 0.02;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 40px,
+          var(--gold) 40px,
+          var(--gold) 41px
+        );
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 400px;
+        background: radial-gradient(
+          ellipse,
+          rgba(196, 165, 90, 0.08) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .page-hero-content {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+      .page-hero-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 16px;
+        font-weight: 500;
+        font-style: italic;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        color: #6b4f18;
+        margin-bottom: 24px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 100% 50%;
+        }
+        50% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+      @keyframes titleShimmer {
+        0%,
+        100% {
+          background-position: 100% 50%;
+        }
+        50% {
+          background-position: 0% 50%;
+        }
+      }
+      .page-hero h1 {
+        font-size: clamp(44px, 6vw, 80px);
+        font-weight: 500;
+        color: #0d0b08;
+        letter-spacing: -1.5px;
+        line-height: 1.22;
+        margin-bottom: 28px;
+      }
+      .page-hero h1 strong {
+        font-weight: 800;
+        background: linear-gradient(
+          90deg,
+          #c4a55a 0%,
+          #e8c572 25%,
+          #f4dd96 50%,
+          #e8c572 75%,
+          #c4a55a 100%
+        );
+        background-size: 220% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        display: inline-block;
+        padding: 0.05em 0.3em;
+        animation: titleShimmer 5s ease-in-out infinite;
+      }
+      .page-hero h1 strong::before {
+        content: "";
+        position: absolute;
+        inset: 2px;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(212, 168, 74, 0.18) 0%,
+          rgba(184, 146, 74, 0.06) 55%,
+          transparent 80%
+        );
+        z-index: -1;
+        pointer-events: none;
+        border-radius: 1px;
+      }
+      .page-hero h1 strong::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #2a1d0a;
+        border: 1px solid #b89a5a;
+        outline: 1px solid rgba(184, 146, 74, 0.45);
+        outline-offset: 4px;
+        border-radius: 2px;
+        z-index: -2;
+        box-shadow: 0 10px 28px rgba(20, 14, 6, 0.35);
+        pointer-events: none;
+      }
+      .page-hero-sub {
+        font-size: 20px;
+        color: #2c2820;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        line-height: 1.85;
+        max-width: 580px;
+        margin: 0 auto 44px;
+      }
+
+      /* ===== SECTION COMMON ===== */
+      .section {
+        padding: 100px 40px;
+      }
+      .section-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .section-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .section-title {
+        font-size: clamp(28px, 3.5vw, 42px);
+        font-weight: 700;
+        margin-bottom: 16px;
+        line-height: 1.3;
+      }
+      .section-desc {
+        font-size: 16px;
+        line-height: 1.7;
+        margin-bottom: 48px;
+      }
+
+      /* Dark section → Ivory classic */
+      .section-dark {
+        background: #f9f6ef;
+        color: var(--text);
+      }
+      .section-dark .section-eyebrow {
+        color: var(--gold);
+      }
+      .section-dark .section-title {
+        color: var(--text);
+      }
+      .section-dark .section-title strong {
+        color: var(--gold);
+      }
+      .section-dark .section-desc {
+        color: var(--text-secondary);
+      }
+
+      /* Cream section */
+      .section-cream {
+        background: var(--bg);
+      }
+      .section-cream .section-eyebrow {
+        color: var(--gold);
+      }
+      .section-cream .section-title strong {
+        color: var(--gold);
+      }
+      .section-cream .section-desc {
+        color: var(--text-secondary);
+      }
+
+      /* ===== SECTION 1.5: 매거진 콘텐츠 허브 (탭+피처드) ===== */
+      .magazine-section {
+        background: #f9f6ef;
+        padding: 100px 0;
+      }
+      .magazine-inner {
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 0 60px;
+      }
+      .magazine-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 32px;
+      }
+      .magazine-header h2 {
+        font-size: 28px;
+        font-weight: 300;
+        color: #2c2820;
+      }
+      .magazine-header h2 strong {
+        font-weight: 700;
+        background: linear-gradient(135deg, #cb9b51, #f6e27a);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .magazine-header .mag-label {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 8px;
+      }
+      /* 탭 */
+      .mag-tabs {
+        display: none;
+        gap: 4px;
+        margin-bottom: 40px;
+        border-bottom: 1px solid rgba(196, 165, 90, 0.15);
+      }
+      .mag-tab {
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #8c8070;
+        cursor: pointer;
+        border: none;
+        background: none;
+        position: relative;
+        transition: 0.3s;
+        font-family: inherit;
+      }
+      .mag-tab:hover {
+        color: #5c5040;
+      }
+      .mag-tab.active {
+        color: var(--gold-dark);
+        font-weight: 700;
+      }
+      .mag-tab.active::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: var(--gold-dark);
+      }
+      /* 패널 */
+      .mag-panel {
+        display: none;
+      }
+      .mag-panel.active {
+        display: block;
+      }
+      /* 피처드 레이아웃 — 메인+리스트 */
+      .mag-featured-layout {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 24px;
+      }
+      .mag-featured {
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+        min-height: 400px;
+        background: linear-gradient(135deg, #f2ece0, #f9f6ef);
+        cursor: pointer;
+      }
+      .mag-featured-bg {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, #f2ece0, #f9f6ef);
+      }
+      .mag-featured-overlay {
+        position: absolute;
+        inset: 0;
+        display: none;
+      }
+      .mag-featured-body {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 32px;
+        z-index: 1;
+      }
+      .mag-featured h3 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #2c2820;
+        line-height: 1.4;
+        margin-bottom: 6px;
+      }
+      .mag-featured p {
+        font-size: 13px;
+        color: #8c8070;
+      }
+      .mag-play {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: rgba(255, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+      }
+      .mag-play svg {
+        width: 20px;
+        height: 20px;
+        margin-left: 3px;
+      }
+      /* 태그 */
+      .mag-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 2px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .mag-tag-video {
+        background: rgba(255, 0, 0, 0.8);
+        color: #fff;
+      }
+      .mag-tag-column {
+        background: rgba(196, 165, 90, 0.8);
+        color: #fff;
+      }
+      .mag-tag-news {
+        background: rgba(140, 128, 112, 0.12);
+        color: #5c5040;
+      }
+      /* 사이드 글 목록 */
+      .mag-side-list {
+        display: flex;
+        gap: 0 24px;
+        border: 1px solid rgba(196, 165, 90, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .mag-news-col {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .mag-news-col + .mag-news-col {
+        border-left: 1px solid #e8e0ce;
+      }
+      .mag-list-info h4 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 280px;
+      }
+      .mag-list-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 10px 16px;
+        cursor: pointer;
+        transition: 0.3s;
+        border-bottom: 1px solid #e8e0ce;
+      }
+      .mag-list-item:last-child {
+        border-bottom: none;
+      }
+      .mag-list-item:hover {
+        background: rgba(196, 165, 90, 0.04);
+      }
+      .mag-list-info {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 4px;
+      }
+      .mag-list-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .mag-list-info .mag-tag {
+        font-size: 12px;
+        padding: 2px 8px;
+        opacity: 0.7;
+        flex-shrink: 0;
+        margin-bottom: 0;
+      }
+      .mag-list-info h4 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2c2820;
+        line-height: 1.3;
+      }
+      .mag-list-meta {
+        font-size: 12px;
+        color: #8c8070;
+      }
+      .mag-list-num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: #8c8070;
+        flex-shrink: 0;
+        width: 28px;
+        text-align: center;
+      }
+
+      /* 하단 미니박스 행 */
+      .mag-mini-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 16px;
+        margin-top: 24px;
+      }
+      .mag-mini-card {
+        flex: none;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+        border: 1px solid #e8e0ce;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .mag-mini-card:hover {
+        border-color: rgba(196, 165, 90, 0.25);
+        transform: translateY(-3px);
+      }
+      .mag-mini-thumb {
+        aspect-ratio: 1;
+        background: linear-gradient(135deg, #f2ece0, #f9f6ef);
+        position: relative;
+        overflow: hidden;
+      }
+      .mag-mini-body {
+        padding: 14px;
+      }
+      .mag-mini-body .mag-tag {
+        display: none;
+      }
+      .mag-mini-body h5 {
+        font-size: 13px;
+        font-weight: 600;
+        color: #2c2820;
+        line-height: 1.4;
+      }
+      .mag-mini-play {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 0, 0, 0.75);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .mag-mini-play svg {
+        width: 12px;
+        height: 12px;
+        fill: #fff;
+        margin-left: 2px;
+      }
+
+      /* 하단 쇼츠 행 */
+      .mag-shorts-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 40px;
+        margin-bottom: 16px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #5c5040;
+      }
+      .mag-shorts-label svg {
+        width: 20px;
+        height: 20px;
+        fill: #ff0000;
+      }
+      .mag-shorts-row {
+        display: flex;
+        gap: 14px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 4px;
+      }
+      .mag-shorts-row::-webkit-scrollbar {
+        display: none;
+      }
+      .mag-shorts-card {
+        flex: 0 0 200px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #ffffff;
+        border: 1px solid #e8e0ce;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .mag-shorts-card:hover {
+        border-color: rgba(196, 165, 90, 0.2);
+        transform: translateY(-3px);
+      }
+      .mag-shorts-thumb {
+        aspect-ratio: 9/16;
+        background: linear-gradient(180deg, #f2ece0, #f9f6ef);
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        padding: 12px;
+      }
+      .mag-shorts-thumb h5 {
+        display: none;
+      }
+      .mag-shorts-thumb::after {
+        display: none;
+      }
+      .mag-shorts-badge {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(255, 0, 0, 0.7);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 3px 6px;
+        border-radius: 2px;
+        letter-spacing: 0.5px;
+        z-index: 1;
+      }
+
+      @media (max-width: 768px) {
+        .mag-featured-layout {
+          grid-template-columns: 1fr;
+        }
+        .mag-slider {
+          min-height: 320px;
+        }
+      }
+
+      /* 슬라이더 */
+      .mag-slider-wrap {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .mag-slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 0.8s ease;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .mag-slide.active {
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 1;
+      }
+      .mag-slider {
+        position: relative;
+        aspect-ratio: 16/9;
+        width: 100%;
+      }
+      .mag-slide .mag-featured-bg {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, #f2ece0, #f9f6ef);
+      }
+      .mag-slide .mag-featured-overlay {
+        position: absolute;
+        inset: 0;
+        display: none;
+      }
+      .mag-slide .mag-featured-body {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 32px;
+        z-index: 1;
+      }
+      .mag-slide .mag-play {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: rgba(255, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+      }
+      .mag-slide .mag-play svg {
+        width: 20px;
+        height: 20px;
+        margin-left: 3px;
+      }
+      .mag-slide h3 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #2c2820;
+        line-height: 1.4;
+        margin-bottom: 6px;
+      }
+      .mag-slide p {
+        font-size: 13px;
+        color: #8c8070;
+      }
+      .mag-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(8px);
+        color: #8c7030;
+        font-size: 28px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+        transition: 0.3s;
+        line-height: 1;
+      }
+      .mag-arrow:hover {
+        background: rgba(196, 165, 90, 0.2);
+        border-color: rgba(196, 165, 90, 0.6);
+      }
+      .mag-arrow-prev {
+        left: 16px;
+      }
+      .mag-arrow-next {
+        right: 16px;
+      }
+      .mag-dots {
+        position: absolute;
+        bottom: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 5;
+      }
+      .mag-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(140, 112, 48, 0.25);
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .mag-dot.active {
+        background: var(--gold-dark);
+        width: 24px;
+        border-radius: 4px;
+      }
+
+      /* 쇼츠 슬라이더 래퍼 */
+      .mag-shorts-slider {
+        position: relative;
+      }
+      .mag-shorts-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(8px);
+        color: #8c7030;
+        font-size: 26px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+        transition: 0.3s;
+        line-height: 1;
+      }
+      .mag-shorts-arrow:hover {
+        background: rgba(196, 165, 90, 0.2);
+        border-color: rgba(196, 165, 90, 0.6);
+      }
+      .mag-shorts-prev {
+        left: -20px;
+      }
+      .mag-shorts-next {
+        right: -20px;
+      }
+
+      /* ===== 노블홍 SNS 콘텐츠 피드 ===== */
+      .sns-section {
+        background: var(--surface-warm);
+        padding: 100px 32px;
+      }
+      .sns-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .sns-header {
+        text-align: center;
+        margin-bottom: 48px;
+      }
+      .sns-label {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 12px;
+      }
+      .sns-header h2 {
+        font-size: clamp(28px, 3.5vw, 40px);
+        font-weight: 300;
+      }
+      .sns-header h2 strong {
+        font-weight: 700;
+        color: var(--gold-dark);
+      }
+      .sns-feed-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+      .sns-channel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .sns-channel-top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .sns-more {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--gold);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .sns-more:hover {
+        text-decoration: underline;
+      }
+      /* 인스타 정사각 그리드 */
+      .sns-insta-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3px;
+        padding: 3px;
+      }
+      .sns-insta-item {
+        aspect-ratio: 1;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .sns-insta-item:hover .sns-placeholder-img {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+      .sns-placeholder-img {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #e8e0d0, #d4c8b0);
+        transition: 0.3s;
+      }
+      /* 블로그 리스트 */
+      .sns-blog-list {
+        display: flex;
+        flex-direction: column;
+      }
+      .sns-blog-item {
+        display: flex;
+        gap: 16px;
+        padding: 16px 20px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        transition: 0.2s;
+      }
+      .sns-blog-item:last-child {
+        border-bottom: none;
+      }
+      .sns-blog-item:hover {
+        background: var(--gold-bg);
+      }
+      .sns-blog-thumb {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #e8e0d0, #d4c8b0);
+        flex-shrink: 0;
+      }
+      .sns-blog-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .sns-blog-info h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 4px;
+        line-height: 1.4;
+      }
+      .sns-blog-info p {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.5;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .sns-blog-date {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 6px;
+      }
+      @media (max-width: 768px) {
+        .sns-feed-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ===== SECTION 2: 매칭전략 연구소 (Narrative E — 확정) ===== */
+      #lab {
+        --lab-serif: "Cormorant Garamond", "Playfair Display", serif;
+        --lab-dark: #1f1c17;
+      }
+      #lab .section {
+        background: var(--bg);
+      }
+      #lab .block {
+        padding: 80px 40px;
+        position: relative;
+      }
+      #lab .block-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      /* BLOCK 1 — Institution Definition (Hero-scale) */
+      #lab .block-1 {
+        padding-top: 100px;
+        padding-bottom: 90px;
+        position: relative;
+        overflow: hidden;
+      }
+      #lab .block-1::before {
+        content: "01";
+        position: absolute;
+        right: 6%;
+        top: 40px;
+        font-family: var(--lab-serif);
+        font-size: 260px;
+        font-weight: 500;
+        color: var(--gold);
+        opacity: 0.06;
+        line-height: 1;
+        pointer-events: none;
+        letter-spacing: -10px;
+      }
+      #lab .b1-label {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 14px;
+        letter-spacing: 4px;
+        color: var(--gold-dark);
+        text-transform: uppercase;
+        margin-bottom: 22px;
+      }
+      #lab .b1-label::before {
+        content: "";
+        display: inline-block;
+        width: 60px;
+        height: 1px;
+        background: var(--gold);
+        margin-right: 14px;
+        vertical-align: middle;
+      }
+      #lab .b1-main-title {
+        font-size: 68px;
+        font-weight: 700;
+        line-height: 1.05;
+        letter-spacing: -2px;
+        margin-bottom: 18px;
+        color: var(--text);
+      }
+      #lab .b1-main-title em {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-weight: 500;
+        background: linear-gradient(
+          135deg,
+          var(--gold-dark),
+          var(--gold-light)
+        );
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+      #lab .b1-title {
+        font-size: 34px;
+        font-weight: 600;
+        line-height: 1.35;
+        letter-spacing: -0.8px;
+        max-width: 900px;
+        color: var(--text-secondary);
+      }
+      #lab .b1-title em {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-weight: 500;
+        color: var(--gold-dark);
+        -webkit-text-fill-color: var(--gold-dark);
+      }
+      #lab .b1-desc {
+        margin-top: 30px;
+        font-size: 18px;
+        color: var(--text-secondary);
+        line-height: 1.95;
+        max-width: 760px;
+      }
+      #lab .b1-callout {
+        display: inline-flex;
+        gap: 48px;
+        margin-top: 36px;
+        padding: 22px 32px;
+        background: var(--surface-warm);
+        border-left: 3px solid var(--gold);
+        border-radius: 0 12px 12px 0;
+      }
+      #lab .b1-callout div strong {
+        display: block;
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 13px;
+        letter-spacing: 2px;
+        color: var(--gold-dark);
+        margin-bottom: 4px;
+        font-weight: 500;
+      }
+      #lab .b1-callout div span {
+        font-size: 16px;
+        color: var(--text);
+      }
+      #lab .b1-notice {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 36px;
+        padding: 12px 22px 12px 18px;
+        background: rgba(184, 154, 90, 0.06);
+        border: 1px solid var(--border-gold);
+        border-left: 3px solid var(--gold);
+        border-radius: 8px;
+        font-size: 14px;
+        color: var(--text-secondary);
+        letter-spacing: -0.1px;
+        max-width: 100%;
+      }
+      #lab .b1-notice strong {
+        color: var(--gold-dark);
+        font-weight: 600;
+      }
+      #lab .b1-notice-tag {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 12px;
+        letter-spacing: 3px;
+        color: #fff;
+        background: var(--gold-dark);
+        padding: 3px 9px;
+        border-radius: 4px;
+        flex-shrink: 0;
+      }
+
+      /* BLOCK 2 — Mission Flow (Hero) */
+      #lab .block-2 {
+        background: radial-gradient(
+          circle at 50% 50%,
+          var(--surface-warm),
+          var(--bg) 70%
+        );
+        padding: 100px 40px 90px;
+        text-align: center;
+      }
+      #lab .b2-label {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 14px;
+        letter-spacing: 5px;
+        color: var(--gold-dark);
+        text-transform: uppercase;
+        margin-bottom: 36px;
+      }
+      #lab .b2-flow {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        margin: 0 auto 40px;
+        max-width: 1120px;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow:
+          0 60px 120px -50px rgba(44, 40, 32, 0.5),
+          inset 0 0 0 1px rgba(184, 154, 90, 0.25);
+      }
+      #lab .b2-step {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 3 / 1;
+        overflow: hidden;
+        background: #1a1612;
+        flex: 0 0 auto;
+        isolation: isolate;
+      }
+      #lab .b2-step + .b2-step {
+        border-top: 1px solid rgba(184, 154, 90, 0.35);
+      }
+      #lab .b2-step video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+      }
+      #lab .b2-step-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(
+          180deg,
+          rgba(26, 22, 18, 0.15) 0%,
+          rgba(26, 22, 18, 0.28) 45%,
+          rgba(26, 22, 18, 0.85) 100%
+        );
+      }
+      #lab .b2-step.finale .b2-step-overlay {
+        background: linear-gradient(
+          180deg,
+          rgba(140, 112, 48, 0.15) 0%,
+          rgba(90, 68, 24, 0.48) 55%,
+          rgba(50, 36, 10, 0.9) 100%
+        );
+      }
+      #lab .b2-step-content {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        padding: 22px 40px 26px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+        font-family: var(--lab-serif);
+        font-size: 42px;
+        font-weight: 500;
+        letter-spacing: -0.8px;
+        color: #fff;
+        line-height: 1.05;
+        text-shadow: 0 2px 40px rgba(0, 0, 0, 0.55);
+      }
+      #lab .b2-step-content small {
+        margin-bottom: 10px;
+      }
+      #lab .b2-step-content small {
+        display: inline-block;
+        font-family: "Pretendard Variable", sans-serif;
+        font-size: 12px;
+        letter-spacing: 3px;
+        color: rgba(255, 255, 255, 0.78);
+        margin-bottom: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-style: normal;
+        padding: 4px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 999px;
+        backdrop-filter: blur(4px);
+      }
+      #lab .b2-step.finale .b2-step-content {
+        font-style: italic;
+        background: linear-gradient(135deg, #ffe7a8, #fff5d4, #ffd67a);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: none;
+      }
+      #lab .b2-step.finale .b2-step-content small {
+        background: rgba(140, 112, 48, 0.4);
+        border-color: rgba(255, 214, 122, 0.5);
+        color: #ffe7a8;
+        -webkit-text-fill-color: #ffe7a8;
+      }
+      #lab .b2-arrow {
+        display: none;
+      }
+      #lab .b2-mission-quote {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 22px;
+        color: var(--text-secondary);
+        max-width: 820px;
+        margin: 0 auto;
+        line-height: 1.8;
+      }
+
+      /* BLOCK 3 — 3 Roles Stack */
+      #lab .block-3 {
+        padding: 80px 40px 30px;
+      }
+      #lab .b3-head {
+        text-align: center;
+        margin-bottom: 50px;
+      }
+      #lab .b3-eyebrow {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 13px;
+        letter-spacing: 4px;
+        color: var(--gold-dark);
+        margin-bottom: 16px;
+        text-transform: uppercase;
+      }
+      #lab .b3-title {
+        font-size: 42px;
+        font-weight: 700;
+        letter-spacing: -0.8px;
+      }
+      #lab .b3-title em {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        color: var(--gold-dark);
+      }
+      #lab .b3-stack {
+        display: grid;
+        gap: 0;
+      }
+      #lab .b3-row {
+        display: grid;
+        grid-template-columns: 240px 1fr 360px;
+        gap: 48px;
+        padding: 44px 0;
+        border-top: 1px solid var(--border);
+        align-items: start;
+        position: relative;
+        transition: background 0.4s ease;
+      }
+      #lab .b3-row:last-child {
+        border-bottom: 1px solid var(--border);
+      }
+      #lab .b3-row:hover {
+        background: linear-gradient(
+          90deg,
+          var(--surface-warm) 0%,
+          transparent 60%
+        );
+      }
+      #lab .b3-left {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+      }
+      #lab .b3-no {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 96px;
+        color: var(--gold);
+        line-height: 1;
+        font-weight: 400;
+      }
+      #lab .b3-stage {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 12px;
+        letter-spacing: 3px;
+        color: var(--gold-dark);
+        padding-right: 4px;
+      }
+      #lab .b3-body h4 {
+        font-size: 40px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        margin-bottom: 4px;
+      }
+      #lab .b3-body .en {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 16px;
+        color: var(--gold-dark);
+        margin-bottom: 22px;
+      }
+      #lab .b3-body p {
+        font-size: 17px;
+        line-height: 1.9;
+        color: var(--text-secondary);
+        max-width: 620px;
+      }
+      #lab .b3-right {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 26px 28px;
+      }
+      #lab .b3-right strong {
+        display: block;
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: var(--gold-dark);
+        margin-bottom: 14px;
+      }
+      #lab .b3-right ul {
+        list-style: none;
+      }
+      #lab .b3-right li {
+        font-size: 14.5px;
+        color: var(--text);
+        padding: 8px 0 8px 20px;
+        position: relative;
+        border-bottom: 1px dashed var(--border);
+      }
+      #lab .b3-right li:last-child {
+        border-bottom: none;
+      }
+      #lab .b3-right li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 16px;
+        width: 10px;
+        height: 1px;
+        background: var(--gold);
+      }
+
+      /* BLOCK 4 — Differentiation as Data Strip */
+      #lab .block-4 {
+        padding: 80px 40px 60px;
+      }
+      #lab .b4-head {
+        max-width: 1200px;
+        margin: 0 auto 40px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 40px;
+        flex-wrap: wrap;
+      }
+      #lab .b4-head-left {
+        flex: 1 1 600px;
+        min-width: 0;
+      }
+      #lab .b4-eyebrow {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 14px;
+        letter-spacing: 4px;
+        color: var(--gold-dark);
+        text-transform: uppercase;
+        margin-bottom: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+      #lab .b4-eyebrow::before {
+        content: "";
+        display: inline-block;
+        width: 40px;
+        height: 1px;
+        background: var(--gold);
+      }
+      #lab .b4-section-title {
+        font-size: 38px;
+        font-weight: 700;
+        letter-spacing: -0.8px;
+        line-height: 1.2;
+        margin-bottom: 18px;
+        color: var(--text);
+      }
+      #lab .b4-section-title em {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-weight: 500;
+        color: var(--gold-dark);
+      }
+      #lab .b4-head h3 {
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+        line-height: 1.4;
+        max-width: 640px;
+        color: var(--text-secondary);
+      }
+      #lab .b4-head h3 em {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        color: var(--gold-dark);
+        font-weight: 500;
+      }
+      #lab .b4-head .note {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 15px;
+        color: var(--text-muted);
+        max-width: 360px;
+        text-align: right;
+      }
+      #lab .b4-strip {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: var(--surface-warm);
+        border-radius: 24px;
+        padding: 40px 40px;
+        color: var(--text);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border-gold);
+        box-shadow: 0 40px 80px -40px rgba(140, 112, 48, 0.18);
+      }
+      #lab .b4-strip::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 85% 15%,
+          rgba(184, 154, 90, 0.08),
+          transparent 55%
+        );
+        z-index: 0;
+        pointer-events: none;
+      }
+      #lab .b4-grid {
+        display: grid;
+        grid-template-columns: 170px repeat(4, 1fr);
+        gap: 1px;
+        background: var(--border-gold);
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+        z-index: 1;
+      }
+      #lab .b4-cell {
+        background: var(--surface);
+        padding: 24px 20px;
+        text-align: center;
+        color: var(--text);
+        position: relative;
+        z-index: 1;
+      }
+      #lab .b4-cell.axis {
+        background: var(--surface-cream);
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 17px;
+        letter-spacing: 0.5px;
+        color: var(--gold-dark);
+        font-weight: 600;
+        text-align: left;
+        padding-left: 22px;
+        display: flex;
+        align-items: center;
+        line-height: 1.3;
+      }
+      #lab .b4-head-row .b4-cell {
+        background: #efe6d1;
+        padding: 20px;
+        border-bottom: 2px solid var(--gold);
+      }
+      #lab .b4-head-row .b4-cell strong {
+        color: var(--text);
+        font-weight: 700;
+        font-size: 14px;
+        letter-spacing: 2px;
+      }
+      #lab .b4-head-row .b4-cell.axis strong {
+        color: var(--gold-dark);
+        font-style: normal;
+      }
+      #lab .b4-cell strong {
+        font-size: 14px;
+        letter-spacing: 2px;
+        color: var(--text);
+      }
+      #lab .b4-cell.key {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 18px;
+        color: var(--gold-dark);
+        letter-spacing: 0.5px;
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          rgba(184, 154, 90, 0.18),
+          rgba(184, 154, 90, 0.06)
+        );
+      }
+      #lab .b4-cell.other-val {
+        color: var(--text-muted);
+        font-size: 15px;
+        font-weight: 400;
+      }
+      #lab .b4-cell.us-val {
+        color: var(--text);
+        font-size: 15.5px;
+        font-weight: 600;
+        background: linear-gradient(
+          135deg,
+          rgba(184, 154, 90, 0.16),
+          rgba(184, 154, 90, 0.05)
+        );
+      }
+
+      /* BLOCK 5 — Final Quote */
+      #lab .block-5 {
+        padding: 80px 40px 100px;
+        text-align: center;
+        background:
+          radial-gradient(
+            circle at 50% 20%,
+            rgba(184, 154, 90, 0.06),
+            transparent 50%
+          ),
+          var(--bg);
+      }
+      #lab .b5-mark {
+        font-family: var(--lab-serif);
+        font-size: 72px;
+        color: var(--gold);
+        line-height: 0.5;
+        opacity: 0.8;
+        margin-bottom: 24px;
+      }
+      #lab .b5-quote {
+        font-family: var(--lab-serif);
+        font-weight: 500;
+        font-size: 32px;
+        line-height: 1.55;
+        letter-spacing: -0.5px;
+        max-width: 1000px;
+        margin: 0 auto 28px;
+        color: var(--text);
+      }
+      #lab .b5-quote em {
+        font-style: italic;
+        color: var(--gold-dark);
+      }
+      #lab .b5-divider {
+        width: 80px;
+        height: 1px;
+        background: var(--gold);
+        margin: 0 auto 18px;
+      }
+      #lab .b5-sig {
+        font-family: var(--lab-serif);
+        font-style: italic;
+        font-size: 14px;
+        letter-spacing: 4px;
+        color: var(--gold-dark);
+      }
+      #lab .b5-disclaimer {
+        margin: 40px auto 0;
+        padding-top: 22px;
+        max-width: 720px;
+        border-top: 1px solid var(--border);
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.7;
+        letter-spacing: -0.1px;
+      }
+
+      @media (max-width: 960px) {
+        #lab .block {
+          padding: 50px 18px;
+        }
+        #lab .block-1::before {
+          display: none;
+        }
+        #lab .b1-main-title {
+          font-size: 40px;
+          letter-spacing: -1px;
+        }
+        #lab .b1-title {
+          font-size: 22px;
+          letter-spacing: -0.3px;
+        }
+        /* B1 Notice — 한 줄 강제 (NOTICE 태그 + 텍스트) */
+        #lab .b1-notice {
+          flex-wrap: nowrap !important;
+          gap: 8px !important;
+          font-size: 10.5px !important;
+          padding: 8px 12px 8px 10px !important;
+          letter-spacing: -0.3px !important;
+          white-space: nowrap;
+          overflow: hidden;
+          width: 100%;
+          max-width: 100%;
+        }
+        #lab .b1-notice-tag {
+          font-size: 9px !important;
+          padding: 2px 7px !important;
+          letter-spacing: 1.5px !important;
+          flex-shrink: 0;
+        }
+
+        /* B1 Callout — WHO/WHAT/HOW 가로 3 → 세로 1줄씩 */
+        #lab .b1-callout {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 10px !important;
+          padding: 16px 18px !important;
+          width: 100%;
+          margin-top: 24px !important;
+        }
+        #lab .b1-callout > div {
+          display: grid !important;
+          grid-template-columns: 100px 1fr;
+          gap: 10px;
+          align-items: baseline;
+        }
+        #lab .b1-callout div strong {
+          margin: 0 !important;
+          font-size: 11px !important;
+          letter-spacing: 1.2px !important;
+        }
+        #lab .b1-callout div span {
+          font-size: 13px !important;
+          line-height: 1.4;
+          word-break: keep-all;
+        }
+
+        /* B4 — block padding & head & strip 모두 압축 */
+        #lab .block-4 {
+          padding: 28px 16px !important; /* 모바일 .block 50px 18px → 28px 16px */
+        }
+        #lab .b4-head {
+          margin: 0 0 10px !important; /* 0 auto 40px → 0 0 10px */
+          gap: 6px !important;
+          flex-direction: column !important;
+          align-items: flex-start !important;
+        }
+        /* 핵심 — flex-basis 600px가 column에서 height 600px로 변환되는 버그 fix */
+        #lab .b4-head-left {
+          flex: 0 0 auto !important;
+          width: 100% !important;
+          min-width: 0 !important;
+        }
+        #lab .b4-eyebrow {
+          margin-bottom: 8px !important; /* 14px → 8px */
+        }
+        #lab .b4-section-title {
+          margin-bottom: 6px !important; /* 18px → 6px */
+        }
+        #lab .b4-head h3 {
+          margin: 0 !important;
+        }
+        #lab .b4-head .note {
+          text-align: left !important;
+          font-size: 11.5px !important;
+          line-height: 1.55;
+          max-width: none !important;
+          margin: 4px 0 0 !important;
+        }
+        #lab .b4-head .note br {
+          display: none;
+        }
+        #lab .b4-strip {
+          padding: 14px 12px !important;
+          margin-top: 4px !important;
+        }
+        #lab .b2-flow {
+          max-width: 100%;
+          border-radius: 16px;
+        }
+        #lab .b2-step {
+          aspect-ratio: 16 / 9;
+        }
+        #lab .b2-step-content {
+          font-size: 30px;
+          padding: 20px 22px 24px;
+          letter-spacing: -0.5px;
+        }
+        #lab .b3-row {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+        #lab .b3-stage {
+          writing-mode: horizontal-tb;
+          transform: none;
+        }
+        #lab .b3-body h4 {
+          font-size: 28px;
+        }
+        #lab .b3-title {
+          font-size: 18px !important; /* 42 → 18: "매칭 전략 연구소의 세 가지 역할" 한 줄 */
+          line-height: 1.4 !important;
+          letter-spacing: -0.3px !important;
+          word-break: keep-all;
+        }
+        #lab .b4-head {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        #lab .b4-head h3 {
+          font-size: 17px !important; /* "우리는 왜 결혼정보회사가 아닌가." 16글자 한 줄 */
+          line-height: 1.45 !important;
+          letter-spacing: -0.3px !important;
+          max-width: none !important;
+          word-break: keep-all;
+        }
+
+        /* B안 — 모바일 비교표: 데스크톱 grid hide, 모바일 테이블 표시 */
+        #lab .b4-grid {
+          display: none !important;
+        }
+        #lab .b4-mobile-table {
+          display: block !important;
+        }
+        #lab .b4-strip {
+          padding: 18px 14px !important;
+        }
+        #lab .b4m-head {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 6px;
+          margin-bottom: 6px;
+        }
+        #lab .b4m-head-cell {
+          padding: 10px 10px;
+          text-align: center;
+          border-radius: 10px 10px 0 0;
+        }
+        #lab .b4m-head-cell.b4m-other {
+          background: var(--ivory-soft, #faf3df);
+          border: 1px solid var(--border, #e8dcb8);
+          border-bottom: none;
+        }
+        #lab .b4m-head-cell.b4m-us {
+          background: linear-gradient(
+            135deg,
+            var(--gold-dark, #8c7030),
+            #6e5a24
+          );
+          color: #ffffff;
+          border: 1px solid var(--gold, #b89a5a);
+          border-bottom: none;
+        }
+        #lab .b4m-h-small {
+          font-size: 9.5px;
+          letter-spacing: 1.2px;
+          font-weight: 700;
+          opacity: 0.75;
+          text-transform: uppercase;
+        }
+        #lab .b4m-h-big {
+          font-size: 12px;
+          font-weight: 800;
+          margin-top: 2px;
+          line-height: 1.2;
+        }
+        #lab .b4m-row {
+          background: #ffffff;
+          border: 1px solid var(--border, #e8dcb8);
+          border-radius: 8px;
+          margin-bottom: 6px;
+          overflow: hidden;
+        }
+        #lab .b4m-axis {
+          text-align: center;
+          font-size: 9.5px;
+          letter-spacing: 1.5px;
+          color: var(--gold-dark, #8c7030);
+          font-weight: 700;
+          padding: 6px 8px;
+          background: var(--ivory-soft, #faf3df);
+          text-transform: uppercase;
+          font-family: inherit !important;
+          font-style: normal !important;
+        }
+        #lab .b4m-cells {
+          display: grid !important;
+          grid-template-columns: 1fr 1px 1fr !important;
+          align-items: stretch !important;
+        }
+        #lab .b4m-cells::before {
+          content: "";
+          grid-column: 2;
+          grid-row: 1;
+          background: var(--border, #e8dcb8);
+        }
+        /* 모든 .b4m-cell — 가운데 정렬 강제 (specificity 강화) */
+        #lab .b4-mobile-table .b4m-cell {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          padding: 14px 10px !important;
+          min-height: 56px !important;
+          font-size: 11px !important;
+          line-height: 1.4 !important;
+          text-align: center !important;
+          word-break: keep-all;
+        }
+        #lab .b4-mobile-table .b4m-cell.b4m-other-val {
+          color: #999999 !important; /* 일반 결혼정보회사 — 회색 */
+          font-weight: 500 !important;
+        }
+        #lab .b4-mobile-table .b4m-cell.b4m-us-val {
+          color: #1a1a1a !important; /* 매칭전략연구소 — 검정 */
+          font-weight: 700 !important;
+        }
+        /* 원래 모바일 분기에 있던 룰 복구 (.b4-grid는 hide 처리되어 무관) */
+        #lab .b5-quote {
+          font-size: 20px;
+        }
+      }
+      /* 데스크톱 — 모바일 테이블 hide */
+      @media (min-width: 769px) {
+        #lab .b4-mobile-table {
+          display: none !important;
+        }
+      }
+
+      /* ===== SECTION 3: 미팅성공 가이드 ===== */
+      .guide-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+      }
+      .guide-group h3 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .guide-group h3 .badge {
+        font-size: 12px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 999px;
+        letter-spacing: 1px;
+      }
+      .guide-tips h3 .badge {
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+      }
+      .guide-cautions h3 .badge {
+        background: rgba(196, 165, 90, 0.15);
+        color: var(--gold-dark);
+      }
+      .guide-item {
+        display: flex;
+        gap: 16px;
+        padding: 16px 0;
+        border-bottom: 1px solid #e8e0ce;
+      }
+      .guide-num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--gold-dark);
+        min-width: 28px;
+      }
+      .guide-text {
+        font-size: 15px;
+        color: #5c5040;
+        line-height: 1.6;
+      }
+      .guide-text strong {
+        color: #2c2820;
+        font-weight: 600;
+      }
+
+      /* ===== SECTION 4: 러브 칼럼 ===== */
+      .column-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .column-card {
+        display: block;
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+      }
+      .column-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        border-color: var(--border-gold);
+      }
+      .column-thumb {
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        background: linear-gradient(
+          135deg,
+          var(--surface-warm),
+          var(--surface-cream)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+      }
+      .column-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .column-thumb .ai-badge {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        font-size: 12px;
+        font-weight: 400;
+        color: #8c8070;
+        background: none;
+        padding: 0;
+        letter-spacing: 0.3px;
+        z-index: 3;
+      }
+      .column-thumb-placeholder {
+        font-size: 13px;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+      }
+      .column-body {
+        padding: 20px 24px 24px;
+      }
+      .column-body h4 {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text);
+        line-height: 1.4;
+      }
+      .column-body p {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      /* ===== SECTION 5: 노블레스 파티 6종 ===== */
+      .party-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .party-card {
+        background: linear-gradient(165deg, #ffffff, #f9f6ef);
+        border: 1px solid rgba(184, 154, 90, 0.25);
+        border-radius: 16px;
+        padding: 32px 28px;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(160, 128, 48, 0.06);
+      }
+      .party-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        transform: scaleX(0);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .party-card:hover::before {
+        transform: scaleX(1);
+      }
+      .party-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--gold);
+        box-shadow: 0 12px 48px rgba(160, 128, 48, 0.15);
+      }
+      .party-num {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 3px;
+        color: var(--gold-dark);
+        margin-bottom: 12px;
+      }
+      .party-name {
+        font-size: 22px;
+        font-weight: 700;
+        color: #2c2820;
+        margin-bottom: 4px;
+      }
+      .party-name-en {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        font-style: italic;
+        color: var(--gold-dark);
+        margin-bottom: 16px;
+        letter-spacing: 1px;
+      }
+      .party-desc {
+        font-size: 14px;
+        color: #8c8070;
+        line-height: 1.6;
+      }
+      .party-icon {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(196, 165, 90, 0.08);
+        border: 1px solid rgba(196, 165, 90, 0.2);
+      }
+      .party-icon svg {
+        width: 18px;
+        height: 18px;
+        stroke: var(--gold-light);
+        fill: none;
+        stroke-width: 1.5;
+      }
+
+      /* ===== SECTION 6: 스페셜 맞선 ===== */
+      .special-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: center;
+      }
+      .special-img {
+        aspect-ratio: 16 / 10;
+        border-radius: 16px;
+        overflow: hidden;
+        background: linear-gradient(
+          135deg,
+          var(--surface-warm),
+          var(--surface-cream)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border);
+      }
+      .special-img-placeholder {
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+      .special-text h3 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: var(--text);
+      }
+      .special-text h3 strong {
+        color: var(--gold);
+      }
+      .special-text p {
+        font-size: 16px;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        margin-bottom: 32px;
+      }
+      .special-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 32px;
+      }
+      .special-badge {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(160, 128, 48, 0.08);
+        color: var(--gold);
+        border: 1px solid var(--border-gold);
+        letter-spacing: 0.3px;
+      }
+      .btn-gold {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .btn-gold:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(160, 128, 48, 0.3);
+      }
+
+      /* ===== SECTION 7: 콘텐츠 피드 ===== */
+      .feed-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+      .feed-card {
+        border-radius: 16px;
+        overflow: hidden;
+        background: linear-gradient(165deg, #ffffff, #f9f6ef);
+        border: 1px solid rgba(184, 154, 90, 0.2);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+      }
+      .feed-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--gold);
+        box-shadow: 0 12px 40px rgba(160, 128, 48, 0.12);
+      }
+      .feed-thumb {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: linear-gradient(135deg, #f2ece0, #f9f6ef);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .feed-thumb-placeholder {
+        font-size: 12px;
+        color: #8c8070;
+      }
+      .feed-platform {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+      .feed-platform.blog {
+        background: rgba(0, 199, 60, 0.15);
+        color: #00c73c;
+      }
+      .feed-platform.insta {
+        background: rgba(225, 48, 108, 0.15);
+        color: #e1306c;
+      }
+      .feed-platform svg {
+        width: 14px;
+        height: 14px;
+      }
+      .feed-body {
+        padding: 20px 24px 24px;
+      }
+      .feed-body h4 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2c2820;
+        margin-bottom: 8px;
+        line-height: 1.4;
+      }
+      .feed-body p {
+        font-size: 13px;
+        color: #8c8070;
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 12px;
+      }
+      .feed-date {
+        font-size: 12px;
+        color: #8c8070;
+        letter-spacing: 0.5px;
+      }
+
+      /* ===== 노블홍 최신소식 게시판 레이아웃 ===== */
+      .news-feed-layout {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 32px;
+        margin-top: 48px;
+      }
+      .news-board-wrap {
+        border: 1px solid rgba(196, 165, 90, 0.15);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .news-board-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 20px;
+        border-bottom: 1px solid rgba(196, 165, 90, 0.1);
+      }
+      .news-board-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #8c7030;
+      }
+      .news-board-more {
+        font-size: 12px;
+        color: #8c8070;
+        text-decoration: none;
+      }
+      .news-board-more:hover {
+        color: #8c7030;
+      }
+      .news-board-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 11px 20px;
+        border-bottom: 1px solid #e8e0ce;
+        text-decoration: none;
+        transition: 0.2s;
+      }
+      .news-board-item:hover {
+        background: rgba(196, 165, 90, 0.04);
+      }
+      .news-board-item:last-child {
+        border-bottom: none;
+      }
+      .news-board-cat {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 2px;
+        letter-spacing: 0.5px;
+        flex-shrink: 0;
+        background: rgba(196, 165, 90, 0.12);
+        color: #8c7030;
+      }
+      .news-board-cat.media {
+        background: rgba(255, 0, 0, 0.12);
+        color: #ff6b6b;
+      }
+      .news-board-cat.event {
+        background: rgba(124, 58, 237, 0.12);
+        color: #a78bfa;
+      }
+      .news-board-cat.award {
+        background: rgba(245, 158, 11, 0.12);
+        color: #fbbf24;
+      }
+      .news-board-item-title {
+        flex: 1;
+        font-size: 13px;
+        color: #5c5040;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .news-board-date {
+        font-size: 12px;
+        color: #8c8070;
+        flex-shrink: 0;
+      }
+      .news-sns-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .news-sns-box {
+        border: 1px solid rgba(196, 165, 90, 0.1);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .news-sns-top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        border-bottom: 1px solid #e8e0ce;
+        font-size: 13px;
+        font-weight: 700;
+        color: #5c5040;
+      }
+      .news-sns-link {
+        margin-left: auto;
+        font-size: 12px;
+        color: #8c8070;
+        text-decoration: none;
+      }
+      .news-sns-link:hover {
+        color: #8c7030;
+      }
+      .news-insta-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+        padding: 2px;
+      }
+      .news-insta-item {
+        aspect-ratio: 4/5;
+        background: linear-gradient(
+          135deg,
+          rgba(196, 165, 90, 0.08),
+          rgba(196, 165, 90, 0.03)
+        );
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .news-insta-item:hover {
+        opacity: 0.7;
+      }
+      .news-blog-list {
+        display: flex;
+        flex-direction: column;
+      }
+      .news-blog-item {
+        display: flex;
+        gap: 12px;
+        padding: 12px 16px;
+        text-decoration: none;
+        border-bottom: 1px solid #e8e0ce;
+        transition: 0.2s;
+      }
+      .news-blog-item:last-child {
+        border-bottom: none;
+      }
+      .news-blog-item:hover {
+        background: rgba(196, 165, 90, 0.04);
+      }
+      .news-blog-thumb {
+        width: 56px;
+        height: 56px;
+        border-radius: 6px;
+        background: linear-gradient(
+          135deg,
+          rgba(196, 165, 90, 0.08),
+          rgba(196, 165, 90, 0.03)
+        );
+        flex-shrink: 0;
+      }
+      .news-blog-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .news-blog-info h5 {
+        font-size: 13px;
+        font-weight: 600;
+        color: #5c5040;
+        margin-bottom: 4px;
+      }
+      .news-blog-info span {
+        font-size: 12px;
+        color: #8c8070;
+      }
+      @media (max-width: 768px) {
+        .news-feed-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ===== SECTION 8: 유튜브 갤러리 ===== */
+      .yt-section-label {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .yt-section-label svg {
+        width: 28px;
+        height: 28px;
+        fill: #ff0000;
+      }
+      .yt-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+      .yt-card {
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+        text-decoration: none;
+        display: block;
+      }
+      .yt-card.hidden {
+        display: none;
+      }
+      .yt-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        border-color: var(--border-gold);
+      }
+      .yt-thumb {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: #f2ece0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .yt-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+      }
+      .yt-card:hover .yt-thumb img {
+        transform: scale(1.05);
+      }
+      .yt-play {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(255, 0, 0, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s;
+      }
+      .yt-card:hover .yt-play {
+        transform: scale(1.1);
+      }
+      .yt-play svg {
+        width: 18px;
+        height: 18px;
+        fill: #fff;
+        margin-left: 2px;
+      }
+      .yt-body {
+        padding: 12px 16px 16px;
+      }
+      .yt-body h4 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .yt-more-wrap {
+        text-align: center;
+        margin-top: 32px;
+      }
+      .yt-more-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 32px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-secondary);
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        letter-spacing: 0.3px;
+      }
+      .yt-more-btn:hover {
+        border-color: var(--gold);
+        color: var(--gold);
+      }
+      .yt-more-btn svg {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.3s;
+      }
+      .yt-more-btn.expanded svg {
+        transform: rotate(180deg);
+      }
+
+      /* Shorts */
+      .shorts-divider {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--border),
+          transparent
+        );
+        margin: 56px 0;
+      }
+      /* Shorts Slider */
+      .shorts-slider-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .shorts-viewport {
+        flex: 1;
+        overflow: hidden;
+        border-radius: 12px;
+      }
+      .shorts-track {
+        display: flex;
+        gap: 14px;
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .shorts-card {
+        flex: 0 0 calc((100% - 14px * 5) / 6);
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
+      }
+      .shorts-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+        border-color: var(--border-gold);
+      }
+      .shorts-thumb {
+        width: 100%;
+        aspect-ratio: 9 / 16;
+        background: #f2ece0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .shorts-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s;
+      }
+      .shorts-card:hover .shorts-thumb img {
+        transform: scale(1.05);
+      }
+      .shorts-badge {
+        position: absolute;
+        bottom: 8px;
+        left: 8px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 8px;
+        border-radius: 4px;
+        background: rgba(255, 0, 0, 0.9);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+      .shorts-play {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .shorts-card:hover .shorts-play {
+        opacity: 1;
+      }
+      .shorts-play svg {
+        width: 16px;
+        height: 16px;
+        fill: #fff;
+        margin-left: 2px;
+      }
+      .shorts-arrow {
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        z-index: 2;
+      }
+      .shorts-arrow:hover {
+        border-color: var(--gold);
+        background: rgba(160, 128, 48, 0.06);
+      }
+      .shorts-arrow:disabled {
+        opacity: 0.3;
+        cursor: default;
+      }
+      .shorts-arrow svg {
+        width: 20px;
+        height: 20px;
+        stroke: var(--text-secondary);
+      }
+      .shorts-arrow:hover svg {
+        stroke: var(--gold);
+      }
+      .yt-subscribe {
+        text-align: center;
+        margin-top: 48px;
+      }
+      .yt-subscribe a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        background: #ff0000;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+      }
+      .yt-subscribe a:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+      }
+
+      /* Video Modal */
+      .video-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(0, 0, 0, 0.92);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+      .video-modal-overlay.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .video-modal {
+        width: 90%;
+        max-width: 960px;
+        aspect-ratio: 16 / 9;
+        position: relative;
+      }
+      .video-modal.shorts-mode {
+        max-width: 400px;
+        aspect-ratio: 9 / 16;
+      }
+      .video-modal iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 8px;
+      }
+      .video-modal-close {
+        position: absolute;
+        top: -48px;
+        right: 0;
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 24px;
+        cursor: pointer;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s;
+      }
+      .video-modal-close:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      /* ===== CTA ===== */
+      .cta-section {
+        padding: 140px 32px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-bg-wrap {
+        position: absolute;
+        inset: 0;
+      }
+      .cta-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .cta-bg img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        filter: contrast(0.7) brightness(0.85);
+        transition: opacity 1.2s ease;
+      }
+      .cta-bg video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        opacity: 0;
+        filter: contrast(0.7) brightness(0.85);
+        transition: opacity 1.2s ease;
+      }
+      .cta-bg.playing img {
+        opacity: 0;
+      }
+      .cta-bg.playing video {
+        opacity: 1;
+      }
+      .cta-bg-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(249, 246, 239, 0.85);
+        z-index: 1;
+      }
+      .cta-frame {
+        position: absolute;
+        inset: 60px;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+        pointer-events: none;
+        border-radius: 2px;
+        z-index: 2;
+      }
+      .cta-content {
+        position: relative;
+        z-index: 3;
+      }
+      .cta-title {
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 200;
+        margin-bottom: 12px;
+        color: #2c2820;
+      }
+      .cta-title strong {
+        font-weight: 600;
+        background: linear-gradient(135deg, #b89a5a, var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-sub {
+        font-size: 16px;
+        color: #5c5040;
+        margin-bottom: 8px;
+      }
+      .cta-phone {
+        font-family: "Pretendard Variable", sans-serif;
+        font-size: 42px;
+        margin: 28px 0;
+        background: linear-gradient(135deg, #b89a5a, #d4b870, #b89a5a);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-note {
+        font-size: 14px;
+        color: #8c8070;
+        margin-bottom: 32px;
+      }
+      .cta-buttons {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+      }
+      .cta-section .btn-filled {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 28px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .cta-section .btn-filled:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(160, 128, 48, 0.3);
+      }
+      .cta-section .btn-outlined {
+        display: inline-flex;
+        align-items: center;
+        padding: 14px 28px;
+        border: 1px solid var(--gold);
+        color: var(--gold-dark);
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .cta-section .btn-outlined:hover {
+        background: rgba(196, 165, 90, 0.1);
+        transform: translateY(-2px);
+      }
+
+      /* ===== FOOTER ===== */
+      .footer {
+        padding: 56px 40px 40px;
+        background: linear-gradient(135deg, #f9f6ef 0%, #f2ece0 100%);
+        border-top: 2px solid var(--gold);
+      }
+      .footer-gold-line {
+        height: 1px;
+        margin-bottom: 56px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        opacity: 0.3;
+      }
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-logo {
+        margin-bottom: 16px;
+      }
+      .footer-logo img {
+        height: 52px;
+        width: auto;
+        opacity: 1;
+      }
+      .footer-info {
+        font-size: 13px;
+        color: #8c8070;
+        line-height: 1.9;
+      }
+      .footer-links {
+        display: flex;
+        gap: 28px;
+      }
+      .footer-links a {
+        font-size: 14px;
+        color: var(--gold);
+        text-decoration: none;
+        letter-spacing: 0.3px;
+        transition: color 0.3s;
+        min-height: 44px;
+        padding: 12px 8px;
+        display: inline-flex;
+        align-items: center;
+      }
+      .footer-links a:hover {
+        color: var(--gold);
+      }
+
+      /* ===== AI IMAGE BADGE ===== */
+      .ai-image-badge {
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+        color: #8c8070;
+        background: rgba(242, 236, 224, 0.6);
+        backdrop-filter: blur(4px);
+        padding: 4px 10px;
+        border-radius: 2px;
+        pointer-events: none;
+      }
+
+      /* ===== BOTTOM INQUIRY BAR (Espresso + Gold Frame) ===== */
+      .bottom-inquiry-bar {
+        position: fixed;
+        left: 20px;
+        right: 20px;
+        bottom: 16px;
+        z-index: 99;
+        background: #2a1d0a;
+        border: 1px solid #b89a5a;
+        outline: 1px solid rgba(184, 146, 74, 0.45);
+        outline-offset: 3px;
+        border-radius: 2px;
+        padding: 18px 22px;
+        box-shadow: 0 14px 36px rgba(20, 14, 6, 0.4);
+      }
+      .bib-row-main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .bib-head {
+        flex-shrink: 0;
+        padding-right: 16px;
+        border-right: 1px solid rgba(184, 146, 74, 0.3);
+      }
+      .bib-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12px;
+        font-style: italic;
+        letter-spacing: 3px;
+        color: #d4bd7a;
+        text-transform: uppercase;
+      }
+      .bib-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: #f4dd96;
+        letter-spacing: -0.2px;
+        white-space: nowrap;
+      }
+      .bib-fields {
+        display: flex;
+        gap: 7px;
+      }
+      .bib-input,
+      .bib-select {
+        padding: 14px 14px;
+        font-size: 14px;
+        border-radius: 2px;
+        border: 1px solid rgba(212, 189, 122, 0.35);
+        background: rgba(244, 221, 150, 0.06);
+        color: #ffffff;
+        min-width: 0;
+        font-family: inherit;
+      }
+      .bib-input::placeholder {
+        color: rgba(244, 236, 212, 0.4);
+      }
+      .bib-select option {
+        background: #ffffff;
+        color: #1a1207;
+        font-weight: 500;
+      }
+      .bib-input.w-name {
+        flex: 0 0 100px;
+      }
+      .bib-input.w-phone {
+        flex: 0 0 130px;
+      }
+      .bib-select.w-gender {
+        flex: 0 0 85px;
+      }
+      .bib-select.w-marital {
+        flex: 0 0 110px;
+      }
+      .bib-select.w-year {
+        flex: 0 0 110px;
+      }
+      .bib-submit {
+        padding: 14px 28px;
+        background: linear-gradient(135deg, #d4bd7a, #b8924a);
+        color: #1a1207;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+        border: 1px solid #d4bd7a;
+        border-radius: 2px;
+        cursor: pointer;
+        white-space: nowrap;
+        font-family: inherit;
+        transition: all 0.3s;
+      }
+      .bib-submit:hover {
+        background: linear-gradient(135deg, #e8c572, #c99a52);
+      }
+      .bib-row-consent {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 10px;
+        padding-top: 8px;
+      }
+      .bib-check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: rgba(244, 236, 212, 0.72);
+        cursor: pointer;
+        min-height: 44px;
+        padding: 6px 4px;
+      }
+      .bib-check strong {
+        color: #d4bd7a;
+      }
+      .bib-check input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        accent-color: #b89a5a;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      /* ===== SIDE INQUIRY BAR (Vertical Form Card) ===== */
+      .side-inquiry-bar {
+        position: fixed;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 220px;
+        z-index: 95;
+        background: #1a1207;
+        border: 1px solid #b89a5a;
+        outline: 1px solid rgba(184, 146, 74, 0.4);
+        outline-offset: 3px;
+        border-radius: 2px;
+        padding: 18px 16px;
+        box-shadow: 0 14px 36px rgba(20, 14, 6, 0.4);
+      }
+      .sib-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 10.5px;
+        font-style: italic;
+        letter-spacing: 3px;
+        color: #d4bd7a;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 6px;
+      }
+      .sib-title {
+        font-size: 13px;
+        font-weight: 800;
+        color: #f4dd96;
+        text-align: center;
+        margin-bottom: 12px;
+      }
+      .sib-input {
+        width: 100%;
+        padding: 9px 11px;
+        background: rgba(244, 221, 150, 0.06);
+        border: 1px solid rgba(212, 189, 122, 0.3);
+        color: #ffffff;
+        font-size: 12px;
+        border-radius: 2px;
+        margin-bottom: 8px;
+        font-family: inherit;
+      }
+      .sib-input::placeholder {
+        color: rgba(244, 236, 212, 0.4);
+      }
+      .sib-submit {
+        width: 100%;
+        padding: 10px;
+        background: linear-gradient(135deg, #d4bd7a, #b8924a);
+        color: #1a1207;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.3s;
+      }
+      .sib-submit:hover {
+        background: linear-gradient(135deg, #e8c572, #c99a52);
+      }
+      .sib-phone {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(184, 146, 74, 0.2);
+        text-align: center;
+        color: #d4bd7a;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+      }
+      .sib-phone strong {
+        color: #f4dd96;
+        font-size: 14px;
+        font-weight: 800;
+      }
+      @media (max-width: 1280px) {
+        .side-inquiry-bar {
+          display: none;
+        }
+      }
+      @media (max-width: 960px) {
+        .bib-input.w-name,
+        .bib-input.w-phone,
+        .bib-select.w-gender,
+        .bib-select.w-marital,
+        .bib-select.w-year {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+        .bib-head {
+          display: none;
+        }
+      }
+      @media (max-width: 720px) {
+        .bottom-inquiry-bar {
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-radius: 0;
+          padding: 10px 14px calc(10px + env(safe-area-inset-bottom)) 14px;
+        }
+        .bib-row-main {
+          flex-wrap: wrap;
+        }
+        .bib-fields {
+          flex-wrap: wrap;
+        }
+        .bib-submit {
+          width: 100%;
+          margin-top: 8px;
+        }
+      }
+
+      /* ===== MOBILE NAV INJECTED v1 — 분리형 하단(메뉴바 + 접수바 토글) + GNB 로고 가운데 ===== */
+      .mobile-bottom-nav,
+      .bib-trigger-mobile,
+      .bib-close-mobile {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        /* GNB 헤더 — 로고 가운데 + CTA 우측 + 72px 고정 */
+        .gnb-inner {
+          position: relative;
+        }
+        .gnb-logo {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          margin: 0;
+        }
+        .gnb-logo img,
+        .gnb.scrolled .gnb-logo img {
+          height: 56px !important;
+          width: auto;
+        }
+        .gnb-cta {
+          margin-left: auto;
+          padding: 8px 14px !important;
+          font-size: 12px !important;
+          letter-spacing: 0.2px !important;
+          min-height: 40px !important;
+        }
+
+        /* 페이지 콘텐츠 하단 여유 (메뉴바 88px + trigger 44px + safe-area) */
+        body {
+          padding-bottom: calc(132px + env(safe-area-inset-bottom));
+        }
+
+        /* 모바일 하단 메뉴바 — 3x2 grid, 항상 visible */
+        .mobile-bottom-nav {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-auto-rows: 44px;
+          background: #fffefb;
+          border-top: 1px solid rgba(184, 154, 90, 0.2);
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          z-index: 95;
+          padding-bottom: env(safe-area-inset-bottom);
+          box-shadow: 0 -2px 8px rgba(44, 40, 32, 0.06);
+        }
+        .mbn-item {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #2c2820;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.2px;
+          text-decoration: none;
+          border-right: 1px solid rgba(184, 154, 90, 0.15);
+          border-bottom: 1px solid rgba(184, 154, 90, 0.15);
+          transition:
+            background 0.2s,
+            color 0.2s;
+        }
+        .mbn-item:nth-child(3n) {
+          border-right: none;
+        }
+        .mbn-item:nth-last-child(-n + 3) {
+          border-bottom: none;
+        }
+        .mbn-item:active,
+        .mbn-item.active {
+          background: linear-gradient(135deg, #d4bd7a 0%, #b8924a 100%);
+          color: #fff;
+        }
+
+        /* 접수바 trigger 버튼 — 메뉴바 위 */
+        .bib-trigger-mobile {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: calc(88px + env(safe-area-inset-bottom));
+          height: 44px;
+          background: linear-gradient(
+            135deg,
+            #d4bd7a 0%,
+            #b8924a 55%,
+            #a8854a 100%
+          );
+          color: #fff;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.4px;
+          border: none;
+          border-top: 1px solid #a8854a;
+          cursor: pointer;
+          z-index: 96;
+          box-shadow: 0 -1px 4px rgba(44, 40, 32, 0.08);
+        }
+        .bib-trigger-mobile-arrow {
+          display: inline-block;
+          width: 0;
+          height: 0;
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-bottom: 6px solid #fff;
+          transition: transform 0.3s;
+        }
+        body.bib-open .bib-trigger-mobile {
+          display: none;
+        }
+
+        /* 기존 bottom-inquiry-bar 모바일 동작 — 접힘 → 슬라이드 업 */
+        .bottom-inquiry-bar {
+          left: 0 !important;
+          right: 0 !important;
+          bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+          border-radius: 0 !important;
+          transform: translateY(110%);
+          transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+          z-index: 97;
+          max-height: 75vh;
+          overflow-y: auto;
+        }
+        body.bib-open .bottom-inquiry-bar {
+          transform: translateY(0);
+        }
+
+        /* 모바일에서 접수바 안에 닫기 버튼 노출 */
+        .bib-close-mobile {
+          display: flex;
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          width: 36px;
+          height: 36px;
+          align-items: center;
+          justify-content: center;
+          background: transparent;
+          border: 1px solid rgba(244, 236, 212, 0.32);
+          border-radius: 50%;
+          color: #f4ecd4;
+          font-size: 16px;
+          cursor: pointer;
+          z-index: 2;
+        }
+
+        /* 접수바 backdrop (열림 시) */
+        .bib-backdrop {
+          display: none;
+          position: fixed;
+          inset: 0;
+          background: rgba(20, 14, 6, 0.5);
+          z-index: 96;
+        }
+        body.bib-open .bib-backdrop {
+          display: block;
+        }
+      }
+      /* ===== END MOBILE NAV INJECTED v1 ===== */
+
+      /* MOBILE NAV PATCH v2 — 접수바 모바일 hide (trigger + form 모두), 메뉴바만 노출 */
+      @media (max-width: 768px) {
+        body {
+          padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+        }
+        .bib-trigger-mobile,
+        .bib-backdrop,
+        .bottom-inquiry-bar {
+          display: none !important;
+        }
+      }
+
+      /* MOTION STABILITY PATCH v3 — 카운터 흔들림 방지 */
+      .stat-num,
+      .ceo-stat-num,
+      .stat-num-glow {
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+      }
+      .stat-item,
+      .ceo-stat-item {
+        contain: layout style;
+      }
+      /* ===== END MOTION STABILITY PATCH v3 ===== */
+
+      /* HERO MOBILE PATCH v4 — CTA 버튼 + 한글 고아텍스트 방지 */
+      .hero-title,
+      .hero-sub,
+      .page-hero h1,
+      .page-hero p,
+      .hero-strong,
+      .hero-eyebrow {
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        text-wrap: pretty;
+      }
+
+      @media (max-width: 768px) {
+        .hero-cta-group,
+        .page-hero-cta-group {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+          padding: 0 24px;
+          max-width: 360px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .hero-cta-group .btn,
+        .page-hero-cta-group .btn,
+        .hero-cta-group a,
+        .page-hero-cta-group a {
+          width: 100%;
+          padding: 14px 18px !important;
+          font-size: 15px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0 !important;
+          justify-content: center;
+          gap: 6px;
+          min-height: 48px;
+          white-space: nowrap;
+        }
+        .hero-cta-group svg,
+        .page-hero-cta-group svg {
+          width: 18px;
+          height: 18px;
+        }
+        .hero-sub,
+        .page-hero p {
+          font-size: 14px !important;
+          line-height: 1.6 !important;
+          padding: 0 16px;
+          max-width: 100%;
+        }
+      }
+      /* ===== END HERO MOBILE PATCH v4 ===== */
+
+      /* MOTION ANTI-SHAKE PATCH v6 — 모바일 흔들림 완전 차단 */
+      @media (max-width: 768px) {
+        /* 1) reveal 대상 transform 무력화 (opacity fade만 남김) */
+        .stat-item,
+        .ceo-stat-item,
+        .ceo-stats-bar,
+        .chart-card,
+        .ceo-image-wrap,
+        .ceo-content,
+        .reveal,
+        .reveal-up,
+        .qualify-card,
+        .qualify-card-media,
+        .ceo-bg-cell,
+        .strength-card,
+        .why-block,
+        .program-card,
+        .yt-card,
+        .lovecol-item,
+        .news-item,
+        .blog-card,
+        .insta-card,
+        .award-item,
+        .mou-item,
+        .notice-item,
+        .press-item {
+          transform: none !important;
+          transition-property: opacity !important;
+        }
+
+        /* SplitText chars — stagger 무력화 (한 번에 페이드) */
+        .svc-line1 .char,
+        .svc-line2 .char,
+        .char {
+          transform: none !important;
+          opacity: 1 !important;
+        }
+
+        /* 2) 카운터 width 잠금 */
+        .stat-num,
+        .ceo-stat-num,
+        .stat-num-glow {
+          display: inline-block !important;
+          min-width: 4em;
+          text-align: center !important;
+          font-variant-numeric: tabular-nums !important;
+          contain: layout style;
+        }
+        /* stat-num은 block로 부모에 width 100% — 자식 inline-block 처럼 동작 */
+        .stat-num {
+          display: block !important;
+          min-width: 0;
+          width: 100%;
+        }
+        .ceo-stat-num {
+          display: block !important;
+          min-width: 0;
+          width: 100%;
+        }
+
+        /* 3) 고정 요소 GPU layer 강제 (스크롤 시 repaint 최소화) */
+        .gnb,
+        .mobile-bottom-nav,
+        .bottom-inquiry-bar,
+        .side-inquiry-bar {
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
+          will-change: transform;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+        }
+
+        /* 4) hero 진입 직후 안정화 (이미지 fixed bg는 모바일에서 attachment scroll로) */
+        .hero-bg,
+        .stats-bg,
+        [data-bg-fixed] {
+          background-attachment: scroll !important;
+        }
+
+        /* 5) 카운팅 섹션 컨테이너에 paint 격리 */
+        .stats-grid,
+        .ceo-stats-bar,
+        .chart-section {
+          contain: layout style paint;
+        }
+      }
+      /* ===== END MOTION ANTI-SHAKE PATCH v6 ===== */
+
+      /* ORPHAN PROTECTION v7 — 한국어 고아텍스트/단어 wrap 차단 */
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      .qualify-title,
+      .qualify-desc,
+      .qualify-label,
+      .stat-label,
+      .stat-sub,
+      .stat-note,
+      .ceo-stat-label,
+      .ceo-quote,
+      .ceo-bio,
+      .ceo-name,
+      .ceo-role,
+      .ceo-meaning-note,
+      .ceo-card .bio-list,
+      .ceo-card .bio-list li,
+      .ceo-card-heading,
+      .why-block-sub,
+      .strength-card strong,
+      .strength-card p,
+      .lovecol-item-title,
+      .lovecol-item-desc,
+      .yt-card-title,
+      .news-item-title,
+      .blog-card-title,
+      .insta-card-caption,
+      .program-card-title,
+      .program-card-desc,
+      .award-name,
+      .award-detail,
+      .mou-item-name,
+      .notice-item-title,
+      .press-item-title,
+      .section-title,
+      .section-desc,
+      .page-hero h1,
+      .page-hero p,
+      .hero-strong,
+      .qualify-card strong,
+      .qualify-card p,
+      .reveal strong,
+      .reveal p {
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        text-wrap: pretty;
+      }
+
+      @media (max-width: 768px) {
+        .qualify-title {
+          font-size: 22px !important;
+          line-height: 1.35 !important;
+          letter-spacing: -0.3px !important;
+        }
+        .qualify-desc {
+          font-size: 13px !important;
+          line-height: 1.6 !important;
+          padding: 0 12px;
+        }
+        .stat-label {
+          font-size: 14px !important;
+        }
+        .stat-sub,
+        .stat-note {
+          font-size: 12px !important;
+        }
+        .ceo-stat-label {
+          font-size: 11px !important;
+          line-height: 1.3 !important;
+        }
+        /* why-noble 카드 모바일에서 1열로 (가로 영역 확보) */
+        section#whyNoble
+          > div
+          > div[style*="grid-template-columns:repeat(2,1fr)"],
+        section#whyNoble
+          > div
+          > div[style*="grid-template-columns: repeat(2, 1fr)"] {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 12px !important;
+        }
+      }
+      /* ===== END ORPHAN PROTECTION v7 ===== */
+
+      /* LAYOUT REFINE v8 — CEO 재배치 + events 슬라이드 + CTA 버튼 모바일 */
+      @media (max-width: 768px) {
+        /* 1) CEO 프로필 모바일 — 이미지+상단정보 가로분할, bio 이하 풀폭 */
+        .ceo-top {
+          display: grid !important;
+          grid-template-columns: 120px 1fr !important;
+          grid-template-areas:
+            "img badge"
+            "img quote"
+            "img name"
+            "img role"
+            "bio bio"
+            "note note"
+            "stats stats" !important;
+          column-gap: 14px !important;
+          row-gap: 6px !important;
+          align-items: start !important;
+        }
+        .ceo-content {
+          display: contents !important;
+        }
+        .ceo-image-wrap {
+          grid-area: img;
+          align-self: start;
+        }
+        .ceo-title-badge {
+          grid-area: badge;
+          align-self: end;
+          margin-bottom: 0 !important;
+        }
+        .ceo-quote {
+          grid-area: quote;
+        }
+        .ceo-name {
+          grid-area: name;
+        }
+        .ceo-role {
+          grid-area: role;
+          align-self: start;
+        }
+        .ceo-bio {
+          grid-area: bio;
+          margin-top: 18px !important;
+        }
+        .ceo-meaning-note {
+          grid-area: note;
+        }
+        .ceo-stats-bar {
+          grid-area: stats;
+          margin-top: 12px !important;
+        }
+
+        /* 2) events-grid 모바일 horizontal scroll snap */
+        .events-grid {
+          display: flex !important;
+          grid-template-columns: none !important;
+          overflow-x: auto;
+          overflow-y: hidden;
+          scroll-snap-type: x mandatory;
+          gap: 12px !important;
+          padding: 4px 16px 12px !important;
+          margin: 0 -16px !important;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+        }
+        .events-grid::-webkit-scrollbar {
+          display: none;
+        }
+        .events-grid > .event-card {
+          flex: 0 0 240px;
+          min-width: 240px;
+          scroll-snap-align: start;
+          padding: 32px 24px !important;
+        }
+        .events-grid > .event-card .event-icon svg,
+        .events-grid > .event-card .event-icon img {
+          width: 48px !important;
+          height: 48px !important;
+        }
+        .events-grid > .event-card .event-name {
+          font-size: 15px !important;
+        }
+        .events-grid > .event-card .event-desc {
+          font-size: 12px !important;
+        }
+
+        /* 3) CTA 버튼 모바일 — hero 패턴과 통일 */
+        .cta-buttons {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px !important;
+          padding: 0 24px;
+          max-width: 360px;
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+        .cta-buttons .btn,
+        .cta-buttons a {
+          width: 100%;
+          padding: 14px 18px !important;
+          font-size: 15px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0 !important;
+          justify-content: center;
+          gap: 6px;
+          min-height: 48px;
+        }
+        .cta-buttons svg {
+          width: 18px;
+          height: 18px;
+        }
+        .cta-note {
+          font-size: 13px !important;
+          line-height: 1.7 !important;
+          padding: 0 16px;
+          word-break: keep-all;
+        }
+        .cta-note strong {
+          font-size: 14px !important;
+          display: inline-block;
+          margin-top: 4px;
+        }
+      }
+      /* ===== END LAYOUT REFINE v8 ===== */
+
+      /* LAYOUT v9 — CEO meaning heading + events-header 모바일 */
+      .ceo-meaning-heading {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--gold-dark);
+        margin: 18px 0 6px;
+        letter-spacing: -0.2px;
+        word-break: keep-all;
+        position: relative;
+        padding-left: 12px;
+      }
+      .ceo-meaning-heading::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 4px;
+        bottom: 4px;
+        width: 3px;
+        background: linear-gradient(
+          180deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        border-radius: 2px;
+      }
+
+      @media (max-width: 768px) {
+        /* CEO meaning heading 풀폭 */
+        .ceo-meaning-heading {
+          grid-column: 1 / -1;
+          font-size: 13px !important;
+          margin: 14px 0 6px !important;
+        }
+
+        /* events-header 모바일 — column stack */
+        .events-header {
+          flex-direction: column !important;
+          align-items: center !important;
+          gap: 14px !important;
+          text-align: center;
+        }
+        .events-header > div:first-child {
+          width: 100%;
+        }
+        .events-title-wrap {
+          justify-content: center;
+        }
+        .events-title-wrap #eventsTitle,
+        .events-title-wrap .qualify-title {
+          font-size: 22px !important;
+          white-space: nowrap;
+        }
+        .events-title-wrap .ceo-title-badge-line {
+          flex: 0 0 24px;
+          max-width: 24px;
+        }
+        .events-header-right {
+          width: 100%;
+          text-align: center;
+        }
+        .events-header-right a {
+          display: inline-block;
+          padding: 10px 14px;
+          font-size: 14px !important;
+          min-height: 44px;
+          line-height: 24px;
+        }
+      }
+      /* ===== END LAYOUT v9 ===== */
+
+      /* FOOTER MOBILE v10 — 링크 vertical 위, 브랜드 아래 */
+      @media (max-width: 768px) {
+        .footer {
+          padding: 16px 20px 24px !important;
+        }
+        .footer-inner {
+          flex-direction: column-reverse !important;
+          align-items: stretch !important;
+          gap: 12px !important;
+        }
+        .footer-links {
+          flex-direction: column !important;
+          align-items: stretch !important;
+          gap: 0 !important;
+          padding: 0 0 8px 0 !important;
+          margin: 0 !important;
+          border-bottom: 1px solid #e8e0ce;
+        }
+        .footer-links a {
+          display: block !important;
+          width: 100% !important;
+          padding: 12px 4px !important;
+          border-bottom: 1px solid rgba(184, 154, 90, 0.2);
+          min-height: 44px;
+          font-size: 14px !important;
+        }
+        .footer-links a:last-child {
+          border-bottom: none;
+        }
+        .footer-info {
+          font-size: 12px !important;
+          line-height: 1.8 !important;
+          word-break: keep-all;
+        }
+        .footer-logo {
+          margin-bottom: 8px !important;
+        }
+        .footer-logo img {
+          height: 32px;
+          width: auto;
+        }
+      }
+      /* ===== END FOOTER MOBILE v10 ===== */
+
+      /* MOBILE NAV C-FLOATING v11 — 떠 있는 둥근 카드 */
+      @media (max-width: 768px) {
+        body {
+          padding-bottom: calc(110px + env(safe-area-inset-bottom)) !important;
+        }
+        .mobile-bottom-nav {
+          position: fixed !important;
+          bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+          left: 12px !important;
+          right: 12px !important;
+          background: linear-gradient(
+            180deg,
+            #2a1d0a 0%,
+            #1a1208 100%
+          ) !important;
+          border: 1px solid #b89a5a !important;
+          outline: 1px solid rgba(184, 146, 74, 0.45);
+          outline-offset: 2px;
+          border-radius: 16px !important;
+          box-shadow:
+            0 12px 32px rgba(20, 14, 6, 0.35),
+            0 4px 12px rgba(212, 184, 112, 0.18);
+          display: grid !important;
+          grid-template-columns: repeat(3, 1fr);
+          grid-auto-rows: 44px;
+          overflow: hidden;
+          padding-bottom: 0 !important;
+          z-index: 95;
+        }
+        .mbn-item {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          color: #d4bd7a !important;
+          font-size: 11px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.1px !important;
+          text-decoration: none !important;
+          border-right: 1px solid rgba(184, 154, 90, 0.18) !important;
+          border-bottom: 1px solid rgba(184, 154, 90, 0.18) !important;
+          background: transparent !important;
+          transition: all 0.2s;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding: 0 4px;
+        }
+        .mbn-item:nth-child(3n) {
+          border-right: none !important;
+        }
+        .mbn-item:nth-last-child(-n + 3) {
+          border-bottom: none !important;
+        }
+        .mbn-item:active,
+        .mbn-item.active {
+          background: linear-gradient(
+            135deg,
+            #d4bd7a 0%,
+            #b8924a 100%
+          ) !important;
+          color: #1a1208 !important;
+        }
+      }
+      /* ===== END MOBILE NAV C-FLOATING v11 ===== */
+
+      /* ===== CTA Section 모바일 패치 (frame inset 정리) ===== */
+      @media (max-width: 768px) {
+        .cta-section {
+          padding: 80px 20px !important;
+        }
+        .cta-frame {
+          inset: 18px !important;
+          border-color: rgba(196, 165, 90, 0.22) !important;
+          border-radius: 8px !important;
+        }
+        .cta-title {
+          font-size: 26px !important;
+          line-height: 1.3 !important;
+        }
+        .cta-sub {
+          font-size: 13px !important;
+          margin-bottom: 6px !important;
+        }
+        .cta-phone {
+          font-size: 32px !important;
+          margin: 20px 0 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ====== LOADING OVERLAY (self-contained) ====== -->
+    <div
+      id="loading-overlay"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: #f9f6ef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.6s ease;
+      "
+    >
+      <canvas
+        id="loading-cv"
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%"
+      ></canvas>
+      <div
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          pointer-events: none;
+          z-index: 2;
+        "
+      >
+        <div
+          id="loading-msg"
+          style="
+            font-family: &quot;Noto Serif KR&quot;, serif;
+            font-size: 18px;
+            font-weight: 300;
+            color: #3d3425;
+            letter-spacing: 4px;
+            transform: translateY(55px);
+          "
+        >
+          당신의 인연을 매칭하는 중<span
+            id="loading-dots"
+            style="
+              display: inline-block;
+              width: 2em;
+              text-align: left;
+              letter-spacing: 2px;
+            "
+          ></span>
+        </div>
+        <div
+          style="
+            font-family: &quot;Cormorant Garamond&quot;, serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(140, 112, 48, 0.9);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            transform: translateY(65px);
+            margin-top: 8px;
+          "
+        >
+          Noble Hong Premium Matching
+        </div>
+      </div>
+      <script>
+        (function () {
+          var overlay = document.getElementById("loading-overlay");
+          var cv = document.getElementById("loading-cv");
+          var ctx = cv.getContext("2d");
+          var dpr = window.devicePixelRatio || 1;
+          var W, H, cxL, cyL;
+          function rs() {
+            W = window.innerWidth;
+            H = window.innerHeight;
+            cv.width = W * dpr;
+            cv.height = H * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            cv.style.width = W + "px";
+            cv.style.height = H + "px";
+            cxL = W / 2;
+            cyL = H / 2;
+          }
+          rs();
+          window.addEventListener("resize", function () {
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            rs();
+          });
+          var dotsEl = document.getElementById("loading-dots");
+          var dc = 0;
+          var dotIv = setInterval(function () {
+            dc = (dc + 1) % 4;
+            dotsEl.textContent = ".".repeat(dc);
+          }, 500);
+          var ambients = [];
+          for (var i = 0; i < 30; i++) {
+            ambients.push({
+              x: Math.random() * 2 - 1,
+              y: Math.random() * 2 - 1,
+              vx: (Math.random() - 0.5) * 0.2,
+              vy: (Math.random() - 0.5) * 0.2,
+              size: 0.5 + Math.random() * 1.5,
+              phase: Math.random() * Math.PI * 2,
+            });
+          }
+          var trail1 = [],
+            trail2 = [],
+            TRAIL_MAX = 50;
+          var t = 0,
+            lastTime = performance.now(),
+            stopped = false;
+          function glow(co, bl) {
+            ctx.shadowColor = co;
+            ctx.shadowBlur = bl;
+          }
+          function noGlow() {
+            ctx.shadowBlur = 0;
+          }
+          function sm(x) {
+            return x * x * (3 - 2 * x);
+          }
+          function lerp(a, b, t) {
+            return a + (b - a) * t;
+          }
+          function getPhase(time) {
+            if (time < 6) return { id: 0, local: time / 6 };
+            if (time < 9) return { id: 1, local: (time - 6) / 3 };
+            if (time < 10.5) return { id: 2, local: (time - 9) / 1.5 };
+            if (time < 12) return { id: 3, local: (time - 10.5) / 1.5 };
+            return { id: 4, local: (time - 12) / 2 };
+          }
+          function draw(now) {
+            if (stopped) return;
+            var dt = Math.min(50, now - lastTime) / 1000;
+            lastTime = now;
+            t += dt;
+            var loopT = t % 14,
+              phase = getPhase(loopT);
+            ctx.clearRect(0, 0, W, H);
+            ambients.forEach(function (p) {
+              p.x += p.vx * dt;
+              p.y += p.vy * dt;
+              if (Math.abs(p.x) > 1.2) p.vx *= -1;
+              if (Math.abs(p.y) > 1.2) p.vy *= -1;
+              var px = cxL + p.x * cxL * 0.8,
+                py = cyL + p.y * cyL * 0.8,
+                tw = 0.3 + Math.sin(t * 2 + p.phase) * 0.3;
+              ctx.beginPath();
+              ctx.arc(px, py, p.size, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(201,169,78," + tw * 0.08 + ")";
+              ctx.fill();
+            });
+            var baseR = Math.min(W, H) * 0.18,
+              R1,
+              R2,
+              tilt1,
+              tilt2,
+              spd1,
+              spd2;
+            if (phase.id === 0) {
+              R1 = baseR;
+              R2 = baseR;
+              tilt1 = 0.35;
+              tilt2 = -0.35;
+              spd1 = 1.8;
+              spd2 = 1.8;
+            } else if (phase.id === 1) {
+              var e = sm(phase.local);
+              R1 = lerp(baseR, baseR * 0.25, e);
+              R2 = R1;
+              tilt1 = lerp(0.35, 0.1, e);
+              tilt2 = lerp(-0.35, -0.1, e);
+              spd1 = lerp(1.8, 2.5, e);
+              spd2 = spd1;
+            } else if (phase.id === 2) {
+              var e2 = sm(phase.local);
+              R1 = lerp(baseR * 0.25, baseR * 0.05, e2);
+              R2 = R1;
+              tilt1 = 0.1;
+              tilt2 = -0.1;
+              spd1 = lerp(2.5, 3.5, e2);
+              spd2 = spd1;
+            } else {
+              R1 = 0;
+              R2 = 0;
+              tilt1 = 0;
+              tilt2 = 0;
+              spd1 = 0;
+              spd2 = 0;
+            }
+            if (phase.id <= 2) {
+              var pa = phase.id === 2 ? 0.06 * (1 - phase.local) : 0.06;
+              ctx.beginPath();
+              for (var i = 0; i <= 100; i++) {
+                var a = (i / 100) * Math.PI * 2,
+                  px = cxL + Math.cos(a) * R1,
+                  py =
+                    cyL +
+                    Math.sin(a) * R1 * 0.4 * Math.cos(tilt1) +
+                    Math.cos(a) * R1 * 0.1 * Math.sin(tilt1);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+              }
+              ctx.closePath();
+              ctx.strokeStyle = "rgba(201,169,78," + pa + ")";
+              ctx.lineWidth = 1;
+              ctx.stroke();
+              ctx.beginPath();
+              for (var j = 0; j <= 100; j++) {
+                var a2 = (j / 100) * Math.PI * 2,
+                  px2 = cxL + Math.cos(a2) * R2 * Math.cos(tilt2 * 2),
+                  py2 = cyL + Math.sin(a2) * R2 * 0.4;
+                if (j === 0) ctx.moveTo(px2, py2);
+                else ctx.lineTo(px2, py2);
+              }
+              ctx.closePath();
+              ctx.strokeStyle = "rgba(201,169,78," + pa + ")";
+              ctx.stroke();
+              var ang1 = t * spd1,
+                ang2 = t * spd2 + Math.PI;
+              var x1 = cxL + Math.cos(ang1) * R1,
+                y1 =
+                  cyL +
+                  Math.sin(ang1) * R1 * 0.4 * Math.cos(tilt1) +
+                  Math.cos(ang1) * R1 * 0.1 * Math.sin(tilt1);
+              var x2 = cxL + Math.cos(ang2) * R2 * Math.cos(tilt2 * 2),
+                y2 = cyL + Math.sin(ang2) * R2 * 0.4;
+              trail1.push({ x: x1, y: y1 });
+              if (trail1.length > TRAIL_MAX) trail1.shift();
+              trail2.push({ x: x2, y: y2 });
+              if (trail2.length > TRAIL_MAX) trail2.shift();
+              trail1.forEach(function (p, i) {
+                var al = i / trail1.length;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3 * al, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(201,169,78," + al * 0.35 + ")";
+                ctx.fill();
+              });
+              trail2.forEach(function (p, i) {
+                var al = i / trail2.length;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3 * al, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(232,201,106," + al * 0.35 + ")";
+                ctx.fill();
+              });
+              var bs = phase.id === 2 ? lerp(6, 8, sm(phase.local)) : 6;
+              ctx.beginPath();
+              ctx.arc(x1, y1, bs, 0, Math.PI * 2);
+              glow("rgba(201,169,78,.6)", 20);
+              ctx.fillStyle = "rgba(201,169,78,.9)";
+              ctx.fill();
+              noGlow();
+              ctx.beginPath();
+              ctx.arc(x1, y1, bs * 0.4, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(255,240,200,.8)";
+              ctx.fill();
+              ctx.beginPath();
+              ctx.arc(x2, y2, bs, 0, Math.PI * 2);
+              glow("rgba(232,201,106,.6)", 20);
+              ctx.fillStyle = "rgba(232,201,106,.9)";
+              ctx.fill();
+              noGlow();
+              ctx.beginPath();
+              ctx.arc(x2, y2, bs * 0.4, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(255,245,210,.8)";
+              ctx.fill();
+              var dist = Math.hypot(x1 - x2, y1 - y2);
+              if (dist < baseR * 0.6) {
+                var str = 1 - dist / (baseR * 0.6);
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                glow("rgba(232,201,106," + str * 0.3 + ")", 8);
+                ctx.strokeStyle = "rgba(232,201,106," + str * 0.5 + ")";
+                ctx.lineWidth = 1 + str * 2;
+                ctx.stroke();
+                noGlow();
+              }
+              if (phase.id === 2 && phase.local > 0.5) {
+                var sp = (phase.local - 0.5) / 0.5,
+                  mx = (x1 + x2) / 2,
+                  my = (y1 + y2) / 2;
+                for (var si = 0; si < 16; si++) {
+                  var sa = (si * Math.PI) / 8 + t * 5,
+                    sd = sp * 35 + Math.sin(t * 8 + si) * 5,
+                    sz = 2 * (1 - sp * 0.5);
+                  ctx.beginPath();
+                  ctx.arc(
+                    mx + Math.cos(sa) * sd,
+                    my + Math.sin(sa) * sd,
+                    sz,
+                    0,
+                    Math.PI * 2,
+                  );
+                  glow("rgba(232,201,106,.3)", 4);
+                  ctx.fillStyle =
+                    "rgba(232,201,106," + (1 - sp * 0.3) * 0.7 + ")";
+                  ctx.fill();
+                  noGlow();
+                }
+              }
+            }
+            if (phase.id === 3) {
+              trail1.length = 0;
+              trail2.length = 0;
+              var e3 = sm(phase.local),
+                oR = lerp(8, 20, e3);
+              var grd = ctx.createRadialGradient(cxL, cyL, 0, cxL, cyL, oR * 3);
+              grd.addColorStop(0, "rgba(255,245,210," + (0.3 + e3 * 0.4) + ")");
+              grd.addColorStop(
+                0.3,
+                "rgba(232,201,106," + (0.2 + e3 * 0.3) + ")",
+              );
+              grd.addColorStop(1, "transparent");
+              ctx.fillStyle = grd;
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR * 3, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR, 0, Math.PI * 2);
+              glow("rgba(255,240,200,.8)", 30 + e3 * 20);
+              ctx.fillStyle = "rgba(255,245,220," + (0.7 + e3 * 0.3) + ")";
+              ctx.fill();
+              noGlow();
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR * 0.5, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(255,252,240,.9)";
+              ctx.fill();
+              for (var ri = 0; ri < 12; ri++) {
+                var ra = (ri * Math.PI) / 6 + t * 0.5,
+                  rl = (40 + e3 * 60) * (0.7 + Math.sin(t * 3 + ri) * 0.3);
+                ctx.beginPath();
+                ctx.moveTo(cxL + Math.cos(ra) * oR, cyL + Math.sin(ra) * oR);
+                ctx.lineTo(cxL + Math.cos(ra) * rl, cyL + Math.sin(ra) * rl);
+                ctx.strokeStyle =
+                  "rgba(232,201,106," +
+                  (0.1 + e3 * 0.15) * (0.5 + Math.sin(t * 4 + ri) * 0.5) +
+                  ")";
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+              }
+              var rR = oR + e3 * 80;
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, rR, 0, Math.PI * 2);
+              ctx.strokeStyle = "rgba(201,169,78," + (1 - e3) * 0.3 + ")";
+              ctx.lineWidth = 1.5;
+              ctx.stroke();
+            }
+            if (phase.id === 4) {
+              var pu = 0.5 + Math.sin(t * 2) * 0.1;
+              var grd2 = ctx.createRadialGradient(cxL, cyL, 0, cxL, cyL, 60);
+              grd2.addColorStop(0, "rgba(255,245,210," + 0.15 * pu + ")");
+              grd2.addColorStop(0.5, "rgba(232,201,106," + 0.08 * pu + ")");
+              grd2.addColorStop(1, "transparent");
+              ctx.fillStyle = grd2;
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, 60, 0, Math.PI * 2);
+              ctx.fill();
+              var oR2 = 14 + Math.sin(t * 1.5) * 2;
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR2, 0, Math.PI * 2);
+              glow("rgba(232,201,106,.5)", 25);
+              ctx.fillStyle = "rgba(255,245,220,.7)";
+              ctx.fill();
+              noGlow();
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR2 * 0.4, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(255,252,240,.85)";
+              ctx.fill();
+            }
+            requestAnimationFrame(draw);
+          }
+          requestAnimationFrame(draw);
+          var loadStart = Date.now();
+          window.addEventListener("load", function () {
+            var elapsed = Date.now() - loadStart;
+            var remain = Math.max(0, 1000 - elapsed);
+            setTimeout(function () {
+              overlay.style.opacity = "0";
+              setTimeout(function () {
+                stopped = true;
+                clearInterval(dotIv);
+                overlay.remove();
+              }, 600);
+            }, remain);
+          });
+        })();
+      </script>
+    </div>
+    <!-- ====== END LOADING OVERLAY ====== -->
+    <!-- GNB -->
+    <nav class="gnb" id="gnb">
+      <div class="gnb-inner">
+        <a href="index.html" class="gnb-logo"
+          ><img
+            src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+            alt="Noble HONG"
+        /></a>
+        <ul class="gnb-menu">
+          <li><a href="about.html">노블홍</a></li>
+          <li><a href="noblematching.html">노블매칭</a></li>
+          <li><a href="consulting.html">맞춤컨설팅</a></li>
+          <li>
+            <a href="matchinglounge.html">차별화 시스템</a>
+          </li>
+          <li><a href="campaign.html">결혼장려 공익캠페인</a></li>
+          <li>
+            <a href="matchinglab.html" class="active">매칭전략연구소</a>
+          </li>
+          <li><a href="contact.html#form">상담문의</a></li>
+        </ul>
+        <a href="contact.html#form" class="gnb-cta">상담 시작</a>
+      </div>
+      <div class="gnb-border"></div>
+    </nav>
+
+    <!-- ===== SECTION 1: HERO ===== -->
+    <section class="page-hero">
+      <div class="page-hero-bg">
+        <img
+          src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/hotel.webp"
+          alt="매칭라운지"
+        />
+      </div>
+      <div class="page-hero-pattern"></div>
+      <div class="page-hero-glow"></div>
+      <div class="page-hero-content">
+        <div class="page-hero-eyebrow">Matching Strategy Lab</div>
+        <h1>데이터로 증명하는<br /><strong>매칭 전략</strong></h1>
+        <p class="page-hero-sub">
+          30년 축적한 8,000명 성혼 데이터 기반<br />
+          사람과 사람을 잇는 과학적 매칭 연구
+        </p>
+        <div class="ornament" style="padding: 0 0 32px">
+          <span class="ornament-line"></span>
+          <span class="ornament-diamond"></span>
+          <span class="ornament-line"></span>
+        </div>
+        <a href="contact.html#form" class="btn-gold">상담 시작하기</a>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 2: 매칭전략 연구소 (Narrative E — 확정) ===== -->
+    <section id="lab">
+      <!-- BLOCK 1: Institution Definition -->
+      <div class="block block-1">
+        <div class="block-inner">
+          <div class="b1-label">Matching Strategy Lab</div>
+          <h1 class="b1-main-title">매칭 전략 <em>연구소</em></h1>
+          <h2 class="b1-title">
+            연애의 처음부터 끝까지,<br />
+            <em>전략적으로</em> 함께하는<br />
+            연애 전문 <em>연구·지원 기관</em>.
+          </h2>
+          <div class="b1-notice">
+            <span class="b1-notice-tag">NOTICE</span>
+            매칭전략연구소는 노블홍결혼정보서비스의
+            <strong>부설연구소</strong>입니다.
+          </div>
+          <p class="b1-desc">
+            매칭 전략 연구소는 남녀 간의 건강하고 진정성 있는 연애를 돕고,
+            궁극적으로 결혼까지 이어질 수 있도록 체계적인 전략과 컨설팅을
+            제공합니다. 단순한 소개팅 주선을 넘어, 개인의
+            성향·가치관·라이프스타일을 분석해 "나에게 맞는 사람"을 찾고 그
+            관계를 발전시키는 전 과정을 함께합니다.
+          </p>
+          <div class="b1-callout">
+            <div>
+              <strong>WHO WE ARE</strong>
+              <span>연애·결혼 전 과정 전문 지원 기관</span>
+            </div>
+            <div>
+              <strong>WHAT WE DO</strong>
+              <span>매칭 · 연애 컨설팅 · 결혼 준비</span>
+            </div>
+            <div>
+              <strong>HOW WE WORK</strong>
+              <span>코칭 + 컨설팅 + 연구</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCK 2: Mission Flow -->
+      <div class="block block-2">
+        <div class="block-inner">
+          <div class="b2-label">Our Mission</div>
+          <div class="b2-flow">
+            <div class="b2-step">
+              <video
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/stage1.mp4"
+                data-delay="2000"
+              ></video>
+              <div class="b2-step-overlay"></div>
+              <div class="b2-step-content">
+                <small>STAGE 01</small>
+                좋은 만남
+              </div>
+            </div>
+            <div class="b2-arrow"></div>
+            <div class="b2-step">
+              <video
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/stage2.mp4"
+                data-delay="2000"
+              ></video>
+              <div class="b2-step-overlay"></div>
+              <div class="b2-step-content">
+                <small>STAGE 02</small>
+                멋진 연애
+              </div>
+            </div>
+            <div class="b2-arrow"></div>
+            <div class="b2-step finale">
+              <video
+                muted
+                loop
+                playsinline
+                preload="metadata"
+                src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/stage3.mp4"
+                data-delay="2000"
+              ></video>
+              <div class="b2-step-overlay"></div>
+              <div class="b2-step-content">
+                <small>STAGE 03</small>
+                행복한 결혼
+              </div>
+            </div>
+          </div>
+          <p class="b2-mission-quote">
+            — 그 여정을 함께 설계하고, 끝까지 지원합니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- BLOCK 3: 3 Roles Stack -->
+      <div class="block block-3">
+        <div class="block-inner">
+          <div class="b3-head">
+            <div class="b3-eyebrow">Three Core Roles</div>
+            <h2 class="b3-title">매칭 전략 연구소의 <em>세 가지 역할</em></h2>
+          </div>
+          <div class="b3-stack">
+            <!-- Role 01 -->
+            <div class="b3-row">
+              <div class="b3-left">
+                <div class="b3-no">01</div>
+                <div class="b3-stage">MATCHING</div>
+              </div>
+              <div class="b3-body">
+                <h4>매칭</h4>
+                <div class="en">Making the Right Connection</div>
+                <p>
+                  조건이 아닌 사람을 봅니다. 성향·가치관·라이프스타일을
+                  입체적으로 읽어 "나에게 맞는 사람"을 정확히 찾아 연결합니다.
+                </p>
+              </div>
+              <div class="b3-right">
+                <strong>CORE ACTIVITIES</strong>
+                <ul>
+                  <li>개인의 성격·가치관·라이프스타일 분석</li>
+                  <li>원하는 이상형 조건 구체화</li>
+                  <li>잘 맞는 상대방과의 연결 주선</li>
+                </ul>
+              </div>
+            </div>
+            <!-- Role 02 -->
+            <div class="b3-row">
+              <div class="b3-left">
+                <div class="b3-no">02</div>
+                <div class="b3-stage">CONSULTING</div>
+              </div>
+              <div class="b3-body">
+                <h4>연애 컨설팅</h4>
+                <div class="en">Dating Consulting</div>
+                <p>
+                  만남은 시작에 불과합니다. 첫 인상부터 관계의 발전까지 단계마다
+                  필요한 전략을 설계하고, 함께 실행합니다.
+                </p>
+              </div>
+              <div class="b3-right">
+                <strong>CORE ACTIVITIES</strong>
+                <ul>
+                  <li>첫 만남부터 관계 발전까지 단계별 전략 제공</li>
+                  <li>소통 방식·데이트 방법·감정 표현 코칭</li>
+                  <li>관계에서 생기는 갈등·고민 상담 및 해결</li>
+                </ul>
+              </div>
+            </div>
+            <!-- Role 03 -->
+            <div class="b3-row">
+              <div class="b3-left">
+                <div class="b3-no">03</div>
+                <div class="b3-stage">PRE-MARRIAGE</div>
+              </div>
+              <div class="b3-body">
+                <h4>결혼 준비 지원</h4>
+                <div class="en">Pre-Marriage Coaching</div>
+                <p>
+                  연애에서 결혼으로, 자연스러운 전환을 설계합니다. 서두름 없이
+                  서로의 가치관을 점검하고 진지한 관계로 발전시키는 전략 코칭을
+                  제공합니다.
+                </p>
+              </div>
+              <div class="b3-right">
+                <strong>CORE ACTIVITIES</strong>
+                <ul>
+                  <li>연애에서 결혼으로 이어지는 과정 설계</li>
+                  <li>결혼 전 두 사람의 가치관 맞춤 점검</li>
+                  <li>진지한 관계로 발전시키는 전략 코칭</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCK 4: Differentiation Data Strip -->
+      <div class="block block-4">
+        <div class="b4-head">
+          <div class="b4-head-left">
+            <div class="b4-eyebrow">Matching Strategy Lab</div>
+            <h2 class="b4-section-title">매칭 전략 <em>연구소</em></h2>
+            <h3>
+              우리는 왜 <em>결혼정보회사가 아닌가</em>.<br />
+              네 가지 축으로 보여드립니다.
+            </h3>
+          </div>
+          <p class="note">
+            조건표로 만남을 주선하는 방식과,<br />
+            사람을 분석해 관계를 설계하는 방식의 차이.
+          </p>
+        </div>
+        <div class="b4-strip">
+          <div class="b4-grid">
+            <div class="b4-cell axis b4-head-row"><strong>AXIS</strong></div>
+            <div class="b4-cell b4-head-row"><strong>목적</strong></div>
+            <div class="b4-cell b4-head-row"><strong>방식</strong></div>
+            <div class="b4-cell b4-head-row"><strong>지원 범위</strong></div>
+            <div class="b4-cell b4-head-row"><strong>접근법</strong></div>
+
+            <div class="b4-cell axis">일반<br />결혼정보회사</div>
+            <div class="b4-cell other-val">결혼 상대 소개</div>
+            <div class="b4-cell other-val">조건 위주 매칭</div>
+            <div class="b4-cell other-val">만남 주선</div>
+            <div class="b4-cell other-val">정보 제공</div>
+
+            <div class="b4-cell axis key">매칭전략<br />연구소</div>
+            <div class="b4-cell us-val">연애 전 과정 + 결혼까지</div>
+            <div class="b4-cell us-val">성향·감정·전략 종합 분석</div>
+            <div class="b4-cell us-val">만남 → 연애 → 결혼 전 단계</div>
+            <div class="b4-cell us-val">코칭 + 컨설팅 + 연구</div>
+          </div>
+
+          <!-- 모바일 전용 비교표 (B안) -->
+          <div class="b4-mobile-table">
+            <div class="b4m-head">
+              <div class="b4m-head-cell b4m-other">
+                <div class="b4m-h-small">Others</div>
+                <div class="b4m-h-big">일반 결혼정보회사</div>
+              </div>
+              <div class="b4m-head-cell b4m-us">
+                <div class="b4m-h-small">Noble Hong</div>
+                <div class="b4m-h-big">매칭전략연구소</div>
+              </div>
+            </div>
+            <div class="b4m-row">
+              <div class="b4m-axis">목적</div>
+              <div class="b4m-cells">
+                <div class="b4m-cell b4m-other-val">결혼 상대 소개</div>
+                <div class="b4m-cell b4m-us-val">연애 전 과정 + 결혼</div>
+              </div>
+            </div>
+            <div class="b4m-row">
+              <div class="b4m-axis">방식</div>
+              <div class="b4m-cells">
+                <div class="b4m-cell b4m-other-val">조건 위주 매칭</div>
+                <div class="b4m-cell b4m-us-val">성향·감정·전략 분석</div>
+              </div>
+            </div>
+            <div class="b4m-row">
+              <div class="b4m-axis">지원 범위</div>
+              <div class="b4m-cells">
+                <div class="b4m-cell b4m-other-val">만남 주선</div>
+                <div class="b4m-cell b4m-us-val">만남 → 연애 → 결혼</div>
+              </div>
+            </div>
+            <div class="b4m-row">
+              <div class="b4m-axis">접근법</div>
+              <div class="b4m-cells">
+                <div class="b4m-cell b4m-other-val">정보 제공</div>
+                <div class="b4m-cell b4m-us-val">코칭 + 컨설팅 + 연구</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOCK 5: Final Quote -->
+      <div class="block block-5">
+        <div class="block-inner">
+          <div class="b5-mark">&ldquo;</div>
+          <p class="b5-quote">
+            내가 원하는 사람을 만나고,<br />
+            그 사람과 <em>멋진 연애</em>를 하며,<br /><br />
+            <em>행복한 결혼</em>으로 나아갈 수 있도록<br />
+            처음부터 끝까지 전략적으로<br />
+            함께 하는 연애 전문 연구소.
+          </p>
+          <div class="b5-divider"></div>
+          <div class="b5-sig">NOBLEHONG MATCHING STRATEGY LAB</div>
+          <p class="b5-disclaimer">
+            ※ 매칭전략연구소는 노블홍결혼정보서비스의 부설연구소입니다.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section" id="cta">
+      <div class="cta-bg-wrap">
+        <div class="cta-bg" id="ctaBgLounge">
+          <img
+            loading="lazy"
+            src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/cta.webp"
+            alt="웨딩"
+          />
+          <video
+            src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/cta.mp4"
+            muted
+            playsinline
+            loop
+          ></video>
+        </div>
+        <div class="cta-bg-overlay"></div>
+      </div>
+      <span
+        class="ai-image-badge"
+        style="position: absolute; bottom: 16px; right: 16px; z-index: 6"
+        >AI 이미지 사용</span
+      >
+      <div class="cta-frame"></div>
+      <div class="cta-content">
+        <h2 class="cta-title">
+          당신의 인연,<br /><strong>지금 시작됩니다</strong>
+        </h2>
+        <p class="cta-sub">주말 및 공휴일에도 상담 가능합니다</p>
+        <div class="cta-phone">1800-8194</div>
+        <p class="cta-note">
+          간단한 정보를 남겨주시면, 담당 커플매니저가 24시간 이내 연락드립니다
+        </p>
+        <div class="cta-buttons">
+          <a href="tel:1800-8194" class="btn-filled">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+              />
+            </svg>
+            전화 상담
+          </a>
+          <a href="contact.html#form" class="btn-outlined">온라인 상담 신청</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-gold-line"></div>
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+              alt="Noble HONG"
+            />
+          </div>
+          <div class="footer-info">
+            (주)노블홍 결혼정보회사 &middot; 대표 홍유진<br />
+            서울시 강남구 강남대로 354 혜천빌딩 705, 706<br />
+            사업자등록번호 321-81-03029 &middot; 국내결혼중개업
+            서울-강남-국내-22-0012호<br />
+            대표전화 1800-8194
+          </div>
+          <div
+            style="
+              margin-top: 16px;
+              padding-top: 12px;
+              border-top: 1px solid var(--border);
+              font-size: 12px;
+              color: #8c8070;
+            "
+          >
+            <span>&copy; 2026 Noble Hong. All rights reserved.</span>
+            <span style="margin-left: 16px"
+              >Designed by
+              <a
+                href="https://polarad.co.kr"
+                target="_blank"
+                rel="noopener"
+                style="color: var(--gold); text-decoration: none"
+                >POLA</a
+              ></span
+            >
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="privacy.html">개인정보처리방침</a>
+          <a href="terms.html">이용약관</a>
+          <a href="damages.html">손해배상절차</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // 노블홍 최신소식 게시판 렌더링 (news.json 기반)
+      (async () => {
+        const catMap = {
+          수상: "award",
+          미디어: "media",
+          이벤트: "event",
+          제휴: "",
+          출간: "",
+          활동: "",
+          VIP: "award",
+          소식: "",
+          공지: "",
+        };
+        const board = document.getElementById("newsBoardList");
+        if (!board) return;
+        try {
+          const res = await fetch("data/news.json");
+          const newsItems = await res.json();
+          board.innerHTML = newsItems
+            .map(
+              (n) =>
+                '<a href="/news_detail?id=' +
+                n.id +
+                '" class="news-board-item">' +
+                '<span class="news-board-cat ' +
+                (catMap[n.category] || "") +
+                '">' +
+                n.category +
+                "</span>" +
+                '<span class="news-board-item-title">' +
+                n.title +
+                "</span>" +
+                '<span class="news-board-date">' +
+                n.date +
+                "</span>" +
+                "</a>",
+            )
+            .join("");
+        } catch (e) {
+          board.innerHTML =
+            '<div style="padding:20px;color:var(--text-muted)">소식을 불러올 수 없습니다.</div>';
+        }
+      })();
+
+      // GNB scroll effect
+      window.addEventListener("scroll", () => {
+        document
+          .getElementById("gnb")
+          .classList.toggle("scrolled", window.scrollY > 60);
+      });
+
+      // GSAP Scroll Animations
+      gsap.registerPlugin(ScrollTrigger);
+
+      /* MOTION STABILITY PATCH v3 — iOS URL bar 무시 */
+      if (typeof ScrollTrigger !== "undefined" && ScrollTrigger.config) {
+        ScrollTrigger.config({
+          ignoreMobileResize: true,
+          autoRefreshEvents: "visibilitychange,DOMContentLoaded,load",
+        });
+      }
+
+      // Reveal animations
+      gsap.utils.toArray(".reveal").forEach((el, i) => {
+        gsap.to(el, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+          delay: (i % 5) * 0.08,
+        });
+      });
+
+      // CTA background video — 2초 후 재생
+      (() => {
+        const bg = document.getElementById("ctaBgLounge");
+        if (!bg) return;
+        const video = bg.querySelector("video");
+        if (!video) return;
+        let timer = null;
+        ScrollTrigger.create({
+          trigger: bg,
+          start: "top 80%",
+          end: "bottom 20%",
+          onEnter: () => {
+            timer = setTimeout(() => {
+              bg.classList.add("playing");
+              video.play().catch(() => {});
+            }, 2000);
+          },
+          onLeave: () => {
+            clearTimeout(timer);
+            bg.classList.remove("playing");
+            video.pause();
+          },
+          onEnterBack: () => {
+            timer = setTimeout(() => {
+              bg.classList.add("playing");
+              video.play().catch(() => {});
+            }, 2000);
+          },
+          onLeaveBack: () => {
+            clearTimeout(timer);
+            bg.classList.remove("playing");
+            video.pause();
+          },
+        });
+      })();
+
+      // ===== YouTube Data & Rendering =====
+      const ytVideoIds = [
+        "9pVRRU5Bahg",
+        "dxBVwPhmum0",
+        "XG4u_Eqngs0",
+        "yeebW70oT44",
+        "2Ifm4MxbGWw",
+        "y8wJ77Pnzkc",
+        "9O7PGLJawJE",
+        "C4YH6ok6P4w",
+        "SqPFYzdqom4",
+        "A9JCWuwYr4Q",
+        "ioBe1Ss66mw",
+        "ci8clgx-8E0",
+        "CiLQEmQhISU",
+        "3cPJUupAlDQ",
+        "cs-CgUT3kcI",
+        "xzkNCivI2V4",
+        "l-k8tXbQR4Q",
+        "kYujmE1PDkg",
+        "Yp9o3PZfKWU",
+        "es0fBxPDc_M",
+        "BqZ1o25CRg8",
+        "CYs7stTso3s",
+        "FGisCLhIu5k",
+        "L2X2uW5ZOuw",
+        "JqNqAioA2Pg",
+        "WXSR-aRPPCc",
+        "OewApb16Dy8",
+        "5GvZaftdIsQ",
+        "lqEB9IJT59Q",
+        "G_8Vj8d4Sg4",
+        "GjLADeU8_5U",
+        "Y4y26vkiocA",
+        "ajLFC7assQo",
+        "Sh_7Nt_QBzA",
+        "1fuINPTMyN8",
+        "8_r3tFW5j2w",
+        "EtW507sB1vY",
+        "wx6gd6ZQw9M",
+        "ocbJV12gU7M",
+        "W3j-IZYmDEs",
+        "Ix3bCeW9dVI",
+        "38-4pZbS6jU",
+        "tCGXcu3PpRQ",
+        "4V1kLtCTqns",
+        "-V-k6TElECg",
+        "adc02gz4zGY",
+        "xY5B-EuuBEA",
+        "tlQkAr6agUM",
+        "PqiIrD11Ekc",
+        "OGCRcMJoOZU",
+        "gj7MquBsMkc",
+        "1QkDvLR0NOU",
+        "hFyvBlxJd6Q",
+        "7OHs9anbUsw",
+        "gFbajc0mwgU",
+        "H9wb4AtVeUg",
+        "GIo34f76JQg",
+        "HgQ6zbFnTxs",
+        "0s0O9C3x_N8",
+        "GOcZwvqL1Jg",
+        "aBTtdS4BgFU",
+        "rHAO6aNIExc",
+        "m0i6sUP6jkE",
+        "svaGcGlhYBo",
+        "-Ea5LxwvGaY",
+        "ZMT1NzKl51o",
+        "USYQzxbVOaI",
+        "hImL4TCX0Ow",
+        "Ed0nD3h5XYo",
+        "aDqXAThh3qs",
+        "Pyp04x-VS80",
+        "UAfhkLo-DlM",
+        "0LFlzgkt3dQ",
+        "LRwU5XuuwJc",
+        "Xe1haW3P7Ks",
+        "pgmdWvPYQYM",
+        "aeYMeIOGiuw",
+        "9PiWuyJQysQ",
+        "kqTTbl3gMHs",
+        "TBrdWS_Y2TI",
+        "4zwM4HgFKw4",
+        "7KccPDIc6C8",
+        "O1Tgnecn8w0",
+        "pnZdHF0v0cU",
+        "r6qA4y1ZCu0",
+        "8HI9NGuMZ5A",
+        "JInSCRbFNh4",
+        "ckEpMt0qMMY",
+        "_Z1ekHufia4",
+        "yevpq0Egxb8",
+        "HhCfh9XGM_Y",
+        "7LZW69XTXp8",
+        "dzk8Zkl69Dc",
+        "fXSdz-AlB6k",
+        "G4cmHgxlJ3s",
+        "-mYWIr0Cy_8",
+        "uLTsxGBgD6g",
+        "zFdgJn7pGqc",
+        "8fN6NYREHew",
+        "i5dxnAmQp5I",
+        "XP6IUdINN3s",
+        "IepVQKMVADY",
+        "Kqy_wLDdXaw",
+        "eqogdpVBiQ8",
+        "Jsul0OtctuI",
+        "oBXpjIkvfl0",
+        "AB75sUCVej0",
+        "b4NU-fUO8-U",
+        "iWGfllYjumM",
+        "xpsTRdkU71Q",
+        "UjXanK8IqTc",
+        "zNEwKjn12i8",
+        "tKI-QSkkurw",
+        "AztEnsnHqAs",
+        "ep_UF3k4ZKs",
+        "OXyk8r9MC2c",
+        "ja5IB0yqxr8",
+        "EVN6P1Y-780",
+        "bkz9PbLFxF4",
+        "3V-KBDoU0Mg",
+        "L8eZB1TJOhA",
+        "3fQugusK0GY",
+        "4rT0S9YAO8I",
+        "8B0EJ0KFdgg",
+        "KGUNGMq8_3U",
+        "CWAMZK-vhX0",
+        "QvzxZsbF1b4",
+        "mLf3VAYuYnk",
+        "RIKGB2Lx2Zs",
+        "UYRxgQrbPpY",
+        "UW3EbARoqag",
+        "soRyTaUUQXU",
+        "0PGkbDemubM",
+        "lKESORSXUWs",
+        "jK1BRvf2shs",
+        "T3vZsWyD_5Y",
+        "kpejOrrfZ6w",
+        "7tjOn_J-_P8",
+        "rWEKZ4s96qw",
+        "Ji1-XRpgO5E",
+        "C44n52R5Hhw",
+        "z8nUrYU514U",
+        "ptGMMly9HAg",
+        "1NE0dUH2nRc",
+        "oohhLXtFaMs",
+        "3g1g2RU2QG8",
+        "icXPWursUs8",
+      ];
+
+      const ytShorts = [
+        { t: "연인이 보내는 이별 시그널 대처방법", id: "4fh6c6xRuik" },
+        { t: "제발 거울부터 보고 오세요", id: "GbB8z4LTRng" },
+        { t: "남자가 어린 여자만 찾는 이유", id: "LLTxb9yYpYg" },
+        { t: "맞춤법이 연애에 미치는 영향", id: "Js33eCAuf8U" },
+        { t: "MBTI 과몰입은 모솔을 부른다", id: "8GGiMksvu0M" },
+        { t: "차은우 만나는 법 알려줌", id: "APRkc5UjUT4" },
+        { t: "딱딱한 남자 좋아하는 사람?", id: "bD_pRlYufH0" },
+        { t: "직진남 류수영의 결혼이야기", id: "Dprn0VtozLs" },
+        { t: "극과긁 그 커플매니저 홍유진!", id: "dJcSMudPaHg" },
+        { t: "이런 결혼정보회사는 무조건 거르세요", id: "wJyQkpoJz_c" },
+        { t: "이런 사람 절대 만나지마세요!", id: "SqCOAlvfs3o" },
+        { t: "가장 중요한 배우자 조건은?!", id: "7iZhVXx3pfA" },
+        { t: "장서갈등 배우자에게도 문제가 있다?!", id: "6YrjtBae2SA" },
+        { t: "전세사기꾼들아 잘 들어라!", id: "0cEcpTxSee4" },
+        { t: "이 시대에 결혼, 꼭 해야할까?", id: "ynW_rNSKFB4" },
+        { t: "상간녀의 최후는 뻔하다?!", id: "Q1FTNDrfpKA" },
+        { t: "혼전동거, 이것만 알면 된다!", id: "kYz8P4oX5HA" },
+        { t: "결혼정보회사 비용, 왜 비밀일까?", id: "xR9vTqM2abc" },
+      ];
+
+      const VIDEOS_PER_PAGE = 20;
+      let ytExpanded = false;
+
+      function renderVideos() {
+        const grid = document.getElementById("ytVideoGrid");
+        grid.innerHTML = ytVideoIds
+          .map(
+            (id, i) => `
+          <div class="yt-card reveal ${i >= VIDEOS_PER_PAGE ? "hidden" : ""}" onclick="openVideoModal('${id}', false)">
+            <div class="yt-thumb">
+              <img src="https://img.youtube.com/vi/${id}/mqdefault.jpg" alt="" loading="lazy" />
+              <div class="yt-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+        const btn = document.getElementById("ytMoreBtn");
+        if (btn) {
+          btn.style.display =
+            ytVideoIds.length <= VIDEOS_PER_PAGE ? "none" : "";
+          btn.textContent = "전체보기 (" + ytVideoIds.length + "개)";
+        }
+      }
+
+      function toggleYtVideos() {
+        ytExpanded = !ytExpanded;
+        const cards = document.querySelectorAll("#ytVideoGrid .yt-card");
+        cards.forEach((card, i) => {
+          if (i >= VIDEOS_PER_PAGE) {
+            card.classList.toggle("hidden", !ytExpanded);
+            if (ytExpanded) {
+              card.style.opacity = "0";
+              card.style.transform = "translateY(24px)";
+              gsap.to(card, {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                ease: "expo.out",
+                delay: ((i - VIDEOS_PER_PAGE) % 4) * 0.06,
+              });
+            }
+          }
+        });
+        const btn = document.getElementById("ytMoreBtn");
+        btn.textContent = ytExpanded
+          ? "접기"
+          : "전체보기 (" + ytVideoIds.length + "개)";
+        btn.classList.toggle("expanded", ytExpanded);
+      }
+
+      let shortsOffset = 0;
+      const SHORTS_VISIBLE = 6;
+
+      function renderShorts() {
+        const track = document.getElementById("ytShortsGrid");
+        track.innerHTML = ytShorts
+          .map(
+            (s) => `
+          <div class="shorts-card" onclick="openVideoModal('${s.id}', true)">
+            <div class="shorts-thumb">
+              <img src="https://img.youtube.com/vi/${s.id}/0.jpg" alt="${s.t}" loading="lazy" />
+              <div class="shorts-badge">Shorts</div>
+              <div class="shorts-play"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+        updateShortsArrows();
+      }
+
+      function slideShorts(dir) {
+        const maxOffset = Math.max(0, ytShorts.length - SHORTS_VISIBLE);
+        shortsOffset = Math.max(0, Math.min(shortsOffset + dir * 3, maxOffset));
+        const track = document.getElementById("ytShortsGrid");
+        const cardWidth = track.children[0].offsetWidth + 14; // card + gap
+        track.style.transform =
+          "translateX(-" + shortsOffset * cardWidth + "px)";
+        updateShortsArrows();
+      }
+
+      function updateShortsArrows() {
+        const maxOffset = Math.max(0, ytShorts.length - SHORTS_VISIBLE);
+        document.getElementById("shortsLeft").disabled = shortsOffset <= 0;
+        document.getElementById("shortsRight").disabled =
+          shortsOffset >= maxOffset;
+      }
+
+      // Video Modal
+      function openVideoModal(videoId, isShorts) {
+        const overlay = document.getElementById("videoModal");
+        const inner = document.getElementById("videoModalInner");
+        const iframe = document.getElementById("videoIframe");
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+        inner.classList.toggle("shorts-mode", isShorts);
+        overlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeVideoModal() {
+        const overlay = document.getElementById("videoModal");
+        const iframe = document.getElementById("videoIframe");
+        iframe.src = "";
+        overlay.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+
+      document
+        .getElementById("videoModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeVideoModal();
+        });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeVideoModal();
+      });
+
+      // Init
+      renderVideos();
+
+      // ===== 매거진 허브 렌더링 =====
+      (async () => {
+        // --- 메인 슬라이더 (최신 영상 4개) ---
+        const SLIDE_COUNT = 4;
+        const slider = document.getElementById("magSlider");
+        const dotsWrap = document.getElementById("magDots");
+        if (!slider) return;
+
+        slider.innerHTML = ytVideoIds
+          .slice(0, SLIDE_COUNT)
+          .map(
+            (id, i) => `
+          <div class="mag-slide ${i === 0 ? "active" : ""}" onclick="openVideoModal('${id}', false)">
+            <div class="mag-featured-bg">
+              <img loading="lazy" src="https://img.youtube.com/vi/${id}/maxresdefault.jpg" style="width:100%;height:100%;object-fit:cover;opacity:1" />
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+
+        dotsWrap.innerHTML = ytVideoIds
+          .slice(0, SLIDE_COUNT)
+          .map(
+            (_, i) =>
+              `<span class="mag-dot ${i === 0 ? "active" : ""}"></span>`,
+          )
+          .join("");
+
+        const slides = slider.querySelectorAll(".mag-slide");
+        const dots = dotsWrap.querySelectorAll(".mag-dot");
+        let current = 0,
+          timer = null;
+
+        function goTo(idx) {
+          current = (idx + slides.length) % slides.length;
+          slides.forEach((s, i) => s.classList.toggle("active", i === current));
+          dots.forEach((d, i) => d.classList.toggle("active", i === current));
+        }
+        function autoPlay() {
+          timer = setInterval(() => goTo(current + 1), 5000);
+        }
+        function resetTimer() {
+          clearInterval(timer);
+          autoPlay();
+        }
+
+        document.getElementById("magPrev").addEventListener("click", () => {
+          goTo(current - 1);
+          resetTimer();
+        });
+        document.getElementById("magNext").addEventListener("click", () => {
+          goTo(current + 1);
+          resetTimer();
+        });
+        dots.forEach((d, i) =>
+          d.addEventListener("click", () => {
+            goTo(i);
+            resetTimer();
+          }),
+        );
+        autoPlay();
+
+        // --- 사이드: 노블홍 소식 2컬럼 (news.json 기반) ---
+        function renderCol(items, start) {
+          return items
+            .map(
+              (n, i) => `
+            <a href="/news_detail?id=${n.id}" class="mag-list-item" style="text-decoration:none">
+              <div class="mag-list-num">${String(start + i + 1).padStart(2, "0")}</div>
+              <div class="mag-list-info">
+                <div class="mag-list-top">
+                  <span class="mag-tag mag-tag-news">${n.category}</span>
+                  <h4>${n.title}</h4>
+                </div>
+                <div class="mag-list-meta">${n.date}</div>
+              </div>
+            </a>`,
+            )
+            .join("");
+        }
+
+        const sideList = document.getElementById("magSideList");
+        try {
+          const newsRes = await fetch("data/news.json");
+          const newsData = await newsRes.json();
+          sideList.innerHTML =
+            '<div class="mag-news-col">' +
+            '<div style="padding:12px 16px;font-size:14px;font-weight:700;color:#8c7030;border-bottom:1px solid rgba(196,165,90,0.15)">노블홍 소식</div>' +
+            renderCol(newsData.slice(0, 8), 0) +
+            "</div>" +
+            '<div class="mag-news-col">' +
+            '<div style="padding:12px 16px;border-bottom:1px solid rgba(196,165,90,0.15)">&nbsp;</div>' +
+            renderCol(newsData.slice(8), 8) +
+            "</div>";
+        } catch (e) {
+          sideList.innerHTML =
+            '<div style="padding:20px;color:var(--text-muted)">소식을 불러올 수 없습니다.</div>';
+        }
+
+        // --- 쇼츠 (전체, 세로 9:16) ---
+        const shortsRow = document.getElementById("magShortsRow");
+        shortsRow.innerHTML = ytShorts
+          .map(
+            (s) => `
+          <div class="mag-shorts-card" onclick="openVideoModal('${s.id}', true)">
+            <div class="mag-shorts-thumb">
+              <img loading="lazy" src="https://img.youtube.com/vi/${s.id}/oar2.jpg" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0" />
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+
+        // 쇼츠 좌우 스크롤
+        document.getElementById("shortsPrev").addEventListener("click", () => {
+          shortsRow.scrollBy({ left: -500, behavior: "smooth" });
+        });
+        document.getElementById("shortsNext").addEventListener("click", () => {
+          shortsRow.scrollBy({ left: 500, behavior: "smooth" });
+        });
+      })();
+
+      // 매거진 허브 — 실제 유튜브 데이터 연결
+      (() => {
+        const SLIDE_COUNT = 4;
+        const MINI_COUNT = 5;
+        const SHORTS_COUNT = ytShorts.length;
+
+        // 메인 슬라이더 렌더링 (최신 영상 4개)
+        const slider = document.getElementById("magSlider");
+        const dotsWrap = document.getElementById("magDots");
+        if (!slider) return;
+
+        slider.innerHTML = ytVideoIds
+          .slice(0, SLIDE_COUNT)
+          .map(
+            (id, i) => `
+          <div class="mag-slide ${i === 0 ? "active" : ""}" onclick="openVideoModal('${id}', false)">
+            <div class="mag-featured-bg">
+              <img loading="lazy" src="https://img.youtube.com/vi/${id}/maxresdefault.jpg" style="width:100%;height:100%;object-fit:cover;opacity:1" />
+            </div>
+
+          </div>
+        `,
+          )
+          .join("");
+
+        dotsWrap.innerHTML = ytVideoIds
+          .slice(0, SLIDE_COUNT)
+          .map(
+            (_, i) =>
+              `<span class="mag-dot ${i === 0 ? "active" : ""}"></span>`,
+          )
+          .join("");
+
+        // 슬라이더 제어
+        const slides = slider.querySelectorAll(".mag-slide");
+        const dots = dotsWrap.querySelectorAll(".mag-dot");
+        let current = 0;
+        let timer = null;
+
+        function goTo(idx) {
+          current = (idx + slides.length) % slides.length;
+          slides.forEach((s, i) => s.classList.toggle("active", i === current));
+          dots.forEach((d, i) => d.classList.toggle("active", i === current));
+        }
+        function autoPlay() {
+          timer = setInterval(() => goTo(current + 1), 5000);
+        }
+        function resetTimer() {
+          clearInterval(timer);
+          autoPlay();
+        }
+
+        document.getElementById("magPrev").addEventListener("click", () => {
+          goTo(current - 1);
+          resetTimer();
+        });
+        document.getElementById("magNext").addEventListener("click", () => {
+          goTo(current + 1);
+          resetTimer();
+        });
+        dots.forEach((d, i) =>
+          d.addEventListener("click", () => {
+            goTo(i);
+            resetTimer();
+          }),
+        );
+        autoPlay();
+
+        // 사이드 목록 — 노블홍 소식 게시판
+        // 쇼츠 렌더링 (실제 쇼츠 데이터)
+        const shortsRow = document.getElementById("magShortsRow");
+        shortsRow.innerHTML = ytShorts
+          .slice(0, SHORTS_COUNT)
+          .map(
+            (s) => `
+          <div class="mag-shorts-card" onclick="openVideoModal('${s.id}', true)">
+            <div class="mag-shorts-thumb">
+              <img loading="lazy" src="https://img.youtube.com/vi/${s.id}/oar2.jpg" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:.6" />
+
+              <h5>${s.t}</h5>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+      })();
+      renderShorts();
+
+      // 쇼츠 좌우 스크롤
+      (() => {
+        const row = document.getElementById("magShortsRow");
+        if (!row) return;
+        document.getElementById("shortsPrev").addEventListener("click", () => {
+          row.scrollBy({ left: -500, behavior: "smooth" });
+        });
+        document.getElementById("shortsNext").addEventListener("click", () => {
+          row.scrollBy({ left: 500, behavior: "smooth" });
+        });
+      })();
+
+      // Re-apply GSAP reveal to dynamically rendered cards
+      requestAnimationFrame(() => {
+        document
+          .querySelectorAll("#ytVideoGrid .reveal, #ytShortsGrid .reveal")
+          .forEach((el, i) => {
+            gsap.to(el, {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "expo.out",
+              scrollTrigger: {
+                trigger: el,
+                start: "top 85%",
+                toggleActions: "play none none none",
+              },
+              delay: (i % 4) * 0.06,
+            });
+          });
+      });
+      // 스페셜 맞선: 썸네일 1초 후 영상 재생
+      (() => {
+        const specialSection = document.querySelector("#special");
+        if (!specialSection) return;
+        const poster = specialSection.querySelector(".seg-poster");
+        const video = specialSection.querySelector("video");
+        if (!poster || !video) return;
+
+        const obs = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                setTimeout(() => {
+                  video
+                    .play()
+                    .then(() => {
+                      poster.style.opacity = "0";
+                    })
+                    .catch(() => {});
+                }, 1000);
+                obs.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.3 },
+        );
+        obs.observe(specialSection);
+      })();
+    </script>
+    <script>
+      // Mission Flow — 각 비디오가 뷰포트 진입 후 2초 정지 → 재생
+      (function () {
+        const videos = document.querySelectorAll(
+          "#lab .b2-step video[data-delay]",
+        );
+        videos.forEach((v) => {
+          const nudge = () => {
+            try {
+              v.currentTime = 0.01;
+            } catch (e) {}
+          };
+          if (v.readyState >= 1) nudge();
+          else v.addEventListener("loadedmetadata", nudge, { once: true });
+
+          const delay = parseInt(v.dataset.delay, 10) || 0;
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  setTimeout(() => {
+                    v.play().catch(() => {});
+                  }, delay);
+                  io.disconnect();
+                }
+              });
+            },
+            { threshold: 0.25 },
+          );
+          io.observe(v);
+        });
+      })();
+    </script>
+
+    <!-- Bottom Inquiry Bar (A-3 · Espresso Gold Frame) -->
+    <div class="bottom-inquiry-bar">
+      <div class="bib-row-main">
+        <div class="bib-head">
+          <div class="bib-eyebrow">Consultation</div>
+          <div class="bib-title">지금 상담</div>
+        </div>
+        <div class="bib-fields">
+          <input class="bib-input w-name" placeholder="이름" />
+          <input class="bib-input w-phone" placeholder="연락처" />
+          <select class="bib-select w-gender">
+            <option value="">성별</option>
+            <option>남성</option>
+            <option>여성</option>
+          </select>
+          <select class="bib-select w-marital">
+            <option value="">혼인여부</option>
+            <option>미혼</option>
+            <option>재혼</option>
+          </select>
+          <select class="bib-select w-year" id="bibYearSelect">
+            <option value="">출생연도</option>
+          </select>
+        </div>
+        <button class="bib-submit">상담 신청 →</button>
+      </div>
+      <div class="bib-row-consent">
+        <label class="bib-check"
+          ><input type="checkbox" /> 개인정보 수집·이용 동의
+          <strong>(필수)</strong></label
+        >
+        <label class="bib-check"
+          ><input type="checkbox" /> 마케팅 활용 동의
+          <strong>(선택)</strong></label
+        >
+      </div>
+    </div>
+
+    <!-- Side Inquiry Bar (B-1 · Vertical Form Card) -->
+    <div class="side-inquiry-bar">
+      <div class="sib-eyebrow">Consultation</div>
+      <div class="sib-title">간편 상담 신청</div>
+      <input class="sib-input" placeholder="이름" />
+      <input class="sib-input" placeholder="연락처" />
+      <button class="sib-submit">상담 신청 →</button>
+      <div class="sib-phone">전화 상담 <strong>1800-8194</strong></div>
+    </div>
+
+    <script>
+      (function () {
+        var sel = document.getElementById("bibYearSelect");
+        if (!sel) return;
+        var curr = new Date().getFullYear();
+        for (var y = curr - 20; y >= 1942; y--) {
+          var opt = document.createElement("option");
+          opt.value = y;
+          opt.textContent = y;
+          sel.appendChild(opt);
+        }
+      })();
+    </script>
+    <!-- GNB_ACTIVE_JS -->
+    <script>
+      (function () {
+        var pathname = location.pathname.replace(/\/$/, "");
+        var segment = pathname.split("/").pop() || "index";
+        segment = segment.replace(/\.html$/, "");
+        if (pathname === "" || pathname === "/") segment = "index";
+        document.querySelectorAll(".gnb-menu a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          var hrefSeg = href
+            .split("#")[0]
+            .split("?")[0]
+            .split("/")
+            .pop()
+            .replace(/\.html$/, "");
+          if (hrefSeg === "" && href.indexOf("/") === 0) hrefSeg = "index";
+          if (hrefSeg === segment) a.classList.add("active");
+        });
+      })();
+    </script>
+    <script src="assets/js/inquiry-bars.js" defer></script>
+
+    <!-- MOBILE NAV INJECTED v1 -->
+    <div class="bib-backdrop" aria-hidden="true"></div>
+    <button
+      type="button"
+      class="bib-trigger-mobile"
+      aria-label="무료 상담 신청 열기"
+      data-action="bib-open"
+    >
+      🔔 무료 상담 신청 받기
+      <span class="bib-trigger-mobile-arrow"></span>
+    </button>
+    <nav class="mobile-bottom-nav" aria-label="모바일 메뉴">
+      <a href="/about" class="mbn-item" data-mbn="about">노블홍</a>
+      <a href="/noblematching" class="mbn-item" data-mbn="noblematching"
+        >노블매칭</a
+      >
+      <a href="/consulting" class="mbn-item" data-mbn="consulting"
+        >맞춤컨설팅</a
+      >
+      <a href="/matchinglounge" class="mbn-item" data-mbn="matchinglounge"
+        >차별화 시스템</a
+      >
+      <a href="/campaign" class="mbn-item" data-mbn="campaign"
+        >결혼장려캠페인</a
+      >
+      <a href="/matchinglab" class="mbn-item" data-mbn="matchinglab"
+        >매칭전략연구소</a
+      >
+    </nav>
+    <script>
+      (function () {
+        var body = document.body;
+        var trigger = document.querySelector(".bib-trigger-mobile");
+        var backdrop = document.querySelector(".bib-backdrop");
+        var bib = document.querySelector(".bottom-inquiry-bar");
+        if (!body || !trigger || !backdrop || !bib) return;
+
+        // 모바일 닫기 버튼 주입 (한 번만)
+        if (!bib.querySelector(".bib-close-mobile")) {
+          var close = document.createElement("button");
+          close.type = "button";
+          close.className = "bib-close-mobile";
+          close.setAttribute("aria-label", "닫기");
+          close.textContent = "✕";
+          bib.insertBefore(close, bib.firstChild);
+          close.addEventListener("click", function () {
+            body.classList.remove("bib-open");
+          });
+        }
+
+        trigger.addEventListener("click", function () {
+          body.classList.add("bib-open");
+        });
+        backdrop.addEventListener("click", function () {
+          body.classList.remove("bib-open");
+        });
+
+        // 현재 페이지 mbn-item active
+        var path = (location.pathname || "")
+          .replace(/\.html$/, "")
+          .replace(/\/$/, "");
+        var slug = (path.split("/").pop() || "").toLowerCase();
+        document.querySelectorAll(".mbn-item").forEach(function (a) {
+          if (a.dataset.mbn === slug) a.classList.add("active");
+        });
+      })();
+    </script>
+    <!-- END MOBILE NAV INJECTED v1 -->
+
+    <script src="assets/visual-viewport.js" defer></script>
+  </body>
+</html>

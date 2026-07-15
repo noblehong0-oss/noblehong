@@ -1,0 +1,4157 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GP98TNL451"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GP98TNL451');
+  </script>
+  <link rel="canonical" href="https://www.noblehong.com/contact" />
+  <meta name="twitter:image" content="https://www.noblehong.com/og-contact.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:url" content="https://www.noblehong.com/contact" />
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev" crossorigin>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>상담문의 — 노블홍 결혼정보회사</title>
+    <meta property="og:title" content="상담문의 — 노블홍 결혼정보회사" />
+    <meta
+      property="og:description"
+      content="무료 상담 신청. 전화 1800-8194 / 온라인 상담 / 방문 상담."
+    />
+    <meta property="og:image" content="https://www.noblehong.com/og-contact.jpg" />
+    <meta property="og:type" content="website" />
+    <meta
+      name="description"
+      content="무료 상담 신청. 전화 1800-8194, 온라인, 방문 상담. 강남역 4번출구 도보 3분."
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon.ico"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-16x16.png"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <style>
+      :root {
+        --bg: #fffefb;
+        --surface: #ffffff;
+        --surface-warm: #f9f6ef;
+        --surface-cream: #f2ece0;
+        --border: #e8e0ce;
+        --border-gold: rgba(184, 154, 90, 0.25);
+        --text: #2c2820;
+        --text-secondary: #5c5040;
+        --text-muted: #8c8070;
+        --gold: #b89a5a;
+        --gold-light: #d4b870;
+        --gold-lighter: #d9c577;
+        --gold-dark: #8c7030;
+        --gold-bg: rgba(184, 154, 90, 0.04);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Pretendard Variable", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      /* ===== GNB ===== */
+      .gnb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: #fffefb;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+        transition: all 0.4s ease;
+        padding-top: env(safe-area-inset-top);
+      }
+      .gnb-border {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent 10%,
+          var(--gold-light) 50%,
+          transparent 90%
+        );
+        opacity: 0.5;
+      }
+      .gnb-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 40px;
+        height: 88px;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-inner {
+        height: 64px;
+      }
+      .gnb-logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+      }
+      .gnb-logo img {
+        height: 72px;
+        width: auto;
+        transition: height 0.4s ease;
+      }
+      .gnb.scrolled .gnb-logo img {
+        height: 48px;
+      }
+      .gnb-menu {
+        display: flex;
+        gap: 40px;
+        list-style: none;
+      }
+      @media (max-width: 768px) {
+        .gnb-menu {
+          display: none;
+        }
+      }
+      .gnb-menu a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        padding: 8px 0;
+        position: relative;
+        color: #1a1714;
+        transition: color 0.3s;
+      }
+      .gnb-menu a::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--gold-dark),
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .gnb-menu a:hover,
+      .gnb-menu a.active {
+        color: var(--gold-dark);
+      }
+      .gnb-menu a:hover::after,
+      .gnb-menu a.active::after {
+        width: 100%;
+      }
+      .gnb-cta {
+        padding: 10px 24px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #a8854a;
+        background: linear-gradient(
+          135deg,
+          #d4bd7a 0%,
+          #b8924a 55%,
+          #a8854a 100%
+        );
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        border-radius: 2px;
+        text-decoration: none;
+        color: #ffffff;
+        transition: all 0.3s;
+        white-space: nowrap;
+        box-shadow: 0 2px 10px rgba(168, 133, 74, 0.2);
+      }
+      .gnb-cta:hover {
+        background: linear-gradient(
+          135deg,
+          #e0c888 0%,
+          #c99a52 55%,
+          #b8924a 100%
+        );
+        border-color: #b8924a;
+        color: #ffffff;
+        box-shadow: 0 6px 20px rgba(168, 133, 74, 0.38);
+        transform: translateY(-1px);
+      }
+
+      /* ===== REVEAL ===== */
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      /* ===== HERO ===== */
+      .page-hero {
+        padding-top: 88px;
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        background: #fffefb;
+      }
+      .page-hero-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .page-hero-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .page-hero-bg::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(250, 246, 235, 0.72) 0%,
+          rgba(248, 240, 220, 0.5) 40%,
+          rgba(255, 254, 251, 0.92) 100%
+        );
+        pointer-events: none;
+      }
+      .page-hero-pattern {
+        position: absolute;
+        inset: 0;
+        opacity: 0.02;
+        pointer-events: none;
+        background-image: repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 40px,
+          var(--gold) 40px,
+          var(--gold) 41px
+        );
+      }
+      .page-hero-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 400px;
+        background: radial-gradient(
+          ellipse,
+          rgba(196, 165, 90, 0.08) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .page-hero-content {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+      .page-hero-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 16px;
+        font-weight: 500;
+        font-style: italic;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        color: #6b4f18;
+        margin-bottom: 24px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 100% 50%;
+        }
+        50% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+      @keyframes titleShimmer {
+        0%,
+        100% {
+          background-position: 100% 50%;
+        }
+        50% {
+          background-position: 0% 50%;
+        }
+      }
+      .page-hero h1 {
+        font-size: clamp(44px, 6vw, 80px);
+        font-weight: 500;
+        color: #0d0b08;
+        letter-spacing: -1.5px;
+        line-height: 1.22;
+        margin-bottom: 28px;
+      }
+      .page-hero h1 strong {
+        font-weight: 800;
+        background: linear-gradient(
+          90deg,
+          #c4a55a 0%,
+          #e8c572 25%,
+          #f4dd96 50%,
+          #e8c572 75%,
+          #c4a55a 100%
+        );
+        background-size: 220% 100%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        display: inline-block;
+        padding: 0.05em 0.3em;
+        animation: titleShimmer 5s ease-in-out infinite;
+      }
+      .page-hero h1 strong::before {
+        content: "";
+        position: absolute;
+        inset: 2px;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(212, 168, 74, 0.18) 0%,
+          rgba(184, 146, 74, 0.06) 55%,
+          transparent 80%
+        );
+        z-index: -1;
+        pointer-events: none;
+        border-radius: 1px;
+      }
+      .page-hero h1 strong::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #2a1d0a;
+        border: 1px solid #b89a5a;
+        outline: 1px solid rgba(184, 146, 74, 0.45);
+        outline-offset: 4px;
+        border-radius: 2px;
+        z-index: -2;
+        box-shadow: 0 10px 28px rgba(20, 14, 6, 0.35);
+        pointer-events: none;
+      }
+      .page-hero-sub {
+        font-size: 20px;
+        color: #2c2820;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+        line-height: 1.85;
+        max-width: 580px;
+        margin: 0 auto 20px;
+      }
+      .page-hero-phone {
+        font-size: 52px;
+        font-weight: 800;
+        color: #0d0b08;
+        letter-spacing: -1px;
+        margin-bottom: 8px;
+      }
+      .page-hero-hours {
+        font-size: 15px;
+        color: #6b6257;
+      }
+
+      /* ===== SECTION COMMON ===== */
+      .section {
+        padding: 100px 40px;
+      }
+      .section-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .section-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .section-title {
+        font-size: clamp(28px, 3.5vw, 42px);
+        font-weight: 700;
+        margin-bottom: 16px;
+        line-height: 1.3;
+      }
+      .section-desc {
+        font-size: 16px;
+        line-height: 1.7;
+        margin-bottom: 48px;
+      }
+      .section-dark {
+        background: #f9f6ef;
+        color: #2c2820;
+      }
+      .section-dark .section-eyebrow {
+        color: var(--gold);
+      }
+      .section-dark .section-title {
+        color: #2c2820;
+      }
+      .section-dark .section-title strong {
+        background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .section-dark .section-desc {
+        color: #5c5040;
+      }
+      .section-cream {
+        background: var(--bg);
+      }
+      .section-cream .section-eyebrow {
+        color: var(--gold);
+      }
+      .section-cream .section-title strong {
+        color: var(--gold);
+      }
+      .section-cream .section-desc {
+        color: var(--text-secondary);
+      }
+
+      /* ===== SECTION 2: 상담 방법 3가지 ===== */
+      .channel-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+      .channel-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 40px 32px;
+        text-align: center;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        overflow: hidden;
+      }
+      .channel-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--gold), var(--gold-light));
+        transform: scaleX(0);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .channel-card:hover::before {
+        transform: scaleX(1);
+      }
+      .channel-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(160, 128, 48, 0.1);
+        border-color: var(--border-gold);
+      }
+      .channel-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          rgba(160, 128, 48, 0.08),
+          rgba(196, 165, 90, 0.04)
+        );
+        border: 1px solid var(--border-gold);
+      }
+      .channel-icon svg {
+        width: 28px;
+        height: 28px;
+        stroke: var(--gold);
+        fill: none;
+        stroke-width: 1.5;
+      }
+      .channel-card h4 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: var(--text);
+      }
+      .channel-card p {
+        font-size: 15px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+      .channel-highlight {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--gold);
+        margin: 16px 0 8px;
+        letter-spacing: 1px;
+      }
+      .channel-sub {
+        font-size: 13px;
+        color: var(--text-muted);
+      }
+
+      /* ===== SECTION 3: 상담 신청 폼 ===== */
+      .form-wrap {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      .form-notice {
+        background: rgba(196, 165, 90, 0.06);
+        border: 1px solid var(--border-gold);
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-bottom: 40px;
+        font-size: 15px;
+        color: #5c5040;
+        line-height: 1.7;
+        text-align: center;
+      }
+      .form-notice strong {
+        color: var(--gold-dark);
+      }
+      .form-row {
+        margin-bottom: 24px;
+      }
+      .form-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #5c5040;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+      }
+      .form-label .required {
+        color: #e85555;
+        margin-left: 4px;
+        font-size: 12px;
+      }
+      .form-radio-group {
+        display: flex;
+        gap: 16px;
+      }
+      /* radio는 visually hidden (display:none이면 required focus 불가) */
+      .form-radio {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      .form-radio:focus + .form-radio-label {
+        outline: 2px solid var(--gold);
+        outline-offset: 2px;
+      }
+      .form-radio-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        min-height: 44px;
+        border: 1px solid #e8e0ce;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        color: #5c5040;
+        transition: all 0.3s;
+        flex: 1;
+        justify-content: center;
+      }
+      .form-radio:checked + .form-radio-label {
+        border-color: var(--gold);
+        color: var(--gold-dark);
+        background: rgba(196, 165, 90, 0.08);
+      }
+      .form-radio-label:hover {
+        border-color: rgba(196, 165, 90, 0.4);
+      }
+      .form-input,
+      .form-select {
+        width: 100%;
+        padding: 14px 16px;
+        background: #ffffff;
+        border: 1px solid #e8e0ce;
+        border-radius: 8px;
+        font-size: 15px;
+        color: #2c2820;
+        font-family: inherit;
+        transition: border-color 0.3s;
+        outline: none;
+      }
+      .form-input:focus,
+      .form-select:focus {
+        border-color: var(--gold);
+      }
+      .form-input::placeholder {
+        color: #8c8070;
+      }
+      .form-input[readonly] {
+        background: rgba(255, 255, 255, 0.06);
+        cursor: pointer;
+      }
+      .form-input-sub {
+        font-size: 14px;
+      }
+      .form-address-wrap {
+        display: flex;
+        gap: 10px;
+      }
+      .form-address-wrap .form-input {
+        flex: 1;
+      }
+      .form-address-btn {
+        flex-shrink: 0;
+        padding: 0 22px;
+        background: var(--gold);
+        color: #ffffff;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        white-space: nowrap;
+        letter-spacing: 0.3px;
+        transition:
+          background 0.3s,
+          transform 0.2s;
+      }
+      .form-address-btn:hover {
+        background: var(--gold-light);
+        transform: translateY(-1px);
+      }
+      .form-textarea {
+        width: 100%;
+        padding: 14px 18px;
+        background: #ffffff;
+        border: 1px solid rgba(196, 165, 90, 0.35);
+        border-radius: 10px;
+        color: #2c2820;
+        font-size: 15px;
+        font-family: inherit;
+        line-height: 1.6;
+        resize: vertical;
+        min-height: 110px;
+        transition:
+          border-color 0.3s,
+          background 0.3s;
+      }
+      .form-textarea:focus {
+        outline: none;
+        border-color: var(--gold);
+        background: #ffffff;
+      }
+      .form-textarea::placeholder {
+        color: #8c8070;
+      }
+      .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23c4a55a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+      }
+      .form-select option {
+        background: #ffffff;
+        color: #2c2820;
+      }
+      .form-checkbox-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 12px;
+        min-height: 44px;
+        padding: 4px 0;
+      }
+      .form-checkbox {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 22px;
+        height: 22px;
+        margin-top: 2px;
+        cursor: pointer;
+        border: 2px solid var(--gold-dark);
+        border-radius: 3px;
+        background: #fff;
+        position: relative;
+        flex-shrink: 0;
+        transition: all 0.2s;
+      }
+      .form-checkbox:hover {
+        border-color: var(--gold);
+      }
+      .form-checkbox:checked {
+        background: var(--gold);
+        border-color: var(--gold);
+      }
+      .form-checkbox:checked::after {
+        content: "";
+        position: absolute;
+        left: 6px;
+        top: 1px;
+        width: 6px;
+        height: 12px;
+        border: solid #ffffff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+      .form-checkbox-text {
+        font-size: 14px;
+        color: #8c8070;
+        line-height: 1.5;
+      }
+      .form-checkbox-text a {
+        color: var(--gold-dark);
+        text-decoration: underline;
+      }
+      .form-submit-wrap {
+        text-align: center;
+        margin-top: 36px;
+      }
+      .form-submit {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 48px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        font-size: 16px;
+        font-weight: 700;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+        font-family: inherit;
+      }
+      .form-submit:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(160, 128, 48, 0.3);
+      }
+      .form-submit:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        filter: none;
+      }
+      .form-security {
+        text-align: center;
+        margin-top: 16px;
+        font-size: 12px;
+        color: #8c8070;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 6px;
+        line-height: 1.5;
+      }
+      .form-security svg {
+        width: 14px;
+        height: 14px;
+        stroke: #8c8070;
+        fill: none;
+        stroke-width: 1.5;
+        flex-shrink: 0;
+        margin-top: 3px;
+      }
+      .form-security span {
+        text-align: center;
+      }
+      .form-legal-notice {
+        margin-top: 20px;
+        padding: 18px 22px;
+        background: rgba(184, 154, 90, 0.08);
+        border: 1px solid rgba(184, 154, 90, 0.35);
+        border-left: 3px solid var(--gold);
+        border-radius: 8px;
+      }
+      .form-legal-notice-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--gold-dark, #8c7030);
+        margin-bottom: 8px;
+        letter-spacing: 0.3px;
+      }
+      .form-legal-notice-title svg {
+        width: 16px;
+        height: 16px;
+        stroke: var(--gold-dark, #8c7030);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .form-legal-notice p {
+        font-size: 12.5px;
+        line-height: 1.75;
+        color: #6b5d4a;
+        margin: 0;
+      }
+      .form-legal-notice p strong {
+        color: var(--gold-dark, #8c7030);
+        font-weight: 700;
+      }
+
+      /* ===== 제출 확인 모달 ===== */
+      .submit-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 500;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .submit-modal.open {
+        display: flex;
+        animation: modalFadeIn 0.25s ease;
+      }
+      @keyframes modalFadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .submit-modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(20, 14, 4, 0.65);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+      }
+      .submit-modal-panel {
+        position: relative;
+        background: #fff;
+        border-radius: 14px;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        animation: modalSlideUp 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      @keyframes modalSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .submit-modal-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 24px 28px 18px;
+        background: linear-gradient(
+          135deg,
+          rgba(184, 154, 90, 0.1),
+          rgba(184, 154, 90, 0.04)
+        );
+        border-bottom: 1px solid rgba(184, 154, 90, 0.25);
+      }
+      .submit-modal-header svg {
+        width: 28px;
+        height: 28px;
+        stroke: #b8424a;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .submit-modal-header h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2c2820;
+        margin: 0;
+        letter-spacing: -0.2px;
+      }
+      .submit-modal-body {
+        padding: 22px 28px 14px;
+      }
+      .submit-modal-body p {
+        font-size: 14px;
+        line-height: 1.7;
+        color: #3d3425;
+        margin: 0 0 12px;
+      }
+      .submit-modal-body p strong {
+        color: #8c2030;
+        font-weight: 700;
+      }
+      .submit-modal-highlight {
+        padding: 12px 14px;
+        background: rgba(184, 42, 60, 0.06);
+        border-left: 3px solid #b8424a;
+        border-radius: 6px;
+        margin: 14px 0 10px !important;
+        font-size: 13.5px !important;
+      }
+      .submit-modal-highlight strong {
+        color: #b8424a !important;
+      }
+      .submit-modal-link {
+        display: inline-block;
+        font-size: 12.5px;
+        color: #8c7030;
+        text-decoration: none;
+        letter-spacing: 0.2px;
+        margin-top: 6px;
+      }
+      .submit-modal-link:hover {
+        color: #b89a5a;
+        text-decoration: underline;
+      }
+      .submit-modal-footer {
+        display: flex;
+        gap: 10px;
+        padding: 16px 28px 24px;
+        background: #fafaf7;
+        border-top: 1px solid #efebe2;
+      }
+      .submit-modal-btn {
+        flex: 1;
+        padding: 13px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        letter-spacing: 0.3px;
+        transition: all 0.25s;
+        border: 1px solid transparent;
+      }
+      .submit-modal-btn.cancel {
+        background: #fff;
+        border-color: #d8d0c0;
+        color: #5c5040;
+      }
+      .submit-modal-btn.cancel:hover {
+        border-color: #8c7030;
+        color: #2c2820;
+      }
+      .submit-modal-btn.confirm {
+        background: #8c2030;
+        color: #fff;
+      }
+      .submit-modal-btn.confirm:hover {
+        background: #6c1020;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(140, 32, 48, 0.25);
+      }
+      .submit-modal-btn.confirm:disabled {
+        background: #5c5040;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+      @media (max-width: 500px) {
+        .submit-modal-header {
+          padding: 18px 20px 14px;
+        }
+        .submit-modal-body {
+          padding: 16px 20px 10px;
+        }
+        .submit-modal-footer {
+          padding: 14px 20px 18px;
+        }
+      }
+
+      .form-result {
+        text-align: center;
+        margin-top: 20px;
+        padding: 16px;
+        border-radius: 8px;
+        font-size: 15px;
+        display: none;
+      }
+      .form-result.success {
+        display: block;
+        background: rgba(0, 180, 80, 0.1);
+        border: 1px solid rgba(0, 180, 80, 0.3);
+        color: #00b450;
+      }
+      .form-result.error {
+        display: block;
+        background: rgba(220, 50, 50, 0.1);
+        border: 1px solid rgba(220, 50, 50, 0.3);
+        color: #dc3232;
+      }
+
+      /* ===== SECTION 4: 오시는 길 ===== */
+      .location-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: start;
+      }
+      .location-map {
+        aspect-ratio: 4 / 3;
+        border-radius: 16px;
+        overflow: hidden;
+        background: var(--surface-warm);
+        border: 1px solid var(--border);
+      }
+      .location-map iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+      .location-info h3 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        color: var(--text);
+      }
+      .location-item {
+        display: flex;
+        gap: 14px;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .location-item:last-child {
+        border-bottom: none;
+      }
+      .location-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(160, 128, 48, 0.08);
+        border: 1px solid var(--border-gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .location-icon svg {
+        width: 16px;
+        height: 16px;
+        stroke: var(--gold);
+        fill: none;
+        stroke-width: 1.5;
+      }
+      .location-text {
+        font-size: 15px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+      .location-text strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .location-badge {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 8px 16px;
+        background: rgba(160, 128, 48, 0.06);
+        border: 1px solid var(--border-gold);
+        border-radius: 999px;
+        font-size: 13px;
+        color: var(--gold);
+        font-weight: 600;
+      }
+
+      /* ===== ORNAMENT ===== */
+      .ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 40px 0;
+      }
+      .ornament-line {
+        width: 80px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+      }
+      .ornament-diamond {
+        width: 8px;
+        height: 8px;
+        border: 1px solid var(--gold-light);
+        transform: rotate(45deg);
+      }
+
+      /* ===== CTA ===== */
+      .cta-section {
+        padding: 140px 32px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-bg-wrap {
+        position: absolute;
+        inset: 0;
+      }
+      .cta-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .cta-bg img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        filter: contrast(0.7) brightness(0.85);
+        transition: opacity 1.2s ease;
+      }
+      .cta-bg video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        opacity: 0;
+        filter: contrast(0.7) brightness(0.85);
+        transition: opacity 1.2s ease;
+      }
+      .cta-bg.playing img {
+        opacity: 0;
+      }
+      .cta-bg.playing video {
+        opacity: 1;
+      }
+      .cta-bg-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(30, 24, 10, 0.75);
+        z-index: 1;
+      }
+      .cta-frame {
+        position: absolute;
+        inset: 60px;
+        border: 1px solid rgba(196, 165, 90, 0.3);
+        pointer-events: none;
+        border-radius: 2px;
+        z-index: 2;
+      }
+      .cta-content {
+        position: relative;
+        z-index: 3;
+      }
+      .cta-title {
+        font-size: clamp(30px, 4vw, 44px);
+        font-weight: 200;
+        margin-bottom: 12px;
+        color: rgba(255, 255, 255, 0.95);
+      }
+      .cta-title strong {
+        font-weight: 600;
+        background: linear-gradient(135deg, #b89a5a, var(--gold-lighter));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-sub {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 8px;
+      }
+      .cta-phone {
+        font-family: "Pretendard Variable", sans-serif;
+        font-size: 42px;
+        margin: 28px 0;
+        background: linear-gradient(135deg, #b89a5a, #d4b870, #b89a5a);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .cta-note {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.4);
+        margin-bottom: 32px;
+      }
+      .cta-buttons {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+      }
+      .cta-section .btn-filled {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 28px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .cta-section .btn-filled:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(160, 128, 48, 0.3);
+      }
+      .cta-section .btn-outlined {
+        display: inline-flex;
+        align-items: center;
+        padding: 14px 28px;
+        border: 1px solid var(--gold-light);
+        color: var(--gold-dark);
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+        letter-spacing: 0.5px;
+      }
+      .cta-section .btn-outlined:hover {
+        background: rgba(196, 165, 90, 0.1);
+        transform: translateY(-2px);
+      }
+
+      /* ===== FOOTER ===== */
+      .footer {
+        padding: 56px 40px 40px;
+        background: linear-gradient(135deg, #f9f6ef 0%, #f2ece0 100%);
+        border-top: 2px solid var(--gold);
+      }
+      .footer-gold-line {
+        height: 1px;
+        margin-bottom: 56px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-light),
+          transparent
+        );
+        opacity: 0.3;
+      }
+      .footer-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-logo {
+        margin-bottom: 16px;
+      }
+      .footer-logo img {
+        height: 52px;
+        width: auto;
+        opacity: 1;
+      }
+      .footer-info {
+        font-size: 13px;
+        color: #8c8070;
+        line-height: 1.9;
+      }
+      .footer-links {
+        display: flex;
+        gap: 28px;
+      }
+      .footer-links a {
+        font-size: 14px;
+        color: var(--gold);
+        text-decoration: none;
+        letter-spacing: 0.3px;
+        transition: color 0.3s;
+        min-height: 44px;
+        padding: 12px 8px;
+        display: inline-flex;
+        align-items: center;
+      }
+      .footer-links a:hover {
+        color: var(--gold);
+      }
+
+      .ai-image-badge {
+        font-size: 12px;
+        font-weight: 400;
+        letter-spacing: 0.5px;
+        color: #8c8070;
+        background: rgba(249, 246, 239, 0.7);
+        backdrop-filter: blur(4px);
+        padding: 4px 10px;
+        border-radius: 2px;
+        pointer-events: none;
+      }
+      /* 인앱브라우저 전화 바로연결 바 */
+      .inapp-call-bar {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-light));
+        text-align: center;
+      }
+      .inapp-call-bar a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .inapp-call-bar svg {
+        width: 20px;
+        height: 20px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2;
+      }
+      .inapp-call-bar.visible {
+        display: block;
+      }
+
+      /* ===== BOTTOM INQUIRY BAR (Espresso + Gold Frame) ===== */
+      .bottom-inquiry-bar {
+        position: fixed;
+        left: 20px;
+        right: 20px;
+        bottom: 16px;
+        z-index: 99;
+        background: #2a1d0a;
+        border: 1px solid #b89a5a;
+        outline: 1px solid rgba(184, 146, 74, 0.45);
+        outline-offset: 3px;
+        border-radius: 2px;
+        padding: 18px 22px;
+        box-shadow: 0 14px 36px rgba(20, 14, 6, 0.4);
+      }
+      .bib-row-main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .bib-head {
+        flex-shrink: 0;
+        padding-right: 16px;
+        border-right: 1px solid rgba(184, 146, 74, 0.3);
+      }
+      .bib-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12px;
+        font-style: italic;
+        letter-spacing: 3px;
+        color: #d4bd7a;
+        text-transform: uppercase;
+      }
+      .bib-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: #f4dd96;
+        letter-spacing: -0.2px;
+        white-space: nowrap;
+      }
+      .bib-fields {
+        display: flex;
+        gap: 7px;
+      }
+      .bib-input,
+      .bib-select {
+        padding: 14px 14px;
+        font-size: 14px;
+        border-radius: 2px;
+        border: 1px solid rgba(212, 189, 122, 0.35);
+        background: rgba(244, 221, 150, 0.06);
+        color: #ffffff;
+        min-width: 0;
+        font-family: inherit;
+      }
+      .bib-input::placeholder {
+        color: rgba(244, 236, 212, 0.4);
+      }
+      .bib-select option {
+        background: #ffffff;
+        color: #1a1207;
+        font-weight: 500;
+      }
+      .bib-input.w-name {
+        flex: 0 0 100px;
+      }
+      .bib-input.w-phone {
+        flex: 0 0 130px;
+      }
+      .bib-select.w-gender {
+        flex: 0 0 85px;
+      }
+      .bib-select.w-marital {
+        flex: 0 0 110px;
+      }
+      .bib-select.w-year {
+        flex: 0 0 110px;
+      }
+      .bib-submit {
+        padding: 14px 28px;
+        background: linear-gradient(135deg, #d4bd7a, #b8924a);
+        color: #1a1207;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+        border: 1px solid #d4bd7a;
+        border-radius: 2px;
+        cursor: pointer;
+        white-space: nowrap;
+        font-family: inherit;
+        transition: all 0.3s;
+      }
+      .bib-submit:hover {
+        background: linear-gradient(135deg, #e8c572, #c99a52);
+      }
+      .bib-row-consent {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 10px;
+        padding-top: 8px;
+      }
+      .bib-check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: rgba(244, 236, 212, 0.72);
+        cursor: pointer;
+        min-height: 44px;
+        padding: 6px 4px;
+      }
+      .bib-check strong {
+        color: #d4bd7a;
+      }
+      .bib-check input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        accent-color: #b89a5a;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      /* ===== SIDE INQUIRY BAR (Vertical Form Card) ===== */
+      .side-inquiry-bar {
+        position: fixed;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 220px;
+        z-index: 95;
+        background: #1a1207;
+        border: 1px solid #b89a5a;
+        outline: 1px solid rgba(184, 146, 74, 0.4);
+        outline-offset: 3px;
+        border-radius: 2px;
+        padding: 18px 16px;
+        box-shadow: 0 14px 36px rgba(20, 14, 6, 0.4);
+      }
+      .sib-eyebrow {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 10.5px;
+        font-style: italic;
+        letter-spacing: 3px;
+        color: #d4bd7a;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 6px;
+      }
+      .sib-title {
+        font-size: 13px;
+        font-weight: 800;
+        color: #f4dd96;
+        text-align: center;
+        margin-bottom: 12px;
+      }
+      .sib-input {
+        width: 100%;
+        padding: 9px 11px;
+        background: rgba(244, 221, 150, 0.06);
+        border: 1px solid rgba(212, 189, 122, 0.3);
+        color: #ffffff;
+        font-size: 12px;
+        border-radius: 2px;
+        margin-bottom: 8px;
+        font-family: inherit;
+      }
+      .sib-input::placeholder {
+        color: rgba(244, 236, 212, 0.4);
+      }
+      .sib-submit {
+        width: 100%;
+        padding: 10px;
+        background: linear-gradient(135deg, #d4bd7a, #b8924a);
+        color: #1a1207;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.3s;
+      }
+      .sib-submit:hover {
+        background: linear-gradient(135deg, #e8c572, #c99a52);
+      }
+      .sib-phone {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(184, 146, 74, 0.2);
+        text-align: center;
+        color: #d4bd7a;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+      }
+      .sib-phone strong {
+        color: #f4dd96;
+        font-size: 14px;
+        font-weight: 800;
+      }
+      @media (max-width: 1280px) {
+        .side-inquiry-bar {
+          display: none;
+        }
+      }
+      @media (max-width: 960px) {
+        .bib-input.w-name,
+        .bib-input.w-phone,
+        .bib-select.w-gender,
+        .bib-select.w-marital,
+        .bib-select.w-year {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+        .bib-head {
+          display: none;
+        }
+      }
+      @media (max-width: 720px) {
+        .bottom-inquiry-bar {
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-radius: 0;
+          padding: 10px 14px calc(10px + env(safe-area-inset-bottom)) 14px;
+        }
+        .bib-row-main {
+          flex-wrap: wrap;
+        }
+        .bib-fields {
+          flex-wrap: wrap;
+        }
+        .bib-submit {
+          width: 100%;
+          margin-top: 8px;
+        }
+      }
+
+      /* ===== MOBILE NAV INJECTED v1 — 분리형 하단(메뉴바 + 접수바 토글) + GNB 로고 가운데 ===== */
+      .mobile-bottom-nav,
+      .bib-trigger-mobile,
+      .bib-close-mobile {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        /* GNB 헤더 — 로고 가운데 + CTA 우측 + 72px 고정 */
+        .gnb-inner {
+          position: relative;
+        }
+        .gnb-logo {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          margin: 0;
+        }
+        .gnb-logo img,
+        .gnb.scrolled .gnb-logo img {
+          height: 56px !important;
+          width: auto;
+        }
+        .gnb-cta {
+          margin-left: auto;
+          padding: 8px 14px !important;
+          font-size: 12px !important;
+          letter-spacing: 0.2px !important;
+          min-height: 40px !important;
+        }
+
+        /* 페이지 콘텐츠 하단 여유 (메뉴바 88px + trigger 44px + safe-area) */
+        body {
+          padding-bottom: calc(132px + env(safe-area-inset-bottom));
+        }
+
+        /* 모바일 하단 메뉴바 — 3x2 grid, 항상 visible */
+        .mobile-bottom-nav {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-auto-rows: 44px;
+          background: #fffefb;
+          border-top: 1px solid rgba(184, 154, 90, 0.2);
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          z-index: 95;
+          padding-bottom: env(safe-area-inset-bottom);
+          box-shadow: 0 -2px 8px rgba(44, 40, 32, 0.06);
+        }
+        .mbn-item {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #2c2820;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.2px;
+          text-decoration: none;
+          border-right: 1px solid rgba(184, 154, 90, 0.15);
+          border-bottom: 1px solid rgba(184, 154, 90, 0.15);
+          transition:
+            background 0.2s,
+            color 0.2s;
+        }
+        .mbn-item:nth-child(3n) {
+          border-right: none;
+        }
+        .mbn-item:nth-last-child(-n + 3) {
+          border-bottom: none;
+        }
+        .mbn-item:active,
+        .mbn-item.active {
+          background: linear-gradient(135deg, #d4bd7a 0%, #b8924a 100%);
+          color: #fff;
+        }
+
+        /* 접수바 trigger 버튼 — 메뉴바 위 */
+        .bib-trigger-mobile {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: calc(88px + env(safe-area-inset-bottom));
+          height: 44px;
+          background: linear-gradient(
+            135deg,
+            #d4bd7a 0%,
+            #b8924a 55%,
+            #a8854a 100%
+          );
+          color: #fff;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.4px;
+          border: none;
+          border-top: 1px solid #a8854a;
+          cursor: pointer;
+          z-index: 96;
+          box-shadow: 0 -1px 4px rgba(44, 40, 32, 0.08);
+        }
+        .bib-trigger-mobile-arrow {
+          display: inline-block;
+          width: 0;
+          height: 0;
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-bottom: 6px solid #fff;
+          transition: transform 0.3s;
+        }
+        body.bib-open .bib-trigger-mobile {
+          display: none;
+        }
+
+        /* 기존 bottom-inquiry-bar 모바일 동작 — 접힘 → 슬라이드 업 */
+        .bottom-inquiry-bar {
+          left: 0 !important;
+          right: 0 !important;
+          bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+          border-radius: 0 !important;
+          transform: translateY(110%);
+          transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+          z-index: 97;
+          max-height: 75vh;
+          overflow-y: auto;
+        }
+        body.bib-open .bottom-inquiry-bar {
+          transform: translateY(0);
+        }
+
+        /* 모바일에서 접수바 안에 닫기 버튼 노출 */
+        .bib-close-mobile {
+          display: flex;
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          width: 36px;
+          height: 36px;
+          align-items: center;
+          justify-content: center;
+          background: transparent;
+          border: 1px solid rgba(244, 236, 212, 0.32);
+          border-radius: 50%;
+          color: #f4ecd4;
+          font-size: 16px;
+          cursor: pointer;
+          z-index: 2;
+        }
+
+        /* 접수바 backdrop (열림 시) */
+        .bib-backdrop {
+          display: none;
+          position: fixed;
+          inset: 0;
+          background: rgba(20, 14, 6, 0.5);
+          z-index: 96;
+        }
+        body.bib-open .bib-backdrop {
+          display: block;
+        }
+      }
+      /* ===== END MOBILE NAV INJECTED v1 ===== */
+
+      /* MOBILE NAV PATCH v2 — 접수바 모바일 hide (trigger + form 모두), 메뉴바만 노출 */
+      @media (max-width: 768px) {
+        body {
+          padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+        }
+        .bib-trigger-mobile,
+        .bib-backdrop,
+        .bottom-inquiry-bar {
+          display: none !important;
+        }
+      }
+
+      /* MOTION STABILITY PATCH v3 — 카운터 흔들림 방지 */
+      .stat-num,
+      .ceo-stat-num,
+      .stat-num-glow {
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+      }
+      .stat-item,
+      .ceo-stat-item {
+        contain: layout style;
+      }
+      /* ===== END MOTION STABILITY PATCH v3 ===== */
+
+      /* HERO MOBILE PATCH v4 — CTA 버튼 + 한글 고아텍스트 방지 */
+      .hero-title,
+      .hero-sub,
+      .page-hero h1,
+      .page-hero p,
+      .hero-strong,
+      .hero-eyebrow {
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        text-wrap: pretty;
+      }
+
+      @media (max-width: 768px) {
+        .hero-cta-group,
+        .page-hero-cta-group {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+          padding: 0 24px;
+          max-width: 360px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .hero-cta-group .btn,
+        .page-hero-cta-group .btn,
+        .hero-cta-group a,
+        .page-hero-cta-group a {
+          width: 100%;
+          padding: 14px 18px !important;
+          font-size: 15px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0 !important;
+          justify-content: center;
+          gap: 6px;
+          min-height: 48px;
+          white-space: nowrap;
+        }
+        .hero-cta-group svg,
+        .page-hero-cta-group svg {
+          width: 18px;
+          height: 18px;
+        }
+        .hero-sub,
+        .page-hero p {
+          font-size: 14px !important;
+          line-height: 1.6 !important;
+          padding: 0 16px;
+          max-width: 100%;
+        }
+      }
+      /* ===== END HERO MOBILE PATCH v4 ===== */
+
+      /* MOTION ANTI-SHAKE PATCH v6 — 모바일 흔들림 완전 차단 */
+      @media (max-width: 768px) {
+        /* 1) reveal 대상 transform 무력화 (opacity fade만 남김) */
+        .stat-item,
+        .ceo-stat-item,
+        .ceo-stats-bar,
+        .chart-card,
+        .ceo-image-wrap,
+        .ceo-content,
+        .reveal,
+        .reveal-up,
+        .qualify-card,
+        .qualify-card-media,
+        .ceo-bg-cell,
+        .strength-card,
+        .why-block,
+        .program-card,
+        .yt-card,
+        .lovecol-item,
+        .news-item,
+        .blog-card,
+        .insta-card,
+        .award-item,
+        .mou-item,
+        .notice-item,
+        .press-item {
+          transform: none !important;
+          transition-property: opacity !important;
+        }
+
+        /* SplitText chars — stagger 무력화 (한 번에 페이드) */
+        .svc-line1 .char,
+        .svc-line2 .char,
+        .char {
+          transform: none !important;
+          opacity: 1 !important;
+        }
+
+        /* 2) 카운터 width 잠금 */
+        .stat-num,
+        .ceo-stat-num,
+        .stat-num-glow {
+          display: inline-block !important;
+          min-width: 4em;
+          text-align: center !important;
+          font-variant-numeric: tabular-nums !important;
+          contain: layout style;
+        }
+        /* stat-num은 block로 부모에 width 100% — 자식 inline-block 처럼 동작 */
+        .stat-num {
+          display: block !important;
+          min-width: 0;
+          width: 100%;
+        }
+        .ceo-stat-num {
+          display: block !important;
+          min-width: 0;
+          width: 100%;
+        }
+
+        /* 3) 고정 요소 GPU layer 강제 (스크롤 시 repaint 최소화) */
+        .gnb,
+        .mobile-bottom-nav,
+        .bottom-inquiry-bar,
+        .side-inquiry-bar {
+          transform: translate3d(0, 0, 0);
+          -webkit-transform: translate3d(0, 0, 0);
+          will-change: transform;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+        }
+
+        /* 4) hero 진입 직후 안정화 (이미지 fixed bg는 모바일에서 attachment scroll로) */
+        .hero-bg,
+        .stats-bg,
+        [data-bg-fixed] {
+          background-attachment: scroll !important;
+        }
+
+        /* 5) 카운팅 섹션 컨테이너에 paint 격리 */
+        .stats-grid,
+        .ceo-stats-bar,
+        .chart-section {
+          contain: layout style paint;
+        }
+      }
+      /* ===== END MOTION ANTI-SHAKE PATCH v6 ===== */
+
+      /* ORPHAN PROTECTION v7 — 한국어 고아텍스트/단어 wrap 차단 */
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      .qualify-title,
+      .qualify-desc,
+      .qualify-label,
+      .stat-label,
+      .stat-sub,
+      .stat-note,
+      .ceo-stat-label,
+      .ceo-quote,
+      .ceo-bio,
+      .ceo-name,
+      .ceo-role,
+      .ceo-meaning-note,
+      .ceo-card .bio-list,
+      .ceo-card .bio-list li,
+      .ceo-card-heading,
+      .why-block-sub,
+      .strength-card strong,
+      .strength-card p,
+      .lovecol-item-title,
+      .lovecol-item-desc,
+      .yt-card-title,
+      .news-item-title,
+      .blog-card-title,
+      .insta-card-caption,
+      .program-card-title,
+      .program-card-desc,
+      .award-name,
+      .award-detail,
+      .mou-item-name,
+      .notice-item-title,
+      .press-item-title,
+      .section-title,
+      .section-desc,
+      .page-hero h1,
+      .page-hero p,
+      .hero-strong,
+      .qualify-card strong,
+      .qualify-card p,
+      .reveal strong,
+      .reveal p {
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        text-wrap: pretty;
+      }
+
+      @media (max-width: 768px) {
+        .qualify-title {
+          font-size: 22px !important;
+          line-height: 1.35 !important;
+          letter-spacing: -0.3px !important;
+        }
+        .qualify-desc {
+          font-size: 13px !important;
+          line-height: 1.6 !important;
+          padding: 0 12px;
+        }
+        .stat-label {
+          font-size: 14px !important;
+        }
+        .stat-sub,
+        .stat-note {
+          font-size: 12px !important;
+        }
+        .ceo-stat-label {
+          font-size: 11px !important;
+          line-height: 1.3 !important;
+        }
+        /* why-noble 카드 모바일에서 1열로 (가로 영역 확보) */
+        section#whyNoble
+          > div
+          > div[style*="grid-template-columns:repeat(2,1fr)"],
+        section#whyNoble
+          > div
+          > div[style*="grid-template-columns: repeat(2, 1fr)"] {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 12px !important;
+        }
+      }
+      /* ===== END ORPHAN PROTECTION v7 ===== */
+
+      /* LAYOUT REFINE v8 — CEO 재배치 + events 슬라이드 + CTA 버튼 모바일 */
+      @media (max-width: 768px) {
+        /* 1) CEO 프로필 모바일 — 이미지+상단정보 가로분할, bio 이하 풀폭 */
+        .ceo-top {
+          display: grid !important;
+          grid-template-columns: 120px 1fr !important;
+          grid-template-areas:
+            "img badge"
+            "img quote"
+            "img name"
+            "img role"
+            "bio bio"
+            "note note"
+            "stats stats" !important;
+          column-gap: 14px !important;
+          row-gap: 6px !important;
+          align-items: start !important;
+        }
+        .ceo-content {
+          display: contents !important;
+        }
+        .ceo-image-wrap {
+          grid-area: img;
+          align-self: start;
+        }
+        .ceo-title-badge {
+          grid-area: badge;
+          align-self: end;
+          margin-bottom: 0 !important;
+        }
+        .ceo-quote {
+          grid-area: quote;
+        }
+        .ceo-name {
+          grid-area: name;
+        }
+        .ceo-role {
+          grid-area: role;
+          align-self: start;
+        }
+        .ceo-bio {
+          grid-area: bio;
+          margin-top: 18px !important;
+        }
+        .ceo-meaning-note {
+          grid-area: note;
+        }
+        .ceo-stats-bar {
+          grid-area: stats;
+          margin-top: 12px !important;
+        }
+
+        /* 2) events-grid 모바일 horizontal scroll snap */
+        .events-grid {
+          display: flex !important;
+          grid-template-columns: none !important;
+          overflow-x: auto;
+          overflow-y: hidden;
+          scroll-snap-type: x mandatory;
+          gap: 12px !important;
+          padding: 4px 16px 12px !important;
+          margin: 0 -16px !important;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+        }
+        .events-grid::-webkit-scrollbar {
+          display: none;
+        }
+        .events-grid > .event-card {
+          flex: 0 0 240px;
+          min-width: 240px;
+          scroll-snap-align: start;
+          padding: 32px 24px !important;
+        }
+        .events-grid > .event-card .event-icon svg,
+        .events-grid > .event-card .event-icon img {
+          width: 48px !important;
+          height: 48px !important;
+        }
+        .events-grid > .event-card .event-name {
+          font-size: 15px !important;
+        }
+        .events-grid > .event-card .event-desc {
+          font-size: 12px !important;
+        }
+
+        /* 3) CTA 버튼 모바일 — hero 패턴과 통일 */
+        .cta-buttons {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px !important;
+          padding: 0 24px;
+          max-width: 360px;
+          margin-left: auto !important;
+          margin-right: auto !important;
+        }
+        .cta-buttons .btn,
+        .cta-buttons a {
+          width: 100%;
+          padding: 14px 18px !important;
+          font-size: 15px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0 !important;
+          justify-content: center;
+          gap: 6px;
+          min-height: 48px;
+        }
+        .cta-buttons svg {
+          width: 18px;
+          height: 18px;
+        }
+        .cta-note {
+          font-size: 13px !important;
+          line-height: 1.7 !important;
+          padding: 0 16px;
+          word-break: keep-all;
+        }
+        .cta-note strong {
+          font-size: 14px !important;
+          display: inline-block;
+          margin-top: 4px;
+        }
+      }
+      /* ===== END LAYOUT REFINE v8 ===== */
+
+      /* LAYOUT v9 — CEO meaning heading + events-header 모바일 */
+      .ceo-meaning-heading {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--gold-dark);
+        margin: 18px 0 6px;
+        letter-spacing: -0.2px;
+        word-break: keep-all;
+        position: relative;
+        padding-left: 12px;
+      }
+      .ceo-meaning-heading::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 4px;
+        bottom: 4px;
+        width: 3px;
+        background: linear-gradient(
+          180deg,
+          var(--gold-light),
+          var(--gold-dark)
+        );
+        border-radius: 2px;
+      }
+
+      @media (max-width: 768px) {
+        /* CEO meaning heading 풀폭 */
+        .ceo-meaning-heading {
+          grid-column: 1 / -1;
+          font-size: 13px !important;
+          margin: 14px 0 6px !important;
+        }
+
+        /* events-header 모바일 — column stack */
+        .events-header {
+          flex-direction: column !important;
+          align-items: center !important;
+          gap: 14px !important;
+          text-align: center;
+        }
+        .events-header > div:first-child {
+          width: 100%;
+        }
+        .events-title-wrap {
+          justify-content: center;
+        }
+        .events-title-wrap #eventsTitle,
+        .events-title-wrap .qualify-title {
+          font-size: 22px !important;
+          white-space: nowrap;
+        }
+        .events-title-wrap .ceo-title-badge-line {
+          flex: 0 0 24px;
+          max-width: 24px;
+        }
+        .events-header-right {
+          width: 100%;
+          text-align: center;
+        }
+        .events-header-right a {
+          display: inline-block;
+          padding: 10px 14px;
+          font-size: 14px !important;
+          min-height: 44px;
+          line-height: 24px;
+        }
+      }
+      /* ===== END LAYOUT v9 ===== */
+
+      /* FOOTER MOBILE v10 — 링크 vertical 위, 브랜드 아래 */
+      @media (max-width: 768px) {
+        .footer {
+          padding: 16px 20px 24px !important;
+        }
+        .footer-inner {
+          flex-direction: column-reverse !important;
+          align-items: stretch !important;
+          gap: 12px !important;
+        }
+        .footer-links {
+          flex-direction: column !important;
+          align-items: stretch !important;
+          gap: 0 !important;
+          padding: 0 0 8px 0 !important;
+          margin: 0 !important;
+          border-bottom: 1px solid #e8e0ce;
+        }
+        .footer-links a {
+          display: block !important;
+          width: 100% !important;
+          padding: 12px 4px !important;
+          border-bottom: 1px solid rgba(184, 154, 90, 0.2);
+          min-height: 44px;
+          font-size: 14px !important;
+        }
+        .footer-links a:last-child {
+          border-bottom: none;
+        }
+        .footer-info {
+          font-size: 12px !important;
+          line-height: 1.8 !important;
+          word-break: keep-all;
+        }
+        .footer-logo {
+          margin-bottom: 8px !important;
+        }
+        .footer-logo img {
+          height: 32px;
+          width: auto;
+        }
+      }
+      /* ===== END FOOTER MOBILE v10 ===== */
+
+      /* MOBILE NAV C-FLOATING v11 — 떠 있는 둥근 카드 */
+      @media (max-width: 768px) {
+        body {
+          padding-bottom: calc(110px + env(safe-area-inset-bottom)) !important;
+        }
+        .mobile-bottom-nav {
+          position: fixed !important;
+          bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+          left: 12px !important;
+          right: 12px !important;
+          background: linear-gradient(
+            180deg,
+            #2a1d0a 0%,
+            #1a1208 100%
+          ) !important;
+          border: 1px solid #b89a5a !important;
+          outline: 1px solid rgba(184, 146, 74, 0.45);
+          outline-offset: 2px;
+          border-radius: 16px !important;
+          box-shadow:
+            0 12px 32px rgba(20, 14, 6, 0.35),
+            0 4px 12px rgba(212, 184, 112, 0.18);
+          display: grid !important;
+          grid-template-columns: repeat(3, 1fr);
+          grid-auto-rows: 44px;
+          overflow: hidden;
+          padding-bottom: 0 !important;
+          z-index: 95;
+        }
+        .mbn-item {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          color: #d4bd7a !important;
+          font-size: 11px !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.1px !important;
+          text-decoration: none !important;
+          border-right: 1px solid rgba(184, 154, 90, 0.18) !important;
+          border-bottom: 1px solid rgba(184, 154, 90, 0.18) !important;
+          background: transparent !important;
+          transition: all 0.2s;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding: 0 4px;
+        }
+        .mbn-item:nth-child(3n) {
+          border-right: none !important;
+        }
+        .mbn-item:nth-last-child(-n + 3) {
+          border-bottom: none !important;
+        }
+        .mbn-item:active,
+        .mbn-item.active {
+          background: linear-gradient(
+            135deg,
+            #d4bd7a 0%,
+            #b8924a 100%
+          ) !important;
+          color: #1a1208 !important;
+        }
+      }
+      /* ===== END MOBILE NAV C-FLOATING v11 ===== */
+
+      /* ===== Contact 페이지 모바일 패치 (channels/form/location) ===== */
+      @media (max-width: 768px) {
+        /* === SECTION 2: 상담 방법 3카드 → 1col stack === */
+        .channel-grid {
+          grid-template-columns: 1fr !important;
+          gap: 12px !important;
+        }
+        .channel-card {
+          padding: 22px 20px !important;
+        }
+        .channel-icon {
+          width: 48px !important;
+          height: 48px !important;
+          margin: 0 auto 12px !important;
+        }
+        .channel-icon svg {
+          width: 22px !important;
+          height: 22px !important;
+        }
+        .channel-card h4 {
+          font-size: 17px !important;
+          margin-bottom: 8px !important;
+        }
+        .channel-highlight {
+          font-size: 22px !important;
+          margin: 8px 0 6px !important;
+          letter-spacing: 0.5px !important;
+        }
+        .channel-card p {
+          font-size: 12.5px !important;
+          line-height: 1.6 !important;
+          word-break: keep-all;
+        }
+        .channel-card p br {
+          display: none;
+        }
+        .channel-sub {
+          font-size: 11px !important;
+        }
+
+        /* ===== SECTION 3: 입력 폼 — D안 라이트 톤 (모바일 전용) ===== */
+        /* 폼 섹션 배경 다크 → 라이트 */
+        section#form.section-dark {
+          background: linear-gradient(
+            180deg,
+            #fefcf6 0%,
+            #faf6ea 100%
+          ) !important;
+          color: var(--text) !important;
+        }
+        section#form .section-eyebrow {
+          color: var(--gold-dark) !important;
+        }
+        section#form .section-title {
+          color: var(--text) !important;
+        }
+        section#form .section-title strong {
+          background: linear-gradient(
+            135deg,
+            var(--gold-light),
+            var(--gold-dark)
+          ) !important;
+          -webkit-background-clip: text !important;
+          -webkit-text-fill-color: transparent !important;
+        }
+
+        .form-wrap {
+          max-width: 100% !important;
+          padding: 18px 16px !important;
+          background: #ffffff !important;
+          border-radius: 14px !important;
+          border: 1px solid rgba(140, 112, 48, 0.15) !important;
+          box-shadow: 0 4px 14px rgba(42, 29, 10, 0.05) !important;
+        }
+        .form-notice {
+          padding: 10px 12px !important;
+          font-size: 10.5px !important;
+          letter-spacing: -0.2px !important;
+          margin-bottom: 16px !important;
+          line-height: 1.55 !important;
+          border-radius: 6px !important;
+          word-break: keep-all;
+          background: rgba(184, 154, 90, 0.1) !important;
+          border: 1px solid rgba(184, 154, 90, 0.3) !important;
+          color: var(--text-secondary) !important;
+          text-align: center !important;
+        }
+        .form-notice strong {
+          color: var(--gold-dark) !important;
+        }
+
+        /* form-pair — 모바일 grid 2 cols */
+        .form-pair {
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          gap: 14px !important;
+          margin-bottom: 14px !important;
+        }
+        .form-pair .form-row {
+          margin-bottom: 0 !important;
+        }
+        .form-row {
+          margin-bottom: 14px !important;
+        }
+
+        /* 라벨 — 골드 다크 10px uppercase */
+        .form-label {
+          font-size: 10px !important;
+          font-weight: 700 !important;
+          letter-spacing: 1.2px !important;
+          text-transform: uppercase !important;
+          color: var(--gold-dark) !important;
+          margin-bottom: 4px !important;
+        }
+        .form-label .required {
+          font-size: 11px !important;
+          color: #d24545 !important;
+        }
+
+        /* 라디오 — 흰 카드 + 골드 active */
+        .form-radio-group {
+          gap: 6px !important;
+          padding: 4px 0 0 !important;
+        }
+        .form-radio-label {
+          padding: 8px 6px !important;
+          font-size: 12px !important;
+          min-height: 36px !important;
+          border-radius: 6px !important;
+          background: #ffffff !important;
+          border: 1px solid rgba(140, 112, 48, 0.3) !important;
+          color: var(--text-secondary) !important;
+          font-weight: 600 !important;
+        }
+        .form-radio:checked + .form-radio-label {
+          background: linear-gradient(
+            135deg,
+            rgba(212, 184, 112, 0.2),
+            rgba(184, 154, 90, 0.08)
+          ) !important;
+          border-color: var(--gold) !important;
+          color: var(--gold-dark) !important;
+          font-weight: 700 !important;
+        }
+
+        /* 인풋/select — 밑줄 스타일 */
+        .form-input,
+        .form-select {
+          padding: 7px 2px 6px !important;
+          font-size: 14px !important;
+          font-weight: 500 !important;
+          background: transparent !important;
+          border: none !important;
+          border-bottom: 1px solid rgba(140, 112, 48, 0.3) !important;
+          border-radius: 0 !important;
+          color: var(--text) !important;
+        }
+        .form-input::placeholder {
+          color: rgba(108, 96, 74, 0.45) !important;
+        }
+        .form-input:focus,
+        .form-select:focus {
+          border-bottom-color: var(--gold-dark) !important;
+          outline: none !important;
+        }
+
+        /* textarea — 흰 카드 */
+        .form-textarea {
+          padding: 10px 12px !important;
+          font-size: 13px !important;
+          min-height: 70px !important;
+          border-radius: 6px !important;
+          background: #ffffff !important;
+          border: 1px solid rgba(140, 112, 48, 0.25) !important;
+          color: var(--text) !important;
+        }
+        .form-textarea::placeholder {
+          color: rgba(108, 96, 74, 0.5) !important;
+        }
+
+        .form-address-wrap {
+          gap: 6px !important;
+        }
+        .form-address-btn {
+          padding: 0 14px !important;
+          font-size: 12px !important;
+          border-radius: 6px !important;
+        }
+
+        /* 체크박스 — 데스크톱 정의 유지 (체크 표시 동작 보존) */
+        .form-checkbox-row {
+          padding: 5px 0 !important;
+          min-height: 0 !important;
+          margin-bottom: 8px !important;
+        }
+        .form-checkbox-text {
+          font-size: 11.5px !important;
+          line-height: 1.5 !important;
+          color: var(--text-secondary) !important;
+        }
+        .form-checkbox-text a {
+          color: var(--gold-dark) !important;
+        }
+
+        /* 제출 버튼 — 골드 그라디언트 */
+        .form-submit-btn,
+        button[type="submit"] {
+          padding: 12px !important;
+          font-size: 14px !important;
+          font-weight: 700 !important;
+          background: linear-gradient(
+            135deg,
+            var(--gold-dark),
+            #6e5a24
+          ) !important;
+          color: #ffffff !important;
+          border-radius: 8px !important;
+          letter-spacing: 0.5px !important;
+        }
+
+        /* === SECTION 4: 오시는 길 — 1col stack === */
+        .location-split {
+          grid-template-columns: 1fr !important;
+          gap: 18px !important;
+        }
+        .location-map {
+          aspect-ratio: 4 / 3 !important;
+          border-radius: 12px !important;
+        }
+        .location-info h3 {
+          font-size: 18px !important;
+          margin-bottom: 14px !important;
+        }
+        .location-item {
+          padding: 10px 0 !important;
+          gap: 12px !important;
+        }
+        .location-icon {
+          width: 32px !important;
+          height: 32px !important;
+        }
+        .location-icon svg {
+          width: 14px !important;
+          height: 14px !important;
+        }
+        .location-text {
+          font-size: 13px !important;
+          line-height: 1.55 !important;
+        }
+        .location-badge {
+          font-size: 12px !important;
+          padding: 6px 12px !important;
+          margin-top: 14px !important;
+        }
+      }
+
+      /* ===== CTA Section 모바일 패치 (frame inset 정리) ===== */
+      @media (max-width: 768px) {
+        .cta-section {
+          padding: 80px 20px !important;
+        }
+        .cta-frame {
+          inset: 18px !important;
+          border-color: rgba(196, 165, 90, 0.22) !important;
+          border-radius: 8px !important;
+        }
+        .cta-title {
+          font-size: 26px !important;
+          line-height: 1.3 !important;
+        }
+        .cta-sub {
+          font-size: 13px !important;
+          margin-bottom: 6px !important;
+        }
+        .cta-phone {
+          font-size: 32px !important;
+          margin: 20px 0 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ====== LOADING OVERLAY (self-contained) ====== -->
+    <div
+      id="loading-overlay"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+        background: #f9f6ef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.6s ease;
+      "
+    >
+      <canvas
+        id="loading-cv"
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%"
+      ></canvas>
+      <div
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          pointer-events: none;
+          z-index: 2;
+        "
+      >
+        <div
+          id="loading-msg"
+          style="
+            font-family: &quot;Noto Serif KR&quot;, serif;
+            font-size: 18px;
+            font-weight: 300;
+            color: #3d3425;
+            letter-spacing: 4px;
+            transform: translateY(55px);
+          "
+        >
+          당신의 인연을 매칭하는 중<span
+            id="loading-dots"
+            style="
+              display: inline-block;
+              width: 2em;
+              text-align: left;
+              letter-spacing: 2px;
+            "
+          ></span>
+        </div>
+        <div
+          style="
+            font-family: &quot;Cormorant Garamond&quot;, serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(140, 112, 48, 0.9);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            transform: translateY(65px);
+            margin-top: 8px;
+          "
+        >
+          Noble Hong Premium Matching
+        </div>
+      </div>
+      <script>
+        (function () {
+          var overlay = document.getElementById("loading-overlay");
+          var cv = document.getElementById("loading-cv");
+          var ctx = cv.getContext("2d");
+          var dpr = window.devicePixelRatio || 1;
+          var W, H, cxL, cyL;
+          function rs() {
+            W = window.innerWidth;
+            H = window.innerHeight;
+            cv.width = W * dpr;
+            cv.height = H * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            cv.style.width = W + "px";
+            cv.style.height = H + "px";
+            cxL = W / 2;
+            cyL = H / 2;
+          }
+          rs();
+          window.addEventListener("resize", function () {
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            rs();
+          });
+          var dotsEl = document.getElementById("loading-dots");
+          var dc = 0;
+          var dotIv = setInterval(function () {
+            dc = (dc + 1) % 4;
+            dotsEl.textContent = ".".repeat(dc);
+          }, 500);
+          var ambients = [];
+          for (var i = 0; i < 30; i++) {
+            ambients.push({
+              x: Math.random() * 2 - 1,
+              y: Math.random() * 2 - 1,
+              vx: (Math.random() - 0.5) * 0.2,
+              vy: (Math.random() - 0.5) * 0.2,
+              size: 0.5 + Math.random() * 1.5,
+              phase: Math.random() * Math.PI * 2,
+            });
+          }
+          var trail1 = [],
+            trail2 = [],
+            TRAIL_MAX = 50;
+          var t = 0,
+            lastTime = performance.now(),
+            stopped = false;
+          function glow(co, bl) {
+            ctx.shadowColor = co;
+            ctx.shadowBlur = bl;
+          }
+          function noGlow() {
+            ctx.shadowBlur = 0;
+          }
+          function sm(x) {
+            return x * x * (3 - 2 * x);
+          }
+          function lerp(a, b, t) {
+            return a + (b - a) * t;
+          }
+          function getPhase(time) {
+            if (time < 6) return { id: 0, local: time / 6 };
+            if (time < 9) return { id: 1, local: (time - 6) / 3 };
+            if (time < 10.5) return { id: 2, local: (time - 9) / 1.5 };
+            if (time < 12) return { id: 3, local: (time - 10.5) / 1.5 };
+            return { id: 4, local: (time - 12) / 2 };
+          }
+          function draw(now) {
+            if (stopped) return;
+            var dt = Math.min(50, now - lastTime) / 1000;
+            lastTime = now;
+            t += dt;
+            var loopT = t % 14,
+              phase = getPhase(loopT);
+            ctx.clearRect(0, 0, W, H);
+            ambients.forEach(function (p) {
+              p.x += p.vx * dt;
+              p.y += p.vy * dt;
+              if (Math.abs(p.x) > 1.2) p.vx *= -1;
+              if (Math.abs(p.y) > 1.2) p.vy *= -1;
+              var px = cxL + p.x * cxL * 0.8,
+                py = cyL + p.y * cyL * 0.8,
+                tw = 0.3 + Math.sin(t * 2 + p.phase) * 0.3;
+              ctx.beginPath();
+              ctx.arc(px, py, p.size, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(201,169,78," + tw * 0.08 + ")";
+              ctx.fill();
+            });
+            var baseR = Math.min(W, H) * 0.18,
+              R1,
+              R2,
+              tilt1,
+              tilt2,
+              spd1,
+              spd2;
+            if (phase.id === 0) {
+              R1 = baseR;
+              R2 = baseR;
+              tilt1 = 0.35;
+              tilt2 = -0.35;
+              spd1 = 1.8;
+              spd2 = 1.8;
+            } else if (phase.id === 1) {
+              var e = sm(phase.local);
+              R1 = lerp(baseR, baseR * 0.25, e);
+              R2 = R1;
+              tilt1 = lerp(0.35, 0.1, e);
+              tilt2 = lerp(-0.35, -0.1, e);
+              spd1 = lerp(1.8, 2.5, e);
+              spd2 = spd1;
+            } else if (phase.id === 2) {
+              var e2 = sm(phase.local);
+              R1 = lerp(baseR * 0.25, baseR * 0.05, e2);
+              R2 = R1;
+              tilt1 = 0.1;
+              tilt2 = -0.1;
+              spd1 = lerp(2.5, 3.5, e2);
+              spd2 = spd1;
+            } else {
+              R1 = 0;
+              R2 = 0;
+              tilt1 = 0;
+              tilt2 = 0;
+              spd1 = 0;
+              spd2 = 0;
+            }
+            if (phase.id <= 2) {
+              var pa = phase.id === 2 ? 0.06 * (1 - phase.local) : 0.06;
+              ctx.beginPath();
+              for (var i = 0; i <= 100; i++) {
+                var a = (i / 100) * Math.PI * 2,
+                  px = cxL + Math.cos(a) * R1,
+                  py =
+                    cyL +
+                    Math.sin(a) * R1 * 0.4 * Math.cos(tilt1) +
+                    Math.cos(a) * R1 * 0.1 * Math.sin(tilt1);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+              }
+              ctx.closePath();
+              ctx.strokeStyle = "rgba(201,169,78," + pa + ")";
+              ctx.lineWidth = 1;
+              ctx.stroke();
+              ctx.beginPath();
+              for (var j = 0; j <= 100; j++) {
+                var a2 = (j / 100) * Math.PI * 2,
+                  px2 = cxL + Math.cos(a2) * R2 * Math.cos(tilt2 * 2),
+                  py2 = cyL + Math.sin(a2) * R2 * 0.4;
+                if (j === 0) ctx.moveTo(px2, py2);
+                else ctx.lineTo(px2, py2);
+              }
+              ctx.closePath();
+              ctx.strokeStyle = "rgba(201,169,78," + pa + ")";
+              ctx.stroke();
+              var ang1 = t * spd1,
+                ang2 = t * spd2 + Math.PI;
+              var x1 = cxL + Math.cos(ang1) * R1,
+                y1 =
+                  cyL +
+                  Math.sin(ang1) * R1 * 0.4 * Math.cos(tilt1) +
+                  Math.cos(ang1) * R1 * 0.1 * Math.sin(tilt1);
+              var x2 = cxL + Math.cos(ang2) * R2 * Math.cos(tilt2 * 2),
+                y2 = cyL + Math.sin(ang2) * R2 * 0.4;
+              trail1.push({ x: x1, y: y1 });
+              if (trail1.length > TRAIL_MAX) trail1.shift();
+              trail2.push({ x: x2, y: y2 });
+              if (trail2.length > TRAIL_MAX) trail2.shift();
+              trail1.forEach(function (p, i) {
+                var al = i / trail1.length;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3 * al, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(201,169,78," + al * 0.35 + ")";
+                ctx.fill();
+              });
+              trail2.forEach(function (p, i) {
+                var al = i / trail2.length;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3 * al, 0, Math.PI * 2);
+                ctx.fillStyle = "rgba(232,201,106," + al * 0.35 + ")";
+                ctx.fill();
+              });
+              var bs = phase.id === 2 ? lerp(6, 8, sm(phase.local)) : 6;
+              ctx.beginPath();
+              ctx.arc(x1, y1, bs, 0, Math.PI * 2);
+              glow("rgba(201,169,78,.6)", 20);
+              ctx.fillStyle = "rgba(201,169,78,.9)";
+              ctx.fill();
+              noGlow();
+              ctx.beginPath();
+              ctx.arc(x1, y1, bs * 0.4, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(255,240,200,.8)";
+              ctx.fill();
+              ctx.beginPath();
+              ctx.arc(x2, y2, bs, 0, Math.PI * 2);
+              glow("rgba(232,201,106,.6)", 20);
+              ctx.fillStyle = "rgba(232,201,106,.9)";
+              ctx.fill();
+              noGlow();
+              ctx.beginPath();
+              ctx.arc(x2, y2, bs * 0.4, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(255,245,210,.8)";
+              ctx.fill();
+              var dist = Math.hypot(x1 - x2, y1 - y2);
+              if (dist < baseR * 0.6) {
+                var str = 1 - dist / (baseR * 0.6);
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                glow("rgba(232,201,106," + str * 0.3 + ")", 8);
+                ctx.strokeStyle = "rgba(232,201,106," + str * 0.5 + ")";
+                ctx.lineWidth = 1 + str * 2;
+                ctx.stroke();
+                noGlow();
+              }
+              if (phase.id === 2 && phase.local > 0.5) {
+                var sp = (phase.local - 0.5) / 0.5,
+                  mx = (x1 + x2) / 2,
+                  my = (y1 + y2) / 2;
+                for (var si = 0; si < 16; si++) {
+                  var sa = (si * Math.PI) / 8 + t * 5,
+                    sd = sp * 35 + Math.sin(t * 8 + si) * 5,
+                    sz = 2 * (1 - sp * 0.5);
+                  ctx.beginPath();
+                  ctx.arc(
+                    mx + Math.cos(sa) * sd,
+                    my + Math.sin(sa) * sd,
+                    sz,
+                    0,
+                    Math.PI * 2,
+                  );
+                  glow("rgba(232,201,106,.3)", 4);
+                  ctx.fillStyle =
+                    "rgba(232,201,106," + (1 - sp * 0.3) * 0.7 + ")";
+                  ctx.fill();
+                  noGlow();
+                }
+              }
+            }
+            if (phase.id === 3) {
+              trail1.length = 0;
+              trail2.length = 0;
+              var e3 = sm(phase.local),
+                oR = lerp(8, 20, e3);
+              var grd = ctx.createRadialGradient(cxL, cyL, 0, cxL, cyL, oR * 3);
+              grd.addColorStop(0, "rgba(255,245,210," + (0.3 + e3 * 0.4) + ")");
+              grd.addColorStop(
+                0.3,
+                "rgba(232,201,106," + (0.2 + e3 * 0.3) + ")",
+              );
+              grd.addColorStop(1, "transparent");
+              ctx.fillStyle = grd;
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR * 3, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR, 0, Math.PI * 2);
+              glow("rgba(255,240,200,.8)", 30 + e3 * 20);
+              ctx.fillStyle = "rgba(255,245,220," + (0.7 + e3 * 0.3) + ")";
+              ctx.fill();
+              noGlow();
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR * 0.5, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(255,252,240,.9)";
+              ctx.fill();
+              for (var ri = 0; ri < 12; ri++) {
+                var ra = (ri * Math.PI) / 6 + t * 0.5,
+                  rl = (40 + e3 * 60) * (0.7 + Math.sin(t * 3 + ri) * 0.3);
+                ctx.beginPath();
+                ctx.moveTo(cxL + Math.cos(ra) * oR, cyL + Math.sin(ra) * oR);
+                ctx.lineTo(cxL + Math.cos(ra) * rl, cyL + Math.sin(ra) * rl);
+                ctx.strokeStyle =
+                  "rgba(232,201,106," +
+                  (0.1 + e3 * 0.15) * (0.5 + Math.sin(t * 4 + ri) * 0.5) +
+                  ")";
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+              }
+              var rR = oR + e3 * 80;
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, rR, 0, Math.PI * 2);
+              ctx.strokeStyle = "rgba(201,169,78," + (1 - e3) * 0.3 + ")";
+              ctx.lineWidth = 1.5;
+              ctx.stroke();
+            }
+            if (phase.id === 4) {
+              var pu = 0.5 + Math.sin(t * 2) * 0.1;
+              var grd2 = ctx.createRadialGradient(cxL, cyL, 0, cxL, cyL, 60);
+              grd2.addColorStop(0, "rgba(255,245,210," + 0.15 * pu + ")");
+              grd2.addColorStop(0.5, "rgba(232,201,106," + 0.08 * pu + ")");
+              grd2.addColorStop(1, "transparent");
+              ctx.fillStyle = grd2;
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, 60, 0, Math.PI * 2);
+              ctx.fill();
+              var oR2 = 14 + Math.sin(t * 1.5) * 2;
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR2, 0, Math.PI * 2);
+              glow("rgba(232,201,106,.5)", 25);
+              ctx.fillStyle = "rgba(255,245,220,.7)";
+              ctx.fill();
+              noGlow();
+              ctx.beginPath();
+              ctx.arc(cxL, cyL, oR2 * 0.4, 0, Math.PI * 2);
+              ctx.fillStyle = "rgba(255,252,240,.85)";
+              ctx.fill();
+            }
+            requestAnimationFrame(draw);
+          }
+          requestAnimationFrame(draw);
+          var loadStart = Date.now();
+          window.addEventListener("load", function () {
+            var elapsed = Date.now() - loadStart;
+            var remain = Math.max(0, 1000 - elapsed);
+            setTimeout(function () {
+              overlay.style.opacity = "0";
+              setTimeout(function () {
+                stopped = true;
+                clearInterval(dotIv);
+                overlay.remove();
+              }, 600);
+            }, remain);
+          });
+        })();
+      </script>
+    </div>
+    <!-- ====== END LOADING OVERLAY ====== -->
+
+    <!-- GNB -->
+    <nav class="gnb" id="gnb">
+      <div class="gnb-inner">
+        <a href="index.html" class="gnb-logo"
+          ><img
+            src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+            alt="Noble HONG"
+        /></a>
+        <ul class="gnb-menu">
+          <li><a href="about.html">노블홍</a></li>
+          <li><a href="noblematching.html">노블매칭</a></li>
+          <li><a href="consulting.html">맞춤컨설팅</a></li>
+          <li><a href="matchinglounge.html">차별화 시스템</a></li>
+          <li><a href="campaign.html">결혼장려 공익캠페인</a></li>
+          <li><a href="matchinglab.html">매칭전략연구소</a></li>
+          <li>
+            <a href="contact.html#form" class="active">상담문의</a>
+          </li>
+        </ul>
+        <a href="#form" class="gnb-cta">상담 시작</a>
+      </div>
+      <div class="gnb-border"></div>
+    </nav>
+
+    <!-- ===== SECTION 1: HERO ===== -->
+    <section class="page-hero">
+      <div class="page-hero-bg">
+        <img
+          src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/unnamed_37.webp"
+          alt="상담문의"
+        />
+      </div>
+      <div class="page-hero-pattern"></div>
+      <div class="page-hero-glow"></div>
+      <span
+        class="ai-image-badge"
+        style="position: absolute; bottom: 16px; right: 16px; z-index: 6"
+        >AI 생성 이미지</span
+      >
+      <div class="page-hero-content">
+        <div class="page-hero-eyebrow">Consultation</div>
+        <h1>당신의 인연,<br /><strong>지금 시작됩니다</strong></h1>
+        <div class="page-hero-phone">1800-8194</div>
+        <p class="page-hero-hours">
+          평일 · 주말 · 공휴일 오전 09:00 ~ 오후 09:00
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 2: 상담 방법 3가지 (크림) ===== -->
+    <section class="section section-cream" id="channels">
+      <div class="section-inner">
+        <div class="section-eyebrow reveal">How to Consult</div>
+        <h2 class="section-title reveal">
+          편한 방법으로 <strong>상담을 시작하세요</strong>
+        </h2>
+        <p class="section-desc reveal">
+          10년 이상 경력의 전문 커플매니저가 1:1 맞춤 상담을 진행합니다
+        </p>
+
+        <div class="channel-grid">
+          <!-- 전화 상담 -->
+          <div class="channel-card reveal">
+            <div class="channel-icon">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+                />
+              </svg>
+            </div>
+            <h4>전화 상담</h4>
+            <div class="channel-highlight">1800-8194</div>
+            <p>무료 전화 상담<br />평일·주말·공휴일 09:00~21:00</p>
+            <div class="channel-sub">가장 빠르고 편한 상담 방법</div>
+          </div>
+
+          <!-- 온라인 상담 -->
+          <div class="channel-card reveal">
+            <div class="channel-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+            </div>
+            <h4>온라인 상담</h4>
+            <div class="channel-highlight" style="font-size: 18px">
+              24시간 접수 가능
+            </div>
+            <p>
+              아래 폼으로 간단한 정보를 남겨주시면<br />담당 매니저가 24시간
+              이내 연락
+            </p>
+            <div class="channel-sub">시간에 구애받지 않는 상담</div>
+          </div>
+
+          <!-- 방문 상담 -->
+          <div class="channel-card reveal">
+            <div class="channel-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+            </div>
+            <h4>방문 상담</h4>
+            <div class="channel-highlight" style="font-size: 18px">
+              사전 예약 필수
+            </div>
+            <p>강남역 4번 출구 도보 3분<br />혜천빌딩 705, 706호</p>
+            <div class="channel-sub">전화 또는 온라인으로 예약</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SECTION 3: 온라인 상담 신청 폼 (다크) ===== -->
+    <section class="section section-dark" id="form">
+      <div class="section-inner">
+        <div class="section-eyebrow reveal" style="text-align: center">
+          Online Consultation
+        </div>
+        <h2 class="section-title reveal" style="text-align: center">
+          <strong>온라인 상담</strong> 신청
+        </h2>
+
+        <div class="form-wrap">
+          <div class="form-notice reveal">
+            간단한 정보 입력 시 <strong>24시간 이내</strong> 연락드립니다<br />
+            · 비밀 보장 · 무료 상담
+          </div>
+
+          <form id="consultForm" onsubmit="return handleSubmit(event);">
+            <!-- 허니팟 (봇 트랩 — 사람에게는 안 보임) -->
+            <div
+              inert
+              style="
+                position: absolute;
+                left: -9999px;
+                top: -9999px;
+                width: 0;
+                height: 0;
+                overflow: hidden;
+              "
+            >
+              <label
+                >Leave blank
+                <input
+                  type="text"
+                  name="nh_extra_field_xyz"
+                  id="hpWebsite"
+                  tabindex="-1"
+                  autocomplete="new-password"
+                  style="display: none"
+              /></label>
+            </div>
+            <!-- 성별 + 혼인 (모바일 split) -->
+            <div class="form-pair">
+              <div class="form-row reveal">
+                <label class="form-label"
+                  >성별 <span class="required">*</span></label
+                >
+                <div class="form-radio-group">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="남성"
+                    id="genderM"
+                    class="form-radio"
+                    required
+                  />
+                  <label for="genderM" class="form-radio-label">남성</label>
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="여성"
+                    id="genderF"
+                    class="form-radio"
+                  />
+                  <label for="genderF" class="form-radio-label">여성</label>
+                </div>
+              </div>
+
+              <div class="form-row reveal">
+                <label class="form-label"
+                  >혼인여부 <span class="required">*</span></label
+                >
+                <div class="form-radio-group">
+                  <input
+                    type="radio"
+                    name="marriage"
+                    value="초혼"
+                    id="marriageFirst"
+                    class="form-radio"
+                    required
+                  />
+                  <label for="marriageFirst" class="form-radio-label"
+                    >초혼</label
+                  >
+                  <input
+                    type="radio"
+                    name="marriage"
+                    value="재혼"
+                    id="marriageRe"
+                    class="form-radio"
+                  />
+                  <label for="marriageRe" class="form-radio-label">재혼</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- 출생년도 + 지역 (모바일 split) -->
+            <div class="form-pair">
+              <div class="form-row reveal">
+                <label class="form-label" for="birthYear"
+                  >출생년도 <span class="required">*</span></label
+                >
+                <select
+                  name="birthYear"
+                  id="birthYear"
+                  class="form-select"
+                  required
+                >
+                  <option value="">출생년도를 선택해주세요</option>
+                </select>
+              </div>
+
+              <div class="form-row reveal">
+                <label class="form-label" for="region"
+                  >지역 <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  name="region"
+                  id="region"
+                  class="form-input"
+                  placeholder="시·군까지만 입력"
+                  maxlength="40"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- 이름 + 휴대폰 (모바일 split) -->
+            <div class="form-pair">
+              <div class="form-row reveal">
+                <label class="form-label" for="name"
+                  >이름 <span class="required">*</span></label
+                >
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  class="form-input"
+                  placeholder="실명을 입력해주세요"
+                  required
+                />
+              </div>
+
+              <div class="form-row reveal">
+                <label class="form-label" for="phone"
+                  >휴대폰번호 <span class="required">*</span></label
+                >
+                <input
+                  type="tel"
+                  name="phone"
+                  id="phone"
+                  class="form-input"
+                  placeholder="010-0000-0000"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- 기타문의사항 -->
+            <div class="form-row reveal">
+              <label class="form-label" for="message">기타문의사항</label>
+              <textarea
+                name="message"
+                id="message"
+                class="form-textarea"
+                rows="4"
+                placeholder="궁금한 점을 남겨주세요 (선택)"
+                maxlength="500"
+              ></textarea>
+            </div>
+
+            <!-- 약관 동의 -->
+            <div class="form-row reveal" style="margin-top: 32px">
+              <div class="form-checkbox-row">
+                <input
+                  type="checkbox"
+                  id="agreePrivacy"
+                  class="form-checkbox"
+                  required
+                />
+                <label for="agreePrivacy" class="form-checkbox-text">
+                  <a href="privacy.html" target="_blank"
+                    >개인정보 수집 및 이용안내</a
+                  >
+                  동의 <strong>[필수]</strong>
+                </label>
+              </div>
+              <div class="form-checkbox-row">
+                <input
+                  type="checkbox"
+                  id="agreeMarketing"
+                  class="form-checkbox"
+                />
+                <label for="agreeMarketing" class="form-checkbox-text">
+                  마케팅 활용 동의 (서비스 및 가입 안내)
+                  <span style="color: var(--muted, #888)">(선택)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- 제출 -->
+            <div class="form-submit-wrap reveal">
+              <button type="submit" class="form-submit" id="submitBtn">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+                상담 신청하기
+              </button>
+            </div>
+
+            <div class="form-security reveal">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              <span>
+                모든 정보는 SSL 암호화로 안전하게 전송됩니다<br /><br />
+                IP 주소가 자동 수집됩니다
+              </span>
+            </div>
+
+            <div class="form-result" id="formResult"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 제출 확인 모달 ===== -->
+    <div
+      class="submit-modal"
+      inert
+      id="submitModal"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="submit-modal-backdrop" data-modal-close></div>
+      <div class="submit-modal-panel">
+        <div class="submit-modal-header">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+            />
+          </svg>
+          <h3>상담 신청 전 반드시 확인해 주세요</h3>
+        </div>
+        <div class="submit-modal-body">
+          <p>
+            <strong
+              >허위 및 타인사칭 접수 시 법적 책임이 발생할 수 있습니다.</strong
+            >
+          </p>
+          <p>
+            노블홍에서는 타인사칭 피해가 발생하지 않도록 적극 대응하고 있으며,
+            접수자의 IP 주소는 별도로 기록·보관됩니다.
+          </p>
+          <p class="submit-modal-highlight">
+            혹시 장난 또는 단순 호기심으로 타인의 정보를 남기고 계신다면 지금
+            바로 <strong>취소</strong>해 주시기 바랍니다.
+          </p>
+          <a
+            href="privacy.html#legal-liability"
+            target="_blank"
+            rel="noopener"
+            class="submit-modal-link"
+          >
+            · 관련 민·형사 법령 상세보기 →
+          </a>
+        </div>
+        <div class="submit-modal-footer">
+          <button
+            type="button"
+            class="submit-modal-btn cancel"
+            data-modal-close
+          >
+            취소
+          </button>
+          <button
+            type="button"
+            class="submit-modal-btn confirm"
+            id="modalConfirm"
+          >
+            접수 신청
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SECTION 4: 오시는 길 (크림) ===== -->
+    <section class="section section-cream" id="location">
+      <div class="section-inner">
+        <div class="section-eyebrow reveal">Location</div>
+        <h2 class="section-title reveal">
+          노블홍으로 <strong>오시는 길</strong>
+        </h2>
+
+        <div class="location-split">
+          <div class="location-map reveal" id="naverMap"></div>
+          <script src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=tcjeid34mz"></script>
+          <script>
+            (function () {
+              var pos = new naver.maps.LatLng(37.4947, 127.0297);
+              var map = new naver.maps.Map("naverMap", {
+                center: pos,
+                zoom: 17,
+                zoomControl: true,
+                zoomControlOptions: { position: naver.maps.Position.TOP_RIGHT },
+              });
+              var marker = new naver.maps.Marker({
+                position: pos,
+                map: map,
+                icon: {
+                  content:
+                    '<div style="position:relative;display:flex;flex-direction:column;align-items:center;transform:translate(-50%,-100%);">' +
+                    "<div style=\"background:#fff;border:1.5px solid #b89a5a;color:#2c2820;padding:7px 14px;border-radius:999px;font-family:Pretendard,'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.18);letter-spacing:-0.3px;margin-bottom:4px;\">노블홍 결혼정보회사</div>" +
+                    '<svg width="30" height="40" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 3px 6px rgba(0,0,0,0.3));">' +
+                    '<path d="M15 0C6.72 0 0 6.72 0 15c0 11.25 15 25 15 25s15-13.75 15-25C30 6.72 23.28 0 15 0z" fill="#b89a5a"/>' +
+                    '<circle cx="15" cy="15" r="6" fill="#fff"/>' +
+                    "</svg>" +
+                    "</div>",
+                  anchor: new naver.maps.Point(0, 0),
+                },
+              });
+              var iw = new naver.maps.InfoWindow({
+                content:
+                  '<div style="padding:14px 18px;font-family:Pretendard,sans-serif;line-height:1.6;">' +
+                  '<strong style="font-size:15px;color:#2c2820;">노블홍 결혼정보회사</strong><br>' +
+                  '<span style="font-size:13px;color:#5c5040;">강남대로 354 혜천빌딩 705, 706호</span><br>' +
+                  '<span style="font-size:13px;color:#8c7030;">1800-8194</span></div>',
+                borderWidth: 1,
+                borderColor: "#e8dcc0",
+                anchorSize: new naver.maps.Size(10, 10),
+              });
+              naver.maps.Event.addListener(marker, "click", function () {
+                if (iw.getMap()) iw.close();
+                else iw.open(map, marker);
+              });
+              if (typeof ResizeObserver !== "undefined") {
+                new ResizeObserver(function (entries) {
+                  for (var i = 0; i < entries.length; i++) {
+                    if (entries[i].contentRect.width > 0) {
+                      naver.maps.Event.trigger(map, "resize");
+                      map.setCenter(pos);
+                    }
+                  }
+                }).observe(document.getElementById("naverMap"));
+              }
+            })();
+          </script>
+
+          <div class="location-info reveal">
+            <h3>Noble HONG</h3>
+
+            <div class="location-item">
+              <div class="location-icon">
+                <svg viewBox="0 0 24 24">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </div>
+              <div class="location-text">
+                <strong>서울시 강남구 강남대로 354</strong><br />
+                혜천빌딩 705, 706호
+              </div>
+            </div>
+
+            <div class="location-item">
+              <div class="location-icon">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <div class="location-text">
+                <strong>강남역 4번 출구</strong> 도보 3분
+              </div>
+            </div>
+
+            <div class="location-item">
+              <div class="location-icon">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+                  />
+                </svg>
+              </div>
+              <div class="location-text">
+                <strong>대표전화</strong> 1800-8194
+              </div>
+            </div>
+
+            <div class="location-item">
+              <div class="location-icon">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <div class="location-text">
+                <strong>운영시간</strong> 평일·주말·공휴일<br />
+                오전 09:00 ~ 오후 09:00
+              </div>
+            </div>
+
+            <div class="location-badge">방문 상담은 사전 예약 필수</div>
+
+            <div
+              style="
+                margin-top: 24px;
+                padding-top: 20px;
+                border-top: 1px solid var(--border);
+                font-size: 13px;
+                color: var(--text-muted);
+                line-height: 1.8;
+              "
+            >
+              (주)노블홍 결혼정보회사 · 대표 홍유진<br />
+              사업자등록번호 321-81-03029<br />
+              국내결혼중개업 서울-강남-국내-22-0012호
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta-section" id="cta">
+      <div class="cta-bg-wrap">
+        <div class="cta-bg" id="ctaBgContact">
+          <img
+            loading="lazy"
+            src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/cta.webp"
+            alt="웨딩"
+          />
+          <video
+            src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/cta.mp4"
+            muted
+            playsinline
+            loop
+          ></video>
+        </div>
+        <div class="cta-bg-overlay"></div>
+      </div>
+      <span
+        class="ai-image-badge"
+        style="position: absolute; bottom: 16px; right: 16px; z-index: 6"
+        >AI 이미지 사용</span
+      >
+      <div class="cta-frame"></div>
+      <div class="cta-content">
+        <h2 class="cta-title">
+          당신의 인연,<br /><strong>지금 시작됩니다</strong>
+        </h2>
+        <p class="cta-sub">주말 및 공휴일에도 상담 가능합니다</p>
+        <div class="cta-phone">1800-8194</div>
+        <p class="cta-note">
+          간단한 정보를 남겨주시면, 담당 커플매니저가 24시간 이내 연락드립니다
+        </p>
+        <div class="cta-buttons">
+          <a href="tel:1800-8194" class="btn-filled">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+              />
+            </svg>
+            전화 상담
+          </a>
+          <a href="#form" class="btn-outlined">온라인 상담 신청</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 인앱브라우저 전화 바로연결 (모바일 하단 고정) -->
+    <div class="inapp-call-bar" id="inappCallBar">
+      <a href="tel:1800-8194">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.11 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"
+          />
+        </svg>
+        지금 바로 전화 상담 1800-8194
+      </a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-gold-line"></div>
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">
+            <img
+              loading="lazy"
+              src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/logo.webp"
+              alt="Noble HONG"
+            />
+          </div>
+          <div class="footer-info">
+            (주)노블홍 결혼정보회사 &middot; 대표 홍유진<br />
+            서울시 강남구 강남대로 354 혜천빌딩 705, 706<br />
+            사업자등록번호 321-81-03029 &middot; 국내결혼중개업
+            서울-강남-국내-22-0012호<br />
+            대표전화 1800-8194
+          </div>
+          <div
+            style="
+              margin-top: 16px;
+              padding-top: 12px;
+              border-top: 1px solid var(--border);
+              font-size: 12px;
+              color: #8c8070;
+            "
+          >
+            <span>&copy; 2026 Noble Hong. All rights reserved.</span>
+            <span style="margin-left: 16px"
+              >Designed by
+              <a
+                href="https://polarad.co.kr"
+                target="_blank"
+                rel="noopener"
+                style="color: var(--gold); text-decoration: none"
+                >POLA</a
+              ></span
+            >
+          </div>
+        </div>
+        <div class="footer-links">
+          <a href="privacy.html">개인정보처리방침</a>
+          <a href="terms.html">이용약관</a>
+          <a href="damages.html">손해배상절차</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // GNB scroll effect
+      window.addEventListener("scroll", () => {
+        document
+          .getElementById("gnb")
+          .classList.toggle("scrolled", window.scrollY > 60);
+      });
+
+      // GSAP
+      gsap.registerPlugin(ScrollTrigger);
+
+      /* MOTION STABILITY PATCH v3 — iOS URL bar 무시 */
+      if (typeof ScrollTrigger !== "undefined" && ScrollTrigger.config) {
+        ScrollTrigger.config({
+          ignoreMobileResize: true,
+          autoRefreshEvents: "visibilitychange,DOMContentLoaded,load",
+        });
+      }
+
+      gsap.utils.toArray(".reveal").forEach((el, i) => {
+        gsap.to(el, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            toggleActions: "play none none none",
+          },
+          delay: (i % 5) * 0.08,
+        });
+      });
+
+      // 인앱브라우저 감지 + 하단 전화바 표시
+      (() => {
+        const ua = navigator.userAgent || "";
+        const isInApp =
+          /FBAN|FBAV|Instagram|KAKAOTALK|NAVER|Line|DaumApps|SamsungBrowser.*CrossApp/i.test(
+            ua,
+          );
+        const isMobile = /iPhone|iPad|Android|Mobile/i.test(ua);
+        if (isInApp || isMobile) {
+          const bar = document.getElementById("inappCallBar");
+          if (bar) bar.classList.add("visible");
+        }
+        // 개인정보 링크: 인앱에서 target="_blank" 안 열릴 수 있으므로 같은 창으로 전환
+        if (isInApp) {
+          document
+            .querySelectorAll('.form-checkbox-text a[target="_blank"]')
+            .forEach((a) => {
+              a.removeAttribute("target");
+            });
+        }
+      })();
+
+      // 출생년도 select 동적 생성
+      (() => {
+        const select = document.getElementById("birthYear");
+        const currentYear = new Date().getFullYear();
+        for (let y = currentYear - 24; y >= 1942; y--) {
+          const age = currentYear - y + 1; // 한국 나이
+          const opt = document.createElement("option");
+          opt.value = y;
+          opt.textContent = y + "년생 (" + age + "세)";
+          select.appendChild(opt);
+        }
+      })();
+
+      // 다음(카카오) 우편번호 서비스로 주소 검색
+      (function () {
+        const btn = document.getElementById("addressBtn");
+        const addrInput = document.getElementById("address");
+        const detailInput = document.getElementById("addressDetail");
+        if (!btn || !addrInput) return;
+        function openPostcode() {
+          if (typeof daum === "undefined" || !daum.Postcode) {
+            alert(
+              "주소 검색 서비스 로딩 중입니다. 잠시 후 다시 시도해 주세요.",
+            );
+            return;
+          }
+          new daum.Postcode({
+            oncomplete: function (data) {
+              let full = data.roadAddress || data.jibunAddress || data.address;
+              if (data.buildingName && data.apartment === "Y") {
+                full += " (" + data.buildingName + ")";
+              }
+              addrInput.value = full;
+              if (detailInput) detailInput.focus();
+            },
+            theme: {
+              bgColor: "#ffffff",
+              searchBgColor: "#b89a5a",
+              contentBgColor: "#ffffff",
+              pageBgColor: "#f9f6ef",
+              textColor: "#2c2820",
+              queryTextColor: "#ffffff",
+              outlineColor: "#e8e0ce",
+            },
+          }).open();
+        }
+        btn.addEventListener("click", openPostcode);
+        addrInput.addEventListener("click", openPostcode);
+      })();
+
+      // 제출 확인 모달 — 허위 접수 경고 후 사용자 confirm
+      (function () {
+        const modal = document.getElementById("submitModal");
+        const confirmBtn = document.getElementById("modalConfirm");
+        if (!modal || !confirmBtn) return;
+
+        function closeModal() {
+          modal.classList.remove("open");
+          modal.setAttribute("inert", "");
+          modal.removeAttribute("aria-hidden");
+          document.body.style.overflow = "";
+          // 포커스를 본래 트리거 버튼으로 복귀
+          const sb = document.getElementById("submitBtn");
+          if (sb) sb.focus();
+        }
+        function openModal() {
+          modal.classList.add("open");
+          modal.removeAttribute("inert");
+          modal.removeAttribute("aria-hidden");
+          document.body.style.overflow = "hidden";
+          setTimeout(() => confirmBtn.focus(), 50);
+        }
+        // 초기 상태: 숨김 + 포커스 불가
+        modal.setAttribute("inert", "");
+        modal.removeAttribute("aria-hidden");
+
+        window.__openSubmitModal = openModal;
+        window.__closeSubmitModal = closeModal;
+
+        modal.addEventListener("click", function (e) {
+          if (e.target.hasAttribute("data-modal-close")) closeModal();
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && modal.classList.contains("open"))
+            closeModal();
+        });
+
+        confirmBtn.addEventListener("click", function () {
+          if (confirmBtn.disabled) return;
+          confirmBtn.disabled = true;
+          confirmBtn.textContent = "접수 중...";
+          closeModal();
+          proceedSubmit().finally(function () {
+            // 성공 시 form reset으로 재접수 흐름, 실패 시 재시도 허용
+            setTimeout(function () {
+              confirmBtn.disabled = false;
+              confirmBtn.textContent = "확인";
+            }, 1500);
+          });
+        });
+      })();
+
+      // 폼 제출 핸들러 (와이어프레임 — 실제 API는 Next.js에서 연결)
+      async function handleSubmit(e) {
+        e.preventDefault();
+        // 네이티브 유효성 통과 후 경고 모달 노출 → 확인 시 proceedSubmit 실행
+        if (window.__openSubmitModal) {
+          window.__openSubmitModal();
+        } else {
+          proceedSubmit();
+        }
+        return false;
+      }
+
+      // 페이지 로드 시각 기록 (봇 타이밍 방어)
+      if (typeof window !== "undefined" && !window._formLoadTs) {
+        window._formLoadTs = Date.now();
+      }
+
+      // 허니팟 자동완성 방어 — 브라우저/비밀번호관리자가 값 주입해도 강제 비움
+      (function clearHoneypot() {
+        function reset() {
+          const el = document.getElementById("hpWebsite");
+          if (el) el.value = "";
+        }
+        reset();
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", reset);
+        }
+        // 자동완성이 onload 이후에 주입되는 케이스 대비
+        window.addEventListener("load", () => setTimeout(reset, 100));
+        window.addEventListener("load", () => setTimeout(reset, 500));
+      })();
+
+      async function proceedSubmit() {
+        if (window._submitInFlight) return; // 재진입 가드
+        window._submitInFlight = true;
+        const btn = document.getElementById("submitBtn");
+        const result = document.getElementById("formResult");
+        const form = document.getElementById("consultForm");
+
+        const ua = navigator.userAgent || "";
+        const hp = (document.getElementById("hpWebsite") || {}).value || "";
+        const data = {
+          gender: form.gender.value,
+          marriage: form.marriage.value,
+          birthYear: form.birthYear.value,
+          name: form.name.value,
+          region: (form.region.value || "").trim(),
+          phone: form.phone.value,
+          message: (form.message.value || "").trim(),
+          agreePrivacy: form.agreePrivacy.checked,
+          agreeMarketing: form.agreeMarketing.checked,
+          userAgent: ua,
+          referrer: document.referrer || "",
+          _hp: hp,
+          _ts: window._formLoadTs || Date.now(),
+        };
+
+        // 즉시 성공 모달 표시 (UX 우선) + 폼 리셋 + 백그라운드 fetch
+        if (window.showNobleSuccessModal) {
+          window.showNobleSuccessModal();
+        }
+        btn.textContent = "접수 완료";
+        btn.disabled = true;
+        result.className = "form-result";
+        result.style.display = "none";
+        form.reset();
+        window._formLoadTs = Date.now();
+
+        fetch("/api/consultation/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then(async function (res) {
+            if (res.ok) return;
+            const j = await res.json().catch(() => ({}));
+            if (res.status === 429) {
+              window.showNobleErrorToast &&
+                window.showNobleErrorToast(
+                  "접수가 몰려 일시 지연됩니다. 1800-8194로 연락 바랍니다.",
+                );
+              return;
+            }
+            const FIELD_KO = {
+              name: "이름",
+              gender: "성별",
+              marriage: "혼인여부",
+              birthYear: "출생연도",
+              phone: "연락처",
+              agreePrivacy: "개인정보 수집·이용 동의",
+              message_url: "문의내용에 링크 포함 불가",
+            };
+            let detail = "";
+            if (j.error === "Invalid fields" && Array.isArray(j.fields)) {
+              detail =
+                " — 확인 필요: " +
+                j.fields.map((f) => FIELD_KO[f] || f).join(", ");
+            }
+            window.showNobleErrorToast &&
+              window.showNobleErrorToast(
+                (j.error === "Invalid fields"
+                  ? "입력값을 확인해주세요" + detail
+                  : "접수 처리 중 오류 (" + (j.error || res.status) + ")") +
+                  " · 1800-8194로 문의해주세요.",
+              );
+          })
+          .catch(function () {
+            window.showNobleErrorToast &&
+              window.showNobleErrorToast(
+                "네트워크 오류로 접수가 전달되지 않았습니다. 1800-8194로 문의해주세요.",
+              );
+          })
+          .finally(function () {
+            window._submitInFlight = false;
+          });
+      }
+
+      // CTA background video
+      (() => {
+        const bg = document.getElementById("ctaBgContact");
+        if (!bg) return;
+        const video = bg.querySelector("video");
+        if (!video) return;
+        let timer = null;
+        ScrollTrigger.create({
+          trigger: bg,
+          start: "top 80%",
+          end: "bottom 20%",
+          onEnter: () => {
+            timer = setTimeout(() => {
+              bg.classList.add("playing");
+              video.play().catch(() => {});
+            }, 2000);
+          },
+          onLeave: () => {
+            clearTimeout(timer);
+            bg.classList.remove("playing");
+            video.pause();
+          },
+          onEnterBack: () => {
+            timer = setTimeout(() => {
+              bg.classList.add("playing");
+              video.play().catch(() => {});
+            }, 2000);
+          },
+          onLeaveBack: () => {
+            clearTimeout(timer);
+            bg.classList.remove("playing");
+            video.pause();
+          },
+        });
+      })();
+
+      // 해시 스크롤 (#form 등)
+      window.addEventListener("load", function () {
+        var h = location.hash.replace("#", "");
+        if (!h) return;
+        var doScroll = function () {
+          var el = document.getElementById(h);
+          if (el) window.scrollTo({ top: el.offsetTop - 20 });
+        };
+        doScroll();
+        window.addEventListener("load", doScroll);
+      });
+    </script>
+
+    <!-- Bottom Inquiry Bar (A-3 · Espresso Gold Frame) -->
+    <div class="bottom-inquiry-bar">
+      <div class="bib-row-main">
+        <div class="bib-head">
+          <div class="bib-eyebrow">Consultation</div>
+          <div class="bib-title">지금 상담</div>
+        </div>
+        <div class="bib-fields">
+          <input class="bib-input w-name" placeholder="이름" />
+          <input class="bib-input w-phone" placeholder="연락처" />
+          <select class="bib-select w-gender">
+            <option value="">성별</option>
+            <option>남성</option>
+            <option>여성</option>
+          </select>
+          <select class="bib-select w-marital">
+            <option value="">혼인여부</option>
+            <option>미혼</option>
+            <option>재혼</option>
+          </select>
+          <select class="bib-select w-year" id="bibYearSelect">
+            <option value="">출생연도</option>
+          </select>
+        </div>
+        <button class="bib-submit">상담 신청 →</button>
+      </div>
+      <div class="bib-row-consent">
+        <label class="bib-check"
+          ><input type="checkbox" /> 개인정보 수집·이용 동의
+          <strong>(필수)</strong></label
+        >
+        <label class="bib-check"
+          ><input type="checkbox" /> 마케팅 활용 동의
+          <strong>(선택)</strong></label
+        >
+      </div>
+    </div>
+
+    <!-- Side Inquiry Bar (B-1 · Vertical Form Card) -->
+    <div class="side-inquiry-bar">
+      <div class="sib-eyebrow">Consultation</div>
+      <div class="sib-title">간편 상담 신청</div>
+      <input class="sib-input" placeholder="이름" />
+      <input class="sib-input" placeholder="연락처" />
+      <button class="sib-submit">상담 신청 →</button>
+      <div class="sib-phone">전화 상담 <strong>1800-8194</strong></div>
+    </div>
+
+    <script>
+      (function () {
+        var sel = document.getElementById("bibYearSelect");
+        if (!sel) return;
+        var curr = new Date().getFullYear();
+        for (var y = curr - 20; y >= 1942; y--) {
+          var opt = document.createElement("option");
+          opt.value = y;
+          opt.textContent = y;
+          sel.appendChild(opt);
+        }
+      })();
+    </script>
+    <!-- GNB_ACTIVE_JS -->
+    <script>
+      (function () {
+        var pathname = location.pathname.replace(/\/$/, "");
+        var segment = pathname.split("/").pop() || "index";
+        segment = segment.replace(/\.html$/, "");
+        if (pathname === "" || pathname === "/") segment = "index";
+        document.querySelectorAll(".gnb-menu a").forEach(function (a) {
+          var href = a.getAttribute("href") || "";
+          var hrefSeg = href
+            .split("#")[0]
+            .split("?")[0]
+            .split("/")
+            .pop()
+            .replace(/\.html$/, "");
+          if (hrefSeg === "" && href.indexOf("/") === 0) hrefSeg = "index";
+          if (hrefSeg === segment) a.classList.add("active");
+        });
+      })();
+    </script>
+    <script src="assets/js/inquiry-bars.js" defer></script>
+
+    <!-- MOBILE NAV INJECTED v1 -->
+    <div class="bib-backdrop" aria-hidden="true"></div>
+    <button
+      type="button"
+      class="bib-trigger-mobile"
+      aria-label="무료 상담 신청 열기"
+      data-action="bib-open"
+    >
+      🔔 무료 상담 신청 받기
+      <span class="bib-trigger-mobile-arrow"></span>
+    </button>
+    <nav class="mobile-bottom-nav" aria-label="모바일 메뉴">
+      <a href="/about" class="mbn-item" data-mbn="about">노블홍</a>
+      <a href="/noblematching" class="mbn-item" data-mbn="noblematching"
+        >노블매칭</a
+      >
+      <a href="/consulting" class="mbn-item" data-mbn="consulting"
+        >맞춤컨설팅</a
+      >
+      <a href="/matchinglounge" class="mbn-item" data-mbn="matchinglounge"
+        >차별화 시스템</a
+      >
+      <a href="/campaign" class="mbn-item" data-mbn="campaign"
+        >결혼장려캠페인</a
+      >
+      <a href="/matchinglab" class="mbn-item" data-mbn="matchinglab"
+        >매칭전략연구소</a
+      >
+    </nav>
+    <script>
+      (function () {
+        var body = document.body;
+        var trigger = document.querySelector(".bib-trigger-mobile");
+        var backdrop = document.querySelector(".bib-backdrop");
+        var bib = document.querySelector(".bottom-inquiry-bar");
+        if (!body || !trigger || !backdrop || !bib) return;
+
+        // 모바일 닫기 버튼 주입 (한 번만)
+        if (!bib.querySelector(".bib-close-mobile")) {
+          var close = document.createElement("button");
+          close.type = "button";
+          close.className = "bib-close-mobile";
+          close.setAttribute("aria-label", "닫기");
+          close.textContent = "✕";
+          bib.insertBefore(close, bib.firstChild);
+          close.addEventListener("click", function () {
+            body.classList.remove("bib-open");
+          });
+        }
+
+        trigger.addEventListener("click", function () {
+          body.classList.add("bib-open");
+        });
+        backdrop.addEventListener("click", function () {
+          body.classList.remove("bib-open");
+        });
+
+        // 현재 페이지 mbn-item active
+        var path = (location.pathname || "")
+          .replace(/\.html$/, "")
+          .replace(/\/$/, "");
+        var slug = (path.split("/").pop() || "").toLowerCase();
+        document.querySelectorAll(".mbn-item").forEach(function (a) {
+          if (a.dataset.mbn === slug) a.classList.add("active");
+        });
+      })();
+    </script>
+    <!-- END MOBILE NAV INJECTED v1 -->
+
+    <script src="assets/visual-viewport.js" defer></script>
+  </body>
+</html>

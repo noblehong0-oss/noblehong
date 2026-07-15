@@ -1,7 +1,20 @@
 <!doctype html>
 <html lang="ko">
   <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GP98TNL451"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GP98TNL451');
+  </script>
+  <link rel="canonical" href="https://www.noblehong.com/noblematching" />
+  <meta name="twitter:image" content="https://www.noblehong.com/og-noblematching.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:url" content="https://www.noblehong.com/noblematching" />
     <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev" crossorigin>
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
@@ -12,10 +25,7 @@
       property="og:description"
       content="대한민국 커플매니저 제1호가 30년간 완성한 8,000명의 성혼 프로세스."
     />
-    <meta
-      property="og:image"
-      content="https://noblehong.vercel.app/og-noblematching.png"
-    />
+    <meta property="og:image" content="https://www.noblehong.com/og-noblematching.jpg" />
     <meta property="og:type" content="website" />
     <meta
       name="description"
@@ -213,6 +223,7 @@
       .page-hero {
         padding-top: 88px;
         min-height: 100vh;
+        min-height: 100dvh;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -7244,7 +7255,7 @@
         var sel = document.getElementById("bibYearSelect");
         if (!sel) return;
         var curr = new Date().getFullYear();
-        for (var y = curr - 20; y >= curr - 75; y--) {
+        for (var y = curr - 20; y >= 1942; y--) {
           var opt = document.createElement("option");
           opt.value = y;
           opt.textContent = y;
