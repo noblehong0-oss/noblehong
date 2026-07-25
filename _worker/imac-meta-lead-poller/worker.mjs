@@ -35,6 +35,8 @@ const DEFAULT_OVERLAP_HOURS = 48;
 const DEFAULT_MAX_PAGES = 10;
 // 조용한 정기 생존신고 간격. 이 시간이 지나면 신규 리드가 없어도 인프라봇에 한 줄 남긴다.
 const DEFAULT_HEALTH_QUIET_HOURS = 6;
+// 미등록 활성폼 확인 간격. Graph 왕복 2번(~1.9초)이라 매시간은 낭비 — 새 폼은 사람이 만든다.
+const DEFAULT_FORM_CHECK_HOURS = 6;
 const DEFAULT_STATE_FILE = resolve(
   dirname(fileURLToPath(import.meta.url)),
   "state.json",
@@ -79,6 +81,11 @@ export function parseFormIds(raw) {
 
 // 전화번호 없는 리드는 워커가 400 으로 거절한다.
 // 매시간 재시도해서 실패 알림만 쌓이는 걸 막으려고 폴러 단에서 걸러 처리완료로 마킹한다.
+//
+// ⚠ 워커 META_FIELD_RULES 의 phone 규칙과 반드시 같은 범위를 유지할 것.
+//   여기가 더 좁으면 워커는 읽을 수 있는 리드를 폴러가 먼저 스킵해버리고,
+//   스킵은 processed 에 처리완료로 남아 영구 유실이 된다(조회창 48시간이라 재수집 불가).
+//   worker.test.mjs 의 "폴러/워커 전화 인식 범위 동일" 테스트가 이 동기화를 강제한다.
 export function hasPhone(fieldData) {
   return (fieldData || []).some((item) => {
     const n = String(item?.name || "")
@@ -87,6 +94,8 @@ export function hasPhone(fieldData) {
     return (
       n === "phone_number" ||
       n.includes("phone") ||
+      n.includes("mobile") ||
+      n.includes("cell") ||
       n.includes("연락처") ||
       n.includes("전화") ||
       n.includes("휴대") ||
@@ -213,6 +222,8 @@ function emptyState(cutoverAt) {
     lastHealthPingAt: "",
     siteStatus: "",
     siteSince: "",
+    formsCheck: null,
+    lastFormCheckAt: "",
     processed: {},
   };
 }
@@ -413,6 +424,86 @@ export function buildInfraProbes(env = process.env) {
     });
   }
   return probes;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// 미등록 활성폼 감지 — 조용한 전량 유실을 막는 유일한 수단.
+//
+// 조회 대상은 META_LEAD_FORM_IDS 정적 목록이다. 새 리드폼을 만들고 여기 추가를 잊으면
+// 그 폼 리드는 전량 유실되는데, 폴러는 멀쩡히 살아있으니 리포트엔 "신규 없음"만 찍힌다.
+// 정지보다 위험하다 — 정지는 최소한 실패 알림이라도 뜬다.
+//
+// 발견해도 조회 대상에 자동 추가하지 않는다. 모르는 폼을 말없이 접수하는 게 더 위험하다.
+// 알림만 내고 사람이 META_LEAD_FORM_IDS 에 넣게 한다.
+// ─────────────────────────────────────────────────────────────────
+// 기록이 없으면(첫 실행·상태파일 초기화) 즉시 확인한다 — 모르는 채로 넘어가지 않는다
+export function isFormCheckDue({ lastCheckAt, nowMs, intervalMs }) {
+  const last = Date.parse(String(lastCheckAt || ""));
+  if (!Number.isFinite(last)) return true;
+  return nowMs - last >= intervalMs;
+}
+
+export function judgeForms(configuredIds, activeForms) {
+  const known = new Set(configuredIds.map(String));
+  const missing = (activeForms || []).filter((f) => !known.has(String(f.id)));
+  // 이미 리드가 쌓인 폼이 빠져 있으면 유실이 확정된 것 → 접수 직결로 올린다
+  const withLeads = missing.filter((f) => Number(f.leadsCount) > 0);
+  return {
+    name: "폼 등록",
+    ok: missing.length === 0,
+    critical: withLeads.length > 0,
+    info: missing.length
+      ? `미등록 활성폼 ${missing.length}개: ` +
+        missing
+          .map((f) => `${f.name || "?"}(${f.id}, 리드 ${f.leadsCount ?? "?"})`)
+          .join(" · ")
+      : `등록 ${known.size}개 = 활성 ${activeForms.length}개`,
+    missing,
+  };
+}
+
+// 페이지 목록 → 페이지별 리드폼. leadgen_forms 목록 조회는 페이지 토큰이 필요하다
+// (시스템유저 토큰으로는 #190 "must be called with a Page Access Token").
+export async function fetchActiveForms({
+  token,
+  graphVersion,
+  appSecret,
+  fetchImpl = fetch,
+}) {
+  const proofQS = () => {
+    const proof = appSecretProof(token, appSecret);
+    return proof ? `&appsecret_proof=${proof}` : "";
+  };
+  const accRes = await fetchImpl(
+    `https://graph.facebook.com/${graphVersion}/me/accounts?fields=id,name,access_token&limit=100${proofQS()}`,
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  const acc = await accRes.json();
+  if (acc?.error)
+    throw new Error(String(acc.error.message || "페이지 조회 실패").slice(0, 160));
+
+  const forms = [];
+  for (const page of acc?.data || []) {
+    // 페이지 토큰은 로그·알림 어디에도 남기지 않는다
+    const pageToken = String(page?.access_token || "");
+    if (!pageToken) continue;
+    const url =
+      `https://graph.facebook.com/${graphVersion}/${page.id}/leadgen_forms` +
+      `?fields=id,name,status,leads_count&limit=100&access_token=${encodeURIComponent(pageToken)}`;
+    const res = await fetchImpl(url);
+    const data = await res.json();
+    if (data?.error) continue; // 페이지 하나 실패로 전체를 죽이지 않는다
+    for (const f of data?.data || []) {
+      if (String(f?.status).toUpperCase() !== "ACTIVE") continue;
+      forms.push({
+        id: String(f.id),
+        name: String(f.name || ""),
+        leadsCount: Number(f.leads_count) || 0,
+        page: String(page.name || page.id),
+      });
+    }
+  }
+  return forms;
 }
 
 export async function probeInfra({ fetchImpl = fetch, env = process.env } = {}) {
@@ -623,7 +714,7 @@ export function formatReport({
       `인프라: ${infra.map((c) => `${c.name} ${c.ok ? "✓" : "✗"}`).join(" · ")}`,
     );
     for (const c of infra.filter((x) => !x.ok)) {
-      lines.push(`  ✗ ${c.name}: ${c.got}`);
+      lines.push(`  ✗ ${c.name}: ${c.got ?? c.info ?? ""}`);
     }
   }
 
@@ -815,6 +906,9 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
     let system = null;
     let siteStatus = state.siteStatus || "";
     let siteSince = state.siteSince || "";
+    // 폼 등록 판정은 6시간마다만 갱신하고 그 사이엔 직전 결과를 그대로 들고 간다
+    let formsCheck = state.formsCheck || null;
+    let lastFormCheckAt = state.lastFormCheckAt || "";
     if (!dryRun && !envFlag("META_LEAD_SKIP_SYSTEM_CHECK")) {
       const guard = async (label, fn) => {
         try {
@@ -826,11 +920,43 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
           return null;
         }
       };
-      [site, infra, system] = await Promise.all([
+      // 폼 목록 조회는 Meta Graph 왕복 2번이라 실측 ~1.9초 — 다른 체크 전부(0.4초)보다 비싸다.
+      // 새 폼은 사람이 만드는 거라 시간 단위 감지가 필요 없어 기본 6시간 간격으로만 돌리고,
+      // 사이 시간대엔 직전 결과를 재사용한다(안 그러면 판정이 깜빡여 복구 오보가 난다).
+      const dueFormCheck = isFormCheckDue({
+        lastCheckAt: state.lastFormCheckAt,
+        nowMs,
+        intervalMs:
+          envNumber("META_LEAD_FORM_CHECK_HOURS", DEFAULT_FORM_CHECK_HOURS) *
+          3600000,
+      });
+
+      const [siteR, infraR, systemR, formsR] = await Promise.all([
         guard("site-probe", () => probeSite({ fetchImpl })),
         guard("infra-probe", () => probeInfra({ fetchImpl })),
         guard("system-check", async () => judgeSystem(await collectSystem())),
+        dueFormCheck
+          ? guard("forms-check", async () =>
+              judgeForms(
+                formIds,
+                await fetchActiveForms({
+                  token,
+                  graphVersion,
+                  appSecret,
+                  fetchImpl,
+                }),
+              ),
+            )
+          : Promise.resolve(null),
       ]);
+      site = siteR;
+      system = systemR;
+      if (formsR) {
+        formsCheck = formsR;
+        lastFormCheckAt = new Date(nowMs).toISOString();
+      }
+      // 폼 등록 상태를 인프라 항목에 얹는다 — 별도 줄로 흩뜨리지 않고 한 리포트에 유지
+      infra = formsCheck ? [...(infraR || []), formsCheck] : infraR;
     }
 
     let lastHealthPingAt = state.lastHealthPingAt || "";
@@ -900,6 +1026,8 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
         lastHealthPingAt,
         siteStatus,
         siteSince,
+        formsCheck,
+        lastFormCheckAt,
         processed: pruneProcessed(processed, retentionFloor),
       });
     }
@@ -978,16 +1106,37 @@ export async function runInspect({ fetchImpl = fetch } = {}) {
 // 배포 직후 "체크가 제대로 도나"를 텔레그램 오염 없이 확인하는 용도.
 export async function runSelfCheck({ fetchImpl = fetch } = {}) {
   const t0 = Date.now();
-  const [site, infra, system] = await Promise.all([
+  const formIds = parseFormIds(process.env.META_LEAD_FORM_IDS);
+  const graphVersion = String(
+    process.env.META_GRAPH_VERSION || DEFAULT_GRAPH_VERSION,
+  ).trim();
+  const [site, infraBase, system, forms] = await Promise.all([
     probeSite({ fetchImpl }),
     probeInfra({ fetchImpl }),
     collectSystem().then(judgeSystem),
+    // 토큰이 없으면(권한 점검 전) 폼 확인은 건너뛴다
+    process.env.META_SYSTEM_USER_TOKEN
+      ? fetchActiveForms({
+          token: process.env.META_SYSTEM_USER_TOKEN,
+          graphVersion,
+          appSecret: String(process.env.META_APP_SECRET || "").trim(),
+          fetchImpl,
+        })
+          .then((active) => judgeForms(formIds, active))
+          .catch((e) => ({
+            name: "폼 등록",
+            ok: false,
+            critical: false,
+            info: `확인 실패: ${String(e?.message || e).slice(0, 80)}`,
+          }))
+      : Promise.resolve(null),
   ]);
+  const infra = forms ? [...infraBase, forms] : infraBase;
   const status = overallStatus({ site, infra, system });
   console.log(
     formatReport({
       checkedAtMs: Date.now(),
-      formCount: parseFormIds(process.env.META_LEAD_FORM_IDS).length,
+      formCount: formIds.length,
       delivered: 0,
       duplicates: 0,
       skipped: 0,

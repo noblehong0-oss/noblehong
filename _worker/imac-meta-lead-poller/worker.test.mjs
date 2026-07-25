@@ -11,6 +11,8 @@ import {
   computeSinceMs,
   formatReport,
   hasPhone,
+  isFormCheckDue,
+  judgeForms,
   judgeSite,
   judgeSystem,
   overallStatus,
@@ -86,6 +88,42 @@ test("연락처 필드 인식 — 두 폼 모두", () => {
   assert.equal(hasPhone(FORM_V2_FIELDS), true); // phone_number
   assert.equal(hasPhone(FORM_V1_FIELDS), true); // 전화번호
   assert.equal(hasPhone([{ name: "성별", values: ["남성"] }]), false);
+});
+
+test("폴러/워커 전화 인식 범위 동일 — 어긋나면 리드가 영구 유실된다", () => {
+  // 폴러가 워커보다 좁으면: 워커는 읽을 수 있는 리드를 폴러가 먼저 스킵하고,
+  // 스킵은 processed 에 처리완료로 남아 다시 안 가져온다(조회창 48시간).
+  // 폴러가 넓으면: 워커가 400 → 매시간 재시도 실패 알림.
+  // 어느 쪽이든 사고이므로 두 판정이 항상 같아야 한다.
+  const names = [
+    "phone_number",
+    "전화번호",
+    "연락처",
+    "휴대폰번호",
+    "핸드폰번호",
+    "휴대전화",
+    "mobile",
+    "Mobile Number",
+    "cellphone",
+    "phone",
+    "성별",
+    "혼인여부",
+    "출생년도",
+    "지역_(시군까지만입력)",
+    "full_name",
+    "이름",
+    "직업",
+  ];
+  for (const name of names) {
+    const poller = hasPhone([{ name, values: ["01012345678"] }]);
+    const worker =
+      mapMetaFieldData([{ name, values: ["01012345678"] }]).phone !== "";
+    assert.equal(
+      poller,
+      worker,
+      `"${name}" — 폴러=${poller} 워커=${worker} (범위 불일치)`,
+    );
+  }
 });
 
 test("payload 는 원본 field_data 와 platform 을 그대로 넘긴다", () => {
@@ -233,6 +271,77 @@ test("인프라 프로브 — R2 미설정이면 해당 프로브를 뺀다", ()
     probes.map((p) => p.name),
     ["워커 API", "D1 읽기"],
   );
+});
+
+// ── 미등록 활성폼 감지 ────────────────────────────────────────────
+const F = (id, name, leadsCount) => ({ id, name, leadsCount, page: "노블홍" });
+
+test("폼 확인 주기 — Graph 왕복 2번(~1.9s)이라 6시간마다만 돈다", () => {
+  const nowMs = Date.parse("2026-08-10T12:00:00Z");
+  const intervalMs = 6 * 3600000;
+  // 기록 없음(첫 실행·상태파일 초기화) → 즉시 확인
+  assert.equal(isFormCheckDue({ lastCheckAt: "", nowMs, intervalMs }), true);
+  assert.equal(
+    isFormCheckDue({ lastCheckAt: "깨진값", nowMs, intervalMs }),
+    true,
+  );
+  // 1시간 전에 확인함 → 건너뜀 (직전 결과 재사용)
+  assert.equal(
+    isFormCheckDue({
+      lastCheckAt: "2026-08-10T11:00:00.000Z",
+      nowMs,
+      intervalMs,
+    }),
+    false,
+  );
+  // 6시간 경과 → 재확인
+  assert.equal(
+    isFormCheckDue({
+      lastCheckAt: "2026-08-10T06:00:00.000Z",
+      nowMs,
+      intervalMs,
+    }),
+    true,
+  );
+});
+
+test("폼 등록 — 활성폼이 전부 등록돼 있으면 ok", () => {
+  const j = judgeForms(
+    ["1304445771796402", "1658915391822063"],
+    [F("1304445771796402", "V2", 120), F("1658915391822063", "V1", 7)],
+  );
+  assert.equal(j.ok, true);
+  assert.equal(j.critical, false);
+  assert.match(j.info, /등록 2개 = 활성 2개/);
+});
+
+test("폼 등록 — 미등록 활성폼에 리드가 있으면 접수 직결(critical)", () => {
+  // 조용한 전량 유실이 이미 진행 중인 상태
+  const j = judgeForms(
+    ["1304445771796402"],
+    [F("1304445771796402", "V2", 120), F("9999", "신규 접수양식", 5)],
+  );
+  assert.equal(j.ok, false);
+  assert.equal(j.critical, true);
+  assert.match(j.info, /미등록 활성폼 1개: 신규 접수양식\(9999, 리드 5\)/);
+});
+
+test("폼 등록 — 아직 리드 0건이면 경고까지만", () => {
+  // 방금 만든 폼일 수 있다. 유실이 확정된 건 아니라 🔴까지 올리지 않는다
+  const j = judgeForms(
+    ["1304445771796402"],
+    [F("1304445771796402", "V2", 120), F("9999", "신규 접수양식", 0)],
+  );
+  assert.equal(j.ok, false);
+  assert.equal(j.critical, false);
+});
+
+test("폼 등록 — 등록됐지만 비활성인 폼은 문제 삼지 않는다", () => {
+  // fetchActiveForms 가 ACTIVE 만 넘기므로 목록에 없는 게 정상
+  const j = judgeForms(["1304445771796402", "1658915391822063"], [
+    F("1304445771796402", "V2", 120),
+  ]);
+  assert.equal(j.ok, true);
 });
 
 // ── 아이맥 시스템 파서 ────────────────────────────────────────────
