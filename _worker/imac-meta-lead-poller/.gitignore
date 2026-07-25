@@ -1,0 +1,6 @@
+.env
+.env.imac.local
+state.json
+state.json.lock
+state.json.tmp
+logs/

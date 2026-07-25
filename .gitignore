@@ -1,6 +1,8 @@
 # Environment variables (CRITICAL — never commit)
 .env
 .env.*
+# 값 없는 템플릿만 예외 — 셋업 문서 역할
+!.env.example
 
 # Dependencies
 node_modules/
@@ -80,3 +82,6 @@ out/
 
 # Legacy forms reference (읽기전용 참조용, git에 올리지 말 것)
 _legacy_forms_ref/
+
+# wrangler 로컬 시크릿 (절대 커밋 금지)
+.dev.vars

@@ -520,6 +520,41 @@ async function probeOne(p) {
   }
 }
 
+// 아이맥 폴러 생존 확인 — Meta 접수는 폴러가 유일한 경로라 폴러 침묵 = 접수 정지다.
+// 폴링 주기 1시간의 3배를 넘도록 하트비트가 없으면 장애로 본다(1회 실패는 다음 정각에 자연 복구).
+const POLLER_STALE_HOURS = 3;
+
+async function probeMetaPoller(env) {
+  const p = {
+    name: "Meta 폴러 하트비트",
+    expect: `${POLLER_STALE_HOURS}시간 이내`,
+  };
+  try {
+    const r = await env.DB.prepare(
+      `SELECT checked_at, detail FROM health_state WHERE id = 'meta_poller'`,
+    ).first();
+    // 아직 한 번도 안 찍힘 = 폴러 미배포 상태. 전환 전에 오보를 내지 않도록 통과시킨다.
+    if (!r?.checked_at)
+      return { ...p, got: "기록없음(폴러 미배포)", ok: true, reachable: true };
+    const ageMs = Date.now() - Date.parse(r.checked_at);
+    if (!Number.isFinite(ageMs))
+      return { ...p, got: "시각 파싱불가", ok: false, reachable: false };
+    return {
+      ...p,
+      got: `${Math.round(ageMs / 60000)}분 전`,
+      ok: ageMs <= POLLER_STALE_HOURS * 3600 * 1000,
+      reachable: true,
+    };
+  } catch (e) {
+    return {
+      ...p,
+      got: "ERR:" + String(e?.message || e).slice(0, 60),
+      ok: false,
+      reachable: false,
+    };
+  }
+}
+
 async function readHealthState(env) {
   try {
     const r = await env.DB.prepare(
@@ -554,7 +589,10 @@ async function writeHealthState(env, status, detail, since) {
 }
 
 async function runHealthCheck(env) {
-  const results = await Promise.all(HEALTH_PROBES.map(probeOne));
+  const results = await Promise.all([
+    ...HEALTH_PROBES.map(probeOne),
+    probeMetaPoller(env),
+  ]);
   const unreachable = results.filter((r) => !r.reachable);
   const failed = results.filter((r) => r.reachable && !r.ok);
   const nowIso = new Date().toISOString();
@@ -586,6 +624,10 @@ async function runHealthCheck(env) {
             .join("\n") +
           `\n\n- <b>정상 항목</b>  ${results.length - failed.length - unreachable.length}/${results.length}` +
           `\n- <b>감지시각</b>  ${nowIso}` +
+          (failed.some((f) => f.name === "Meta 폴러 하트비트")
+            ? `\n\n※ 폴러 침묵 = Meta 접수 정지(유일 경로). 아이맥 전원/네트워크 확인 →\n` +
+              `<code>launchctl kickstart -k gui/501/com.noblehong.meta-lead-poller</code>`
+            : "") +
           `\n\n※ /api 404 = Vercel 배포가 _deploy 아닌 repo 루트로 덮인 상태.\n` +
           `복구: _deploy/ 에서 <code>vercel --prod</code> 재배포`,
       );
@@ -1411,6 +1453,100 @@ function timingSafeEqualStr(a, b) {
   return diff === 0;
 }
 
+// ─────────────────────────────────────────────────────────────────
+// Meta Graph 원본 field_data 매핑 (아이맥 폴러 경로)
+// 폴러는 원본 field_data 를 그대로 넘긴다 — 매핑을 워커가 쥐고 있어야 폼 질문이 바뀌어도
+// 아이맥 재배포 없이 워커만 고치면 된다.
+// 실측(2026-07-25): 폼마다 질문 name 이 다르다.
+//   1304445771796402 = full_name / phone_number / 성별 / 혼인여부 / 출생년도 / 지역_(시군까지만입력)
+//   1658915391822063 = 이름 / 전화번호 / 성별 / 혼인여부 / 출생년도 / 지역 + 지역_(시군까지만입력)
+// 정확일치를 우선순위대로 훑고, 없으면 부분일치로 폴백한다.
+// ─────────────────────────────────────────────────────────────────
+const META_FIELD_RULES = [
+  ["name", ["full_name", "이름", "성함"], /이름|성함|name/i],
+  [
+    "phone",
+    ["phone_number", "전화번호", "연락처"],
+    /연락처|전화|휴대|핸드폰|phone/i,
+  ],
+  ["gender", ["성별"], /성별|gender/i],
+  ["marriage", ["혼인여부"], /혼인|결혼|marriage/i],
+  ["birthYear", ["출생년도", "출생연도"], /출생|생년|birth/i],
+  [
+    "region",
+    ["지역_(시군까지만입력)", "지역", "주소"],
+    /지역|주소|소재지|region|city/i,
+  ],
+];
+
+// export 는 테스트용 — Workers 런타임은 default export 만 본다
+export function mapMetaFieldData(fieldData) {
+  const items = (Array.isArray(fieldData) ? fieldData : [])
+    .map((f) => ({
+      name: String(f?.name || "").trim(),
+      value: String(
+        (Array.isArray(f?.values) ? f.values[0] : f?.values) || "",
+      ).trim(),
+    }))
+    .filter((i) => i.name);
+
+  const out = {};
+  const used = new Set();
+  for (const [key, exact, fuzzy] of META_FIELD_RULES) {
+    let hit = null;
+    for (const want of exact) {
+      hit = items.find(
+        (i) => i.name.toLowerCase() === want.toLowerCase() && i.value,
+      );
+      if (hit) break;
+    }
+    if (!hit) hit = items.find((i) => i.value && fuzzy.test(i.name));
+    out[key] = hit ? hit.value : "";
+    if (hit) used.add(hit.name);
+  }
+  // 매핑에 안 걸린 응답은 버리지 않고 원본 그대로 남긴다 (폼에 질문이 추가돼도 유실 0)
+  out.extras = items
+    .filter((i) => i.value && !used.has(i.name))
+    .map((i) => `${i.name}=${i.value}`);
+  return out;
+}
+
+// Meta leadId 선점 — INSERT OR IGNORE 로 유니크를 잡고 changes=0 이면 이미 처리한 리드.
+// 폴러의 48시간 겹침 조회 때문에 이 게이트가 없으면 중복 접수가 확정적으로 난다.
+async function claimMetaLead(env, leadId, createdTime) {
+  try {
+    const r = await env.DB.prepare(
+      `INSERT OR IGNORE INTO meta_leads (lead_id, created_time, claimed_at)
+       VALUES (?, ?, ?)`,
+    )
+      .bind(leadId, createdTime || null, new Date().toISOString())
+      .run();
+    return (r?.meta?.changes || 0) > 0 ? "claimed" : "duplicate";
+  } catch {
+    // 멱등 테이블 장애로 리드를 버리진 않는다 — 중복 1건이 유실 1건보다 낫다
+    return "error";
+  }
+}
+
+// 저장이 실패했으면 선점을 풀어 다음 폴링에서 다시 시도되게 한다
+async function releaseMetaLead(env, leadId) {
+  try {
+    await env.DB.prepare(`DELETE FROM meta_leads WHERE lead_id = ?`)
+      .bind(leadId)
+      .run();
+  } catch {}
+}
+
+async function linkMetaLead(env, leadId, consultationId) {
+  try {
+    await env.DB.prepare(
+      `UPDATE meta_leads SET consultation_id = ? WHERE lead_id = ?`,
+    )
+      .bind(consultationId, leadId)
+      .run();
+  } catch {}
+}
+
 async function handleMetaLead(request, env) {
   if (request.method !== "POST")
     return json({ error: "Method not allowed" }, 405);
@@ -1440,9 +1576,14 @@ async function handleMetaLead(request, env) {
     return json({ error: "Invalid JSON" }, 400);
   }
 
-  const name = cleanLine(body["이름"] || body.name || "", 50);
+  // 두 경로를 모두 받는다:
+  //   (1) 아이맥 폴러 — Graph 원본 { leadId, createdTime, platform, adName, fieldData[] }
+  //   (2) Make 웹훅   — 평면 한글키 { 이름, 연락처, ... }  ← 전환기 하위호환
+  const g = mapMetaFieldData(body.fieldData);
+
+  const name = cleanLine(body["이름"] || body.name || g.name || "", 50);
   // 연락처 정규화: +82, 0082, 82 prefix → 0 으로 통일 (Meta는 E.164로 보냄)
-  let phone = str(body["연락처"] || body.phone || "", 30).replace(
+  let phone = str(body["연락처"] || body.phone || g.phone || "", 30).replace(
     /[\s()]/g,
     "",
   );
@@ -1451,11 +1592,16 @@ async function handleMetaLead(request, env) {
     .replace(/^82(?=1\d)/, "0")
     // Meta/Make가 국가코드 없이 로컬번호(0…)에 +만 붙인 경우: +010… → 010…
     .replace(/^\+(?=0)/, "");
-  const gender = str(body["성별"] || "", 10);
-  const marriage = str(body["혼인여부"] || "", 10);
-  const birthYearRaw = str(body["출생년도"] || body["출생연도"] || "", 10);
-  const region = cleanLine(body["지역"] || "", 100);
-  const adName = cleanLine(body["광고명"] || "", 200);
+  const gender = str(body["성별"] || g.gender || "", 10);
+  const marriage = str(body["혼인여부"] || g.marriage || "", 10);
+  // 실측상 출생년도 응답이 자유입력이라 25건 중 11건이 4자리가 아니다("75", "1975년생" 등).
+  // 여기서 자르면 normBirthYear 가 볼 원본이 손상되므로 넉넉히 받고 보정은 카페24 단계에 맡긴다.
+  const birthYearRaw = str(
+    body["출생년도"] || body["출생연도"] || g.birthYear || "",
+    20,
+  );
+  const region = cleanLine(body["지역"] || g.region || "", 100);
+  const adName = cleanLine(body["광고명"] || body.adName || "", 200);
   // 플랫폼: ig/fb 정규화 (instagram, facebook, IG, FB, instagram_feed 등 모두 수용)
   const platformRaw = String(body["플랫폼"] || body.platform || "")
     .toLowerCase()
@@ -1476,6 +1622,17 @@ async function handleMetaLead(request, env) {
   const ua = str(request.headers.get("user-agent") || "Make/Meta", 500);
   if (!env.DB) return json({ error: "Server misconfigured" }, 500);
 
+  // leadId 멱등 게이트 — 폴러가 48시간 겹침 조회를 하므로 여기서 막지 않으면
+  // 같은 리드가 매시간 재접수된다. 블랙리스트 검사보다 먼저 선점해야 차단 알림도 1회로 끝난다.
+  const leadId = str(body.leadId || body.lead_id || "", 40).replace(
+    /[^0-9A-Za-z_-]/g,
+    "",
+  );
+  if (leadId) {
+    const claim = await claimMetaLead(env, leadId, body.createdTime);
+    if (claim === "duplicate") return json({ ok: true, duplicate: true });
+  }
+
   // 블랙리스트 차단 — fake 200 반환 + 어드민 알림. D1/카페24/TG 전부 스킵
   if (await checkBlacklist(env, phone)) {
     bgRun(
@@ -1488,8 +1645,18 @@ async function handleMetaLead(request, env) {
     return json({ ok: true, id: null });
   }
 
+  let saved = false;
   try {
-    const messageText = adName ? `[Meta 광고] ${adName}` : "[Meta 광고]";
+    // 매핑 안 된 폼 응답은 문의내용 꼬리에 원본 그대로 붙인다 (폼 질문이 늘어도 유실 0)
+    const messageText = cleanLine(
+      [
+        adName ? `[Meta 광고] ${adName}` : "[Meta 광고]",
+        g.extras.length ? `· ${g.extras.join(" · ")}` : "",
+      ]
+        .filter(Boolean)
+        .join(" "),
+      500,
+    );
     const { id: recordId, error: saveError } = await saveConsultation(env, {
       이름: name,
       연락처: phone,
@@ -1507,12 +1674,16 @@ async function handleMetaLead(request, env) {
       제출일시: new Date().toISOString(),
     });
     if (saveError) {
+      // 선점을 풀어야 다음 폴링(1시간 뒤)에서 같은 리드를 다시 시도한다 — 안 풀면 영구 유실
+      if (leadId) await releaseMetaLead(env, leadId);
       await tgDebug(
         env,
         `[노블홍/meta-lead] D1 저장 실패\nIP: ${ip}\n${saveError}`,
       );
       return json({ error: "Failed to save" }, 500);
     }
+    if (leadId) await linkMetaLead(env, leadId, recordId);
+    saved = true;
 
     const platformLabel =
       platform === "ig" ? "Instagram" : platform === "fb" ? "Facebook" : "";
@@ -1567,12 +1738,57 @@ async function handleMetaLead(request, env) {
 
     return json({ ok: true, id: recordId });
   } catch (err) {
+    // 저장 전에 터졌으면 선점을 풀어 다음 폴링에서 재시도. 저장 후(알림 단계) 실패면
+    // 선점을 유지해야 같은 리드가 다시 접수되지 않는다.
+    if (leadId && !saved) await releaseMetaLead(env, leadId);
     await tgDebug(
       env,
       `[노블홍/meta-lead] 500 에러\nIP:${ip}\n${String(err?.message || err).slice(0, 200)}`,
     );
     return json({ error: "Server error" }, 500);
   }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// 핸들러: 폴러 하트비트 /api/lead/meta/heartbeat
+//   아이맥 폴러가 매 실행마다(1시간) 찍는다.
+//   아이맥이 꺼지거나 launchd 가 내려가면 폴러는 스스로 "죽었다"를 알릴 수 없다.
+//   그 침묵을 워커 크론이 이 시각의 노후로 대신 감지한다.
+// ─────────────────────────────────────────────────────────────────
+async function handleMetaLeadHeartbeat(request, env) {
+  if (request.method !== "POST")
+    return json({ error: "Method not allowed" }, 405);
+  const expected = env.META_LEAD_SECRET;
+  if (!expected) return json({ error: "Server misconfigured" }, 500);
+  if (!timingSafeEqualStr(request.headers.get("x-meta-secret") || "", expected))
+    return json({ error: "Unauthorized" }, 401);
+  if (!env.DB) return json({ error: "Server misconfigured" }, 500);
+
+  let body = {};
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
+  const num = (v) => (Number.isFinite(Number(v)) ? Number(v) : 0);
+  const detail = str(
+    `forms=${num(body.forms)} fetched=${num(body.fetched)} delivered=${num(body.delivered)} dup=${num(body.duplicates)} skipped=${num(body.skipped)}`,
+    200,
+  );
+  const nowIso = new Date().toISOString();
+  try {
+    await env.DB.prepare(
+      `INSERT INTO health_state (id, status, detail, since, checked_at)
+       VALUES ('meta_poller', 'ok', ?, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET
+         status = 'ok', detail = excluded.detail, checked_at = excluded.checked_at`,
+    )
+      .bind(detail, nowIso, nowIso)
+      .run();
+  } catch (e) {
+    return json({ error: "Failed to record" }, 500);
+  }
+  return json({ ok: true, at: nowIso });
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -3570,6 +3786,8 @@ async function route(request, env) {
   if (path === "/api/consultation/bar")
     return handleConsultationBar(request, env);
   if (path === "/api/lead/meta") return handleMetaLead(request, env);
+  if (path === "/api/lead/meta/heartbeat")
+    return handleMetaLeadHeartbeat(request, env);
 
   // Admin auth
   if (path === "/api/admin/login") return handleAdminLogin(request, env);
