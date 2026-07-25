@@ -15,7 +15,9 @@ node_modules/
 .omx/
 
 # 세션 핸드오프 노트 (로컬 작업용, 실수로 토큰이 섞일 수 있음)
+# 정본은 F:\handoff_archive + F:\obsidian\Pola\Sessions 에 둔다
 NEXT_SESSION_*.md
+*_세션핸드오프.md
 
 # 배포 백업 폴더 (시점별 dump, 커밋 불필요)
 _deploy_backup_*/
