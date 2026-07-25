@@ -457,68 +457,17 @@ function sendInfraAlert(env, message) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// 헬스체크 — 반드시 noblehong.com(Vercel 경유)을 찌른다.
-// 2026-07-14 장애는 워커가 아니라 "Vercel→워커 다리"가 끊긴 것이라,
-// 워커 자기 자신을 체크하면 동일 사고를 100% 놓친다.
-// 폼 프로브는 빈 연락처를 보내 400(Invalid fields)을 기대 → saveConsultation
-// 도달 전에 잘리므로 D1·카페24·리드알림·레이트리밋 어디에도 기록되지 않는다(드라이런).
+// 헬스체크 — 이 크론은 "데드맨 스위치" 하나만 본다.
+//
+// 사이트 접수경로 프로브(폼 3종 + 홈/자산/cleanUrls)는 2026-07-25부로
+// 아이맥 폴러가 1시간마다 직접 돈다. 아이맥은 진짜 외부 시점이고 주기도 6배 촘촘해서
+// 워커가 같은 걸 6시간마다 또 찌르는 건 중복이었다.
+//
+// 대신 아이맥이 못 하는 것 하나가 남는다 — 자기 자신의 죽음.
+// 아이맥이 꺼지면 체크도 알림도 멈추는데 그 침묵은 "정상"과 구분되지 않는다.
+// 그리고 아이맥이 멈춘 상태 = Meta 접수 전면 정지(자체 폼 유입은 사실상 0)다.
+// 그 침묵을 여기서 하트비트 노후로 잡는다.
 // ─────────────────────────────────────────────────────────────────
-const HEALTH_SITE = "https://noblehong.com";
-const HEALTH_PROBES = [
-  {
-    name: "폼 간편(quick)",
-    method: "POST",
-    path: "/api/consultation/quick",
-    expect: 400,
-  },
-  {
-    name: "폼 하단바(bar)",
-    method: "POST",
-    path: "/api/consultation/bar",
-    expect: 400,
-  },
-  {
-    name: "폼 풀폼(submit)",
-    method: "POST",
-    path: "/api/consultation/submit",
-    expect: 400,
-  },
-  { name: "홈", method: "GET", path: "/", expect: 200 },
-  {
-    name: "폼 스크립트",
-    method: "GET",
-    path: "/assets/js/inquiry-bars.js",
-    expect: 200,
-  },
-  { name: "cleanUrls(/privacy)", method: "GET", path: "/privacy", expect: 200 },
-];
-
-async function probeOne(p) {
-  const init = { method: p.method, redirect: "manual" };
-  if (p.method === "POST") {
-    init.headers = { "Content-Type": "application/json" };
-    init.body = "{}"; // 빈 payload → 필드검증 400 (저장 미도달)
-  }
-  try {
-    const res = await fetch(HEALTH_SITE + p.path, init);
-    // HTTP 상태가 돌아왔다 = 사이트 판정 가능
-    return {
-      ...p,
-      got: res.status,
-      ok: res.status === p.expect,
-      reachable: true,
-    };
-  } catch (e) {
-    // fetch 자체가 터짐 = 체커/네트워크 문제.
-    // 사이트 장애로 단정하면 오보가 되므로 별도 분류한다.
-    return {
-      ...p,
-      got: "ERR:" + String(e?.message || e).slice(0, 60),
-      ok: false,
-      reachable: false,
-    };
-  }
-}
 
 // 아이맥 폴러 생존 확인 — Meta 접수는 폴러가 유일한 경로라 폴러 침묵 = 접수 정지다.
 // 폴링 주기 1시간의 3배를 넘도록 하트비트가 없으면 장애로 본다(1회 실패는 다음 정각에 자연 복구).
@@ -589,58 +538,41 @@ async function writeHealthState(env, status, detail, since) {
 }
 
 async function runHealthCheck(env) {
-  const results = await Promise.all([
-    ...HEALTH_PROBES.map(probeOne),
-    probeMetaPoller(env),
-  ]);
-  const unreachable = results.filter((r) => !r.reachable);
-  const failed = results.filter((r) => r.reachable && !r.ok);
+  const poller = await probeMetaPoller(env);
   const nowIso = new Date().toISOString();
 
-  // 3단계 판정 — unreachable을 조용히 무시하면 "정상" 오판이 난다.
-  //   fail     : HTTP 상태가 기대와 다름 → 확실한 사이트 장애
-  //   degraded : 프로브가 fetch 자체 실패 → 판정 불가(체커/네트워크 문제 가능)
-  //   ok       : 전 항목 기대대로
-  let status;
-  if (failed.length) status = "fail";
-  else if (unreachable.length) status = "degraded";
-  else status = "ok";
+  // 3단계 판정 — degraded 를 조용히 ok 로 접으면 "정상" 오판이 난다.
+  //   fail     : 하트비트가 노후 → 폴러 정지 = Meta 접수 정지
+  //   degraded : 상태 조회 자체가 실패 → 판정 불가(D1 문제일 수 있음)
+  //   ok       : 하트비트 신선
+  const status = poller.ok ? "ok" : poller.reachable ? "fail" : "degraded";
 
   const prev = await readHealthState(env);
   const prevStatus = prev?.status || "unknown";
-  const detail = [...failed, ...unreachable]
-    .map((f) => `${f.name} ${f.expect}→${f.got}`)
-    .join(" · ")
-    .slice(0, 400);
+  const detail = poller.ok
+    ? ""
+    : `${poller.name} ${poller.expect}→${poller.got}`.slice(0, 400);
 
   // 상태 변화시에만 알림 (지속 장애 스팸 0)
   if (status !== prevStatus) {
     if (status === "fail") {
       await sendInfraAlert(
         env,
-        `<b>[노블홍/healthcheck] 🔴 접수 장애 감지</b>\n──────────────\n` +
-          failed
-            .map((f) => `- <b>${f.name}</b>  기대 ${f.expect} → 실제 ${f.got}`)
-            .join("\n") +
-          `\n\n- <b>정상 항목</b>  ${results.length - failed.length - unreachable.length}/${results.length}` +
+        `<b>[노블홍/healthcheck] 🔴 Meta 접수 정지 의심</b>\n──────────────\n` +
+          `- <b>${poller.name}</b>  기대 ${poller.expect} → 실제 ${poller.got}` +
           `\n- <b>감지시각</b>  ${nowIso}` +
-          (failed.some((f) => f.name === "Meta 폴러 하트비트")
-            ? `\n\n※ 폴러 침묵 = Meta 접수 정지(유일 경로). 아이맥 전원/네트워크 확인 →\n` +
-              `<code>launchctl kickstart -k gui/501/com.noblehong.meta-lead-poller</code>`
-            : "") +
-          `\n\n※ /api 404 = Vercel 배포가 _deploy 아닌 repo 루트로 덮인 상태.\n` +
-          `복구: _deploy/ 에서 <code>vercel --prod</code> 재배포`,
+          `\n\n※ 폴러가 멈추면 Meta 접수가 통째로 끊긴다(자체 폼 유입 사실상 0).\n` +
+          `아이맥 전원/네트워크 확인 후:\n` +
+          `<code>launchctl kickstart -k gui/501/com.noblehong.meta-lead-poller</code>\n` +
+          `로그: <code>tail -20 ~/noblehong-meta-lead-poller/logs/worker.log</code>`,
       );
     } else if (status === "degraded") {
       await sendInfraAlert(
         env,
         `<b>[노블홍/healthcheck] ⚠️ 판정 불가</b>\n──────────────\n` +
-          unreachable
-            .map((f) => `- <b>${f.name}</b>  ${String(f.got).slice(0, 70)}`)
-            .join("\n") +
-          `\n\n- <b>확인된 정상</b>  ${results.length - unreachable.length}/${results.length}` +
+          `- <b>${poller.name}</b>  ${String(poller.got).slice(0, 70)}` +
           `\n- <b>시각</b>  ${nowIso}` +
-          `\n\n※ 사이트 장애가 아니라 체커 문제일 수 있음. 수동 확인 필요.`,
+          `\n\n※ 폴러 장애가 아니라 D1/체커 문제일 수 있음. 수동 확인 필요.`,
       );
     } else {
       const downFrom = prev?.since
@@ -648,8 +580,8 @@ async function runHealthCheck(env) {
         : "";
       await sendInfraAlert(
         env,
-        `<b>[노블홍/healthcheck] 🟢 정상 복구</b>\n──────────────\n` +
-          `- <b>전체 항목</b>  ${results.length}/${results.length} 정상${downFrom}` +
+        `<b>[노블홍/healthcheck] 🟢 폴러 정상 복구</b>\n──────────────\n` +
+          `- <b>${poller.name}</b>  ${poller.got}${downFrom}` +
           `\n- <b>복구시각</b>  ${nowIso}`,
       );
     }
@@ -657,12 +589,7 @@ async function runHealthCheck(env) {
   } else {
     await writeHealthState(env, status, detail, prev?.since || nowIso);
   }
-  return {
-    status,
-    failed: failed.length,
-    unreachable: unreachable.length,
-    total: results.length,
-  };
+  return { status, detail };
 }
 
 async function tgSend(token, chatId, text) {
@@ -1771,8 +1698,11 @@ async function handleMetaLeadHeartbeat(request, env) {
     body = {};
   }
   const num = (v) => (Number.isFinite(Number(v)) ? Number(v) : 0);
+  // site = 아이맥이 1시간마다 직접 찌른 사이트 접수경로 판정(ok/fail/degraded).
+  // 워커는 이 값으로 알림을 내지 않는다 — 알림은 아이맥이 이미 보냈다. 사후 확인용 기록.
+  const site = str(String(body.site || ""), 20);
   const detail = str(
-    `forms=${num(body.forms)} fetched=${num(body.fetched)} delivered=${num(body.delivered)} dup=${num(body.duplicates)} skipped=${num(body.skipped)}`,
+    `forms=${num(body.forms)} fetched=${num(body.fetched)} delivered=${num(body.delivered)} dup=${num(body.duplicates)} skipped=${num(body.skipped)}${site ? ` site=${site}` : ""}`,
     200,
   );
   const nowIso = new Date().toISOString();
@@ -3855,7 +3785,8 @@ export default {
   async scheduled(event, env, ctx) {
     const cronExpr = event.cron;
 
-    // 6시간마다 접수 경로 헬스체크 (00/06/12/18 UTC).
+    // 6시간마다 데드맨 스위치 — 아이맥 폴러 하트비트 노후 감지 (00/06/12/18 UTC).
+    // 사이트 접수경로 프로브는 아이맥 폴러가 1시간마다 직접 돈다(runHealthCheck 주석 참조).
     // 아래 유튜브/GA4 동기화가 조건 없이 실행되므로 반드시 조기 return으로 격리한다.
     // (18:00 은 "0 18 * * *" 과 겹치지만 CF가 크론별로 event.cron 을 따로 넘기므로
     //  각 크론이 자기 분기만 탄다 — 유튜브가 6시간마다 도는 일은 없음)

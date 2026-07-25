@@ -211,6 +211,8 @@ function emptyState(cutoverAt) {
     highWatermarkAt: cutoverAt,
     lastSuccessfulPollAt: "",
     lastHealthPingAt: "",
+    siteStatus: "",
+    siteSince: "",
     processed: {},
   };
 }
@@ -316,10 +318,101 @@ async function postHeartbeat({ url, secret, stats, fetchImpl = fetch }) {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────
+// 사이트 접수경로 프로브 — 폴링과 같은 1시간 주기로 아이맥에서 직접 찌른다.
+//
+// 워커 크론(6시간)이 아니라 여기서 도는 이유: 아이맥은 진짜 외부 시점이라
+// CF→Vercel→CF 자기호출보다 실제 고객 경로에 가깝고, 주기도 6배 촘촘하다.
+// (아이맥 자신의 죽음만은 감지 못 하므로, 그건 워커 크론이 하트비트 침묵으로 잡는다)
+//
+// 빈 payload {} 를 보내 400(Invalid fields)을 기대한다 — 워커 실행순서상
+// saveConsultation 도달 전에 잘리므로 D1·카페24·리드알림·레이트리밋 어디에도 안 남는 드라이런.
+// ─────────────────────────────────────────────────────────────────
+const HEALTH_SITE = "https://noblehong.com";
+const SITE_PROBES = [
+  { name: "폼 간편(quick)", method: "POST", path: "/api/consultation/quick", expect: 400 },
+  { name: "폼 하단바(bar)", method: "POST", path: "/api/consultation/bar", expect: 400 },
+  { name: "폼 풀폼(submit)", method: "POST", path: "/api/consultation/submit", expect: 400 },
+  { name: "홈", method: "GET", path: "/", expect: 200 },
+  { name: "폼 스크립트", method: "GET", path: "/assets/js/inquiry-bars.js", expect: 200 },
+  { name: "cleanUrls(/privacy)", method: "GET", path: "/privacy", expect: 200 },
+];
+
+async function probeOne(probe, fetchImpl) {
+  const init = { method: probe.method, redirect: "manual" };
+  if (probe.method === "POST") {
+    init.headers = { "Content-Type": "application/json" };
+    init.body = "{}";
+  }
+  try {
+    const res = await fetchImpl(HEALTH_SITE + probe.path, init);
+    return { ...probe, got: res.status, ok: res.status === probe.expect, reachable: true };
+  } catch (error) {
+    // fetch 자체가 터진 것 = 아이맥 네트워크 문제일 수 있다.
+    // 사이트 장애로 단정하면 오보가 되므로 따로 분류한다.
+    return {
+      ...probe,
+      got: "ERR:" + String(error?.message || error).slice(0, 60),
+      ok: false,
+      reachable: false,
+    };
+  }
+}
+
+// fail(HTTP 불일치=확실한 장애) / degraded(판정보류) / ok — 워커 헬스체크와 동일한 3단 판정
+export function judgeSite(results) {
+  const failed = results.filter((r) => r.reachable && !r.ok);
+  const unreachable = results.filter((r) => !r.reachable);
+  const status = failed.length ? "fail" : unreachable.length ? "degraded" : "ok";
+  return { status, failed, unreachable, total: results.length };
+}
+
+export async function probeSite({ fetchImpl = fetch } = {}) {
+  return judgeSite(
+    await Promise.all(SITE_PROBES.map((probe) => probeOne(probe, fetchImpl))),
+  );
+}
+
+export function formatSiteAlert(site, checkedAtMs, prevSince, prevStatus) {
+  const head =
+    site.status === "fail"
+      ? "🔴 접수 장애 감지"
+      : site.status === "degraded"
+        ? "⚠️ 판정 불가"
+        : // 첫 실행에는 고장난 적이 없으니 "복구"가 아니다
+          prevStatus
+          ? "🟢 정상 복구"
+          : "🟢 접수경로 감시 시작";
+  const lines = [`[HEALTH] 노블홍 사이트 · ${head}`];
+  for (const r of [...site.failed, ...site.unreachable]) {
+    lines.push(`- ${r.name}: 기대 ${r.expect} → 실제 ${r.got}`);
+  }
+  if (site.status === "ok") {
+    lines.push(`- 전체 ${site.total}/${site.total} 정상`);
+    if (prevSince) lines.push(`- 직전 이상 시작: ${prevSince}`);
+  } else {
+    const bad = site.failed.length + site.unreachable.length;
+    lines.push(`- 정상 항목: ${site.total - bad}/${site.total}`);
+  }
+  if (site.status === "fail") {
+    lines.push("");
+    lines.push("※ /api 404 = Vercel 배포가 _deploy 아닌 repo 루트로 덮인 상태.");
+    lines.push("  복구: _deploy/ 에서 vercel --prod 재배포");
+  }
+  lines.push(`체크 시각: ${formatKst(checkedAtMs)}`);
+  return lines.join("\n");
+}
+
 function formatKst(ms) {
   const shifted = new Date(ms + 9 * 60 * 60 * 1000).toISOString();
   return `${shifted.slice(0, 10)} ${shifted.slice(11, 16)} KST`;
 }
+
+const SITE_LABEL = {
+  ok: "🟢 정상",
+  fail: "🔴 장애",
+  degraded: "⚠️ 판정불가",
+};
 
 export function formatHealthCheckMessage({
   checkedAtMs,
@@ -327,6 +420,7 @@ export function formatHealthCheckMessage({
   delivered,
   duplicates,
   skipped,
+  site,
 }) {
   const status =
     delivered > 0 ? `정상 · 신규 ${delivered}건 접수` : "정상 · 신규 없음";
@@ -336,6 +430,9 @@ export function formatHealthCheckMessage({
     duplicates > 0 ? `서버 중복(멱등 차단): ${duplicates}건` : "",
     skipped > 0 ? `연락처 없음 스킵: ${skipped}건` : "",
     `조회 폼: ${formCount}개`,
+    site
+      ? `사이트 접수경로: ${SITE_LABEL[site.status] || site.status} (${site.total - site.failed.length - site.unreachable.length}/${site.total})`
+      : "",
     `체크 시각: ${formatKst(checkedAtMs)}`,
   ]
     .filter(Boolean)
@@ -508,8 +605,41 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
         payload.createdTime || new Date().toISOString();
     }
 
+    // 사이트 접수경로 프로브 — 리드 전달이 끝난 뒤에 돈다.
+    // 여기서 터져도 리드 전달은 이미 끝났고, 폴링 자체를 실패시키지 않는다.
+    let site = null;
+    let siteStatus = state.siteStatus || "";
+    let siteSince = state.siteSince || "";
+    if (!dryRun && !envFlag("META_LEAD_SKIP_SITE_PROBE")) {
+      try {
+        site = await probeSite({ fetchImpl });
+      } catch (error) {
+        console.error(
+          `${TAG} site-probe-error ${String(error?.message || error).slice(0, 200)}`,
+        );
+      }
+    }
+
     let lastHealthPingAt = state.lastHealthPingAt || "";
     if (!dryRun) {
+      // 사이트 상태가 바뀐 순간에만 별도 알림 (지속 장애 도배 0)
+      if (site && site.status !== siteStatus) {
+        try {
+          await sendHealthCheck({
+            botToken: healthBotToken,
+            chatId: healthChatId,
+            message: formatSiteAlert(site, nowMs, siteSince, siteStatus),
+            fetchImpl,
+          });
+        } catch (error) {
+          console.error(
+            `${TAG} site-alert-error ${String(error?.message || error).slice(0, 200)}`,
+          );
+        }
+        siteSince = new Date(nowMs).toISOString();
+        siteStatus = site.status;
+      }
+
       await postHeartbeat({
         url: heartbeatUrl,
         secret: webhookSecret,
@@ -519,6 +649,7 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
           delivered,
           duplicates,
           skipped,
+          site: site ? site.status : "",
         },
         fetchImpl,
       });
@@ -542,6 +673,7 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
             delivered,
             duplicates,
             skipped,
+            site,
           }),
           fetchImpl,
         });
@@ -560,14 +692,22 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
         highWatermarkAt: new Date(Math.max(newestMs, nowMs)).toISOString(),
         lastSuccessfulPollAt: new Date(nowMs).toISOString(),
         lastHealthPingAt,
+        siteStatus,
+        siteSince,
         processed: pruneProcessed(processed, retentionFloor),
       });
     }
 
     console.log(
-      `${TAG} ok dryRun=${dryRun} forms=${formIds.length} fetched=${leads.length} delivered=${delivered} duplicates=${duplicates} skipped=${skipped} since=${new Date(sinceMs).toISOString()}`,
+      `${TAG} ok dryRun=${dryRun} forms=${formIds.length} fetched=${leads.length} delivered=${delivered} duplicates=${duplicates} skipped=${skipped} site=${site ? site.status : "-"} since=${new Date(sinceMs).toISOString()}`,
     );
-    return { fetched: leads.length, delivered, duplicates, skipped };
+    return {
+      fetched: leads.length,
+      delivered,
+      duplicates,
+      skipped,
+      site: site ? site.status : "",
+    };
   } finally {
     await lock.close();
     await rm(lockPath, { force: true });

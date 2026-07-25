@@ -9,7 +9,9 @@ import {
   buildPayload,
   computeSinceMs,
   formatHealthCheckMessage,
+  formatSiteAlert,
   hasPhone,
+  judgeSite,
   parseFormIds,
   pruneProcessed,
   sanitizePagingUrl,
@@ -167,6 +169,89 @@ test("헬스 메시지에 신규 건수와 멱등 차단 건수가 드러난다"
   assert.match(msg, /서버 중복\(멱등 차단\): 3건/);
   assert.match(msg, /연락처 없음 스킵: 1건/);
   assert.match(msg, /2026-08-10 12:00 KST/); // UTC+9
+});
+
+// ── 사이트 접수경로 프로브 (워커 크론 → 아이맥으로 이관) ──────────
+const P = (name, expect, got, reachable = true) => ({
+  name,
+  expect,
+  got,
+  ok: reachable && got === expect,
+  reachable,
+});
+
+test("사이트 판정 — 전 항목 기대대로면 ok", () => {
+  const j = judgeSite([P("홈", 200, 200), P("폼 간편(quick)", 400, 400)]);
+  assert.equal(j.status, "ok");
+  assert.equal(j.total, 2);
+});
+
+test("사이트 판정 — HTTP 불일치는 fail (7/14 클로버 사고 유형)", () => {
+  // repo 루트가 _deploy 를 덮으면 /api/* 가 404 로 떨어진다
+  const j = judgeSite([P("홈", 200, 200), P("폼 간편(quick)", 400, 404)]);
+  assert.equal(j.status, "fail");
+  assert.equal(j.failed.length, 1);
+});
+
+test("사이트 판정 — fetch 자체 실패는 degraded (오보 방지)", () => {
+  // 아이맥 네트워크 문제일 수 있어 사이트 장애로 단정하지 않는다
+  const j = judgeSite([P("홈", 200, "ERR:timeout", false)]);
+  assert.equal(j.status, "degraded");
+  assert.equal(j.unreachable.length, 1);
+});
+
+test("사이트 판정 — fail 이 degraded 보다 우선", () => {
+  const j = judgeSite([
+    P("홈", 200, 404),
+    P("폼 간편(quick)", 400, "ERR:timeout", false),
+  ]);
+  assert.equal(j.status, "fail");
+});
+
+test("사이트 알림 — 장애 시 실패항목과 복구안내가 들어간다", () => {
+  const msg = formatSiteAlert(
+    judgeSite([P("홈", 200, 200), P("폼 간편(quick)", 400, 404)]),
+    Date.parse("2026-08-10T03:00:00Z"),
+    "",
+  );
+  assert.match(msg, /🔴 접수 장애 감지/);
+  assert.match(msg, /폼 간편\(quick\): 기대 400 → 실제 404/);
+  assert.match(msg, /정상 항목: 1\/2/);
+  assert.match(msg, /vercel --prod 재배포/);
+});
+
+test("사이트 알림 — 복구 시 직전 이상 시작시각을 붙인다", () => {
+  const msg = formatSiteAlert(
+    judgeSite([P("홈", 200, 200)]),
+    Date.parse("2026-08-10T03:00:00Z"),
+    "2026-08-09T21:00:00.000Z",
+    "fail",
+  );
+  assert.match(msg, /🟢 정상 복구/);
+  assert.match(msg, /직전 이상 시작: 2026-08-09T21:00:00\.000Z/);
+});
+
+test("사이트 알림 — 첫 실행은 '복구'가 아니라 '감시 시작'", () => {
+  const msg = formatSiteAlert(
+    judgeSite([P("홈", 200, 200)]),
+    Date.parse("2026-08-10T03:00:00Z"),
+    "",
+    "",
+  );
+  assert.match(msg, /🟢 접수경로 감시 시작/);
+  assert.doesNotMatch(msg, /복구/);
+});
+
+test("정기 보고에 사이트 상태 한 줄이 들어간다", () => {
+  const msg = formatHealthCheckMessage({
+    checkedAtMs: Date.parse("2026-08-10T03:00:00Z"),
+    formCount: 2,
+    delivered: 0,
+    duplicates: 0,
+    skipped: 0,
+    site: judgeSite([P("홈", 200, 200), P("폼 간편(quick)", 400, 404)]),
+  });
+  assert.match(msg, /사이트 접수경로: 🔴 장애 \(1\/2\)/);
 });
 
 // ── 워커 매핑 (실제 폼 질문 이름 기준) ────────────────────────────
