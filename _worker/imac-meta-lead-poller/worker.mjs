@@ -37,6 +37,8 @@ const DEFAULT_MAX_PAGES = 10;
 const DEFAULT_HEALTH_QUIET_HOURS = 6;
 // 미등록 활성폼 확인 간격. Graph 왕복 2번(~1.9초)이라 매시간은 낭비 — 새 폼은 사람이 만든다.
 const DEFAULT_FORM_CHECK_HOURS = 6;
+// 자기 자신의 launchd 라벨. 자기 조회는 타이밍 때문에 미등록으로 보일 수 있어 따로 취급한다.
+const SELF_LABEL = "com.noblehong.meta-lead-poller";
 const DEFAULT_STATE_FILE = resolve(
   dirname(fileURLToPath(import.meta.url)),
   "state.json",
@@ -596,6 +598,10 @@ export function judgeSystem(sys) {
       critical: false,
     });
   }
+  // 자기 자신은 감시 대상이 아니다 (collectSystem 에서 제외).
+  // 실행 중 자기 라벨을 launchctl 로 조회하면 상태가 SSH 세션에서 볼 때와 달라
+  // 매 기동마다 ⚠️ 오보가 났다. 애초에 자기가 죽으면 이 검사도 못 도니 의미가 없고,
+  // 진짜 사망은 워커 크론의 하트비트 데드맨 스위치가 잡는다.
   for (const w of sys.watched || []) {
     checks.push({
       name: `폴러 ${w.label.replace(/^com\./, "").replace(/\.meta-lead-poller$/, "")}`,
@@ -618,11 +624,13 @@ async function collectSystem() {
     });
   const watchLabels = String(
     process.env.SYSTEM_WATCH_LABELS ||
-      "com.noblehong.meta-lead-poller,com.polarad.meta-lead-poller,com.kefalab.meta-lead-poller",
+      "com.polarad.meta-lead-poller,com.kefalab.meta-lead-poller",
   )
     .split(",")
     .map((s) => s.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    // 자기 자신은 제외 — 실행 중 자기 조회는 신뢰할 수 없고, 자기 사망은 워커가 잡는다
+    .filter((label) => label !== SELF_LABEL);
 
   const [df, pmset, list] = await Promise.all([
     run("df", ["-k", "/"]),
@@ -635,6 +643,7 @@ async function collectSystem() {
     uptimeDays: Math.floor(os.uptime() / 86400),
     sleep: parsePmsetSleep(pmset),
     watched: parseLaunchctlLabels(list, watchLabels),
+    ownLabel: SELF_LABEL,
   };
 }
 
@@ -960,6 +969,7 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
     }
 
     let lastHealthPingAt = state.lastHealthPingAt || "";
+    let reportStatus = "-";
     if (!dryRun) {
       const heartbeat = await postHeartbeat({
         url: heartbeatUrl,
@@ -976,7 +986,9 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
       });
 
       const status = overallStatus({ site, infra, system });
-      const statusChanged = Boolean(site || infra || system) && status !== siteStatus;
+      reportStatus = status;
+      const statusChanged =
+        Boolean(site || infra || system) && status !== siteStatus;
       const ping = shouldPingHealth({
         delivered,
         duplicates,
@@ -1032,8 +1044,17 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
       });
     }
 
+    // 판정 근거를 로그에 남긴다 — 텔레그램만 보고는 "왜 warn 인지"를 사후에 못 캔다
+    const failedNames = [
+      ...(site ? [...site.failed, ...site.unreachable].map((r) => r.name) : []),
+      ...(infra || []).filter((c) => !c.ok).map((c) => c.name),
+      ...(system || []).filter((c) => !c.ok).map((c) => c.name),
+    ];
     console.log(
-      `${TAG} ok dryRun=${dryRun} forms=${formIds.length} fetched=${leads.length} delivered=${delivered} duplicates=${duplicates} skipped=${skipped} site=${site ? site.status : "-"} since=${new Date(sinceMs).toISOString()}`,
+      `${TAG} ok dryRun=${dryRun} forms=${formIds.length} fetched=${leads.length} delivered=${delivered} duplicates=${duplicates} skipped=${skipped}` +
+        ` status=${reportStatus} site=${site ? site.status : "-"}` +
+        (failedNames.length ? ` failed=[${failedNames.join(",")}]` : "") +
+        ` since=${new Date(sinceMs).toISOString()}`,
     );
     return {
       fetched: leads.length,
