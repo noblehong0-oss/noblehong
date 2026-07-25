@@ -81,6 +81,12 @@ const allowed = [
   "META_LEAD_HEALTH_ALWAYS",
   "META_LEAD_STATE_FILE",
   "META_LEAD_DRY_RUN",
+  // 시스템 헬스체크
+  "WORKER_BASE_URL",
+  "R2_PUBLIC_URL",
+  "R2_PROBE_KEY",
+  "SYSTEM_WATCH_LABELS",
+  "META_LEAD_SKIP_SYSTEM_CHECK",
 ];
 const remoteEnv = `${allowed
   .filter((key) => sourceEnv[key] !== undefined && sourceEnv[key] !== "")

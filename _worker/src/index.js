@@ -791,6 +791,43 @@ function normBirthYear(raw) {
   return y != null && y >= MIN_Y && y <= MAX_Y ? String(y) : BIRTHY_UNKNOWN;
 }
 
+// 카페24 전송 결과를 접수 레코드에 남긴다.
+// 전송은 fire-and-forget 이라 지금까진 실패해야만 디버그 채널에 흔적이 남고
+// "잘 들어갔다"는 아무 데도 안 남았다. 시간당 리포트로 답하려면 성공도 기록해야 한다.
+// 기록 자체가 실패해도 접수/전송에는 영향 없다(조용히 넘어간다).
+async function recordCafe24Result(env, recordId, status) {
+  if (!env?.DB || !recordId) return;
+  try {
+    await env.DB.prepare(`UPDATE consultations SET cafe24 = ? WHERE id = ?`)
+      .bind(String(status).slice(0, 120), recordId)
+      .run();
+  } catch {}
+}
+
+// 최근 N시간 카페24 전송 집계 — 하트비트 응답으로 아이맥에 돌려줘 시간당 리포트에 싣는다
+async function cafe24Summary(env, hours = 24) {
+  try {
+    const r = await env.DB.prepare(
+      `SELECT
+         COUNT(*) AS total,
+         SUM(CASE WHEN cafe24 = 'ok' THEN 1 ELSE 0 END) AS ok,
+         SUM(CASE WHEN cafe24 LIKE 'fail:%' THEN 1 ELSE 0 END) AS fail
+       FROM consultations
+       WHERE 제출일시 >= datetime('now', ?)`,
+    )
+      .bind(`-${Number(hours) || 24} hours`)
+      .first();
+    return {
+      hours,
+      total: r?.total || 0,
+      ok: r?.ok || 0,
+      fail: r?.fail || 0,
+    };
+  } catch {
+    return null;
+  }
+}
+
 async function postToCafe24(env, fields) {
   if (!env.CRM_ENDPOINT) throw new Error("CRM_ENDPOINT not configured");
 
@@ -1183,12 +1220,19 @@ async function handleConsultationSubmit(request, env) {
           (address ? `\n거주지: ${address} ${addressDetail}` : ""),
         agree1: body.agreePrivacy ? "Y" : "N",
         agree2: body.agreeMarketing ? "Y" : "N",
-      }).catch((e) =>
-        tgDebug(
-          env,
-          `[노블홍/consultations] 카페24 전송 실패 (우리측 접수 OK)\nRecord:${recordId}\n${String(e).slice(0, 200)}`,
-        ),
-      ),
+      })
+        .then(() => recordCafe24Result(env, recordId, "ok"))
+        .catch(async (e) => {
+          await recordCafe24Result(
+            env,
+            recordId,
+            `fail:${String(e?.message || e).slice(0, 80)}`,
+          );
+          await tgDebug(
+            env,
+            `[노블홍/consultations] 카페24 전송 실패 (우리측 접수 OK)\nRecord:${recordId}\n${String(e).slice(0, 200)}`,
+          );
+        }),
     );
 
     return json({
@@ -1309,12 +1353,19 @@ async function handleConsultationQuick(request, env) {
         u_memo: "[간편상담신청] 사이드바에서 접수",
         agree1: "Y",
         agree2: "N",
-      }).catch((e) =>
-        tgDebug(
-          env,
-          `[노블홍/quick] 카페24 전송 실패\nRecord:${recordId}\n${String(e).slice(0, 200)}`,
-        ),
-      ),
+      })
+        .then(() => recordCafe24Result(env, recordId, "ok"))
+        .catch(async (e) => {
+          await recordCafe24Result(
+            env,
+            recordId,
+            `fail:${String(e?.message || e).slice(0, 80)}`,
+          );
+          return tgDebug(
+            env,
+            `[노블홍/quick] 카페24 전송 실패\nRecord:${recordId}\n${String(e).slice(0, 200)}`,
+          );
+        }),
     );
 
     return json({
@@ -1655,12 +1706,19 @@ async function handleMetaLead(request, env) {
         u_memo: cafe24Memo,
         agree1: "Y",
         agree2: "N",
-      }).catch((e) =>
-        tgDebug(
-          env,
-          `[노블홍/meta-lead] 카페24 전송 실패\nRecord:${recordId}\n${String(e).slice(0, 200)}`,
-        ),
-      ),
+      })
+        .then(() => recordCafe24Result(env, recordId, "ok"))
+        .catch(async (e) => {
+          await recordCafe24Result(
+            env,
+            recordId,
+            `fail:${String(e?.message || e).slice(0, 80)}`,
+          );
+          await tgDebug(
+            env,
+            `[노블홍/meta-lead] 카페24 전송 실패\nRecord:${recordId}\n${String(e).slice(0, 200)}`,
+          );
+        }),
     );
 
     return json({ ok: true, id: recordId });
@@ -1718,7 +1776,9 @@ async function handleMetaLeadHeartbeat(request, env) {
   } catch (e) {
     return json({ error: "Failed to record" }, 500);
   }
-  return json({ ok: true, at: nowIso });
+  // 카페24 전송 실적을 응답에 실어 보낸다 — 아이맥이 시간당 리포트에 그대로 싣는다.
+  // 별도 엔드포인트를 만들지 않고 이미 있는 왕복에 얹는다.
+  return json({ ok: true, at: nowIso, cafe24: await cafe24Summary(env, 24) });
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -1853,13 +1913,21 @@ async function handleConsultationBar(request, env) {
         u_birthY: birthYear ? String(birthYear) : "",
         u_memo: "[하단바 접수] 메인 페이지 하단 가로바에서 접수",
         agree1: body.agreePrivacy ? "Y" : "N",
+        // ↓ 아래 .then/.catch 에서 전송 결과를 consultations.cafe24 에 기록한다
         agree2: body.agreeMarketing ? "Y" : "N",
-      }).catch((e) =>
-        tgDebug(
-          env,
-          `[노블홍/bar] 카페24 전송 실패\nRecord:${recordId}\n${String(e).slice(0, 200)}`,
-        ),
-      ),
+      })
+        .then(() => recordCafe24Result(env, recordId, "ok"))
+        .catch(async (e) => {
+          await recordCafe24Result(
+            env,
+            recordId,
+            `fail:${String(e?.message || e).slice(0, 80)}`,
+          );
+          return tgDebug(
+            env,
+            `[노블홍/bar] 카페24 전송 실패\nRecord:${recordId}\n${String(e).slice(0, 200)}`,
+          );
+        }),
     );
 
     return json({

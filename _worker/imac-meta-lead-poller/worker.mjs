@@ -311,7 +311,9 @@ async function postHeartbeat({ url, secret, stats, fetchImpl = fetch }) {
       },
       body: JSON.stringify(stats),
     });
-    return { ok: response.ok, status: response.status };
+    // 응답에 카페24 전송 실적(최근 24h)이 실려온다 — 시간당 리포트에 그대로 싣는다
+    const data = await response.json().catch(() => ({}));
+    return { ok: response.ok, status: response.status, cafe24: data?.cafe24 };
   } catch (error) {
     // 하트비트 실패로 폴링 자체를 실패 처리하지 않는다 — 리드 전달이 우선
     return { ok: false, error: String(error?.message || error).slice(0, 120) };
@@ -373,34 +375,176 @@ export async function probeSite({ fetchImpl = fetch } = {}) {
   );
 }
 
-export function formatSiteAlert(site, checkedAtMs, prevSince, prevStatus) {
-  const head =
-    site.status === "fail"
-      ? "🔴 접수 장애 감지"
-      : site.status === "degraded"
-        ? "⚠️ 판정 불가"
-        : // 첫 실행에는 고장난 적이 없으니 "복구"가 아니다
-          prevStatus
-          ? "🟢 정상 복구"
-          : "🟢 접수경로 감시 시작";
-  const lines = [`[HEALTH] 노블홍 사이트 · ${head}`];
-  for (const r of [...site.failed, ...site.unreachable]) {
-    lines.push(`- ${r.name}: 기대 ${r.expect} → 실제 ${r.got}`);
+// ─────────────────────────────────────────────────────────────────
+// 인프라 프로브 — "작동여부만" 본다.
+// 본문은 받지 않거나(HEAD) 즉시 취소해서 바이트를 안 끌어온다.
+// 실측(2026-07-25): 워커 53B/0.2s · D1 1행 260B/0.7s · 카페24 0B/0.05s · R2 0B/0.3s
+// ─────────────────────────────────────────────────────────────────
+// 카페24는 합성 프로브로 찌르지 않는다 — 알고 싶은 건 "서버가 켜져 있나"가 아니라
+// "접수 데이터가 실제로 들어갔나"다. 그건 워커가 전송 결과를 기록해두고
+// 하트비트 응답으로 최근 24시간 집계를 돌려준다(runPoll 의 crm 라인).
+const DEFAULT_WORKER_BASE = "https://noblehong-api.noblehong0.workers.dev";
+
+export function buildInfraProbes(env = process.env) {
+  const worker = String(env.WORKER_BASE_URL || DEFAULT_WORKER_BASE).replace(
+    /\/+$/,
+    "",
+  );
+  const probes = [
+    { name: "워커 API", url: `${worker}/api/health`, expect: 200, critical: true },
+    {
+      // 접수 저장소가 D1이라 읽기가 죽으면 쓰기도 의심해야 한다. 1행만 조회.
+      name: "D1 읽기",
+      url: `${worker}/api/content?module=press&limit=1`,
+      expect: 200,
+      critical: true,
+    },
+  ];
+  const r2 = String(env.R2_PUBLIC_URL || "").replace(/\/+$/, "");
+  const r2Key = String(env.R2_PROBE_KEY || "media/stats/stats_v1.mp4");
+  if (r2) {
+    // 자산은 접수에 직결되지 않으므로 실패해도 경고까지만
+    probes.push({
+      name: "R2 자산",
+      url: `${r2}/${r2Key}`,
+      method: "HEAD",
+      expect: 200,
+      critical: false,
+    });
   }
-  if (site.status === "ok") {
-    lines.push(`- 전체 ${site.total}/${site.total} 정상`);
-    if (prevSince) lines.push(`- 직전 이상 시작: ${prevSince}`);
-  } else {
-    const bad = site.failed.length + site.unreachable.length;
-    lines.push(`- 정상 항목: ${site.total - bad}/${site.total}`);
+  return probes;
+}
+
+export async function probeInfra({ fetchImpl = fetch, env = process.env } = {}) {
+  return Promise.all(
+    buildInfraProbes(env).map(async (p) => {
+      try {
+        const res = await fetchImpl(p.url, {
+          method: p.method || "GET",
+          headers: p.headers,
+          redirect: "manual",
+        });
+        // 본문은 안 읽고 즉시 버린다 — 소켓만 정리하고 바이트는 끌어오지 않는다
+        if (res.body) await res.body.cancel().catch(() => {});
+        return {
+          name: p.name,
+          ok: p.anyResponse ? true : res.status === p.expect,
+          got: String(res.status),
+          critical: p.critical,
+        };
+      } catch (error) {
+        return {
+          name: p.name,
+          ok: false,
+          got: "ERR:" + String(error?.message || error).slice(0, 50),
+          critical: p.critical,
+        };
+      }
+    }),
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────
+// 아이맥 자체 상태 — 폴러가 도는 바닥이 멀쩡한지.
+// 전부 로컬 명령 한 줄씩이라 비용은 사실상 0.
+// 디스크가 차거나 절전으로 잠들면 폴러가 멈추므로 사후가 아니라 예측 지표다.
+// ─────────────────────────────────────────────────────────────────
+export function parseDiskUsedPercent(dfOutput) {
+  // df -k / 의 2번째 줄에서 "62%" 형태를 집는다
+  const line = String(dfOutput || "").split(/\r?\n/)[1] || "";
+  const m = line.match(/(\d{1,3})%/);
+  return m ? Number(m[1]) : null;
+}
+
+export function parsePmsetSleep(pmsetOutput) {
+  // "sleep  0 (imposed by ...)" → 0 이면 잠들지 않음
+  const m = String(pmsetOutput || "").match(/^\s*sleep\s+(\d+)/m);
+  return m ? Number(m[1]) : null;
+}
+
+export function parseLaunchctlLabels(listOutput, labels) {
+  // launchctl list 출력: "PID\tStatus\tLabel" (PID 가 '-' 면 대기중, 정상)
+  const rows = new Map();
+  for (const line of String(listOutput || "").split(/\r?\n/)) {
+    const cols = line.split(/\t+/);
+    if (cols.length >= 3) rows.set(cols[2].trim(), cols[1].trim());
   }
-  if (site.status === "fail") {
-    lines.push("");
-    lines.push("※ /api 404 = Vercel 배포가 _deploy 아닌 repo 루트로 덮인 상태.");
-    lines.push("  복구: _deploy/ 에서 vercel --prod 재배포");
+  return labels.map((label) => ({
+    label,
+    loaded: rows.has(label),
+    // 마지막 종료코드. 0 아니면 최근 실행이 실패했다는 뜻
+    lastExit: rows.has(label) ? rows.get(label) : null,
+  }));
+}
+
+export function judgeSystem(sys) {
+  const checks = [];
+  if (sys.diskUsedPercent != null) {
+    checks.push({
+      name: "디스크",
+      // 가득 차면 상태파일·로그 쓰기가 실패해 폴러가 죽는다 → 접수 직결
+      ok: sys.diskUsedPercent < 90,
+      info: `${sys.diskUsedPercent}% 사용`,
+      critical: true,
+    });
   }
-  lines.push(`체크 시각: ${formatKst(checkedAtMs)}`);
-  return lines.join("\n");
+  if (sys.memFreePercent != null) {
+    checks.push({
+      name: "메모리",
+      ok: sys.memFreePercent >= 5,
+      info: `여유 ${sys.memFreePercent}%`,
+      critical: false,
+    });
+  }
+  if (sys.sleep != null) {
+    checks.push({
+      name: "절전",
+      // 잠들면 launchd 주기 실행이 멈춘다 (깨어날 때 1회만 몰아서 실행)
+      ok: sys.sleep === 0,
+      info: sys.sleep === 0 ? "off" : `${sys.sleep}분 후 sleep`,
+      critical: false,
+    });
+  }
+  for (const w of sys.watched || []) {
+    checks.push({
+      name: `폴러 ${w.label.replace(/^com\./, "").replace(/\.meta-lead-poller$/, "")}`,
+      ok: w.loaded && (w.lastExit === "-" || w.lastExit === "0"),
+      info: w.loaded ? `exit ${w.lastExit}` : "미등록",
+      critical: false,
+    });
+  }
+  return checks;
+}
+
+async function collectSystem() {
+  const { execFile } = await import("node:child_process");
+  const os = await import("node:os");
+  const run = (cmd, args) =>
+    new Promise((resolve) => {
+      execFile(cmd, args, { timeout: 5000 }, (err, stdout) =>
+        resolve(err ? "" : String(stdout)),
+      );
+    });
+  const watchLabels = String(
+    process.env.SYSTEM_WATCH_LABELS ||
+      "com.noblehong.meta-lead-poller,com.polarad.meta-lead-poller,com.kefalab.meta-lead-poller",
+  )
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  const [df, pmset, list] = await Promise.all([
+    run("df", ["-k", "/"]),
+    run("pmset", ["-g", "custom"]),
+    run("launchctl", ["list"]),
+  ]);
+  return {
+    diskUsedPercent: parseDiskUsedPercent(df),
+    memFreePercent: Math.round((os.freemem() / os.totalmem()) * 100),
+    uptimeDays: Math.floor(os.uptime() / 86400),
+    sleep: parsePmsetSleep(pmset),
+    watched: parseLaunchctlLabels(list, watchLabels),
+  };
 }
 
 function formatKst(ms) {
@@ -408,35 +552,90 @@ function formatKst(ms) {
   return `${shifted.slice(0, 10)} ${shifted.slice(11, 16)} KST`;
 }
 
-const SITE_LABEL = {
+// 접수 + 사이트 + 인프라 + 아이맥을 한 메시지로 인프라봇에 보고한다.
+// 전체 판정: 접수 직결(critical) 항목이 깨지면 🔴, 부가 항목만 깨지면 ⚠️.
+export function overallStatus({ site, infra, system }) {
+  const critical = [
+    // 사이트는 HTTP 불일치만 확실한 장애로 본다.
+    // fetch 자체 실패는 아이맥 네트워크 문제일 수 있어 경고까지만(오보 방지).
+    ...(site ? site.failed.map(() => true) : []),
+    ...(infra || []).filter((c) => !c.ok && c.critical).map(() => true),
+    ...(system || []).filter((c) => !c.ok && c.critical).map(() => true),
+  ];
+  if (critical.length) return "fail";
+  const warn =
+    (site ? site.unreachable.length : 0) +
+    (infra || []).filter((c) => !c.ok).length +
+    (system || []).filter((c) => !c.ok).length;
+  return warn ? "warn" : "ok";
+}
+
+const STATUS_HEAD = {
   ok: "🟢 정상",
+  warn: "⚠️ 경고",
   fail: "🔴 장애",
-  degraded: "⚠️ 판정불가",
 };
 
-export function formatHealthCheckMessage({
+export function formatReport({
   checkedAtMs,
   formCount,
   delivered,
   duplicates,
   skipped,
   site,
+  infra,
+  system,
+  cafe24,
+  status,
 }) {
-  const status =
-    delivered > 0 ? `정상 · 신규 ${delivered}건 접수` : "정상 · 신규 없음";
-  return [
-    "[HEALTH] 노블홍 Meta 접수체크",
-    status,
-    duplicates > 0 ? `서버 중복(멱등 차단): ${duplicates}건` : "",
-    skipped > 0 ? `연락처 없음 스킵: ${skipped}건` : "",
-    `조회 폼: ${formCount}개`,
-    site
-      ? `사이트 접수경로: ${SITE_LABEL[site.status] || site.status} (${site.total - site.failed.length - site.unreachable.length}/${site.total})`
-      : "",
-    `체크 시각: ${formatKst(checkedAtMs)}`,
-  ]
-    .filter(Boolean)
-    .join("\n");
+  const lines = [`[HEALTH] 노블홍 시스템체크 · ${STATUS_HEAD[status] || status}`];
+
+  // 1) 접수
+  const acc = [
+    delivered > 0 ? `신규 ${delivered}건` : "신규 없음",
+    duplicates > 0 ? `중복차단 ${duplicates}` : "",
+    skipped > 0 ? `연락처없음 ${skipped}` : "",
+  ].filter(Boolean);
+  lines.push(`접수: ${acc.join(" · ")} (폼 ${formCount}개)`);
+
+  // 2) 카페24 — 도달성이 아니라 "실제로 들어갔나"
+  if (cafe24) {
+    const pending = Math.max(0, cafe24.total - cafe24.ok - cafe24.fail);
+    lines.push(
+      `CRM 전송(${cafe24.hours}h): 성공 ${cafe24.ok}/${cafe24.total}` +
+        (cafe24.fail ? ` · 실패 ${cafe24.fail}` : "") +
+        (pending ? ` · 미기록 ${pending}` : ""),
+    );
+  }
+
+  // 3) 사이트
+  if (site) {
+    const bad = site.failed.length + site.unreachable.length;
+    lines.push(`사이트: ${site.total - bad}/${site.total}`);
+    for (const r of [...site.failed, ...site.unreachable]) {
+      lines.push(`  ✗ ${r.name}: 기대 ${r.expect} → ${r.got}`);
+    }
+  }
+
+  // 4) 인프라
+  if (infra?.length) {
+    lines.push(
+      `인프라: ${infra.map((c) => `${c.name} ${c.ok ? "✓" : "✗"}`).join(" · ")}`,
+    );
+    for (const c of infra.filter((x) => !x.ok)) {
+      lines.push(`  ✗ ${c.name}: ${c.got}`);
+    }
+  }
+
+  // 5) 아이맥
+  if (system?.length) {
+    lines.push(
+      `아이맥: ${system.map((c) => `${c.name} ${c.info}${c.ok ? "" : " ✗"}`).join(" · ")}`,
+    );
+  }
+
+  lines.push(`체크: ${formatKst(checkedAtMs)}`);
+  return lines.join("\n");
 }
 
 export function formatHealthCheckFailureMessage(error, checkedAtMs) {
@@ -459,8 +658,11 @@ export function shouldPingHealth({
   nowMs,
   quietMs,
   always,
+  statusChanged,
 }) {
   if (always) return true;
+  // 상태가 바뀐 순간은 무조건 보고 — 장애 발생도 복구도 놓치면 안 된다
+  if (statusChanged) return true;
   if (delivered > 0 || duplicates > 0 || skipped > 0) return true;
   if (!Number.isFinite(lastHealthPingAtMs) || !lastHealthPingAtMs) return true;
   return nowMs - lastHealthPingAtMs >= quietMs;
@@ -605,42 +807,35 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
         payload.createdTime || new Date().toISOString();
     }
 
-    // 사이트 접수경로 프로브 — 리드 전달이 끝난 뒤에 돈다.
+    // 시스템 헬스체크 — 리드 전달이 끝난 뒤에 돈다.
     // 여기서 터져도 리드 전달은 이미 끝났고, 폴링 자체를 실패시키지 않는다.
+    // 전부 "작동여부만" 보는 수준(본문 미수신 · 로컬 명령 3개)이라 1초 남짓.
     let site = null;
+    let infra = null;
+    let system = null;
     let siteStatus = state.siteStatus || "";
     let siteSince = state.siteSince || "";
-    if (!dryRun && !envFlag("META_LEAD_SKIP_SITE_PROBE")) {
-      try {
-        site = await probeSite({ fetchImpl });
-      } catch (error) {
-        console.error(
-          `${TAG} site-probe-error ${String(error?.message || error).slice(0, 200)}`,
-        );
-      }
+    if (!dryRun && !envFlag("META_LEAD_SKIP_SYSTEM_CHECK")) {
+      const guard = async (label, fn) => {
+        try {
+          return await fn();
+        } catch (error) {
+          console.error(
+            `${TAG} ${label}-error ${String(error?.message || error).slice(0, 200)}`,
+          );
+          return null;
+        }
+      };
+      [site, infra, system] = await Promise.all([
+        guard("site-probe", () => probeSite({ fetchImpl })),
+        guard("infra-probe", () => probeInfra({ fetchImpl })),
+        guard("system-check", async () => judgeSystem(await collectSystem())),
+      ]);
     }
 
     let lastHealthPingAt = state.lastHealthPingAt || "";
     if (!dryRun) {
-      // 사이트 상태가 바뀐 순간에만 별도 알림 (지속 장애 도배 0)
-      if (site && site.status !== siteStatus) {
-        try {
-          await sendHealthCheck({
-            botToken: healthBotToken,
-            chatId: healthChatId,
-            message: formatSiteAlert(site, nowMs, siteSince, siteStatus),
-            fetchImpl,
-          });
-        } catch (error) {
-          console.error(
-            `${TAG} site-alert-error ${String(error?.message || error).slice(0, 200)}`,
-          );
-        }
-        siteSince = new Date(nowMs).toISOString();
-        siteStatus = site.status;
-      }
-
-      await postHeartbeat({
+      const heartbeat = await postHeartbeat({
         url: heartbeatUrl,
         secret: webhookSecret,
         stats: {
@@ -654,6 +849,8 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
         fetchImpl,
       });
 
+      const status = overallStatus({ site, infra, system });
+      const statusChanged = Boolean(site || infra || system) && status !== siteStatus;
       const ping = shouldPingHealth({
         delivered,
         duplicates,
@@ -662,22 +859,31 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
         nowMs,
         quietMs,
         always: healthAlways,
+        statusChanged,
       });
       if (ping) {
         await sendHealthCheck({
           botToken: healthBotToken,
           chatId: healthChatId,
-          message: formatHealthCheckMessage({
+          message: formatReport({
             checkedAtMs: nowMs,
             formCount: formIds.length,
             delivered,
             duplicates,
             skipped,
             site,
+            infra,
+            system,
+            cafe24: heartbeat?.cafe24,
+            status,
           }),
           fetchImpl,
         });
         lastHealthPingAt = new Date(nowMs).toISOString();
+      }
+      if (statusChanged) {
+        siteSince = new Date(nowMs).toISOString();
+        siteStatus = status;
       }
 
       // 상태 저장은 전달·알림이 끝난 뒤에. 중간에 죽으면 다음 실행이 같은 구간을 다시 훑고,
@@ -768,10 +974,42 @@ export async function runInspect({ fetchImpl = fetch } = {}) {
   }
 }
 
+// 시스템 헬스체크만 돌려 리포트를 화면에 찍는다 — Meta 조회도, 전송도, 알림도 없다.
+// 배포 직후 "체크가 제대로 도나"를 텔레그램 오염 없이 확인하는 용도.
+export async function runSelfCheck({ fetchImpl = fetch } = {}) {
+  const t0 = Date.now();
+  const [site, infra, system] = await Promise.all([
+    probeSite({ fetchImpl }),
+    probeInfra({ fetchImpl }),
+    collectSystem().then(judgeSystem),
+  ]);
+  const status = overallStatus({ site, infra, system });
+  console.log(
+    formatReport({
+      checkedAtMs: Date.now(),
+      formCount: parseFormIds(process.env.META_LEAD_FORM_IDS).length,
+      delivered: 0,
+      duplicates: 0,
+      skipped: 0,
+      site,
+      infra,
+      system,
+      cafe24: null, // 하트비트 왕복이 없으므로 CRM 집계는 생략
+      status,
+    }),
+  );
+  console.log(`\n(전송·알림 없음 · 소요 ${Date.now() - t0}ms)`);
+  return { status, ms: Date.now() - t0 };
+}
+
 async function main() {
   try {
     if (process.argv.includes("--inspect")) {
       await runInspect();
+      return;
+    }
+    if (process.argv.includes("--selfcheck")) {
+      await runSelfCheck();
       return;
     }
     await runPoll();
