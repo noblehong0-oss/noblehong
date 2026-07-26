@@ -9,6 +9,7 @@ import {
   buildInfraProbes,
   buildPayload,
   computeSinceMs,
+  formatHealthCheckFailureMessage,
   formatReport,
   hasPhone,
   isFormCheckDue,
@@ -209,8 +210,49 @@ test("리포트 — 신규 없음/스킵도 그대로 드러난다", () => {
     skipped: 1,
     status: "ok",
   });
-  assert.match(msg, /접수: 신규 없음 · 연락처없음 1 \(폼 2개\)/);
+  assert.match(msg, /- <b>접수<\/b>  신규 없음 · 연락처없음 1 \(폼 2개\)/);
   assert.match(msg, /2026-08-10 12:00 KST/); // UTC+9
+});
+
+// 인프라봇 채널 공용 포맷 — 굵은 헤더 + 구분선 + `- <b>라벨</b>  값`
+test("리포트 — 지정 알림 스타일(헤더·구분선·하이픈 라벨)을 지킨다", () => {
+  const msg = formatReport({
+    checkedAtMs: Date.parse("2026-08-10T03:00:00Z"),
+    formCount: 2,
+    delivered: 0,
+    duplicates: 0,
+    skipped: 0,
+    status: "ok",
+  });
+  const lines = msg.split("\n");
+  assert.equal(lines[0], "<b>[HEALTH] 노블홍 시스템체크</b> 🟢 정상");
+  assert.equal(lines[1], "──────────────");
+  for (const line of lines.slice(2)) {
+    assert.match(line, /^- <b>[^<]+<\/b> {2}/);
+  }
+});
+
+test("리포트 — 폼 이름의 꺾쇠는 이스케이프된다(HTML 파싱 깨짐 방지)", () => {
+  const msg = formatReport({
+    checkedAtMs: Date.parse("2026-08-10T03:00:00Z"),
+    formCount: 1,
+    delivered: 0,
+    duplicates: 0,
+    skipped: 0,
+    infra: [{ name: "폼 등록", ok: false, info: "미등록 <신규폼> & 1개" }],
+    status: "warn",
+  });
+  assert.match(msg, /미등록 &lt;신규폼&gt; &amp; 1개/);
+  assert.equal(msg.includes("<신규폼>"), false);
+});
+
+test("실패 알림도 같은 스타일로 나간다", () => {
+  const msg = formatHealthCheckFailureMessage(
+    new Error("token expired"),
+    Date.parse("2026-08-10T03:00:00Z"),
+  );
+  assert.match(msg, /^<b>\[HEALTH\] 노블홍 시스템체크<\/b> 🔴 실패\n──────────────\n/);
+  assert.match(msg, /- <b>사유<\/b>  token expired/);
 });
 
 // ── 사이트 접수경로 프로브 (워커 크론 → 아이맥으로 이관) ──────────
@@ -486,13 +528,16 @@ test("리포트 — 접수·CRM·사이트·인프라·아이맥이 한 메시�
     status: "warn",
   });
   assert.match(msg, /⚠️ 경고/);
-  assert.match(msg, /접수: 신규 2건 · 중복차단 1 \(폼 2개\)/);
-  assert.match(msg, /CRM 전송\(24h\): 성공 3\/3/);
-  assert.match(msg, /사이트: 2\/2/);
-  assert.match(msg, /인프라: 워커 API ✓ · R2 자산 ✗/);
+  assert.match(msg, /- <b>접수<\/b>  신규 2건 · 중복차단 1 \(폼 2개\)/);
+  assert.match(msg, /- <b>CRM 전송\(24h\)<\/b>  성공 3\/3/);
+  assert.match(msg, /- <b>사이트<\/b>  2\/2/);
+  assert.match(msg, /- <b>인프라<\/b>  워커 API ✓ · R2 자산 ✗/);
   assert.match(msg, /✗ R2 자산: 404/);
-  assert.match(msg, /아이맥: 디스크 64% 사용 · 메모리 여유 41% · 절전 off/);
-  assert.match(msg, /체크: 2026-08-10 12:00 KST/);
+  assert.match(
+    msg,
+    /- <b>아이맥<\/b>  디스크 64% 사용 · 메모리 여유 41% · 절전 off/,
+  );
+  assert.match(msg, /- <b>체크시각<\/b>  2026-08-10 12:00 KST/);
 });
 
 test("리포트 — CRM 전송 실패가 숫자로 드러난다", () => {
@@ -505,7 +550,7 @@ test("리포트 — CRM 전송 실패가 숫자로 드러난다", () => {
     cafe24: { hours: 24, total: 5, ok: 3, fail: 2 },
     status: "ok",
   });
-  assert.match(msg, /CRM 전송\(24h\): 성공 3\/5 · 실패 2/);
+  assert.match(msg, /- <b>CRM 전송\(24h\)<\/b>  성공 3\/5 · 실패 2/);
 });
 
 test("상태가 바뀌면 조용모드여도 무조건 보고한다", () => {

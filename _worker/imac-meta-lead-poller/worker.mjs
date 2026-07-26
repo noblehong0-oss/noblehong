@@ -676,6 +676,26 @@ const STATUS_HEAD = {
   fail: "🔴 장애",
 };
 
+// 알림 스타일은 워커 인프라 알림과 같은 채널(인프라봇)로 가므로 포맷도 같아야 한다.
+// 지정 포맷 = 굵은 헤더 + 구분선 + `- <b>라벨</b>  값` (parse_mode=HTML 전제).
+const DIVIDER = "──────────────";
+
+function escapeHtml(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function row(label, value) {
+  return `- <b>${escapeHtml(label)}</b>  ${escapeHtml(value)}`;
+}
+
+// 이상 항목은 라벨 줄 아래에 들여쓴다 — 한 줄에 몰면 뭐가 깨졌는지 안 보인다
+function subRow(text) {
+  return `   ✗ ${escapeHtml(text)}`;
+}
+
 export function formatReport({
   checkedAtMs,
   formCount,
@@ -688,7 +708,10 @@ export function formatReport({
   cafe24,
   status,
 }) {
-  const lines = [`[HEALTH] 노블홍 시스템체크 · ${STATUS_HEAD[status] || status}`];
+  const lines = [
+    `<b>[HEALTH] 노블홍 시스템체크</b> ${STATUS_HEAD[status] || status}`,
+    DIVIDER,
+  ];
 
   // 1) 접수
   const acc = [
@@ -696,55 +719,67 @@ export function formatReport({
     duplicates > 0 ? `중복차단 ${duplicates}` : "",
     skipped > 0 ? `연락처없음 ${skipped}` : "",
   ].filter(Boolean);
-  lines.push(`접수: ${acc.join(" · ")} (폼 ${formCount}개)`);
+  lines.push(row("접수", `${acc.join(" · ")} (폼 ${formCount}개)`));
 
   // 2) 카페24 — 도달성이 아니라 "실제로 들어갔나"
   if (cafe24) {
     const pending = Math.max(0, cafe24.total - cafe24.ok - cafe24.fail);
     lines.push(
-      `CRM 전송(${cafe24.hours}h): 성공 ${cafe24.ok}/${cafe24.total}` +
-        (cafe24.fail ? ` · 실패 ${cafe24.fail}` : "") +
-        (pending ? ` · 미기록 ${pending}` : ""),
+      row(
+        `CRM 전송(${cafe24.hours}h)`,
+        `성공 ${cafe24.ok}/${cafe24.total}` +
+          (cafe24.fail ? ` · 실패 ${cafe24.fail}` : "") +
+          (pending ? ` · 미기록 ${pending}` : ""),
+      ),
     );
   }
 
   // 3) 사이트
   if (site) {
     const bad = site.failed.length + site.unreachable.length;
-    lines.push(`사이트: ${site.total - bad}/${site.total}`);
+    lines.push(row("사이트", `${site.total - bad}/${site.total}`));
     for (const r of [...site.failed, ...site.unreachable]) {
-      lines.push(`  ✗ ${r.name}: 기대 ${r.expect} → ${r.got}`);
+      lines.push(subRow(`${r.name}: 기대 ${r.expect} → ${r.got}`));
     }
   }
 
   // 4) 인프라
   if (infra?.length) {
     lines.push(
-      `인프라: ${infra.map((c) => `${c.name} ${c.ok ? "✓" : "✗"}`).join(" · ")}`,
+      row(
+        "인프라",
+        infra.map((c) => `${c.name} ${c.ok ? "✓" : "✗"}`).join(" · "),
+      ),
     );
     for (const c of infra.filter((x) => !x.ok)) {
-      lines.push(`  ✗ ${c.name}: ${c.got ?? c.info ?? ""}`);
+      lines.push(subRow(`${c.name}: ${c.got ?? c.info ?? ""}`));
     }
   }
 
   // 5) 아이맥
   if (system?.length) {
     lines.push(
-      `아이맥: ${system.map((c) => `${c.name} ${c.info}${c.ok ? "" : " ✗"}`).join(" · ")}`,
+      row(
+        "아이맥",
+        system
+          .map((c) => `${c.name} ${c.info}${c.ok ? "" : " ✗"}`)
+          .join(" · "),
+      ),
     );
   }
 
-  lines.push(`체크: ${formatKst(checkedAtMs)}`);
+  lines.push(row("체크시각", formatKst(checkedAtMs)));
   return lines.join("\n");
 }
 
 export function formatHealthCheckFailureMessage(error, checkedAtMs) {
   const reason = String(error?.message || error || "unknown").slice(0, 240);
   return [
-    "[HEALTH] 노블홍 Meta 접수체크",
-    "🔴 실패 · 리드 수신이 멈췄을 수 있음",
-    `사유: ${reason}`,
-    `체크 시각: ${formatKst(checkedAtMs)}`,
+    "<b>[HEALTH] 노블홍 시스템체크</b> 🔴 실패",
+    DIVIDER,
+    row("증상", "리드 수신이 멈췄을 수 있음"),
+    row("사유", reason),
+    row("체크시각", formatKst(checkedAtMs)),
   ].join("\n");
 }
 
@@ -782,6 +817,7 @@ export async function sendHealthCheck({
       body: JSON.stringify({
         chat_id: chatId,
         text: message,
+        parse_mode: "HTML",
         disable_web_page_preview: true,
       }),
     },
