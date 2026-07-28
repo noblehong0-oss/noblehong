@@ -394,50 +394,57 @@ const SOURCE_LABEL = {
   "meta-fb": "Meta · Facebook",
 };
 
-// C안 HTML 풀폼 — 정상 접수 알림 (일반 채널)
-function buildConsultMessage(env, source, fields, recordId, ip) {
+// 접수 알림 공통 포맷 — 굵은 헤더 + 구분선 + `- <b>라벨</b>  값` (이모지/IP 없음)
+// 접수경로(홈페이지 폼 3종 / Meta)가 달라도 같은 모양으로 나가야 한다.
+function buildLeadMessage(env, headerLabel, rows, recordId) {
   const adminBase = env.ADMIN_URL || "https://noblehong.vercel.app/admin";
   const adminLink = `${adminBase}/?id=${encodeURIComponent(recordId || "")}`;
-  const lines = [
-    `<b>🎯 새 상담 접수 · ${escapeHtml(SOURCE_LABEL[source] || source)}</b>`,
-    "",
-  ];
-  // 이름 + 추가정보
-  let nameLine = `👤 <b>${escapeHtml(fields.name || "")}</b>`;
-  const extras = [];
-  if (fields.gender) extras.push(escapeHtml(fields.gender));
-  if (fields.birthYear) extras.push(escapeHtml(String(fields.birthYear)));
-  if (fields.marriage) extras.push(escapeHtml(fields.marriage));
-  if (extras.length) nameLine += " · " + extras.join(" · ");
-  lines.push(nameLine);
-  lines.push(`📞 <code>${escapeHtml(fields.phone || "")}</code>`);
-  if (fields.address) {
-    const addr =
-      fields.address + (fields.addressDetail ? " " + fields.addressDetail : "");
-    lines.push(`🏠 ${escapeHtml(addr)}`);
-  }
-  if (fields.message) {
-    const msg = String(fields.message);
-    const trimmed = msg.length > 100 ? msg.slice(0, 100) + "…" : msg;
-    lines.push(`💬 ${escapeHtml(trimmed)}`);
-  }
-  lines.push(`🕒 ${formatKoreanDate()}`);
-  lines.push(`🌐 IP <code>${escapeHtml(ip || "")}</code>`);
-  lines.push("");
-  lines.push(
-    `🔗 <a href="${escapeHtml(adminLink)}"><b>어드민에서 열기</b></a>`,
+  const bodyLines = rows
+    .filter(([, v]) => v && String(v).trim() !== "")
+    .map(([k, v]) => `- <b>${escapeHtml(k)}</b>  ${escapeHtml(v)}`);
+  const divider = "─────────────────────";
+  return [
+    `<b>[새 상담 접수]</b> ${escapeHtml(headerLabel)}`,
+    divider,
+    ...bodyLines,
+    divider,
+    `<a href="${escapeHtml(adminLink)}">어드민에서 열기 →</a>`,
+  ].join("\n");
+}
+
+// 홈페이지 폼 접수 알림 (일반 채널)
+function buildConsultMessage(env, source, fields, recordId) {
+  const personalBits = [];
+  if (fields.gender) personalBits.push(fields.gender);
+  if (fields.birthYear) personalBits.push(String(fields.birthYear));
+  if (fields.marriage) personalBits.push(fields.marriage);
+  const addr = fields.address
+    ? fields.address + (fields.addressDetail ? " " + fields.addressDetail : "")
+    : "";
+  const msg = String(fields.message || "");
+  return buildLeadMessage(
+    env,
+    SOURCE_LABEL[source] || source,
+    [
+      ["이름", fields.name],
+      ["인적사항", personalBits.join(" · ")],
+      ["연락처", fields.phone],
+      ["지역", addr],
+      ["상담내용", msg.length > 100 ? msg.slice(0, 100) + "…" : msg],
+      ["접수시각", formatKoreanDate()],
+    ],
+    recordId,
   );
-  return lines.join("\n");
 }
 
 // 일반 접수 채널 (사장님이 보는 채널)
-function tgConsult(env, source, fields, recordId, ip) {
+function tgConsult(env, source, fields, recordId) {
   const token = env.TELEGRAM_BOT_TOKEN || env.ADMIN_TG_BOT_TOKEN;
   const chatId = env.TELEGRAM_CHAT_ID || env.ADMIN_TG_CHAT_ID;
   return tgSend(
     token,
     chatId,
-    buildConsultMessage(env, source, fields, recordId, ip),
+    buildConsultMessage(env, source, fields, recordId),
   );
 }
 
@@ -1181,7 +1188,6 @@ async function handleConsultationSubmit(request, env) {
         message,
       },
       recordId,
-      ip,
     );
 
     // best-effort (이메일 + 카페24)
@@ -1341,7 +1347,7 @@ async function handleConsultationQuick(request, env) {
       return json({ error: "Failed to save" }, 500);
     }
 
-    await tgConsult(env, "quick", { name, phone }, recordId, ip);
+    await tgConsult(env, "quick", { name, phone }, recordId);
 
     bgRun(
       env,
@@ -1388,41 +1394,27 @@ async function handleConsultationQuick(request, env) {
 //   Body (한글 키): { 이름, 연락처, 성별, 혼인여부, 출생년도, 지역, 광고명 }
 //   처리: D1 consultations INSERT + Telegram 알림 + 카페24 CRM(u_memo 출처태그)
 // ─────────────────────────────────────────────────────────────────
-// Meta lead 전용 텔레그램 메시지 (라벨정렬 + 헤더구분선 + 하이픈 짝대기)
-function displayWidth(s) {
-  let w = 0;
-  for (const c of String(s || "")) w += c.charCodeAt(0) > 127 ? 2 : 1;
-  return w;
-}
+// Meta lead 텔레그램 메시지 — 홈페이지 폼과 같은 buildLeadMessage 포맷
 function buildMetaLeadMessage(env, fields, recordId, platformLabel) {
-  const adminBase = env.ADMIN_URL || "https://noblehong.vercel.app/admin";
-  const adminLink = `${adminBase}/?id=${encodeURIComponent(recordId || "")}`;
   const headerPlat = platformLabel ? `Meta · ${platformLabel}` : "Meta 광고";
   const personalBits = [];
   if (fields.gender) personalBits.push(fields.gender);
   if (fields.birthYear) personalBits.push(String(fields.birthYear));
   if (fields.marriage) personalBits.push(fields.marriage);
-  const rows = [
-    ["이름", fields.name],
-    ["인적사항", personalBits.join(" · ")],
-    ["연락처", fields.phone],
-    ["지역", fields.address],
-    ["광고", fields.adName],
-    ["접수시각", formatKoreanDate()],
-  ].filter(([, v]) => v && String(v).trim() !== "");
-  const bodyLines = rows.map(
-    ([k, v]) => `- <b>${escapeHtml(k)}</b>  ${escapeHtml(v)}`,
+  return buildLeadMessage(
+    env,
+    headerPlat,
+    [
+      ["이름", fields.name],
+      ["인적사항", personalBits.join(" · ")],
+      ["연락처", fields.phone],
+      ["지역", fields.address],
+      ["광고", fields.adName],
+      ["접수시각", formatKoreanDate()],
+    ],
+    recordId,
   );
-  const divider = "─────────────────────";
-  return [
-    `<b>[새 상담 접수]</b> ${escapeHtml(headerPlat)}`,
-    divider,
-    ...bodyLines,
-    divider,
-    `<a href="${escapeHtml(adminLink)}">어드민에서 열기 →</a>`,
-  ].join("\n");
 }
-
 function timingSafeEqualStr(a, b) {
   if (typeof a !== "string" || typeof b !== "string") return false;
   if (a.length !== b.length) return false;
@@ -1901,7 +1893,6 @@ async function handleConsultationBar(request, env) {
       "bar",
       { name, phone, gender: genderKo, birthYear, marriage },
       recordId,
-      ip,
     );
 
     bgRun(
