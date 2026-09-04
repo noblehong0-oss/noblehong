@@ -44,6 +44,10 @@ const DEFAULT_STATE_FILE = resolve(
   "state.json",
 );
 const LOCK_STALE_MS = 10 * 60 * 1000;
+// 같은 리드에서 이 횟수만큼 연속 실패하면 격리하고 큐를 다시 흐르게 한다.
+// 폴링이 1시간 간격이라 3회 = 약 3시간. 일시 장애는 그 전에 스스로 풀리고,
+// 그 리드가 원인인 경우에만 격리되어 뒤에 줄 선 리드가 무한정 막히지 않는다.
+const MAX_LEAD_RETRIES = 3;
 
 function envRequired(name) {
   const value = String(process.env[name] || "").trim();
@@ -227,6 +231,7 @@ function emptyState(cutoverAt) {
     formsCheck: null,
     lastFormCheckAt: "",
     processed: {},
+    retries: {},
   };
 }
 
@@ -264,6 +269,16 @@ export function pruneProcessed(processed, floorMs) {
   return next;
 }
 
+// 이미 처리된 리드의 재시도 기록은 들고 있을 이유가 없다. 상태 파일이 무한히 커지는 것도 막는다.
+export function pruneRetries(retries, processed) {
+  const next = {};
+  for (const [leadId, count] of Object.entries(retries || {})) {
+    if (!processed?.[leadId] && Number.isFinite(count) && count > 0)
+      next[leadId] = count;
+  }
+  return next;
+}
+
 // 겹치는 실행 방지. launchd가 이전 실행이 끝나기 전에 또 띄워도 조회가 두 번 나가지 않는다.
 async function acquireLock(path) {
   const tryOpen = () => open(path, "wx", 0o600);
@@ -286,7 +301,7 @@ async function acquireLock(path) {
 }
 
 // 워커 /api/lead/meta 로 개별 전달. X-Meta-Secret 헤더 = 워커 env.META_LEAD_SECRET 와 일치.
-async function postLead({
+export async function postLead({
   webhookUrl,
   webhookSecret,
   payload,
@@ -302,11 +317,28 @@ async function postLead({
   });
   const data = await response.json().catch(() => ({}));
   if (!response.ok || data?.error) {
-    throw new Error(
+    const error = new Error(
       `lead=${payload.leadId} 워커 전달 실패: ${String(
         data?.error || `HTTP ${response.status}`,
       ).slice(0, 200)}`,
     );
+    error.status = response.status;
+    // 이 리드 하나만의 문제인지(=다시 보내도 같은 답), 전체 공통 장애인지 구분한다.
+    //   400/415 = 워커가 데이터 형식으로 거절 — 해외번호·필수값 누락 등. 재시도해도 400.
+    //   401/403 = 시크릿 불일치, 429 = 한도, 5xx = 워커 장애 → 전 리드 공통이라 멈춰야 맞다.
+    error.permanent = response.status === 400 || response.status === 415;
+    // 401/403/429 는 리드 내용과 무관한 전체 공통 장애다. 리드별 재시도로 소진시키면
+    // 멀쩡한 리드까지 차례로 격리되어 진짜 유실이 되므로, 이건 사람이 볼 때까지 멈춘다.
+    error.fatal =
+      response.status === 401 ||
+      response.status === 403 ||
+      response.status === 429;
+    error.reason = String(
+      data?.error || `HTTP ${response.status}`,
+    ).slice(0, 80);
+    if (Array.isArray(data?.fields) && data.fields.length)
+      error.reason += `(${data.fields.join(",")})`;
+    throw error;
   }
   return data; // { ok, id } 또는 { ok, duplicate: true }
 }
@@ -702,6 +734,9 @@ export function formatReport({
   delivered,
   duplicates,
   skipped,
+  rejected = 0,
+  quarantined = 0,
+  rejectedNotes = [],
   site,
   infra,
   system,
@@ -718,8 +753,13 @@ export function formatReport({
     delivered > 0 ? `신규 ${delivered}건` : "신규 없음",
     duplicates > 0 ? `중복차단 ${duplicates}` : "",
     skipped > 0 ? `연락처없음 ${skipped}` : "",
+    rejected > 0 ? `형식거절 ${rejected}` : "",
+    quarantined > 0 ? `격리 ${quarantined}` : "",
   ].filter(Boolean);
   lines.push(row("접수", `${acc.join(" · ")} (폼 ${formCount}개)`));
+  // 거절은 장애가 아니라 정상 방어(해외번호 등)다. 다만 폼 질문이 바뀌어 매번 거절되는
+  // 상황과 구분이 안 되면 안 되므로 사유를 그대로 노출한다.
+  for (const note of rejectedNotes) lines.push(subRow(note));
 
   // 2) 카페24 — 도달성이 아니라 "실제로 들어갔나"
   if (cafe24) {
@@ -789,6 +829,8 @@ export function shouldPingHealth({
   delivered,
   duplicates,
   skipped,
+  rejected = 0,
+  quarantined = 0,
   lastHealthPingAtMs,
   nowMs,
   quietMs,
@@ -798,7 +840,14 @@ export function shouldPingHealth({
   if (always) return true;
   // 상태가 바뀐 순간은 무조건 보고 — 장애 발생도 복구도 놓치면 안 된다
   if (statusChanged) return true;
-  if (delivered > 0 || duplicates > 0 || skipped > 0) return true;
+  if (
+    delivered > 0 ||
+    duplicates > 0 ||
+    skipped > 0 ||
+    rejected > 0 ||
+    quarantined > 0
+  )
+    return true;
   if (!Number.isFinite(lastHealthPingAtMs) || !lastHealthPingAtMs) return true;
   return nowMs - lastHealthPingAtMs >= quietMs;
 }
@@ -913,6 +962,13 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
     let delivered = 0;
     let duplicates = 0;
     let skipped = 0;
+    let rejected = 0;
+    let quarantined = 0;
+    const rejectedNotes = [];
+    const retries = { ...(state.retries || {}) };
+    // 전달을 중단시킨 원인. 상태 저장·알림까지 끝낸 뒤 마지막에 던진다 —
+    // 여기서 바로 던지면 재시도 횟수가 저장되지 않아 자동 복구가 영원히 시작되지 않는다.
+    let blocked = null;
     let newestMs = Math.max(
       cutoverMs,
       Number.isFinite(highWatermarkMs) ? highWatermarkMs : 0,
@@ -931,12 +987,56 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
         continue;
       }
       if (dryRun) continue;
-      const result = await postLead({
-        webhookUrl,
-        webhookSecret,
-        payload,
-        fetchImpl,
-      });
+      let result;
+      try {
+        result = await postLead({
+          webhookUrl,
+          webhookSecret,
+          payload,
+          fetchImpl,
+        });
+      } catch (error) {
+        // 여기서 그냥 던지면 리드 1건이 뒤에 줄 선 리드 전부를 막는다(head-of-line blocking).
+        // 워터마크도 같이 멈추므로 조회창을 벗어나지도 못해 사람이 손대기 전엔 안 풀린다.
+        // 실측 2026-09-04: 미얀마 번호(+95…) 리드 1건이 400 을 받아 접수 전체가 정지했다.
+        const reason = error?.reason || String(error?.message || error).slice(0, 80);
+        // (1) 형식 거절 — 다시 보내도 같은 400 이라 재시도가 무의미하다
+        if (error?.permanent) {
+          console.log(`${TAG} reject lead=${payload.leadId} reason=${reason}`);
+          rejected += 1;
+          // 거절 사유는 알림에 싣는다 — 조용히 넘기면 형식 거절과 진짜 유실을 구분할 수 없다
+          if (rejectedNotes.length < 5)
+            rejectedNotes.push(`${payload.leadId} ${reason}`);
+          delete retries[payload.leadId];
+          processed[payload.leadId] =
+            payload.createdTime || new Date().toISOString();
+          continue;
+        }
+        // (2) 전체 공통 장애 — 리드 내용 문제가 아니므로 소진시키지 않고 다음 폴링을 기다린다
+        if (error?.fatal) {
+          blocked = { error, createdMs };
+          break;
+        }
+        // (3) 나머지(워커 5xx·네트워크·예상 못 한 예외) — 같은 리드에서 반복되면 그 리드가
+        //     원인일 가능성이 크다. 재시도 한도를 넘기면 격리하고 큐를 다시 흐르게 한다.
+        const tries = (retries[payload.leadId] || 0) + 1;
+        retries[payload.leadId] = tries;
+        if (tries < MAX_LEAD_RETRIES) {
+          blocked = { error, createdMs, tries };
+          break;
+        }
+        console.error(
+          `${TAG} quarantine lead=${payload.leadId} tries=${tries} reason=${reason}`,
+        );
+        quarantined += 1;
+        if (rejectedNotes.length < 5)
+          rejectedNotes.push(`${payload.leadId} ${tries}회 실패 격리: ${reason}`);
+        delete retries[payload.leadId];
+        processed[payload.leadId] =
+          payload.createdTime || new Date().toISOString();
+        continue;
+      }
+      delete retries[payload.leadId];
       if (result?.duplicate) duplicates += 1;
       else delivered += 1;
       processed[payload.leadId] =
@@ -1016,6 +1116,7 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
           delivered,
           duplicates,
           skipped,
+          rejected,
           site: site ? site.status : "",
         },
         fetchImpl,
@@ -1029,6 +1130,8 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
         delivered,
         duplicates,
         skipped,
+        rejected,
+        quarantined,
         lastHealthPingAtMs: Date.parse(lastHealthPingAt || ""),
         nowMs,
         quietMs,
@@ -1045,6 +1148,9 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
             delivered,
             duplicates,
             skipped,
+            rejected,
+            quarantined,
+            rejectedNotes,
             site,
             infra,
             system,
@@ -1066,17 +1172,29 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
         cutoverMs,
         nowMs - Math.max(lookbackMs, overlapMs) * 2,
       );
+      // 전달이 중단됐으면 워터마크를 그 리드 앞에 묶는다. 못 보낸 리드보다 앞으로 밀면
+      // 다음 조회 구간에서 빠져 진짜 유실이 된다(조회창은 48시간이라 되돌릴 수 없다).
+      const savedNewestMs = blocked
+        ? Math.min(newestMs, blocked.createdMs - 1)
+        : newestMs;
       await writeState(statePath, {
         version: 1,
         cutoverAt,
-        highWatermarkAt: new Date(Math.max(newestMs, nowMs)).toISOString(),
-        lastSuccessfulPollAt: new Date(nowMs).toISOString(),
+        highWatermarkAt: new Date(
+          blocked ? savedNewestMs : Math.max(savedNewestMs, nowMs),
+        ).toISOString(),
+        lastSuccessfulPollAt: blocked
+          ? state.lastSuccessfulPollAt || ""
+          : new Date(nowMs).toISOString(),
         lastHealthPingAt,
         siteStatus,
         siteSince,
         formsCheck,
         lastFormCheckAt,
         processed: pruneProcessed(processed, retentionFloor),
+        // 재시도 횟수는 반드시 저장돼야 한다 — 저장이 안 되면 한도에 영영 도달하지 못해
+        // 자동 복구가 시작되지 않는다(이번 정지 사고의 구조적 원인).
+        retries: pruneRetries(retries, processed),
       });
     }
 
@@ -1087,16 +1205,26 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
       ...(system || []).filter((c) => !c.ok).map((c) => c.name),
     ];
     console.log(
-      `${TAG} ok dryRun=${dryRun} forms=${formIds.length} fetched=${leads.length} delivered=${delivered} duplicates=${duplicates} skipped=${skipped}` +
+      `${TAG} ok dryRun=${dryRun} forms=${formIds.length} fetched=${leads.length} delivered=${delivered} duplicates=${duplicates} skipped=${skipped} rejected=${rejected} quarantined=${quarantined}` +
         ` status=${reportStatus} site=${site ? site.status : "-"}` +
         (failedNames.length ? ` failed=[${failedNames.join(",")}]` : "") +
         ` since=${new Date(sinceMs).toISOString()}`,
     );
+    // 상태 저장과 알림이 끝난 뒤에 던진다. 다음 실행이 남은 리드를 이어서 처리하고,
+    // 같은 리드가 MAX_LEAD_RETRIES 회 반복되면 격리되어 큐가 스스로 풀린다.
+    if (blocked) {
+      if (blocked.tries)
+        blocked.error.message += ` (재시도 ${blocked.tries}/${MAX_LEAD_RETRIES} — 한도 도달 시 자동 격리 후 재개)`;
+      throw blocked.error;
+    }
+
     return {
       fetched: leads.length,
       delivered,
       duplicates,
       skipped,
+      rejected,
+      quarantined,
       site: site ? site.status : "",
     };
   } finally {

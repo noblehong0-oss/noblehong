@@ -3,6 +3,9 @@
 // 네트워크·아이맥·Meta 계정 없이 순수 로직만 검증한다 (실제 리드 전송 없음).
 
 import assert from "node:assert/strict";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 
 import {
@@ -21,7 +24,10 @@ import {
   parseFormIds,
   parseLaunchctlLabels,
   parsePmsetSleep,
+  postLead,
   pruneProcessed,
+  pruneRetries,
+  runPoll,
   sanitizePagingUrl,
   shouldPingHealth,
 } from "./worker.mjs";
@@ -619,4 +625,235 @@ test("워커 매핑 — field_data 가 없어도 안전하게 빈 값", () => {
   assert.equal(g.name, "");
   assert.equal(g.phone, "");
   assert.deepEqual(g.extras, []);
+});
+
+// ─────────────────────────────────────────────────────────────────
+// 접수 정지 회귀 방어 — 2026-09-04 실제 사고
+//   미얀마 번호(+959795908242) 리드 1건이 워커에서 400(Invalid fields)을 받자
+//   폴링 루프 전체가 예외로 중단됐다. 상태 저장까지 못 가서 워터마크가 멈췄고,
+//   그래서 그 리드는 조회창을 벗어나지도 못해 매시간 같은 지점에서 다시 죽었다.
+//   = 리드 1건이 이후 모든 접수를 영구히 막는 구조. 아래 테스트가 이 회귀를 잡는다.
+// ─────────────────────────────────────────────────────────────────
+
+function leadOf(id, createdTime, phone) {
+  return {
+    id,
+    created_time: createdTime,
+    platform: "ig",
+    ad_name: "테스트광고",
+    field_data: [
+      { name: "full_name", values: ["홍길동"] },
+      { name: "phone_number", values: [phone] },
+    ],
+  };
+}
+
+// 워커 응답을 리드별로 지정해 폴링 한 번을 통째로 돌린다.
+async function runPollWith({ leads, workerReply, statePath }) {
+  const posted = [];
+  const fetchImpl = async (url, init = {}) => {
+    const target = String(url);
+    const reply = (status, body) =>
+      new Response(JSON.stringify(body), {
+        status,
+        headers: { "Content-Type": "application/json" },
+      });
+    if (target.includes("graph.facebook.com")) return reply(200, { data: leads });
+    if (target.includes("/api/lead/meta/heartbeat")) return reply(200, { ok: true });
+    if (target.includes("/api/lead/meta")) {
+      const payload = JSON.parse(init.body);
+      posted.push(payload.leadId);
+      return workerReply(payload.leadId, reply);
+    }
+    if (target.includes("api.telegram.org")) return reply(200, { ok: true });
+    return reply(200, {});
+  };
+
+  const env = {
+    META_SYSTEM_USER_TOKEN: "t",
+    META_LEAD_FORM_IDS: "1304445771796402",
+    META_LEAD_CUTOVER_AT: "2026-09-01T00:00:00Z",
+    LEAD_WEBHOOK_URL: "https://example.test/api/lead/meta",
+    LEAD_HEARTBEAT_URL: "https://example.test/api/lead/meta/heartbeat",
+    LEAD_WEBHOOK_SECRET: "s",
+    HEALTH_TELEGRAM_BOT_TOKEN: "b",
+    HEALTH_TELEGRAM_CHAT_ID: "c",
+    META_LEAD_STATE_FILE: statePath,
+    META_LEAD_SKIP_SYSTEM_CHECK: "1",
+  };
+  const saved = {};
+  for (const [key, value] of Object.entries(env)) {
+    saved[key] = process.env[key];
+    process.env[key] = value;
+  }
+  let result = null;
+  let error = null;
+  try {
+    result = await runPoll({ fetchImpl });
+  } catch (caught) {
+    error = caught;
+  } finally {
+    for (const [key, value] of Object.entries(saved)) {
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  }
+  const raw = await readFile(statePath, "utf8").catch(() => "null");
+  return { posted, result, error, state: JSON.parse(raw) };
+}
+
+test("접수 정지 회귀 — 400 리드 1건이 뒤 리드를 막지 않는다", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "nh-poll-"));
+  const statePath = join(dir, "state.json");
+  try {
+    const { posted, result, error, state } = await runPollWith({
+      statePath,
+      leads: [
+        leadOf("A1", "2026-09-04T01:00:00+0000", "+821012345678"),
+        leadOf("B2", "2026-09-04T02:00:00+0000", "+959795908242"),
+        leadOf("C3", "2026-09-04T03:00:00+0000", "+821098765432"),
+      ],
+      workerReply: (leadId, reply) =>
+        leadId === "B2"
+          ? reply(400, { error: "Invalid fields", fields: ["연락처"] })
+          : reply(200, { ok: true, id: `rec${leadId}` }),
+    });
+    assert.equal(error, null, "형식 거절 1건으로 폴링 전체가 죽으면 안 된다");
+    // 거절된 B2 뒤의 C3 까지 반드시 전달돼야 한다 (head-of-line blocking 방지)
+    assert.deepEqual(posted, ["A1", "B2", "C3"]);
+    assert.equal(result.delivered, 2);
+    assert.equal(result.rejected, 1);
+    // 세 건 모두 처리완료로 남아 다음 폴링에서 같은 400 을 반복하지 않는다
+    assert.deepEqual(Object.keys(state.processed).sort(), ["A1", "B2", "C3"]);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test("접수 정지 회귀 — 5xx 는 재시도하고 한도를 넘으면 격리 후 재개한다", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "nh-poll-"));
+  const statePath = join(dir, "state.json");
+  try {
+    const options = {
+      statePath,
+      leads: [
+        leadOf("X1", "2026-09-04T01:00:00+0000", "+821012345678"),
+        leadOf("Y2", "2026-09-04T02:00:00+0000", "+821011112222"),
+      ],
+      workerReply: (leadId, reply) =>
+        leadId === "X1"
+          ? reply(500, { error: "boom" })
+          : reply(200, { ok: true, id: "recY2" }),
+    };
+    // 1·2회차: 재시도 구간이라 멈춘다. 멈춰도 재시도 횟수는 반드시 저장돼야 한다.
+    for (const expected of [1, 2]) {
+      const { error, state } = await runPollWith(options);
+      assert.ok(error, "일시 장애는 그대로 알려야 한다");
+      assert.equal(
+        state.retries.X1,
+        expected,
+        "재시도 횟수가 저장되지 않으면 자동 복구가 시작되지 않는다",
+      );
+      assert.equal(state.processed.Y2, undefined, "뒤 리드는 아직 전달되면 안 된다");
+    }
+    // 3회차: 한도에 도달해 X1 을 격리하고 Y2 를 전달하여 큐가 스스로 풀린다
+    const { error, result, state } = await runPollWith(options);
+    assert.equal(error, null, "한도에 도달한 뒤에는 스스로 복구돼야 한다");
+    assert.equal(result.quarantined, 1);
+    assert.equal(result.delivered, 1);
+    assert.ok(state.processed.Y2, "격리한 뒤에는 뒤 리드가 전달돼야 한다");
+    assert.equal(state.retries.X1, undefined, "격리한 리드의 재시도 기록은 정리한다");
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test("접수 정지 회귀 — 시크릿 오류(401)는 격리하지 않고 멈춘다", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "nh-poll-"));
+  const statePath = join(dir, "state.json");
+  try {
+    const options = {
+      statePath,
+      leads: [leadOf("Z1", "2026-09-04T01:00:00+0000", "+821012345678")],
+      workerReply: (_leadId, reply) => reply(401, { error: "Unauthorized" }),
+    };
+    for (let i = 0; i < 4; i += 1) {
+      const { error, state } = await runPollWith(options);
+      assert.ok(error, "시크릿 불일치는 사람이 볼 때까지 알려야 한다");
+      // 전 리드 공통 장애라 재시도로 소진시키면 멀쩡한 리드까지 유실된다
+      assert.equal(state.retries.Z1, undefined);
+      assert.equal(
+        state.processed.Z1,
+        undefined,
+        "전달하지 못한 리드를 처리완료로 지우면 유실이다",
+      );
+    }
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test("접수 정지 회귀 — 중단하면 워터마크를 미전달 리드 앞에 묶는다", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "nh-poll-"));
+  const statePath = join(dir, "state.json");
+  try {
+    const { state } = await runPollWith({
+      statePath,
+      leads: [
+        leadOf("P1", "2026-09-04T01:00:00+0000", "+821012345678"),
+        leadOf("Q2", "2026-09-04T02:00:00+0000", "+821011112222"),
+      ],
+      workerReply: (leadId, reply) =>
+        leadId === "Q2"
+          ? reply(500, { error: "boom" })
+          : reply(200, { ok: true, id: "recP1" }),
+    });
+    // 워터마크가 Q2 를 넘어가면 다음 조회 구간에서 빠져 영구 유실된다
+    assert.ok(
+      Date.parse(state.highWatermarkAt) < Date.parse("2026-09-04T02:00:00Z"),
+      `워터마크가 미전달 리드를 넘었다: ${state.highWatermarkAt}`,
+    );
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+});
+
+test("전달 실패 분류 — 400/415 만 재시도가 무의미한 형식 거절이다", async () => {
+  const call = async (status, body) => {
+    try {
+      await postLead({
+        webhookUrl: "https://example.test/api/lead/meta",
+        webhookSecret: "s",
+        payload: { leadId: "L1" },
+        fetchImpl: async () =>
+          new Response(JSON.stringify(body), {
+            status,
+            headers: { "Content-Type": "application/json" },
+          }),
+      });
+      return null;
+    } catch (error) {
+      return error;
+    }
+  };
+  const invalid = await call(400, { error: "Invalid fields", fields: ["연락처"] });
+  assert.equal(invalid.permanent, true);
+  assert.equal(invalid.fatal, false);
+  assert.match(invalid.reason, /연락처/);
+
+  assert.equal((await call(415, { error: "json required" })).permanent, true);
+  // 아래 셋은 리드 내용과 무관하다 — 재시도로 소진시키면 멀쩡한 리드가 유실된다
+  for (const status of [401, 403, 429]) {
+    const error = await call(status, { error: "nope" });
+    assert.equal(error.permanent, false, `${status} 를 형식 거절로 보면 안 된다`);
+    assert.equal(error.fatal, true);
+  }
+  const boom = await call(500, { error: "boom" });
+  assert.equal(boom.permanent, false);
+  assert.equal(boom.fatal, false);
+});
+
+test("처리가 끝난 리드의 재시도 기록은 정리한다", () => {
+  const kept = pruneRetries({ A: 2, B: 1 }, { B: "2026-09-04T00:00:00Z" });
+  assert.deepEqual(kept, { A: 2 });
 });
