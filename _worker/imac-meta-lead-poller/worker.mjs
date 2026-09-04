@@ -356,9 +356,15 @@ async function postHeartbeat({ url, secret, stats, fetchImpl = fetch }) {
       },
       body: JSON.stringify(stats),
     });
-    // 응답에 카페24 전송 실적(최근 24h)이 실려온다 — 시간당 리포트에 그대로 싣는다
+    // 응답에 카페24 전송 실적(최근 24h)과 알림 계통 상태가 실려온다 —
+    // 시간당 리포트에 그대로 싣는다.
     const data = await response.json().catch(() => ({}));
-    return { ok: response.ok, status: response.status, cafe24: data?.cafe24 };
+    return {
+      ok: response.ok,
+      status: response.status,
+      cafe24: data?.cafe24,
+      tg: data?.tg,
+    };
   } catch (error) {
     // 하트비트 실패로 폴링 자체를 실패 처리하지 않는다 — 리드 전달이 우선
     return { ok: false, error: String(error?.message || error).slice(0, 120) };
@@ -1121,6 +1127,27 @@ export async function runPoll({ fetchImpl = fetch } = {}) {
         },
         fetchImpl,
       });
+
+      // 알림 계통 — 워커가 하트비트 응답에 실어 준다.
+      // 접수는 D1·카페24까지 멀쩡한데 알림만 끊기는 무성 실패를 여기서 눈에 보이게 한다.
+      // 접수 자체는 살아 있으므로 critical 로 올리지 않는다(⚠️ 까지).
+      if (heartbeat?.tg) {
+        const t = heartbeat.tg;
+        const failed = t.status === "fail";
+        infra = [
+          ...(infra || []),
+          {
+            name: "알림 발송",
+            ok: !failed,
+            critical: false,
+            info: failed
+              ? `${t.detail || "전송 실패"}${t.queued ? ` · 미배달 ${t.queued}건` : ""}`
+              : t.queued
+                ? `미배달 ${t.queued}건 재발송 대기`
+                : "정상",
+          },
+        ];
+      }
 
       const status = overallStatus({ site, infra, system });
       reportStatus = status;

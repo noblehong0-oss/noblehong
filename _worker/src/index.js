@@ -437,15 +437,24 @@ function buildConsultMessage(env, source, fields, recordId) {
   );
 }
 
+// 채널 이름 → 토큰. 미배달 재발송(tgOutboxFlush)이 이 매핑으로 원래 채널을 복원한다.
+function tgTokenFor(env, channel) {
+  if (channel === "인프라")
+    return (
+      env.INFRA_TG_BOT_TOKEN || env.ADMIN_TG_BOT_TOKEN || env.TELEGRAM_BOT_TOKEN
+    );
+  if (channel === "디버그")
+    return env.ADMIN_TG_BOT_TOKEN || env.TELEGRAM_BOT_TOKEN;
+  return env.TELEGRAM_BOT_TOKEN || env.ADMIN_TG_BOT_TOKEN;
+}
+
 // 일반 접수 채널 (사장님이 보는 채널)
 function tgConsult(env, source, fields, recordId) {
   const token = env.TELEGRAM_BOT_TOKEN || env.ADMIN_TG_BOT_TOKEN;
   const chatId = env.TELEGRAM_CHAT_ID || env.ADMIN_TG_CHAT_ID;
-  return tgSend(
-    token,
-    chatId,
-    buildConsultMessage(env, source, fields, recordId),
-  );
+  return tgSend(env, token, chatId, buildConsultMessage(env, source, fields, recordId), {
+    channel: "접수",
+  });
 }
 
 // 디버그/에러 채널 — 관리자/에러 봇 우선, 없으면 일반 채널 폴백
@@ -453,13 +462,20 @@ function tgDebug(env, message) {
   const token = env.ADMIN_TG_BOT_TOKEN || env.TELEGRAM_BOT_TOKEN;
   const chatId =
     env.TELEGRAM_DEBUG_CHAT_ID || env.ADMIN_TG_CHAT_ID || env.TELEGRAM_CHAT_ID;
-  return tgSend(token, chatId, message);
+  return tgSend(env, token, chatId, message, { channel: "디버그" });
 }
 
 // 인프라 장애 채널 — 리드 알림봇 오염 방지용 별도 채널. 미설정 시 tgDebug 폴백
-function sendInfraAlert(env, message) {
+//
+// 이 경로는 "장애를 알리는 경로" 자체다. 여기서 또 실패를 알리려 들면 재귀가 된다.
+// 그래서 폴백도 추적도 끄고(silent), 결과는 health_state 기록으로만 남긴다 —
+// 그 기록은 아이맥 폴러가 하트비트 응답으로 받아 시간당 리포트에 싣는다.
+function sendInfraAlert(env, message, opts = {}) {
   if (env.INFRA_TG_BOT_TOKEN && env.INFRA_TG_CHAT_ID)
-    return tgSend(env.INFRA_TG_BOT_TOKEN, env.INFRA_TG_CHAT_ID, message);
+    return tgSend(env, env.INFRA_TG_BOT_TOKEN, env.INFRA_TG_CHAT_ID, message, {
+      channel: "인프라",
+      silent: !!opts.silent,
+    });
   return tgDebug(env, message);
 }
 
@@ -599,15 +615,261 @@ async function runHealthCheck(env) {
   return { status, detail };
 }
 
-async function tgSend(token, chatId, text) {
-  if (!token || !chatId) return;
+// ─────────────────────────────────────────────────────────────────
+// 텔레그램 전송 — 실패를 삼키지 않는다.
+//
+// 이전 구현은 fetch 응답 코드를 보지 않고 catch {} 로 전부 삼켰다. 그래서 봇 토큰이
+// 죽어도 "접수는 D1·카페24까지 멀쩡히 처리되는데 알림만 안 오는" 무성 실패가 났고,
+// 경보가 하나도 뜨지 않아 사람이 눈치챌 때까지 시간이 걸렸다(2026-09 봇토큰 교체 사고).
+//
+// 자가복구 3단 —
+//   1) 일시 오류(429·5xx·네트워크)는 백오프를 두고 재시도한다.
+//   2) 그래도 실패하면 인프라 채널로 원문을 폴백 전송한다. 채널이 바뀔지언정
+//      알림 자체는 살린다.
+//   3) 폴백까지 실패하면 tg_outbox 에 적재하고 크론이 재발송한다.
+//      토큰을 갈아끼우면 밀린 알림이 그때 자동으로 배달된다.
+//
+// 감지 — health_state('tg_delivery') 에 기록하고 상태가 바뀔 때만 인프라봇에 알린다.
+// ─────────────────────────────────────────────────────────────────
+const TG_MAX_RETRY = 2;
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// 토큰 무효·채팅 없음은 몇 번을 더 보내도 결과가 같다. 재시도는 일시 오류에만 쓴다.
+function tgPermanent(status) {
+  return status === 400 || status === 401 || status === 403 || status === 404;
+}
+
+async function tgPost(token, chatId, text) {
+  if (!token || !chatId)
+    return { ok: false, reason: "토큰/채널 미설정", permanent: true };
   try {
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
     });
+    if (r.ok) return { ok: true };
+    let desc = "";
+    try {
+      desc = String((await r.json())?.description || "").slice(0, 120);
+    } catch {}
+    return {
+      ok: false,
+      reason: `HTTP ${r.status}${desc ? " " + desc : ""}`,
+      permanent: tgPermanent(r.status),
+    };
+  } catch (e) {
+    return {
+      ok: false,
+      reason: String(e?.message || e).slice(0, 120),
+      permanent: false,
+    };
+  }
+}
+
+// 재시도까지 포함한 채널 1개 전송
+async function tgDeliver(token, chatId, text) {
+  let last = { ok: false, reason: "미시도", permanent: false };
+  for (let i = 0; i <= TG_MAX_RETRY; i++) {
+    last = await tgPost(token, chatId, text);
+    if (last.ok || last.permanent) return last;
+    await sleep(400 * (i + 1));
+  }
+  return last;
+}
+
+// 미배달 알림 적재. 테이블이 없어도 본 흐름(접수 처리)을 막지 않는다.
+async function tgOutboxPush(env, channel, chatId, text, reason) {
+  if (!env.DB) return false;
+  try {
+    await env.DB.prepare(
+      `INSERT INTO tg_outbox (channel, chat_id, text, tries, last_error, created_at)
+       VALUES (?, ?, ?, 0, ?, ?)`,
+    )
+      .bind(
+        channel,
+        String(chatId || ""),
+        text,
+        String(reason || "").slice(0, 200),
+        new Date().toISOString(),
+      )
+      .run();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// 전송 계통 상태 기록 + 상태가 바뀔 때만 알림(지속 장애 스팸 0)
+async function tgRecordHealth(env, channel, res, queued) {
+  if (!env.DB) return;
+  const nowIso = new Date().toISOString();
+  const status = res.ok ? "ok" : "fail";
+  let prev = null;
+  try {
+    prev = await env.DB.prepare(
+      `SELECT status, since FROM health_state WHERE id = 'tg_delivery'`,
+    ).first();
   } catch {}
+  const prevStatus = prev?.status || "unknown";
+  const detail = res.ok
+    ? ""
+    : `${channel}: ${res.reason}${queued ? " · 큐 적재" : " · 유실"}`.slice(
+        0,
+        400,
+      );
+  const since = status === prevStatus && prev?.since ? prev.since : nowIso;
+
+  try {
+    await env.DB.prepare(
+      `INSERT INTO health_state (id, status, detail, since, checked_at)
+       VALUES ('tg_delivery', ?, ?, ?, ?)
+       ON CONFLICT(id) DO UPDATE SET
+         status = excluded.status,
+         detail = excluded.detail,
+         since = excluded.since,
+         checked_at = excluded.checked_at`,
+    )
+      .bind(status, detail, since, nowIso)
+      .run();
+  } catch {}
+
+  if (status === prevStatus) return;
+
+  if (status === "fail") {
+    await sendInfraAlert(
+      env,
+      `<b>[노블홍/telegram] 🔴 알림 전송 실패</b>\n──────────────\n` +
+        `- <b>경로</b>  ${escapeHtml(channel)}\n` +
+        `- <b>사유</b>  ${escapeHtml(res.reason)}\n` +
+        `- <b>미배달</b>  ${queued ? "tg_outbox 적재 · 복구되면 자동 재발송" : "적재 실패 — 유실"}\n` +
+        `- <b>감지시각</b>  ${nowIso}\n\n` +
+        `※ 접수 자체는 D1·카페24까지 정상 처리된다. 끊긴 것은 알림뿐이다.\n` +
+        `봇 토큰을 교체했다면 워커 시크릿도 같이 갈아야 한다.`,
+      { silent: true },
+    );
+  } else {
+    await sendInfraAlert(
+      env,
+      `<b>[노블홍/telegram] 🟢 알림 전송 복구</b>\n──────────────\n` +
+        `- <b>경로</b>  ${escapeHtml(channel)}\n` +
+        (prev?.since ? `- <b>장애 시작</b>  ${prev.since}\n` : "") +
+        `- <b>복구시각</b>  ${nowIso}`,
+      { silent: true },
+    );
+  }
+}
+
+// 채널 1개 전송 + 자가복구 + 감지.
+// silent 는 인프라 경로 전용이다 — 알림 경로가 자기 실패를 또 알리면 재귀가 된다.
+async function tgSend(env, token, chatId, text, opts = {}) {
+  const { channel = "일반", silent = false } = opts;
+  const res = await tgDeliver(token, chatId, text);
+
+  if (res.ok) {
+    if (!silent) await tgRecordHealth(env, channel, res, false);
+    return res;
+  }
+
+  // 자가복구 2 — 인프라 채널로 원문을 돌려보낸다(인프라 경로 자신은 제외)
+  let recovered = false;
+  if (
+    !silent &&
+    channel !== "인프라" &&
+    env.INFRA_TG_BOT_TOKEN &&
+    env.INFRA_TG_CHAT_ID
+  ) {
+    const fb = await tgDeliver(
+      env.INFRA_TG_BOT_TOKEN,
+      env.INFRA_TG_CHAT_ID,
+      `<b>[노블홍/telegram] ↪️ ${escapeHtml(channel)} 채널 대체 배달</b>\n` +
+        `<i>원래 채널 전송 실패: ${escapeHtml(res.reason)}</i>\n──────────────\n` +
+        text,
+    );
+    recovered = fb.ok;
+  }
+
+  // 자가복구 3 — 대체 배달도 안 되면 적재해 두고 크론이 다시 시도한다
+  let queued = false;
+  if (!recovered) queued = await tgOutboxPush(env, channel, chatId, text, res.reason);
+
+  if (!silent) await tgRecordHealth(env, channel, res, queued || recovered);
+  return res;
+}
+
+// 미배달 재발송 — 크론(6시간)이 돈다. 토큰을 갈아끼우면 밀린 알림이 여기서 나간다.
+async function tgOutboxFlush(env, limit = 25) {
+  if (!env.DB) return { sent: 0, left: 0 };
+  let rows = [];
+  try {
+    rows =
+      (
+        await env.DB.prepare(
+          `SELECT id, channel, chat_id, text FROM tg_outbox ORDER BY id LIMIT ?`,
+        )
+          .bind(limit)
+          .all()
+      )?.results || [];
+  } catch {
+    return { sent: 0, left: 0 };
+  }
+
+  let sent = 0;
+  for (const row of rows) {
+    const token = tgTokenFor(env, row.channel);
+    const r = await tgDeliver(token, row.chat_id, row.text);
+    if (r.ok) {
+      sent++;
+      try {
+        await env.DB.prepare(`DELETE FROM tg_outbox WHERE id = ?`)
+          .bind(row.id)
+          .run();
+      } catch {}
+      continue;
+    }
+    try {
+      await env.DB.prepare(
+        `UPDATE tg_outbox SET tries = tries + 1, last_error = ? WHERE id = ?`,
+      )
+        .bind(String(r.reason).slice(0, 200), row.id)
+        .run();
+    } catch {}
+    // 토큰이 아직 죽어 있으면 남은 것도 같은 결과다. 헛돌지 않고 다음 크론에 미룬다.
+    if (r.permanent) break;
+  }
+
+  let left = 0;
+  try {
+    left =
+      (await env.DB.prepare(`SELECT COUNT(*) AS c FROM tg_outbox`).first())?.c ||
+      0;
+  } catch {}
+  return { sent, left };
+}
+
+// 알림 계통 요약 — 하트비트 응답에 실어 아이맥 폴러 리포트에 노출한다.
+async function tgSummary(env) {
+  if (!env.DB) return null;
+  try {
+    const st = await env.DB.prepare(
+      `SELECT status, detail, since FROM health_state WHERE id = 'tg_delivery'`,
+    ).first();
+    let queued = 0;
+    try {
+      queued =
+        (await env.DB.prepare(`SELECT COUNT(*) AS c FROM tg_outbox`).first())
+          ?.c || 0;
+    } catch {}
+    return {
+      status: st?.status || "unknown",
+      detail: st?.detail || "",
+      since: st?.since || "",
+      queued,
+    };
+  } catch {
+    return null;
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -1675,9 +1937,11 @@ async function handleMetaLead(request, env) {
       platformLabel,
     );
     await tgSend(
+      env,
       env.TELEGRAM_BOT_TOKEN || env.ADMIN_TG_BOT_TOKEN,
       env.TELEGRAM_CHAT_ID || env.ADMIN_TG_CHAT_ID,
       tgText,
+      { channel: "접수" },
     );
 
     // 카페24 CRM (MSSQL) INSERT — fire-and-forget. 실패해도 D1/TG 영향 없음
@@ -1773,7 +2037,12 @@ async function handleMetaLeadHeartbeat(request, env) {
   }
   // 카페24 전송 실적을 응답에 실어 보낸다 — 아이맥이 시간당 리포트에 그대로 싣는다.
   // 별도 엔드포인트를 만들지 않고 이미 있는 왕복에 얹는다.
-  return json({ ok: true, at: nowIso, cafe24: await cafe24Summary(env, 24) });
+  return json({
+    ok: true,
+    at: nowIso,
+    cafe24: await cafe24Summary(env, 24),
+    tg: await tgSummary(env),
+  });
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -3856,6 +4125,15 @@ export default {
       ctx.waitUntil(
         (async () => {
           try {
+            // 미배달 알림 재발송 먼저 — 토큰이 복구됐다면 밀린 알림이 여기서 나간다.
+            const flushed = await tgOutboxFlush(env);
+            if (flushed.sent > 0)
+              await sendInfraAlert(
+                env,
+                `<b>[노블홍/telegram] 📤 미배달 재발송</b>\n──────────────\n` +
+                  `- <b>발송</b>  ${flushed.sent}건\n- <b>잔여</b>  ${flushed.left}건`,
+                { silent: true },
+              );
             await runHealthCheck(env);
           } catch (e) {
             await sendInfraAlert(
