@@ -1590,8 +1590,8 @@ async function handleFallMeeting(request, env) {
     ? body.eventId : null;
   const { id: recordId, error: saveError } = await saveConsultation(env, {
     이름: name, 연락처: phone, 성별: gender,
-    문의내용: `가을미팅신청 · 나이 ${age}세`,
-    개인정보동의: true, 마케팅동의: trackingConsent,
+    문의내용: `가을미팅신청 · 나이 ${age}세 · Meta 광고 성과 측정 ${trackingConsent ? "동의" : "미동의"}`,
+    개인정보동의: true, 마케팅동의: false,
     상태: "접수", 출처: "가을미팅신청",
     IP: ip, UserAgent: ua, Referrer: sourceUrl,
     제출일시: new Date().toISOString(),
