@@ -1245,6 +1245,7 @@
               <option value="간편상담신청">간편상담신청</option>
               <option value="하단바">하단바</option>
               <option value="Meta">Meta</option>
+              <option value="가을미팅신청">가을미팅신청</option>
             </select>
             <select id="filterStatus">
               <option value="">상태 전체</option>
@@ -1754,6 +1755,17 @@
           );
         }
 
+        const ip = f["IP"] || "";
+        const geo = [f["접속국가"], f["접속지역"], f["접속도시"]]
+          .filter(Boolean).join(" · ");
+        if (ip) metaParts.push(`<span class="consult-meta-dot">·</span>IP ${esc(ip)}`);
+        if (geo) metaParts.push(`<span class="consult-meta-dot">·</span>추정 위치 ${esc(geo)}`);
+        if (source === "가을미팅신청") {
+          const crm = f["cafe24"] || "";
+          const label = crm === "ok" ? "CRM 전달 확인" : crm.startsWith("fail:") ? "CRM 전달 오류" : "CRM 전달 확인 중";
+          metaParts.push(`<span class="consult-meta-dot">·</span>${esc(label)}`);
+        }
+
         const memoHtml = memo
           ? `<div class="consult-card-memo">${esc(memo)}</div>`
           : "";
@@ -1817,6 +1829,7 @@
       }
 
       async function loadConsultations(append = false) {
+        if (append && (!state.offset || Number(state.offset) > 5000)) return;
         const params = new URLSearchParams();
         if (state.filter.source) params.set("source", state.filter.source);
         if (state.filter.status) params.set("status", state.filter.status);
@@ -1839,7 +1852,7 @@
 
         if (append) state.records = state.records.concat(r.json.records || []);
         else state.records = r.json.records || [];
-        state.offset = r.json.offset || null;
+        state.offset = /^\d{1,4}$/.test(String(r.json.offset || "")) && Number(r.json.offset) <= 5000 ? r.json.offset : null;
 
         if (state.records.length === 0) {
           body.innerHTML = `<div class="empty" style="padding:40px;text-align:center;color:#8a7e60">조건에 맞는 접수 내역이 없습니다.</div>`;
@@ -1966,6 +1979,8 @@
           ["개인정보", f["개인정보동의"] ? "동의" : "미동의"],
           ["마케팅", f["마케팅동의"] ? "동의" : "미동의"],
           ["IP", f["IP"] || ""],
+          ["추정 위치", [f["접속국가"], f["접속지역"], f["접속도시"]].filter(Boolean).join(" · ")],
+          ["CRM 전달", f["cafe24"] === "ok" ? "확인" : (f["cafe24"] || "")],
           ["상태", f["상태"] || "접수"],
         ];
         document.getElementById("modalDl").innerHTML = fields

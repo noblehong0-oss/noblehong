@@ -954,6 +954,10 @@ const CONSULT_COLUMNS = [
   "Referrer",
   "제출일시",
   "createdTime",
+  "접속국가",
+  "접속지역",
+  "접속도시",
+  "방문쿠키",
 ];
 
 async function saveConsultation(env, fields) {
@@ -980,6 +984,10 @@ async function saveConsultation(env, fields) {
     fields["Referrer"] || null,
     now,
     now,
+    fields["접속국가"] || null,
+    fields["접속지역"] || null,
+    fields["접속도시"] || null,
+    fields["방문쿠키"] || null,
   ];
   const placeholders = CONSULT_COLUMNS.map(() => "?").join(",");
   const cols = CONSULT_COLUMNS.map((c) => `"${c}"`).join(",");
@@ -1549,17 +1557,96 @@ async function handleConsultationSubmit(request, env) {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// 가을 미팅 전용 폼: 접수 원본은 D1, 기존 Cafe24 CRM 비고는 고정 출처값.
+function fallJson(body, status = 200) {
+  return json(body, status, { "Cache-Control": "private, no-store" });
+}
+
+function fallGeo(request) {
+  // Vercel rewrite가 전달한 방문자 지역을 우선한다. 직접 Worker 접속은 CF edge 값.
+  const header = (name, max = 80) => cleanLine(request.headers.get(name), max);
+  let city = header("x-vercel-ip-city");
+  try { city = decodeURIComponent(city); } catch { city = ""; }
+  return {
+    country: header("x-vercel-ip-country", 4) || cleanLine(request.cf?.country, 4),
+    region: header("x-vercel-ip-country-region", 40) || cleanLine(request.cf?.region, 40),
+    city: cleanLine(city || request.cf?.city, 80),
+  };
+}
+
+async function recordFallStage(env, fields, stage, detail = "") {
+  const id = crypto.randomUUID();
+  const createdAt = new Date().toISOString();
+  try {
+    await env.DB.prepare(
+      `INSERT INTO fall_meeting_audit
+       (id, consultation_id, visit_id, ip, country, region, city, stage, detail, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ).bind(id, fields.recordId || null, fields.visitId || null, fields.ip || null,
+      fields.geo?.country || null, fields.geo?.region || null, fields.geo?.city || null,
+      stage, cleanLine(detail, 120), createdAt).run();
+  } catch {
+    // D1 장애 때도 비식별 오류 코드만 R2에 남긴다. 공개 R2에는 IP·쿠키·고객정보를 쓰지 않는다.
+    try {
+      await env.BUCKET?.put(`diagnostics/fall-meeting/${createdAt.slice(0, 10)}/${id}.json`,
+        JSON.stringify({ stage, detail: cleanLine(detail, 120), at: createdAt }),
+        { httpMetadata: { contentType: "application/json" } });
+    } catch {}
+  }
+}
+
+async function snapshotFallAudit(env) {
+  if (!env.DB || !env.BUCKET) return;
+  const date = new Date(Date.now() + 9 * 3600000 - 86400000).toISOString().slice(0, 10);
+  const start = new Date(`${date}T00:00:00+09:00`).toISOString();
+  const end = new Date(new Date(start).getTime() + 86400000).toISOString();
+  const rows = await env.DB.prepare(
+    `SELECT stage, COUNT(*) AS count FROM fall_meeting_audit
+     WHERE created_at >= ? AND created_at < ? GROUP BY stage`,
+  ).bind(start, end).all();
+  const counts = Object.fromEntries((rows.results || []).map((row) => [row.stage, row.count]));
+  await env.BUCKET.put(`analytics/fall-meeting/${date}.json`,
+    JSON.stringify({ date, counts, generatedAt: new Date().toISOString() }),
+    { httpMetadata: { contentType: "application/json" } });
+}
+
+async function verifyFallTurnstile(env, token) {
+  if (!env.FALL_TURNSTILE_SECRET || !token || token.length > 2048)
+    return { ok: false, status: 422 };
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 7000);
+  try {
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ secret: env.FALL_TURNSTILE_SECRET, response: token }),
+      signal: controller.signal,
+    });
+    if (!response.ok) return { ok: false, status: 503 };
+    const result = await response.json();
+    return { ok: result.success === true && result.action === "fall_meeting" &&
+      ["noblehong.com", "www.noblehong.com"].includes(result.hostname), status: 422 };
+  } catch {
+    return { ok: false, status: 503 };
+  } finally { clearTimeout(timeout); }
+}
+
 async function handleFallMeeting(request, env) {
-  if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
+  if (request.method !== "POST") return fallJson({ error: "Method not allowed" }, 405);
   if (!(request.headers.get("content-type") || "").toLowerCase().includes("application/json"))
-    return json({ error: "application/json required" }, 415);
+    return fallJson({ error: "application/json required" }, 415);
+  if (Number(request.headers.get("content-length") || 0) > 8192)
+    return fallJson({ error: "Request too large" }, 413);
   let body;
-  try { body = await request.json(); } catch { return json({ error: "Invalid JSON" }, 400); }
-  if (body._hp) return json({ ok: true, tracked: false });
+  try {
+    const raw = await request.text();
+    if (raw.length > 8192) return fallJson({ error: "Request too large" }, 413);
+    body = JSON.parse(raw);
+    if (!body || typeof body !== "object" || Array.isArray(body)) throw new Error("Invalid JSON");
+  } catch { return fallJson({ error: "Invalid JSON" }, 400); }
+  if (body._hp) return fallJson({ ok: true, tracked: false });
   const loadTs = Number(body._ts);
   if (loadTs && Date.now() - loadTs < MIN_SUBMIT_MS && !isBypassedIP(env, clientIP(request, env)))
-    return json({ error: "Too fast" }, 429);
+    return fallJson({ error: "Too fast" }, 429);
   const name = cleanLine(body.name, 30);
   const phoneDigits = str(body.phone, 30).replace(/\D/g, "");
   const phone = phoneDigits.length === 11
@@ -1572,12 +1659,16 @@ async function handleFallMeeting(request, env) {
   if (!gender) errors.push("gender");
   if (!Number.isInteger(age) || age < 55 || age > 75) errors.push("age");
   if (body.agreePrivacy !== true) errors.push("agreePrivacy");
-  if (errors.length) return json({ error: "Invalid fields", fields: errors }, 400);
-  if (!env.DB) return json({ error: "Server misconfigured" }, 500);
+  if (errors.length) return fallJson({ error: "Invalid fields", fields: errors }, 400);
+  if (!env.DB) return fallJson({ error: "Server misconfigured" }, 500);
   const ip = clientIP(request, env);
-  if (await checkBlacklist(env, phone)) return json({ ok: true, tracked: false });
+  if (await checkBlacklist(env, phone)) return fallJson({ ok: true, tracked: false });
   const { limited } = await checkRateLimit(env, ip);
-  if (limited) return json({ error: "Too many submissions" }, 429);
+  if (limited) return fallJson({ error: "Too many submissions" }, 429);
+  const verified = await verifyFallTurnstile(env, str(body.turnstileToken, 2050));
+  if (!verified.ok) return fallJson({ error: verified.status === 503 ? "Verification unavailable" : "Verification required" }, verified.status);
+  const geo = fallGeo(request);
+  const visitId = /^[0-9a-f-]{36}$/i.test(str(body.visitId, 40)) ? body.visitId : null;
   const ua = str(request.headers.get("user-agent") || "", 500);
   let sourceUrl = "https://noblehong.com/fall-meeting/";
   try {
@@ -1594,9 +1685,15 @@ async function handleFallMeeting(request, env) {
     개인정보동의: true, 마케팅동의: false,
     상태: "접수", 출처: "가을미팅신청",
     IP: ip, UserAgent: ua, Referrer: sourceUrl,
+    접속국가: geo.country, 접속지역: geo.region, 접속도시: geo.city, 방문쿠키: visitId,
     제출일시: new Date().toISOString(),
   });
-  if (saveError) return json({ error: "Failed to save" }, 500);
+  const auditFields = { recordId, visitId, ip, geo };
+  if (saveError) {
+    await recordFallStage(env, auditFields, "d1_save_failed", "save_error");
+    return fallJson({ error: "Failed to save" }, 500);
+  }
+  await recordFallStage(env, auditFields, "d1_saved");
   bgRun(env, tgConsult(env, "fall-meeting", {
     name, phone, gender, message: `가을미팅신청 · 나이 ${age}세`,
   }, recordId).catch(() => {}));
@@ -1608,20 +1705,23 @@ async function handleFallMeeting(request, env) {
     u_birthY: "1911", // 나이만 수집하므로 정확한 출생연도를 임의로 만들지 않는다.
     u_memo: "가을미팅신청",
     agree1: "Y", agree2: "N",
-  }).then(() => recordCafe24Result(env, recordId, "ok"))
+  }).then(async (result) => {
+      if (result.status >= 400) throw new Error(`CRM HTTP ${result.status}`);
+      await recordCafe24Result(env, recordId, "ok");
+      await recordFallStage(env, auditFields, "crm_ok");
+    })
     .catch(async (error) => {
       await recordCafe24Result(env, recordId, `fail:${String(error?.message || error).slice(0, 80)}`);
-      await tgDebug(env, `[노블홍/fall-meeting] 카페24 전송 실패 · Record:${recordId}`);
+      await recordFallStage(env, auditFields, "crm_failed", String(error?.message || error));
     }));
   if (eventId) {
     bgRun(env, sendFallMeetingCapi(env, {
       eventId, phone, ip, userAgent: ua, sourceUrl,
       fbp: str(body.fbp, 150), fbc: str(body.fbc, 150),
-    }).catch(async () => {
-      await tgDebug(env, `[노블홍/fall-meeting] CAPI 전송 실패 · Record:${recordId}`);
-    }));
+    }).then(() => recordFallStage(env, auditFields, "capi_ok"))
+      .catch((error) => recordFallStage(env, auditFields, "capi_failed", String(error?.message || error))));
   }
-  return json({ ok: true, tracked: !!eventId });
+  return fallJson({ ok: true, tracked: !!eventId, reference: recordId });
 }
 
 // 핸들러: 사이드바 간편 /api/consultation/quick
@@ -2563,12 +2663,35 @@ async function handleConsultationsList(request, env) {
   if (!env.DB) return json({ error: "DB not configured" }, 500);
 
   const url = new URL(request.url);
-  // 기존 어드민은 offset에 Airtable 토큰을 넘겼지만, D1은 정수 offset을 사용
-  const offset = parseInt(url.searchParams.get("offset") || "0", 10) || 0;
   const source = url.searchParams.get("source") || "";
   const status = url.searchParams.get("status") || "";
   const q = (url.searchParams.get("q") || "").trim();
   const PAGE_SIZE = 50;
+  const noStore = { "Cache-Control": "private, no-store" };
+  if (source.length > 100 || status.length > 30 || q.length > 100)
+    return json({ error: "Filter too long" }, 400, noStore);
+  const rawOffset = url.searchParams.get("offset") || "0";
+  if (!/^\d{1,4}$/.test(rawOffset) || Number(rawOffset) > 5000)
+    return json({ error: "Invalid offset" }, 400, noStore);
+  const offset = Number(rawOffset);
+  const rawCursor = url.searchParams.get("cursor");
+  if (rawCursor && offset) return json({ error: "Use cursor or offset" }, 400, noStore);
+  let cursor = null;
+  if (rawCursor) {
+    if (rawCursor.length > 1024 || !/^[A-Za-z0-9_-]+$/.test(rawCursor))
+      return json({ error: "Invalid cursor" }, 400, noStore);
+    try {
+      const encoded = rawCursor.replace(/-/g, "+").replace(/_/g, "/");
+      const binary = atob(encoded.padEnd(Math.ceil(encoded.length / 4) * 4, "="));
+      const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+      const decoded = JSON.parse(new TextDecoder().decode(bytes));
+      if (!Array.isArray(decoded) || decoded.length !== 5 ||
+        decoded[0] !== source || decoded[1] !== status || decoded[2] !== q ||
+        typeof decoded[3] !== "string" || decoded[3].length > 40 ||
+        !/^rec[A-Za-z0-9]{14}$/.test(decoded[4])) throw new Error("cursor scope");
+      cursor = [decoded[3], decoded[4]];
+    } catch { return json({ error: "Invalid cursor" }, 400, noStore); }
+  }
 
   const where = [];
   const binds = [];
@@ -2591,27 +2714,34 @@ async function handleConsultationsList(request, env) {
     const like = `%${q}%`;
     binds.push(like, like, like);
   }
+  if (cursor) {
+    where.push(`("제출일시", id) < (?, ?)`);
+    binds.push(...cursor);
+  }
   const whereSQL = where.length ? `WHERE ${where.join(" AND ")}` : "";
 
   try {
     const r = await env.DB.prepare(
-      `SELECT * FROM consultations ${whereSQL} ORDER BY "제출일시" DESC LIMIT ? OFFSET ?`,
+      `SELECT * FROM consultations ${whereSQL} ORDER BY "제출일시" DESC, id DESC LIMIT ? OFFSET ?`,
     )
-      .bind(...binds, PAGE_SIZE, offset)
+      .bind(...binds, PAGE_SIZE + 1, offset)
       .all();
-    const records = (r.results || []).map(rowToAirtableShape);
-    // Airtable과 호환되게 다음 페이지 토큰 반환 (여기서는 정수 offset을 문자열로)
-    const nextOffset =
-      records.length === PAGE_SIZE ? String(offset + PAGE_SIZE) : null;
-    return json({ ok: true, records, offset: nextOffset });
-  } catch (e) {
-    return json(
-      {
-        error: "DB query failed",
-        detail: String(e?.message || e).slice(0, 200),
-      },
-      500,
-    );
+    const rows = r.results || [];
+    const hasMore = rows.length > PAGE_SIZE;
+    const page = rows.slice(0, PAGE_SIZE);
+    let nextCursor = null;
+    if (hasMore && page.length) {
+      const last = page[page.length - 1];
+      const bytes = new TextEncoder().encode(JSON.stringify([source, status, q, last["제출일시"], last.id]));
+      let binary = "";
+      for (const byte of bytes) binary += String.fromCharCode(byte);
+      nextCursor = btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    }
+    return json({ ok: true, records: page.map(rowToAirtableShape),
+      offset: hasMore && offset < 5000 ? String(offset + PAGE_SIZE) : null,
+      cursor: nextCursor, hasMore }, 200, noStore);
+  } catch {
+    return json({ error: "DB query failed" }, 500, noStore);
   }
 }
 
@@ -4281,6 +4411,10 @@ export default {
         })(),
       );
       return;
+    }
+
+    if (cronExpr === "0 18 * * *") {
+      ctx.waitUntil(snapshotFallAudit(env).catch(() => {}));
     }
 
     // 기존: 매일 홍유진TV 동기화
