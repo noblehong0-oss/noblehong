@@ -1106,7 +1106,7 @@ async function cafe24Summary(env, hours = 24) {
   }
 }
 
-async function postToCafe24(env, fields) {
+async function postToCafe24(env, fields, { suppressDebug = false } = {}) {
   if (!env.CRM_ENDPOINT) throw new Error("CRM_ENDPOINT not configured");
 
   // 전화번호 분할 (원본 폼과 동일: u_hp1/u_hp2/u_hp3)
@@ -1170,8 +1170,8 @@ async function postToCafe24(env, fields) {
       } catch {
         text = new TextDecoder("euc-kr").decode(bytes);
       }
-      // 디버그: Cafe24 응답 첫 300자를 Telegram으로 관측 (성공/실패 모두)
-      bgRun(
+      // 가을미팅 진단은 D1에 기록하므로 개인정보 포함 디버그 알림을 보내지 않는다.
+      if (!suppressDebug) bgRun(
         env,
         tgDebug(
           env,
@@ -1705,10 +1705,10 @@ async function handleFallMeeting(request, env) {
     u_birthY: "1911", // 나이만 수집하므로 정확한 출생연도를 임의로 만들지 않는다.
     u_memo: "가을미팅신청",
     agree1: "Y", agree2: "N",
-  }).then(async (result) => {
+  }, { suppressDebug: true }).then(async (result) => {
       if (result.status >= 400) throw new Error(`CRM HTTP ${result.status}`);
       await recordCafe24Result(env, recordId, "ok");
-      await recordFallStage(env, auditFields, "crm_ok");
+      await recordFallStage(env, auditFields, "crm_ok", `http:${result.status}; attempt:${result.attempt}`);
     })
     .catch(async (error) => {
       await recordCafe24Result(env, recordId, `fail:${String(error?.message || error).slice(0, 80)}`);
