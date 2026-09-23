@@ -389,6 +389,7 @@ const SOURCE_LABEL = {
   quick: "사이드바",
   bar: "하단바",
   submit: "상담문의",
+  "fall-meeting": "가을미팅신청",
   meta: "Meta 광고",
   "meta-ig": "Meta · Instagram",
   "meta-fb": "Meta · Facebook",
@@ -1189,6 +1190,36 @@ async function postToCafe24(env, fields) {
   throw lastErr;
 }
 
+// 브라우저 Pixel과 같은 event_id를 사용해 중복 전환을 하나로 묶는다.
+// 광고 성과 측정에 별도로 동의한 접수에만 호출한다.
+async function sendFallMeetingCapi(env, { eventId, phone, fbp, fbc, sourceUrl, ip, userAgent }) {
+  if (!env.META_PIXEL_ID || !env.META_CAPI_ACCESS_TOKEN) return;
+  const phoneBytes = new TextEncoder().encode(phone.replace(/\D/g, ""));
+  const digest = await crypto.subtle.digest("SHA-256", phoneBytes);
+  const ph = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+  const userData = { ph: [ph], client_ip_address: ip, client_user_agent: userAgent };
+  if (fbp) userData.fbp = fbp;
+  if (fbc) userData.fbc = fbc;
+  const payload = {
+    data: [{
+      event_name: "Lead",
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: eventId,
+      action_source: "website",
+      event_source_url: sourceUrl,
+      user_data: userData,
+      custom_data: { content_name: "가을미팅신청" },
+    }],
+    access_token: env.META_CAPI_ACCESS_TOKEN,
+  };
+  const response = await fetch(`https://graph.facebook.com/v24.0/${encodeURIComponent(env.META_PIXEL_ID)}/events`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error(`Meta CAPI HTTP ${response.status}`);
+}
+
 // ─────────────────────────────────────────────────────────────────
 // Gmail OAuth 전송 (submit 전용)
 // ─────────────────────────────────────────────────────────────────
@@ -1518,6 +1549,81 @@ async function handleConsultationSubmit(request, env) {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// 가을 미팅 전용 폼: 접수 원본은 D1, 기존 Cafe24 CRM 비고는 고정 출처값.
+async function handleFallMeeting(request, env) {
+  if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
+  if (!(request.headers.get("content-type") || "").toLowerCase().includes("application/json"))
+    return json({ error: "application/json required" }, 415);
+  let body;
+  try { body = await request.json(); } catch { return json({ error: "Invalid JSON" }, 400); }
+  if (body._hp) return json({ ok: true, tracked: false });
+  const loadTs = Number(body._ts);
+  if (loadTs && Date.now() - loadTs < MIN_SUBMIT_MS && !isBypassedIP(env, clientIP(request, env)))
+    return json({ error: "Too fast" }, 429);
+  const name = cleanLine(body.name, 30);
+  const phoneDigits = str(body.phone, 30).replace(/\D/g, "");
+  const phone = phoneDigits.length === 11
+    ? `${phoneDigits.slice(0, 3)}-${phoneDigits.slice(3, 7)}-${phoneDigits.slice(7)}` : "";
+  const gender = body.gender === "남성" || body.gender === "여성" ? body.gender : "";
+  const age = Number(body.age);
+  const errors = [];
+  if (!name) errors.push("name");
+  if (!/^010-\d{4}-\d{4}$/.test(phone)) errors.push("phone");
+  if (!gender) errors.push("gender");
+  if (!Number.isInteger(age) || age < 55 || age > 75) errors.push("age");
+  if (body.agreePrivacy !== true) errors.push("agreePrivacy");
+  if (errors.length) return json({ error: "Invalid fields", fields: errors }, 400);
+  if (!env.DB) return json({ error: "Server misconfigured" }, 500);
+  const ip = clientIP(request, env);
+  if (await checkBlacklist(env, phone)) return json({ ok: true, tracked: false });
+  const { limited } = await checkRateLimit(env, ip);
+  if (limited) return json({ error: "Too many submissions" }, 429);
+  const ua = str(request.headers.get("user-agent") || "", 500);
+  let sourceUrl = "https://noblehong.com/fall-meeting/";
+  try {
+    const candidate = new URL(request.headers.get("referer") || sourceUrl);
+    if (["noblehong.com", "www.noblehong.com", "noblehong.vercel.app"].includes(candidate.hostname))
+      sourceUrl = candidate.origin + candidate.pathname;
+  } catch {}
+  const trackingConsent = body.trackingConsent === true;
+  const eventId = trackingConsent && /^[0-9a-f-]{36}$/i.test(str(body.eventId, 40))
+    ? body.eventId : null;
+  const { id: recordId, error: saveError } = await saveConsultation(env, {
+    이름: name, 연락처: phone, 성별: gender,
+    문의내용: `가을미팅신청 · 나이 ${age}세`,
+    개인정보동의: true, 마케팅동의: trackingConsent,
+    상태: "접수", 출처: "가을미팅신청",
+    IP: ip, UserAgent: ua, Referrer: sourceUrl,
+    제출일시: new Date().toISOString(),
+  });
+  if (saveError) return json({ error: "Failed to save" }, 500);
+  bgRun(env, tgConsult(env, "fall-meeting", {
+    name, phone, gender, message: `가을미팅신청 · 나이 ${age}세`,
+  }, recordId).catch(() => {}));
+  bgRun(env, postToCafe24(env, {
+    in_course2: env.CRM_COURSE_CODE || "5002",
+    in_course_desc: "가을미팅신청",
+    u_name: name, u_hp: phoneDigits,
+    u_gender: gender === "남성" ? "1" : "2",
+    u_birthY: "1911", // 나이만 수집하므로 정확한 출생연도를 임의로 만들지 않는다.
+    u_memo: "가을미팅신청",
+    agree1: "Y", agree2: "N",
+  }).then(() => recordCafe24Result(env, recordId, "ok"))
+    .catch(async (error) => {
+      await recordCafe24Result(env, recordId, `fail:${String(error?.message || error).slice(0, 80)}`);
+      await tgDebug(env, `[노블홍/fall-meeting] 카페24 전송 실패 · Record:${recordId}`);
+    }));
+  if (eventId) {
+    bgRun(env, sendFallMeetingCapi(env, {
+      eventId, phone, ip, userAgent: ua, sourceUrl,
+      fbp: str(body.fbp, 150), fbc: str(body.fbc, 150),
+    }).catch(async () => {
+      await tgDebug(env, `[노블홍/fall-meeting] CAPI 전송 실패 · Record:${recordId}`);
+    }));
+  }
+  return json({ ok: true, tracked: !!eventId });
+}
+
 // 핸들러: 사이드바 간편 /api/consultation/quick
 // ─────────────────────────────────────────────────────────────────
 async function handleConsultationQuick(request, env) {
@@ -4042,6 +4148,8 @@ async function route(request, env) {
   // Consultation
   if (path === "/api/consultation/submit")
     return handleConsultationSubmit(request, env);
+  if (path === "/api/consultation/fall-meeting")
+    return handleFallMeeting(request, env);
   if (path === "/api/consultation/quick")
     return handleConsultationQuick(request, env);
   if (path === "/api/consultation/bar")
