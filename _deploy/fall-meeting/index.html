@@ -130,6 +130,7 @@
     .tracking-choice{border-top:1px solid var(--line);margin-top:18px;padding-top:16px}
     .tracking-choice h3{font-size:15px;margin:0 0 8px;color:var(--wine)}
     .tracking-choice p{font-size:12px;line-height:1.7;margin:0 0 10px;word-break:keep-all}
+    .meta-notice{font-size:12.5px;line-height:1.6;color:#827064;margin:-4px 0 14px;word-break:keep-all}.meta-notice .terms-open{padding:4px 0 4px 2px;min-height:0}
     .tracking-choice .consent-label{font-size:13px;padding:5px 0}
   </style>
 
@@ -183,12 +184,13 @@
     <div class="interlude"><p>멋지고 매력있는<br>분들을 초대합니다</p><span>편안하고 품격 있는 버스팅</span></div>
     <section class="section apply" id="apply" aria-labelledby="apply-title">
       <p class="eyebrow">홍유진 커플매니저와 함께</p><h2 class="section-title" id="apply-title" tabindex="-1">가을 버스팅 참가 신청</h2><p class="section-intro">상세한 내용은 접수 시<br>개별 안내드립니다.</p>
-      <!-- 신청은 노블홍 접수 API와 연결됩니다. 광고 성과 측정은 선택 동의 시에만 실행됩니다. -->
+      <!-- 신청은 노블홍 접수 API와 연결됩니다. 픽셀은 페이지 방문 때 시작하고, 신청 접수 때 픽셀과 CAPI로 같은 event_id의 Lead를 보냅니다. -->
       <form id="application-form" class="form" novalidate>
         <div class="field"><label class="field-label" for="app-name">이름<span class="required" aria-hidden="true">*</span></label><input class="input" id="app-name" name="name" autocomplete="name" placeholder="성함을 입력해 주세요" maxlength="30" required></div>
         <div class="field"><label class="field-label" for="app-phone">휴대폰 번호<span class="required" aria-hidden="true">*</span></label><input class="input" id="app-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000" maxlength="13" aria-describedby="phone-hint" required><p class="form-hint" id="phone-hint">참가 안내를 받으실 번호를 입력해 주세요.</p></div>
         <div class="form-row"><fieldset class="field gender-field"><legend class="field-label">성별<span class="required" aria-hidden="true">*</span></legend><div class="gender-options"><label class="choice"><input type="radio" name="gender" value="남성" required><span>남성</span></label><label class="choice"><input type="radio" name="gender" value="여성" required><span>여성</span></label></div></fieldset><div class="field"><label class="field-label" for="app-age">나이<span class="required" aria-hidden="true">*</span></label><select class="input" id="app-age" name="age" required><option value="" disabled selected>나이 선택</option><option value="55">55세</option><option value="56">56세</option><option value="57">57세</option><option value="58">58세</option><option value="59">59세</option><option value="60">60세</option><option value="61">61세</option><option value="62">62세</option><option value="63">63세</option><option value="64">64세</option><option value="65">65세</option><option value="66">66세</option><option value="67">67세</option><option value="68">68세</option><option value="69">69세</option><option value="70">70세</option><option value="71">71세</option><option value="72">72세</option><option value="73">73세</option><option value="74">74세</option><option value="75">75세</option></select></div></div>
         <div class="consent-row"><label class="consent-label" for="app-consent"><input id="app-consent" type="checkbox" required><span>개인정보 수집·이용 동의 <b>(필수)</b></span></label><button class="terms-open" id="terms-open" type="button" data-open-privacy aria-haspopup="dialog">내용 보기</button></div>
+        <p class="meta-notice">신청하시면 광고 성과 측정을 위해 일부 정보가 Meta에 제공됩니다. <button class="terms-open" type="button" data-open-privacy data-focus="tracking-terms" aria-haspopup="dialog">자세히 보기</button></p>
         <div aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0"><label>비워 두세요<input name="_hp" autocomplete="off" tabindex="-1"></label></div>
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAFA_wyOk0s5YoMVh" data-action="fall_meeting" data-appearance="interaction-only" data-size="flexible"></div>
         <p class="form-error" id="form-error" role="alert" hidden></p><button type="submit" class="button-primary submit" id="submit-btn">가을 버스팅 참가 신청하기 <span class="arrow" aria-hidden="true">→</span></button><p class="submit-note">신청은 참가 의사 접수이며, 대면 상담 후 최종 확정합니다.</p>
@@ -206,20 +208,20 @@
     </footer>
   </main>
   <aside class="bottom-dock" id="bottom-dock" aria-label="가을 버스팅 참가 신청 바로가기"><a class="button-primary" href="#apply"><span class="dock-date">11.20 금</span>가을 버스팅 참가 신청<span class="arrow" aria-hidden="true">→</span></a></aside>
-  <dialog id="terms-dialog" aria-labelledby="terms-title"><div class="dialog-top"><h2 id="terms-title">개인정보 수집·이용</h2><button class="close-dialog" type="button" data-close-dialog aria-label="개인정보 안내 닫기">×</button></div><div class="terms-copy"><dl><dt>수집·이용 목적</dt><dd>가을 버스팅 참가 신청 확인, 참가 상담 및 개별 안내, 자동접수 방지와 접수 오류 확인</dd><dt>수집 항목</dt><dd>이름, 휴대폰 번호, 성별, 나이, 접속 IP와 IP 기반 추정 국가·지역·도시, 접수 시 방문 식별 쿠키</dd><dt>보유·이용 기간</dt><dd>고객상담 내역과 접수 진단 기록은 노블홍 개인정보처리방침에 따라 3년간 보관합니다. 방문 식별 쿠키의 유효기간은 1일입니다.</dd></dl><p>동의를 거부하실 수 있으며, 동의하지 않으시면 참가 신청 안내를 받으실 수 없습니다. IP 기반 위치는 실제 거주지와 다를 수 있습니다.</p><div class="tracking-choice"><h3>Meta 광고 성과 측정 안내</h3><p id="tracking-explainer">광고를 통한 방문·신청 성과를 확인하기 위해, 허용한 경우에만 방문·신청 기록과 접속 정보, 해시 처리한 휴대폰 번호를 Meta에 전송합니다. 이 정보는 광고 성과 측정에 사용됩니다.</p><label class="consent-label" for="tracking-consent"><input id="tracking-consent" type="checkbox" aria-describedby="tracking-explainer"><span>Meta 광고 성과 측정 허용 <b>(선택)</b></span></label><p>허용하지 않아도 가을 버스팅 참가 신청은 가능합니다.</p></div></div><button type="button" class="button-primary terms-confirm" data-close-dialog>확인</button></dialog>
+  <dialog id="terms-dialog" aria-labelledby="terms-title"><div class="dialog-top"><h2 id="terms-title">개인정보 수집·이용</h2><button class="close-dialog" type="button" data-close-dialog aria-label="개인정보 안내 닫기">×</button></div><div class="terms-copy"><dl><dt>수집·이용 목적</dt><dd>가을 버스팅 참가 신청 확인, 참가 상담 및 개별 안내, 자동접수 방지와 접수 오류 확인</dd><dt>수집 항목</dt><dd>이름, 휴대폰 번호, 성별, 나이, 접속 IP와 IP 기반 추정 국가·지역·도시, 접수 시 방문 식별 쿠키</dd><dt>보유·이용 기간</dt><dd>고객상담 내역과 접수 진단 기록은 노블홍 개인정보처리방침에 따라 3년간 보관합니다. 방문 식별 쿠키의 유효기간은 1일입니다.</dd></dl><p>동의를 거부하실 수 있으며, 동의하지 않으시면 참가 신청 안내를 받으실 수 없습니다. IP 기반 위치는 실제 거주지와 다를 수 있습니다.</p><div class="tracking-choice" id="tracking-terms"><h3>Meta 광고 성과 측정 정보 제공 (국외 이전)</h3><p>광고를 통한 방문·신청 성과를 확인하기 위해 아래 정보를 Meta에 전송합니다.</p><dl><dt>제공받는 자</dt><dd>Meta Platforms, Inc.</dd><dt>이전 국가</dt><dd>미국</dd><dt>제공 항목</dt><dd>해시 처리한 휴대폰 번호, 방문·신청 기록, 접속 IP, 브라우저 정보, 광고 클릭 식별값</dd><dt>제공 시기·방법</dt><dd>페이지 방문과 신청 접수 시 네트워크로 전송</dd><dt>이용 목적</dt><dd>광고 성과 측정과 광고 노출 최적화</dd><dt>보유·이용 기간</dt><dd>Meta 데이터 정책에 따른 기간</dd></dl></div></div><button type="button" class="button-primary terms-confirm" data-close-dialog>확인</button></dialog>
   <dialog class="complete" id="complete-dialog" aria-labelledby="complete-title" aria-describedby="complete-copy"><div class="complete-mark" aria-hidden="true"></div><h2 id="complete-title">설레는 가을,<br>신청해 주셔서 감사합니다.</h2><p id="complete-copy">남겨주신 연락처로 담당자가<br>참가 방법과 자세한 일정을 안내해 드립니다.</p><div class="complete-event">11월 20일 금요일 · 노블홍 가을 버스팅</div><button type="button" class="button-primary" data-close-dialog>확인</button></dialog>
   <script>
     (() => {
       'use strict';
       const form=document.getElementById('application-form'),dock=document.getElementById('bottom-dock'),apply=document.getElementById('apply');
-      const name=document.getElementById('app-name'),phone=document.getElementById('app-phone'),age=document.getElementById('app-age'),consent=document.getElementById('app-consent'),tracking=document.getElementById('tracking-consent'),error=document.getElementById('form-error');
+      const name=document.getElementById('app-name'),phone=document.getElementById('app-phone'),age=document.getElementById('app-age'),consent=document.getElementById('app-consent'),error=document.getElementById('form-error');
       const terms=document.getElementById('terms-dialog'),complete=document.getElementById('complete-dialog');
       let formInView=false,completeShown=false;
       const syncDock=()=>{const hide=formInView||form.contains(document.activeElement)||terms.open||complete.open||completeShown;dock.classList.toggle('is-hidden',hide);dock.inert=hide;};
       const observer=new IntersectionObserver(entries=>{formInView=entries[0].isIntersecting;syncDock();},{threshold:0,rootMargin:'0px 0px -80px 0px'});
       observer.observe(apply);form.addEventListener('focusin',syncDock);form.addEventListener('focusout',()=>setTimeout(syncDock,0));
       document.querySelectorAll('a[href="#apply"]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();document.getElementById('apply-title').focus({preventScroll:true});apply.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});}));
-      document.querySelectorAll('[data-open-privacy]').forEach(button=>button.addEventListener('click',()=>{terms.showModal();syncDock();}));
+      document.querySelectorAll('[data-open-privacy]').forEach(button=>button.addEventListener('click',()=>{terms.showModal();syncDock();if(button.dataset.focus)document.getElementById(button.dataset.focus)?.scrollIntoView({block:'start'});}));
       document.querySelectorAll('[data-close-dialog]').forEach(button=>button.addEventListener('click',()=>button.closest('dialog').close()));
       [terms,complete].forEach(dialog=>dialog.addEventListener('close',syncDock));
       phone.addEventListener('input',()=>{const digits=phone.value.replace(/\D/g,'').slice(0,11);phone.value=digits.length>7?digits.slice(0,3)+'-'+digits.slice(3,7)+'-'+digits.slice(7):digits.length>3?digits.slice(0,3)+'-'+digits.slice(3):digits;});
@@ -245,7 +247,7 @@
         const t=b.createElement(e),s=b.getElementsByTagName(e)[0];t.async=true;t.src=v;s.parentNode.insertBefore(t,s);
         f.fbq('set','autoConfig',false,pixelId);f.fbq('init',pixelId);f.fbq('track','PageView');
       }
-      tracking.addEventListener('change',()=>{if(tracking.checked){if(window.fbq)window.fbq('consent','grant');else startPixel();}else if(window.fbq)window.fbq('consent','revoke');});
+      startPixel();
       const formLoadedAt=Date.now();
       form.addEventListener('submit',async event=>{
         event.preventDefault();if(completeShown)return;error.hidden=true;form.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'));
@@ -257,8 +259,7 @@
         if(!consent.checked)return invalid(consent,'개인정보 수집 및 이용에 동의해 주세요.');
         const turnstileToken=form.querySelector('[name="cf-turnstile-response"]')?.value||'';
         if(!turnstileToken){error.textContent='보안 확인이 끝나면 다시 신청해 주세요.';error.hidden=false;return;}
-        const submit=document.getElementById('submit-btn'),originalLabel=submit.innerHTML,trackingConsent=tracking.checked,eventId=trackingConsent&&crypto.randomUUID?crypto.randomUUID():null;
-        if(trackingConsent)startPixel();
+        const submit=document.getElementById('submit-btn'),originalLabel=submit.innerHTML,trackingConsent=true,eventId=crypto.randomUUID?crypto.randomUUID():null;
         submit.disabled=true;submit.textContent='신청 접수 중...';
         try{
           const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),15000);
