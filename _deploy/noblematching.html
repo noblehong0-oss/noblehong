@@ -48,8 +48,11 @@
       sizes="16x16"
       href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-16x16.png"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link
-      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
       rel="stylesheet"
     />
     <link
@@ -4836,7 +4839,7 @@
           }
           requestAnimationFrame(draw);
           var loadStart = Date.now();
-          window.addEventListener("load", function () {
+          document.addEventListener("DOMContentLoaded", function () {
             var elapsed = Date.now() - loadStart;
             var remain = Math.max(0, 1000 - elapsed);
             setTimeout(function () {
@@ -5180,7 +5183,7 @@
       <div
         class="strength-section-wrap"
         style="
-          background: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/cm26000138.webp&quot;)
+          background: url(&quot;https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/cm26000138_1920.webp&quot;)
             center/cover no-repeat;
           position: relative;
         "
@@ -7283,7 +7286,7 @@
         });
       })();
     </script>
-    <script src="assets/js/inquiry-bars.js" defer></script>
+    <script src="assets/js/inquiry-bars.js?v=20261102" defer></script>
 
     <!-- MOBILE NAV INJECTED v1 -->
     <div class="bib-backdrop" aria-hidden="true"></div>

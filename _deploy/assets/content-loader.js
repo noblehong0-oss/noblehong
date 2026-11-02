@@ -6,6 +6,93 @@
  */
 (function () {
   const API = "https://noblehong-api.noblehong0.workers.dev";
+  const CACHE_KEY = "noble-content-v2";
+  const CACHE_TTL = 60 * 1000;
+  const CACHE_ENTRIES = 20;
+  const CACHE_BYTES = 1024 * 1024;
+  const REQUEST_TIMEOUT = 8000;
+  const MAX_CONCURRENT = 4;
+  const cache = new Map();
+  const pending = new Map();
+  const queue = [];
+  const rendered = new WeakMap();
+  let active = 0;
+
+  // Only public content is stored. Expired/oversized entries never survive a visit.
+  try {
+    const saved = sessionStorage.getItem(CACHE_KEY);
+    if (saved && saved.length * 2 <= CACHE_BYTES) {
+      const entries = JSON.parse(saved);
+      if (Array.isArray(entries)) {
+        entries.slice(-CACHE_ENTRIES).forEach(([key, entry]) => {
+          if (entry && entry.data && entry.data.ok && Array.isArray(entry.data.records) &&
+              entry.expires > Date.now() && entry.expires <= Date.now() + CACHE_TTL) {
+            cache.set(key, entry);
+          }
+        });
+      }
+    }
+  } catch (_) { /* Storage may be disabled; the in-memory cache still works. */ }
+
+  function remember(key, data) {
+    cache.delete(key);
+    cache.set(key, { expires: Date.now() + CACHE_TTL, data });
+    for (const [entryKey, entry] of cache) {
+      if (entry.expires <= Date.now()) cache.delete(entryKey);
+    }
+    while (cache.size > CACHE_ENTRIES) cache.delete(cache.keys().next().value);
+    let saved = JSON.stringify(Array.from(cache));
+    while (saved.length * 2 > CACHE_BYTES && cache.size) {
+      cache.delete(cache.keys().next().value);
+      saved = JSON.stringify(Array.from(cache));
+    }
+    try { sessionStorage.setItem(CACHE_KEY, saved); } catch (_) {}
+  }
+
+  function drainQueue() {
+    while (active < MAX_CONCURRENT && queue.length) {
+      const run = queue.shift();
+      active++;
+      run().finally(() => {
+        active--;
+        drainQueue();
+      });
+    }
+  }
+
+  function requestContent(qs) {
+    const key = qs.toString();
+    const hit = cache.get(key);
+    if (hit && hit.expires > Date.now()) {
+      cache.delete(key);
+      cache.set(key, hit);
+      return Promise.resolve(hit.data);
+    }
+    cache.delete(key);
+    if (pending.has(key)) return pending.get(key);
+    if (pending.size >= 64) return Promise.reject(new Error("Content request limit reached"));
+    const request = new Promise((resolve, reject) => {
+      queue.push(async () => {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+        try {
+          const response = await fetch(API + "/api/content?" + key, { signal: controller.signal });
+          if (!response.ok) throw Object.assign(new Error("Content HTTP " + response.status), { status: response.status });
+          const data = await response.json();
+          if (!data.ok || !Array.isArray(data.records)) throw new Error("Invalid content response");
+          remember(key, data);
+          resolve(data);
+        } catch (error) {
+          reject(error);
+        } finally {
+          clearTimeout(timeout);
+        }
+      });
+    }).finally(() => pending.delete(key));
+    pending.set(key, request);
+    drainQueue();
+    return request;
+  }
 
   function escHtml(s) {
     return String(s == null ? "" : s).replace(
@@ -24,19 +111,18 @@
   async function fetchModule(moduleKey, opts) {
     opts = opts || {};
     const qs = new URLSearchParams({ module: moduleKey });
-    if (opts.limit) qs.set("limit", String(opts.limit));
+    const limit = Number(opts.limit);
+    qs.set("limit", String(Number.isFinite(limit) && limit > 0 ? Math.max(1, Math.min(50, Math.floor(limit))) : 50));
     if (opts.pinned) qs.set("pinned", "true");
     if (opts.offset) qs.set("offset", String(opts.offset));
+    if (opts.view === "summary") qs.set("view", "summary");
+    if (opts.id) qs.set("id", String(opts.id));
     try {
-      const r = await fetch(API + "/api/content?" + qs.toString());
-      const d = await r.json();
-      if (!d.ok) {
-        console.warn("[content-loader] " + moduleKey + " not ok", d);
-        return [];
-      }
+      const d = await requestContent(qs);
       return d.records || [];
     } catch (e) {
-      console.error("[content-loader] " + moduleKey + " fetch failed", e);
+      if (opts.throwOnError) throw e;
+      console.warn("[content-loader] " + moduleKey + " unavailable: " + e.name);
       return [];
     }
   }
@@ -329,39 +415,53 @@
   // 페이지 안의 [data-content-module] 컨테이너 자동 처리
   async function autoRender() {
     const targets = document.querySelectorAll("[data-content-module]");
-    for (const el of targets) {
+    return Promise.all(Array.from(targets, (el) => {
+      if (rendered.has(el)) return rendered.get(el);
       const moduleKey = el.dataset.contentModule;
       const limit = Number(el.dataset.limit) || 50;
       const renderName = el.dataset.render;
       const filterType = el.dataset.videoType; // 영상타입 필터 (옵션)
       const renderer = renderers[renderName];
-      if (!renderer) continue;
-      let records = await fetchModule(moduleKey, { limit });
-      if (filterType) {
-        records = records.filter((rec) => {
-          const vt = rec.fields?.["영상타입"] || "홍유진TV";
-          return vt === filterType;
+      if (!renderer) return;
+      const task = (async () => {
+        let records = await fetchModule(moduleKey, {
+          limit,
+          view: renderName === "lovecolCard" ? undefined : "summary",
         });
-      }
-      if (!records.length) continue;
-      el.innerHTML = records.map(renderer).join("");
-      applyReveal(el);
-    }
+        if (filterType) {
+          records = records.filter((rec) => {
+            const vt = rec.fields?.["영상타입"] || "홍유진TV";
+            return vt === filterType;
+          });
+        }
+        if (!records.length) {
+          rendered.delete(el);
+          return;
+        }
+        el.innerHTML = records.map(renderer).join("");
+        applyReveal(el);
+      })();
+      rendered.set(el, task);
+      return task;
+    }));
   }
 
   // 외부 노출
+  let finishInitialRender;
+  const ready = new Promise((resolve) => { finishInitialRender = resolve; });
   window.NobleContent = {
     fetchModule,
     applyReveal,
     renderers,
     escHtml,
     autoRender,
+    ready,
   };
 
   // DOMContentLoaded 후 자동 실행
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", autoRender);
+    document.addEventListener("DOMContentLoaded", () => autoRender().then(finishInitialRender, finishInitialRender), { once: true });
   } else {
-    autoRender();
+    autoRender().then(finishInitialRender, finishInitialRender);
   }
 })();

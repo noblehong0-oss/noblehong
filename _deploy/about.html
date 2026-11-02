@@ -48,8 +48,11 @@
       sizes="16x16"
       href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-16x16.png"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link
-      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
       rel="stylesheet"
     />
     <link
@@ -3429,8 +3432,14 @@
             });
         }
 
+        var activeSearch = null;
         function doSearch() {
           var v = (input.value || "").trim();
+          if (activeSearch && activeSearch.name === v) return;
+          if (activeSearch) {
+            activeSearch.controller.abort();
+            activeSearch = null;
+          }
           if (!v) {
             showNoResult("매니저 이름을 입력해 주세요.");
             return;
@@ -3442,11 +3451,16 @@
 
           // 서버 API 우선 (사진 포함)
           showNoResult("검색 중...");
-          fetch("/api/couple-manager/search?cmgName=" + encodeURIComponent(v))
+          var request = { name: v, controller: new AbortController() };
+          activeSearch = request;
+          var timeout = setTimeout(function () { request.controller.abort(); }, 8000);
+          fetch("/api/couple-manager/search?cmgName=" + encodeURIComponent(v), { signal: request.controller.signal })
             .then(function (r) {
+              if (!r.ok) throw new Error("Search unavailable");
               return r.json();
             })
             .then(function (data) {
+              if (activeSearch !== request) return;
               if (!data || !data.found || !data.manager) {
                 // API는 응답했지만 결과 없음 → 로컬 fallback 확인
                 if (profiles[v]) {
@@ -3468,12 +3482,17 @@
               });
             })
             .catch(function () {
+              if (activeSearch !== request) return;
               // 네트워크 실패 → 로컬 fallback
               if (profiles[v]) {
                 renderProfile(profiles[v]);
                 return;
               }
               showNoResult("서버 연결에 실패했습니다.");
+            })
+            .finally(function () {
+              clearTimeout(timeout);
+              if (activeSearch === request) activeSearch = null;
             });
         }
 
@@ -3567,8 +3586,8 @@
         });
       })();
     </script>
-    <script src="assets/js/inquiry-bars.js" defer></script>
-    <script src="assets/content-loader.js" defer></script>
+    <script src="assets/js/inquiry-bars.js?v=20261102" defer></script>
+    <script src="assets/content-loader.js?v=20260922" defer></script>
 
     <!-- MOBILE NAV INJECTED v1 -->
     <div class="bib-backdrop" aria-hidden="true"></div>
@@ -3707,13 +3726,16 @@
               });
           }
         }
-        // content-loader.js (defer)가 먼저 실행되도록 살짝 늦게
+        // Wait for the actual bounded content request; avoid racing a slow API.
+        function afterContent() {
+          var ready = window.NobleContent && window.NobleContent.ready;
+          if (ready) ready.then(loadNews);
+          else loadNews();
+        }
         if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", function () {
-            setTimeout(loadNews, 800);
-          });
+          document.addEventListener("DOMContentLoaded", afterContent, { once: true });
         } else {
-          setTimeout(loadNews, 800);
+          afterContent();
         }
       })();
     </script>

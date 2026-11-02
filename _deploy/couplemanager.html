@@ -28,8 +28,11 @@
       name="description"
       content="대한민국 커플매니저 제1호 홍유진 대표의 30년 성혼 경험과 노블홍의 전문 매칭 철학 안내."
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link
-      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
       rel="stylesheet"
     />
     <link
@@ -637,8 +640,14 @@
         });
       }
 
+      var activeSearch = null;
       function doSearch() {
         var v = document.getElementById("searchInput").value.trim();
+        if (activeSearch && activeSearch.name === v) return;
+        if (activeSearch) {
+          activeSearch.controller.abort();
+          activeSearch = null;
+        }
         if (!v) {
           alert("찾으시는 매니저 이름을 입력해 주세요.");
           return;
@@ -664,11 +673,16 @@
         noResult.style.display = "block";
         noResult.querySelector("p").textContent = "검색 중...";
 
-        fetch("/api/couple-manager/search?cmgName=" + encodeURIComponent(v))
+        var request = { name: v, controller: new AbortController() };
+        activeSearch = request;
+        var timeout = setTimeout(function () { request.controller.abort(); }, 8000);
+        fetch("/api/couple-manager/search?cmgName=" + encodeURIComponent(v), { signal: request.controller.signal })
           .then(function (r) {
+            if (!r.ok) throw new Error("Search unavailable");
             return r.json();
           })
           .then(function (data) {
+            if (activeSearch !== request) return;
             if (!data.found || !data.manager) {
               noResult.querySelector("p").textContent = "검색 결과가 없습니다";
               return;
@@ -687,8 +701,13 @@
             loadProfileDirect("_live");
           })
           .catch(function () {
+            if (activeSearch !== request) return;
             noResult.querySelector("p").textContent =
               "서버 연결에 실패했습니다";
+          })
+          .finally(function () {
+            clearTimeout(timeout);
+            if (activeSearch === request) activeSearch = null;
           });
 
         document.querySelectorAll(".demo-bar button").forEach(function (b) {

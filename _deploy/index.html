@@ -21,8 +21,11 @@
     <link rel="icon" type="image/x-icon" href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/favicon-16x16.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link
-      href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/variable/pretendardvariable.min.css"
+      href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
       rel="stylesheet"
     />
     <link
@@ -3518,7 +3521,7 @@
         }
         requestAnimationFrame(draw);
         var loadStart=Date.now();
-        window.addEventListener('load',function(){
+        document.addEventListener('DOMContentLoaded',function(){
           var elapsed=Date.now()-loadStart;
           var remain=Math.max(0,1000-elapsed);
           setTimeout(function(){overlay.style.opacity='0';setTimeout(function(){stopped=true;clearInterval(dotIv);overlay.remove();},600);},remain);
@@ -3550,7 +3553,7 @@
     <section class="hero" id="hero">
       <div class="hero-bg-image" id="heroBg">
         <img src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/hero1.webp" alt="커플 데이트" />
-        <video src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/hero_01.mp4" muted playsinline loop></video>
+        <video src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/hero_01.mp4" muted playsinline loop preload="metadata"></video>
       </div>
       <div class="hero-bg-overlay"></div>
       <span class="ai-image-badge">AI 이미지 사용</span>
@@ -3604,7 +3607,7 @@
     <section class="stats" id="stats">
       <div class="stats-bg" id="statsBg">
         <img loading="lazy" src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/virgin_road.webp" alt="버진로드" />
-        <video src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/virgin_road.mp4" muted playsinline loop></video>
+        <video src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/virgin_road.mp4" muted playsinline loop preload="none"></video>
       </div>
       <div class="stats-inner">
         <div class="stats-eyebrow">Noble HONG in Numbers</div>
@@ -3618,7 +3621,7 @@
             src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/stats/stats_v1.mp4?v=2"
             muted
             playsinline
-            preload="auto"
+            preload="metadata"
             loop
           ></video>
         </div>
@@ -3697,7 +3700,7 @@
             muted
             playsinline
             loop
-          ></video>
+           preload="none"></video>
         </div>
         <div class="ceo-bg-cell">
           <img loading="lazy" src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/ceo_thumb_02.webp" alt="" /><video
@@ -3705,7 +3708,7 @@
             muted
             playsinline
             loop
-          ></video>
+           preload="none"></video>
         </div>
         <div class="ceo-bg-cell">
           <img loading="lazy" src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/ceo_thumb_03.webp" alt="" /><video
@@ -3713,7 +3716,7 @@
             muted
             playsinline
             loop
-          ></video>
+           preload="none"></video>
         </div>
         <div class="ceo-bg-cell">
           <img loading="lazy" src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/ceo_thumb_04.webp" alt="" /><video
@@ -3721,7 +3724,7 @@
             muted
             playsinline
             loop
-          ></video>
+           preload="none"></video>
         </div>
         <div class="ceo-bg-cell">
           <img loading="lazy" src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/ceo_thumb_05.webp" alt="" /><video
@@ -3729,7 +3732,7 @@
             muted
             playsinline
             loop
-          ></video>
+           preload="none"></video>
         </div>
         <div class="ceo-bg-cell">
           <img loading="lazy" src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/ceo_thumb_01.webp" alt="" /><video
@@ -3737,7 +3740,7 @@
             muted
             playsinline
             loop
-          ></video>
+           preload="none"></video>
         </div>
         <div class="ceo-bg-cell">
           <img loading="lazy" src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/ceo_thumb_02.webp" alt="" /><video
@@ -3745,7 +3748,7 @@
             muted
             playsinline
             loop
-          ></video>
+           preload="none"></video>
         </div>
         <div class="ceo-bg-cell">
           <img loading="lazy" src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/ceo_thumb_06.webp" alt="" /><video
@@ -3753,7 +3756,7 @@
             muted
             playsinline
             loop
-          ></video>
+           preload="none"></video>
         </div>
       </div>
       <div class="ceo-bg-overlay"></div>
@@ -3771,7 +3774,7 @@
                   muted
                   playsinline
                   loop
-                ></video>
+                 preload="none"></video>
               </div>
             </div>
           </div>
@@ -4274,7 +4277,7 @@
     <section class="events-preview" id="events">
       <div class="events-bg" id="eventsBg">
         <img loading="lazy" src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/hotel.webp" alt="호텔 로비" />
-        <video src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/hotel.mp4" muted playsinline loop></video>
+        <video src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/hotel.mp4" muted playsinline loop preload="none"></video>
       </div>
       <span
         class="ai-image-badge"
@@ -4441,7 +4444,7 @@
       <div class="cta-bg-wrap">
         <div class="cta-bg" id="ctaBg">
           <img loading="lazy" src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/cta.webp" alt="웨딩" />
-          <video src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/cta.mp4" muted playsinline loop></video>
+          <video src="https://pub-1fc4fdf6312a462eb1845d9a1c27314d.r2.dev/media/images/qualify/cta.mp4" muted playsinline loop preload="none"></video>
         </div>
         <div class="cta-bg-overlay"></div>
       </div>
@@ -4934,9 +4937,8 @@
         const video = heroBg.querySelector("video");
         if (!video) return;
         setTimeout(() => {
-          heroBg.classList.add("playing");
           video.currentTime = 0;
-          video.play().catch(() => {});
+          video.play().then(() => heroBg.classList.add("playing")).catch(() => {});
         }, 2000);
       })();
 
@@ -4978,9 +4980,8 @@
               video.pause();
               timer = setTimeout(() => {
                 if (inView) {
-                  statsBg.classList.add("playing");
                   video.currentTime = 0;
-                  video.play().catch(() => {});
+                  video.play().then(() => statsBg.classList.add("playing")).catch(() => {});
                 }
               }, 3000);
             }
@@ -5353,9 +5354,8 @@
             cells.forEach((cell) => {
               const video = cell.querySelector("video");
               if (!video) return;
-              video.classList.add("playing");
               video.currentTime = 0;
-              video.play().catch(() => {});
+              video.play().then(() => video.classList.add("playing")).catch(() => {});
             });
           },
         });
@@ -5373,9 +5373,8 @@
         function playCard(card) {
           const video = card.querySelector("video");
           if (!video) return;
-          card.classList.add("playing");
           video.currentTime = 0;
-          video.play().catch(() => {});
+          video.play().then(() => card.classList.add("playing")).catch(() => {});
         }
 
         function pauseCard(card) {
@@ -5442,9 +5441,8 @@
         function playStep(el) {
           const video = el.querySelector("video");
           if (!video) return;
-          el.classList.add("playing");
           video.currentTime = 0;
-          video.play().catch(() => {});
+          video.play().then(() => el.classList.add("playing")).catch(() => {});
         }
 
         function pauseStep(el) {
@@ -5518,8 +5516,7 @@
           onEnter: () => {
             inView = true;
             timer = setTimeout(() => {
-              bg.classList.add("playing");
-              video.play().catch(() => {});
+              video.play().then(() => bg.classList.add("playing")).catch(() => {});
             }, 2000);
           },
           onLeave: () => {
@@ -5531,8 +5528,7 @@
           onEnterBack: () => {
             inView = true;
             timer = setTimeout(() => {
-              bg.classList.add("playing");
-              video.play().catch(() => {});
+              video.play().then(() => bg.classList.add("playing")).catch(() => {});
             }, 2000);
           },
           onLeaveBack: () => {
@@ -5778,9 +5774,8 @@
               video.pause();
               timer = setTimeout(() => {
                 if (inView) {
-                  ceoImg.classList.add("playing");
                   video.currentTime = 0;
-                  video.play().catch(() => {});
+                  video.play().then(() => ceoImg.classList.add("playing")).catch(() => {});
                 }
               }, 3000);
             }
@@ -5890,9 +5885,8 @@
               video.pause();
               timer = setTimeout(() => {
                 if (inView) {
-                  ctaBg.classList.add("playing");
                   video.currentTime = 0;
-                  video.play().catch(() => {});
+                  video.play().then(() => ctaBg.classList.add("playing")).catch(() => {});
                 }
               }, 3000);
             }
@@ -6288,8 +6282,8 @@
         });
       })();
     </script>
-    <script src="assets/js/inquiry-bars.js" defer></script>
-    <script src="assets/content-loader.js" defer></script>
+    <script src="assets/js/inquiry-bars.js?v=20261102" defer></script>
+    <script src="assets/content-loader.js?v=20260922" defer></script>
   
     <!-- MOBILE NAV INJECTED v1 -->
     <div class="bib-backdrop" aria-hidden="true"></div>
