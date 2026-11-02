@@ -21,6 +21,9 @@
  *   GET   /api/admin/analytics/status           GA4 연결 상태 확인
  *   GET   /api/admin/analytics/summary          GA4 방문통계 D1 스냅샷 조회
  *   POST  /api/admin/analytics/sync             GA4 방문통계 수집 + D1/R2 영속화
+ *   GET   /api/admin/analytics/visitors         방문자 분석 (GA4 batchRunReports + 접수 DB 요약, 6시간 캐시)
+ *   GET   /api/admin/works/list?month=YYYY-MM   업무관리: 그 달 업무 기록과 의견
+ *   POST  /api/admin/works/{save,delete,comment,comment-delete}  업무관리 기록·의견 쓰기
  *   GET|POST /api/couple-manager/search         레거시 커플매니저 스크레이핑
  *
  * Bindings: env.BUCKET (R2 "noblehong-r2"), env.DB (D1 "noblehong-db")
@@ -4008,6 +4011,941 @@ async function handleAnalyticsSync(request, env) {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// 핸들러: 방문자 분석 GET /api/admin/analytics/visitors
+//   GA4 보고서 최대 13종(비교 시 이전 기간 3종 추가)을 batchRunReports 3~4회로 묶어 부르고,
+//   접수 DB 는 KST 기간으로 자른 요약 쿼리(LIMIT 포함)만 부른다.
+//   결과는 인자 조합별로 Cache API 와 R2(analytics/visitors-cache/v1/)에 6시간 둔다. refresh=1 일 때만 다시 받는다.
+//   관리자는 workers.dev 주소로 부르는데 Cache API 는 커스텀 도메인에서만 확실히 동작하므로 R2 가 실제 저장소다.
+//   GA4 는 호출마다 15초 타임아웃, 429 는 재시도하지 않는다.
+// ─────────────────────────────────────────────────────────────────
+const VA_CACHE_TTL_SEC = 6 * 3600;
+// 「지금 새로 받기」 연타 방지: 1분 안에 받은 결과는 GA4 를 다시 부르지 않고 그대로 돌려준다
+const VA_REFRESH_MIN_SEC = 60;
+const VA_GA4_TIMEOUT_MS = 15000;
+const VA_GA4_BATCH_SIZE = 5; // batchRunReports 한 번에 담을 수 있는 최대 보고서 수
+const VA_MAX_DAYS = 400;
+const VA_PRESETS = { "7d": 7, "28d": 28, "90d": 90 };
+const VA_CHANNELS = new Set([
+  "Direct",
+  "Organic Search",
+  "Paid Search",
+  "Paid Social",
+  "Organic Social",
+  "Referral",
+  "Email",
+  "Affiliates",
+  "Display",
+  "Organic Video",
+  "Paid Video",
+  "Organic Shopping",
+  "Paid Shopping",
+  "Paid Other",
+  "Cross-network",
+  "Audio",
+  "SMS",
+  "Mobile Push Notifications",
+  "AI Assistant",
+  "Unassigned",
+]);
+const VA_SEARCH_CHANNEL = "Organic Search";
+// GA4 는 네이버·다음 검색을 여러 소스 값으로 나눠 남기고, 네이버 광고 결과 화면(ad.search.naver.com)까지 Organic Search 로 묶는다.
+// 위에서부터 먼저 맞는 엔진으로 분류하고 어디에도 안 맞으면 other 다. 정규식은 GA4 PARTIAL_REGEXP(RE2)와 JS 양쪽에서 쓴다.
+const VA_SEARCH_ENGINES = [
+  { id: "naver_ad", re: "(^|\\.)ad\\.search\\.naver\\.com$" },
+  { id: "naver", re: "naver" },
+  { id: "google", re: "google" },
+  { id: "daum", re: "daum" },
+];
+for (const id of [...VA_SEARCH_ENGINES.map((e) => e.id), "other"])
+  VA_CHANNELS.add(`${VA_SEARCH_CHANNEL}:${id}`);
+const VA_DEVICES = new Set(["mobile", "desktop", "tablet"]);
+const VA_VISITORS = new Set(["new", "returning"]);
+// GA4 region(영문) → 시·도
+const VA_REGION_KO = {
+  Seoul: "서울",
+  "Gyeonggi-do": "경기",
+  Incheon: "인천",
+  Busan: "부산",
+  Daegu: "대구",
+  Gwangju: "광주",
+  Daejeon: "대전",
+  Ulsan: "울산",
+  Sejong: "세종",
+  "Sejong-si": "세종",
+  "Gangwon-do": "강원",
+  "Gangwon State": "강원",
+  "Chungcheongbuk-do": "충북",
+  "Chungcheongnam-do": "충남",
+  "Jeollabuk-do": "전북",
+  "Jeonbuk State": "전북",
+  "Jeollanam-do": "전남",
+  "Gyeongsangbuk-do": "경북",
+  "Gyeongsangnam-do": "경남",
+  "Jeju-do": "제주",
+  Jeju: "제주",
+};
+// Meta 신청서 지역(자유 입력) → 시·도. output/report_6m/collect.mjs 의 SIDO 와 같은 규칙
+const VA_SIDO = [
+  ["서울", /서울/],
+  ["인천", /인천/],
+  [
+    "경기",
+    /경기|수원|용인|성남|고양|부천|안양|화성|남양주|평택|의정부|파주|김포|광명|하남|시흥|안산|구리|오산|군포|의왕|이천|안성|양주|포천|여주|동두천|과천|가평|양평|연천|광주시 ?(오포|초월|곤지암)|분당|일산|동탄|위례/,
+  ],
+  ["부산", /부산/],
+  ["대구", /대구/],
+  ["광주", /광주/],
+  ["대전", /대전/],
+  ["울산", /울산/],
+  ["세종", /세종/],
+  ["강원", /강원|춘천|원주|강릉|속초|동해|삼척|태백|홍천|철원/],
+  ["충북", /충북|충청북|청주|충주|제천|음성|진천/],
+  ["충남", /충남|충청남|천안|아산|서산|당진|공주|논산|보령|홍성|계룡/],
+  ["전북", /전북|전라북|전주|익산|군산|정읍|남원|김제/],
+  ["전남", /전남|전라남|목포|여수|순천|광양|나주|무안/],
+  ["경북", /경북|경상북|포항|구미|경주|안동|김천|영주|상주|경산|칠곡/],
+  ["경남", /경남|경상남|창원|김해|진주|양산|거제|통영|사천|밀양|마산|진해/],
+  ["제주", /제주|서귀포/],
+];
+const VA_LEAD_GROUP = `CASE WHEN "출처" LIKE 'meta%' THEN 'meta' WHEN "출처" = '가을미팅신청' THEN 'fall' ELSE 'home' END`;
+// 앞 두 조건은 인덱스(idx_consultations_제출일시 / stable_page) 범위 검색용으로 하루씩 여유를 두고,
+// 뒤 두 조건이 KST 기준으로 정확히 자른다.
+const VA_LEAD_RANGE = `"제출일시" >= ? AND "제출일시" < ? AND datetime("제출일시", '+9 hours') >= ? AND datetime("제출일시", '+9 hours') < ?`;
+
+const VA_EVENT_FORM_START = {
+  filter: {
+    fieldName: "eventName",
+    stringFilter: { matchType: "EXACT", value: "form_start" },
+  },
+};
+const VA_ORGANIC_SEARCH = {
+  filter: {
+    fieldName: "sessionDefaultChannelGroup",
+    stringFilter: { matchType: "EXACT", value: VA_SEARCH_CHANNEL },
+  },
+};
+const VA_REPORTS = [
+  {
+    key: "totals",
+    dims: [],
+    metrics: [
+      "totalUsers",
+      "newUsers",
+      "sessions",
+      "screenPageViews",
+      "engagementRate",
+      "averageSessionDuration",
+    ],
+  },
+  {
+    key: "visitorTypes",
+    dims: ["newVsReturning"],
+    metrics: [
+      "totalUsers",
+      "sessions",
+      "engagementRate",
+      "averageSessionDuration",
+      "screenPageViewsPerSession",
+    ],
+    limit: 5,
+  },
+  {
+    key: "daily",
+    dims: ["date"],
+    metrics: ["totalUsers", "sessions"],
+    orderBys: [{ dimension: { dimensionName: "date" } }],
+    limit: VA_MAX_DAYS + 10,
+  },
+  {
+    key: "dowHour",
+    dims: ["dayOfWeek", "hour"],
+    metrics: ["sessions"],
+    limit: 200,
+  },
+  {
+    key: "regions",
+    dims: ["region"],
+    metrics: ["totalUsers", "sessions"],
+    filters: [
+      {
+        filter: {
+          fieldName: "country",
+          stringFilter: { matchType: "EXACT", value: "South Korea" },
+        },
+      },
+    ],
+    orderBys: [{ metric: { metricName: "totalUsers" }, desc: true }],
+    limit: 25,
+  },
+  {
+    key: "channels",
+    dims: ["sessionDefaultChannelGroup"],
+    metrics: [
+      "sessions",
+      "totalUsers",
+      "engagementRate",
+      "averageSessionDuration",
+      "screenPageViewsPerSession",
+    ],
+    orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
+    limit: 25,
+  },
+  {
+    key: "formByChannel",
+    dims: ["sessionDefaultChannelGroup"],
+    metrics: ["eventCount", "totalUsers"],
+    filters: [VA_EVENT_FORM_START],
+    limit: 25,
+  },
+  {
+    key: "searchSources",
+    searchOnly: true,
+    dims: ["sessionSource"],
+    metrics: [
+      "sessions",
+      "totalUsers",
+      "engagementRate",
+      "averageSessionDuration",
+      "screenPageViewsPerSession",
+    ],
+    filters: [VA_ORGANIC_SEARCH],
+    orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
+    limit: 50,
+  },
+  {
+    key: "formBySearchSource",
+    searchOnly: true,
+    dims: ["sessionSource"],
+    metrics: ["eventCount", "totalUsers"],
+    filters: [VA_ORGANIC_SEARCH, VA_EVENT_FORM_START],
+    limit: 50,
+  },
+  {
+    key: "landings",
+    dims: ["landingPage"],
+    metrics: ["sessions", "engagementRate", "averageSessionDuration"],
+    orderBys: [{ metric: { metricName: "sessions" }, desc: true }],
+    limit: 15,
+  },
+  {
+    key: "formByLanding",
+    dims: ["landingPage"],
+    metrics: ["eventCount", "totalUsers"],
+    filters: [VA_EVENT_FORM_START],
+    orderBys: [{ metric: { metricName: "totalUsers" }, desc: true }],
+    limit: 30,
+  },
+  {
+    key: "deviceTypes",
+    dims: ["deviceCategory", "newVsReturning"],
+    metrics: ["totalUsers"],
+    limit: 20,
+  },
+  {
+    key: "events",
+    dims: ["eventName"],
+    metrics: ["eventCount", "totalUsers"],
+    filters: [
+      {
+        filter: {
+          fieldName: "eventName",
+          inListFilter: { values: ["scroll", "form_start"] },
+        },
+      },
+    ],
+    limit: 5,
+  },
+];
+// 이전 기간은 KPI 에 필요한 보고서만 다시 부른다
+const VA_COMPARE_KEYS = new Set(["totals", "visitorTypes", "events"]);
+
+class VaInputError extends Error {}
+class VaUpstreamError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+}
+
+function vaShiftDate(iso, days) {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+function vaTodayKst() {
+  return new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
+}
+
+function vaParseParams(url) {
+  const p = url.searchParams;
+  const flag = (name) => {
+    const v = p.get(name);
+    if (v === null || v === "" || v === "0") return false;
+    if (v === "1") return true;
+    throw new VaInputError(`Invalid ${name}`);
+  };
+  const pick = (name, allowed) => {
+    const v = (p.get(name) || "").trim();
+    if (v && !allowed.has(v)) throw new VaInputError(`Invalid ${name}`);
+    return v;
+  };
+  const today = vaTodayKst();
+  const start = (p.get("start") || "").trim();
+  const end = (p.get("end") || "").trim();
+  let rangeKey, startDate, endDate;
+  if (start || end) {
+    if (!isIsoDate(start) || !isIsoDate(end))
+      throw new VaInputError("start and end must be YYYY-MM-DD");
+    const span = daysInclusive(start, end);
+    if (span <= 0) throw new VaInputError("start must not be after end");
+    if (span > VA_MAX_DAYS)
+      throw new VaInputError(`Range is limited to ${VA_MAX_DAYS} days`);
+    if (start < "2015-08-14" || end > vaShiftDate(today, 1))
+      throw new VaInputError("Date out of range");
+    rangeKey = "custom";
+    startDate = start;
+    endDate = end;
+  } else {
+    const raw = (p.get("range") || "28d").trim().toLowerCase();
+    if (!VA_PRESETS[raw]) throw new VaInputError("Invalid range");
+    rangeKey = raw;
+    endDate = today;
+    startDate = vaShiftDate(today, -(VA_PRESETS[raw] - 1));
+  }
+  return {
+    rangeKey,
+    startDate,
+    endDate,
+    days: daysInclusive(startDate, endDate),
+    channel: pick("channel", VA_CHANNELS),
+    device: pick("device", VA_DEVICES),
+    visitor: pick("visitor", VA_VISITORS),
+    compare: flag("compare"),
+    refresh: flag("refresh"),
+  };
+}
+
+function vaPrevRange(q) {
+  const end = vaShiftDate(q.startDate, -1);
+  return { start: vaShiftDate(end, -(q.days - 1)), end };
+}
+
+// 분류 순서를 GA4 필터로 옮긴다: 앞 엔진은 제외하고 자기 정규식에 맞는 소스만 남긴다. other 는 전부 제외한다
+function vaSearchFilters(id) {
+  const source = (value) => ({
+    filter: {
+      fieldName: "sessionSource",
+      stringFilter: { matchType: "PARTIAL_REGEXP", value },
+    },
+  });
+  const at = VA_SEARCH_ENGINES.findIndex((e) => e.id === id);
+  const out = VA_SEARCH_ENGINES.slice(0, at < 0 ? undefined : at).map((e) => ({
+    notExpression: source(e.re),
+  }));
+  if (at >= 0) out.push(source(VA_SEARCH_ENGINES[at].re));
+  return out;
+}
+
+function vaBaseFilters(q) {
+  const exact = (fieldName, value) => ({
+    filter: { fieldName, stringFilter: { matchType: "EXACT", value } },
+  });
+  const out = [];
+  const [channel, engine] = q.channel.split(":");
+  if (channel) out.push(exact("sessionDefaultChannelGroup", channel));
+  if (engine) out.push(...vaSearchFilters(engine));
+  if (q.device) out.push(exact("deviceCategory", q.device));
+  if (q.visitor) out.push(exact("newVsReturning", q.visitor));
+  return out;
+}
+
+function vaReportBody(def, start, end, base) {
+  const body = {
+    dateRanges: [{ startDate: start, endDate: end }],
+    metrics: def.metrics.map((name) => ({ name })),
+  };
+  if (def.dims.length) body.dimensions = def.dims.map((name) => ({ name }));
+  const expressions = [...base, ...(def.filters || [])];
+  if (expressions.length) body.dimensionFilter = { andGroup: { expressions } };
+  if (def.orderBys) body.orderBys = def.orderBys;
+  if (def.limit) body.limit = def.limit;
+  return body;
+}
+
+async function vaWithTimeout(promise, ms, label) {
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(
+      () => reject(new VaUpstreamError(504, `${label} timeout`)),
+      ms,
+    );
+  });
+  try {
+    return await Promise.race([promise, timeout]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function vaGa4Batch(env, accessToken, requests) {
+  const propertyId = env.GA4_PROPERTY_ID;
+  if (!propertyId) throw new Error("GA4_PROPERTY_ID missing");
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const ac = new AbortController();
+    const timer = setTimeout(() => ac.abort(), VA_GA4_TIMEOUT_MS);
+    let res;
+    let data = {};
+    try {
+      res = await fetch(
+        `https://analyticsdata.googleapis.com/v1beta/properties/${propertyId}:batchRunReports`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ requests }),
+          signal: ac.signal,
+        },
+      );
+      data = await res.json().catch(() => ({}));
+    } catch (e) {
+      if (e?.name === "AbortError")
+        throw new VaUpstreamError(504, "GA4 batchRunReports timeout");
+      throw e;
+    } finally {
+      clearTimeout(timer);
+    }
+    if (res.ok) return data.reports || [];
+    const detail = String(data.error?.message || "").slice(0, 160);
+    // 429(할당량)는 다시 불러도 같은 결과라 재시도하지 않는다. 5xx 만 한 번 더 부른다.
+    if (res.status === 429)
+      throw new VaUpstreamError(429, `GA4 batchRunReports 429: ${detail}`);
+    if (res.status >= 500 && attempt === 0) {
+      await sleep(500);
+      continue;
+    }
+    throw new VaUpstreamError(
+      res.status,
+      `GA4 batchRunReports ${res.status}: ${detail}`,
+    );
+  }
+  throw new Error("GA4 batchRunReports failed");
+}
+
+async function vaGa4Reports(env, q, prev) {
+  const base = vaBaseFilters(q);
+  // 검색이 아닌 경로로 좁힌 조회에서는 검색 엔진 보고서가 비므로 부르지 않는다
+  const wantSearch = !q.channel || q.channel.startsWith(VA_SEARCH_CHANNEL);
+  const defs = VA_REPORTS.filter((def) => wantSearch || !def.searchOnly);
+  const jobs = defs.map((def) => ({
+    key: def.key,
+    def,
+    body: vaReportBody(def, q.startDate, q.endDate, base),
+  }));
+  if (prev) {
+    for (const def of VA_REPORTS) {
+      if (!VA_COMPARE_KEYS.has(def.key)) continue;
+      jobs.push({
+        key: `prev_${def.key}`,
+        def,
+        body: vaReportBody(def, prev.start, prev.end, base),
+      });
+    }
+  }
+  const accessToken = await vaWithTimeout(
+    ga4AccessToken(env),
+    VA_GA4_TIMEOUT_MS,
+    "GA4 token",
+  );
+  const chunks = [];
+  for (let i = 0; i < jobs.length; i += VA_GA4_BATCH_SIZE)
+    chunks.push(jobs.slice(i, i + VA_GA4_BATCH_SIZE));
+  const results = await Promise.all(
+    chunks.map((chunk) =>
+      vaGa4Batch(
+        env,
+        accessToken,
+        chunk.map((job) => job.body),
+      ),
+    ),
+  );
+  const out = {};
+  chunks.forEach((chunk, ci) => {
+    chunk.forEach((job, ji) => {
+      out[job.key] = ga4Rows(
+        results[ci][ji] || {},
+        job.def.dims,
+        job.def.metrics,
+      );
+    });
+  });
+  return out;
+}
+
+async function vaLeadSummary(env, q, prev) {
+  const bounds = (start, end) => [
+    vaShiftDate(start, -1),
+    vaShiftDate(end, 2),
+    `${start} 00:00:00`,
+    `${vaShiftDate(end, 1)} 00:00:00`,
+  ];
+  const all = (sql, binds) =>
+    env.DB.prepare(sql)
+      .bind(...binds)
+      .all()
+      .then((r) => r.results || []);
+  const cur = bounds(q.startDate, q.endDate);
+  const totalsSql = `SELECT ${VA_LEAD_GROUP} AS g, count(*) AS n FROM consultations WHERE ${VA_LEAD_RANGE} GROUP BY g LIMIT 10`;
+  const [daily, dowHour, regionRows, totals, prevTotals] = await Promise.all([
+    all(
+      `SELECT strftime('%Y-%m-%d', "제출일시", '+9 hours') AS d, ${VA_LEAD_GROUP} AS g, count(*) AS n FROM consultations WHERE ${VA_LEAD_RANGE} GROUP BY d, g ORDER BY d LIMIT ${(VA_MAX_DAYS + 2) * 3}`,
+      cur,
+    ),
+    all(
+      `SELECT CAST(strftime('%w', "제출일시", '+9 hours') AS INTEGER) AS w, CAST(strftime('%H', "제출일시", '+9 hours') AS INTEGER) AS h, count(*) AS n FROM consultations WHERE ${VA_LEAD_RANGE} GROUP BY w, h LIMIT 200`,
+      cur,
+    ),
+    // 지역 원문은 시·도로 묶는 데만 쓰고 응답에는 넣지 않는다
+    all(
+      `SELECT trim(coalesce("주소", '')) AS r, count(*) AS n FROM consultations WHERE ${VA_LEAD_RANGE} AND "출처" LIKE 'meta%' GROUP BY r ORDER BY n DESC LIMIT 1000`,
+      cur,
+    ),
+    all(totalsSql, cur),
+    prev ? all(totalsSql, bounds(prev.start, prev.end)) : null,
+  ]);
+  return { daily, dowHour, regionRows, totals, prevTotals };
+}
+
+function vaLeadTotals(rows) {
+  const out = { total: 0, home: 0, meta: 0, fall: 0 };
+  for (const r of rows || []) {
+    const n = Number(r.n) || 0;
+    if (r.g in out) out[r.g] += n;
+    out.total += n;
+  }
+  return out;
+}
+
+function vaKpi(R, prefix, leads) {
+  const t = R[`${prefix}totals`]?.[0] || {};
+  const types = R[`${prefix}visitorTypes`] || [];
+  const ev = (name) =>
+    (R[`${prefix}events`] || []).find((x) => x.eventName === name) || {};
+  const r1 = (v) => Math.round(metricNumber(v));
+  return {
+    users: r1(t.totalUsers),
+    newUsers: r1(t.newUsers),
+    sessions: r1(t.sessions),
+    pageViews: r1(t.screenPageViews),
+    engagementRate: +metricNumber(t.engagementRate).toFixed(4),
+    avgSessionDuration: +metricNumber(t.averageSessionDuration).toFixed(1),
+    returningUsers: r1(
+      types.find((x) => x.newVsReturning === "returning")?.totalUsers,
+    ),
+    scrollUsers: r1(ev("scroll").totalUsers),
+    scrollEvents: r1(ev("scroll").eventCount),
+    formStartUsers: r1(ev("form_start").totalUsers),
+    formStartEvents: r1(ev("form_start").eventCount),
+    leads,
+  };
+}
+
+// 소스 값을 엔진별로 합친다. 비율·시간은 세션 수로 가중 평균한다
+function vaSearchEngineRows(R) {
+  const byId = new Map();
+  const rowOf = (source) => {
+    const s = String(source || "");
+    const hit = VA_SEARCH_ENGINES.find((e) => new RegExp(e.re, "i").test(s));
+    const id = hit ? hit.id : "other";
+    if (!byId.has(id))
+      byId.set(id, {
+        channel: `${VA_SEARCH_CHANNEL}:${id}`,
+        sessions: 0,
+        users: 0,
+        engaged: 0,
+        seconds: 0,
+        pages: 0,
+        formStartUsers: 0,
+        formStartEvents: 0,
+      });
+    return byId.get(id);
+  };
+  for (const x of R.searchSources || []) {
+    const o = rowOf(x.sessionSource);
+    const s = Math.round(metricNumber(x.sessions));
+    o.sessions += s;
+    o.users += Math.round(metricNumber(x.totalUsers));
+    o.engaged += metricNumber(x.engagementRate) * s;
+    o.seconds += metricNumber(x.averageSessionDuration) * s;
+    o.pages += metricNumber(x.screenPageViewsPerSession) * s;
+  }
+  for (const f of R.formBySearchSource || []) {
+    const o = rowOf(f.sessionSource);
+    o.formStartUsers += Math.round(metricNumber(f.totalUsers));
+    o.formStartEvents += Math.round(metricNumber(f.eventCount));
+  }
+  return Array.from(byId.values())
+    .map(({ engaged, seconds, pages, ...o }) => {
+      const w = o.sessions || 1;
+      return {
+        ...o,
+        engagementRate: +(engaged / w).toFixed(4),
+        avgSessionDuration: +(seconds / w).toFixed(1),
+        pagesPerSession: +(pages / w).toFixed(2),
+      };
+    })
+    .sort((a, b) => b.sessions - a.sessions);
+}
+
+function vaBuildPayload(q, prev, R, L) {
+  const r1 = (v) => Math.round(metricNumber(v));
+  const rate = (v) => +metricNumber(v).toFixed(4);
+  const sec = (v) => +metricNumber(v).toFixed(1);
+
+  // 일별: 기간 안의 모든 날짜를 0 으로 채운 뒤 GA4 방문과 접수(출처 그룹별)를 겹친다
+  const byDay = new Map();
+  for (let i = 0; i < q.days; i++) {
+    const d = vaShiftDate(q.startDate, i);
+    byDay.set(d, { d, users: 0, sessions: 0, meta: 0, home: 0, fall: 0 });
+  }
+  for (const row of R.daily || []) {
+    const o = byDay.get(ga4Date(row.date));
+    if (!o) continue;
+    o.users += r1(row.totalUsers);
+    o.sessions += r1(row.sessions);
+  }
+  for (const row of L.daily) {
+    const o = byDay.get(row.d);
+    if (o && row.g in o) o[row.g] += Number(row.n) || 0;
+  }
+
+  const grid = () => Array.from({ length: 7 }, () => Array(24).fill(0));
+  const visits = grid();
+  for (const row of R.dowHour || []) {
+    const w = Number(row.dayOfWeek);
+    const h = Number(row.hour);
+    if (w >= 0 && w < 7 && h >= 0 && h < 24) visits[w][h] += r1(row.sessions);
+  }
+  const leadsGrid = grid();
+  for (const row of L.dowHour) {
+    const w = Number(row.w);
+    const h = Number(row.h);
+    if (w >= 0 && w < 7 && h >= 0 && h < 24)
+      leadsGrid[w][h] += Number(row.n) || 0;
+  }
+
+  const regionVisits = new Map();
+  let regionVisitsUnknown = 0;
+  for (const row of R.regions || []) {
+    const sido = VA_REGION_KO[row.region];
+    if (!sido) {
+      regionVisitsUnknown += r1(row.totalUsers);
+      continue;
+    }
+    const o = regionVisits.get(sido) || { sido, users: 0, sessions: 0 };
+    o.users += r1(row.totalUsers);
+    o.sessions += r1(row.sessions);
+    regionVisits.set(sido, o);
+  }
+  const regionLeads = new Map();
+  let regionLeadsUnknown = 0;
+  for (const row of L.regionRows) {
+    const n = Number(row.n) || 0;
+    const hit = row.r ? VA_SIDO.find(([, re]) => re.test(row.r)) : null;
+    if (!hit) {
+      regionLeadsUnknown += n;
+      continue;
+    }
+    regionLeads.set(hit[0], (regionLeads.get(hit[0]) || 0) + n);
+  }
+
+  const formByChannel = new Map(
+    (R.formByChannel || []).map((x) => [x.sessionDefaultChannelGroup, x]),
+  );
+  const channels = (R.channels || []).map((x) => {
+    const f = formByChannel.get(x.sessionDefaultChannelGroup) || {};
+    formByChannel.delete(x.sessionDefaultChannelGroup);
+    return {
+      channel: x.sessionDefaultChannelGroup,
+      sessions: r1(x.sessions),
+      users: r1(x.totalUsers),
+      engagementRate: rate(x.engagementRate),
+      avgSessionDuration: sec(x.averageSessionDuration),
+      pagesPerSession: +metricNumber(x.screenPageViewsPerSession).toFixed(2),
+      formStartUsers: r1(f.totalUsers),
+      formStartEvents: r1(f.eventCount),
+    };
+  });
+  for (const f of formByChannel.values()) {
+    channels.push({
+      channel: f.sessionDefaultChannelGroup,
+      sessions: 0,
+      users: 0,
+      engagementRate: 0,
+      avgSessionDuration: 0,
+      pagesPerSession: 0,
+      formStartUsers: r1(f.totalUsers),
+      formStartEvents: r1(f.eventCount),
+    });
+  }
+
+  const formByLanding = new Map(
+    (R.formByLanding || []).map((x) => [x.landingPage, x]),
+  );
+  const landings = (R.landings || [])
+    .filter((x) => x.landingPage)
+    .map((x) => ({
+      path: String(x.landingPage).slice(0, 200),
+      sessions: r1(x.sessions),
+      engagementRate: rate(x.engagementRate),
+      avgSessionDuration: sec(x.averageSessionDuration),
+      formStartUsers: r1(formByLanding.get(x.landingPage)?.totalUsers),
+    }));
+
+  const deviceMap = new Map();
+  for (const x of R.deviceTypes || []) {
+    const o = deviceMap.get(x.deviceCategory) || {
+      device: x.deviceCategory,
+      newUsers: 0,
+      returningUsers: 0,
+    };
+    if (x.newVsReturning === "new") o.newUsers += r1(x.totalUsers);
+    else if (x.newVsReturning === "returning")
+      o.returningUsers += r1(x.totalUsers);
+    deviceMap.set(x.deviceCategory, o);
+  }
+
+  const visitorTypes = (R.visitorTypes || [])
+    .filter(
+      (x) => x.newVsReturning === "new" || x.newVsReturning === "returning",
+    )
+    .map((x) => ({
+      type: x.newVsReturning,
+      users: r1(x.totalUsers),
+      sessions: r1(x.sessions),
+      engagementRate: rate(x.engagementRate),
+      avgSessionDuration: sec(x.averageSessionDuration),
+      pagesPerSession: +metricNumber(x.screenPageViewsPerSession).toFixed(2),
+    }));
+
+  const leads = vaLeadTotals(L.totals);
+  const kpi = vaKpi(R, "", leads);
+  return {
+    ok: true,
+    generatedAt: new Date().toISOString(),
+    range: {
+      key: q.rangeKey,
+      start: q.startDate,
+      end: q.endDate,
+      days: q.days,
+    },
+    compareRange: prev ? { start: prev.start, end: prev.end } : null,
+    filters: { channel: q.channel, device: q.device, visitor: q.visitor },
+    kpi,
+    prev: prev ? vaKpi(R, "prev_", vaLeadTotals(L.prevTotals)) : null,
+    daily: Array.from(byDay.values()),
+    dowHour: { visits, leads: leadsGrid },
+    regions: {
+      visits: Array.from(regionVisits.values()).sort(
+        (a, b) => b.users - a.users,
+      ),
+      visitsUnknown: regionVisitsUnknown,
+      leads: Array.from(regionLeads, ([sido, n]) => ({ sido, n })).sort(
+        (a, b) => b.n - a.n,
+      ),
+      leadsUnknown: regionLeadsUnknown,
+    },
+    channels,
+    searchEngines: vaSearchEngineRows(R),
+    landings,
+    devices: Array.from(deviceMap.values()),
+    visitorTypes,
+    funnel: {
+      users: kpi.users,
+      scrollUsers: kpi.scrollUsers,
+      formStartUsers: kpi.formStartUsers,
+      homeLeads: leads.home,
+    },
+  };
+}
+
+const VA_R2_PREFIX = "analytics/visitors-cache/v1/";
+// R2 키는 인자 조합 해시 하나라 같은 조합은 덮어쓴다. 기간이 바뀌어 새로 생긴 키는 매일 크론이 7일 뒤 지운다
+const VA_R2_PURGE_AGE_MS = 7 * 86400000;
+const VA_R2_PURGE_PAGE = 100;
+const VA_R2_PURGE_MAX_PAGES = 10;
+
+async function vaCacheKeys(url, env, q) {
+  // 키는 비밀값을 섞은 해시라 밖에서 추측할 수 없고, 같은 인자 조합만 같은 키가 된다
+  const parts = [
+    "v2",
+    q.rangeKey,
+    q.startDate,
+    q.endDate,
+    q.channel,
+    q.device,
+    q.visitor,
+    q.compare ? "1" : "0",
+  ].join("|");
+  const hash = await sha256Hex(`${env.ADMIN_JWT_SECRET || ""}|${parts}`);
+  return {
+    edgeKey: `${url.origin}/__visitor-analytics-cache/v1/${hash}`,
+    r2Key: `${VA_R2_PREFIX}${hash}.json`,
+  };
+}
+
+// 저장한 지 몇 초 지났는지. 6시간을 넘었거나 시각을 읽을 수 없으면 -1
+function vaCacheAge(savedAt) {
+  const t = Date.parse(savedAt || "");
+  if (!Number.isFinite(t)) return -1;
+  const age = (Date.now() - t) / 1000;
+  return age >= 0 && age < VA_CACHE_TTL_SEC ? age : -1;
+}
+
+function vaEdgePut(edge, key, payload, ttlSec) {
+  return edge
+    .put(
+      key,
+      new Response(JSON.stringify(payload), {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Cache-Control": `max-age=${Math.max(60, Math.floor(ttlSec))}`,
+        },
+      }),
+    )
+    .catch(() => {});
+}
+
+function vaR2Put(env, key, payload) {
+  return env.BUCKET.put(key, JSON.stringify(payload), {
+    httpMetadata: { contentType: "application/json; charset=utf-8" },
+    customMetadata: { generatedAt: payload.generatedAt },
+  }).catch(() => {});
+}
+
+// 읽는 순서: Cache API(같은 데이터센터) → R2(workers.dev 에서도 남는 저장소). 6시간 지난 것은 쓰지 않는다
+async function vaReadCache(env, keys) {
+  const edge = globalThis.caches?.default;
+  if (edge) {
+    try {
+      const cached = await edge.match(keys.edgeKey);
+      if (cached) {
+        const body = await cached.json();
+        const age = vaCacheAge(body.generatedAt);
+        if (age >= 0) return { body, age, source: "edge" };
+      }
+    } catch {
+      // 캐시를 못 읽어도 다음 저장소로 넘어간다
+    }
+  }
+  if (env.BUCKET) {
+    try {
+      const obj = await env.BUCKET.get(keys.r2Key);
+      if (obj) {
+        const body = await obj.json();
+        const age = vaCacheAge(obj.customMetadata?.generatedAt || body.generatedAt);
+        if (age >= 0) return { body, age, source: "r2" };
+      }
+    } catch {
+      // R2 를 못 읽으면 새로 받는다
+    }
+  }
+  return null;
+}
+
+// 매일 크론(KST 03:00): 7일 넘은 방문자 분석 R2 캐시를 지운다. 100개씩 최대 10쪽(1,000개)까지만 본다
+async function vaPurgeR2Cache(env, now = Date.now()) {
+  if (!env.BUCKET) return { scanned: 0, deleted: 0 };
+  let cursor;
+  let scanned = 0;
+  let deleted = 0;
+  for (let page = 0; page < VA_R2_PURGE_MAX_PAGES; page++) {
+    const list = await env.BUCKET.list({
+      prefix: VA_R2_PREFIX,
+      limit: VA_R2_PURGE_PAGE,
+      cursor,
+    });
+    const objects = list.objects || [];
+    scanned += objects.length;
+    const old = objects
+      .filter((o) => now - new Date(o.uploaded).getTime() > VA_R2_PURGE_AGE_MS)
+      .map((o) => o.key);
+    if (old.length) {
+      await env.BUCKET.delete(old);
+      deleted += old.length;
+    }
+    if (!list.truncated || !list.cursor) break;
+    cursor = list.cursor;
+  }
+  return { scanned, deleted };
+}
+
+async function handleAnalyticsVisitors(request, env) {
+  if (request.method !== "GET")
+    return json({ error: "Method not allowed" }, 405);
+  const gate = await requireAuth(request, env);
+  if (gate.error) return gate.error;
+  const url = new URL(request.url);
+  let q;
+  try {
+    q = vaParseParams(url);
+  } catch (e) {
+    if (e instanceof VaInputError) return json({ error: e.message }, 400);
+    throw e;
+  }
+  if (!env.DB) return json({ error: "DB not configured" }, 500);
+
+  const keys = await vaCacheKeys(url, env, q);
+  const edge = globalThis.caches?.default;
+  const hit = await vaReadCache(env, keys);
+  if (hit && (!q.refresh || hit.age < VA_REFRESH_MIN_SEC)) {
+    // R2 에서 찾은 결과는 이 데이터센터의 Cache API 에도 남은 수명만큼 넣는다
+    if (hit.source === "r2" && edge)
+      bgRun(
+        env,
+        vaEdgePut(edge, keys.edgeKey, hit.body, VA_CACHE_TTL_SEC - hit.age),
+      );
+    return json({ ...hit.body, cached: true }, 200, {
+      "X-Visitor-Cache": hit.source,
+      "Cache-Control": "private, no-store",
+    });
+  }
+
+  try {
+    const prev = q.compare ? vaPrevRange(q) : null;
+    const [R, L] = await Promise.all([
+      vaGa4Reports(env, q, prev),
+      vaLeadSummary(env, q, prev),
+    ]);
+    const payload = vaBuildPayload(q, prev, R, L);
+    // 정상 응답만 저장한다(오류는 이 자리까지 오지 않는다)
+    if (edge)
+      bgRun(env, vaEdgePut(edge, keys.edgeKey, payload, VA_CACHE_TTL_SEC));
+    if (env.BUCKET) bgRun(env, vaR2Put(env, keys.r2Key, payload));
+    return json({ ...payload, cached: false }, 200, {
+      "X-Visitor-Cache": "miss",
+      "Cache-Control": "private, no-store",
+    });
+  } catch (e) {
+    if (e instanceof VaUpstreamError && e.status === 429)
+      return json({ error: "Analytics is busy. Try again later." }, 503, {
+        "Retry-After": "60",
+      });
+    const ip = clientIP(request, env);
+    bgRun(
+      env,
+      tgDebug(
+        env,
+        `[noblehong/analytics-visitors] 500 에러\nIP: ${escapeHtml(ip)}\n${escapeHtml(String(e?.message || e).slice(0, 200))}`,
+      ),
+    );
+    return json({ error: "Visitor analytics failed" }, 500);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
 // 핸들러: 공개 조회 /api/content
 // ─────────────────────────────────────────────────────────────────
 async function handlePublicContent(request, env) {
@@ -4264,6 +5202,266 @@ async function syncManagerPhotosR2(env) {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// 핸들러: 업무관리 /api/admin/works/{list,save,delete,comment,comment-delete}
+//   폴라애드가 진행한 작업과 결과를 날짜별로 남기고 노블홍이 의견을 단다. 모두 관리자 인증 필요.
+//   목록은 한 달 단위로만 부른다(업무 최대 300건, 의견 최대 1000건). 표: works, work_comments
+//   표 정의: _worker/migrations/2026-11-02_works.sql
+// ─────────────────────────────────────────────────────────────────
+const WORK_STATUS = new Set(["완료", "진행", "특이사항"]);
+const WORK_CATEGORIES = new Set([
+  "홈페이지",
+  "광고",
+  "접수·CRM",
+  "관리자",
+  "콘텐츠",
+  "리포트",
+  "기타",
+]);
+const WORK_AUTHORS = new Set(["폴라애드", "노블홍"]);
+const WORK_MONTH_LIMIT = 300;
+const WORK_COMMENT_LIMIT = 1000;
+const WORK_COMMENTS_PER_WORK = 200;
+
+function workNewId(prefix) {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const buf = crypto.getRandomValues(new Uint8Array(14));
+  let s = prefix;
+  for (let i = 0; i < 14; i++) s += chars[buf[i] % 62];
+  return s;
+}
+
+// 여러 줄은 허용하고 제어문자만 지운 뒤 길이를 자른다
+function workText(v, max) {
+  return String(v == null ? "" : v)
+    .replace(/\r\n?/g, "\n")
+    .replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, "")
+    .trim()
+    .slice(0, max);
+}
+
+async function workGate(request, env, method) {
+  if (request.method !== method)
+    return { error: json({ error: "Method not allowed" }, 405) };
+  const gate = await requireAuth(request, env);
+  if (gate.error) return gate;
+  if (!env.DB) return { error: json({ error: "DB not configured" }, 500) };
+  if (method !== "POST") return {};
+  const ct = (request.headers.get("content-type") || "").toLowerCase();
+  if (!ct.includes("application/json"))
+    return { error: json({ error: "application/json required" }, 415) };
+  try {
+    const body = await request.json();
+    if (!body || typeof body !== "object")
+      return { error: json({ error: "Invalid JSON" }, 400) };
+    return { body };
+  } catch {
+    return { error: json({ error: "Invalid JSON" }, 400) };
+  }
+}
+
+function workFail(request, env, name, e) {
+  const ip = clientIP(request, env);
+  bgRun(
+    env,
+    tgDebug(
+      env,
+      `[noblehong/admin-works-${name}] 500 에러\nIP: ${escapeHtml(ip)}\n${escapeHtml(String(e?.message || e).slice(0, 200))}`,
+    ),
+  );
+  return json({ error: "Work log failed" }, 500);
+}
+
+async function handleWorksList(request, env) {
+  const g = await workGate(request, env, "GET");
+  if (g.error) return g.error;
+  const month = (new URL(request.url).searchParams.get("month") || "").trim();
+  if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(month))
+    return json({ error: "Invalid month" }, 400);
+  const start = `${month}-01`;
+  const end = `${month}-31`;
+  try {
+    const [w, c] = await Promise.all([
+      env.DB.prepare(
+        `SELECT id, work_date, status, category, title, result, body, author, created_at, updated_at, completed_at FROM works WHERE work_date >= ? AND work_date <= ? ORDER BY work_date, created_at LIMIT ?`,
+      )
+        .bind(start, end, WORK_MONTH_LIMIT)
+        .all(),
+      env.DB.prepare(
+        `SELECT c.id, c.work_id, c.author, c.body, c.created_at FROM works w JOIN work_comments c ON c.work_id = w.id WHERE w.work_date >= ? AND w.work_date <= ? LIMIT ?`,
+      )
+        .bind(start, end, WORK_COMMENT_LIMIT)
+        .all(),
+    ]);
+    const byWork = new Map();
+    for (const r of c.results || []) {
+      const list = byWork.get(r.work_id) || [];
+      list.push({
+        id: r.id,
+        author: r.author,
+        body: r.body,
+        createdAt: r.created_at,
+      });
+      byWork.set(r.work_id, list);
+    }
+    const works = (w.results || []).map((r) => ({
+      id: r.id,
+      date: r.work_date,
+      status: r.status,
+      category: r.category,
+      title: r.title,
+      result: r.result || "",
+      body: r.body || "",
+      author: r.author,
+      createdAt: r.created_at,
+      updatedAt: r.updated_at,
+      completedAt: r.completed_at || null,
+      comments: (byWork.get(r.id) || []).sort((a, b) =>
+        a.createdAt < b.createdAt ? -1 : 1,
+      ),
+    }));
+    return json({ ok: true, month, works }, 200, {
+      "Cache-Control": "private, no-store",
+    });
+  } catch (e) {
+    return workFail(request, env, "list", e);
+  }
+}
+
+async function handleWorksSave(request, env) {
+  const g = await workGate(request, env, "POST");
+  if (g.error) return g.error;
+  const b = g.body;
+  const id = b.id == null || b.id === "" ? "" : String(b.id);
+  if (id && !/^wk[A-Za-z0-9]{14}$/.test(id))
+    return json({ error: "Invalid id" }, 400);
+  const date = String(b.date || "").trim();
+  const status = String(b.status || "");
+  const category = String(b.category || "");
+  const author = String(b.author || "");
+  const title = cleanLine(b.title, 120);
+  const result = cleanLine(b.result, 200);
+  const body = workText(b.body, 3000);
+  if (!isIsoDate(date)) return json({ error: "Invalid date" }, 400);
+  if (!WORK_STATUS.has(status)) return json({ error: "Invalid status" }, 400);
+  if (!WORK_CATEGORIES.has(category))
+    return json({ error: "Invalid category" }, 400);
+  if (!WORK_AUTHORS.has(author)) return json({ error: "Invalid author" }, 400);
+  if (!title) return json({ error: "Title required" }, 400);
+  const now = new Date().toISOString();
+  try {
+    if (!id) {
+      const newId = workNewId("wk");
+      await env.DB.prepare(
+        `INSERT INTO works (id, work_date, status, category, title, result, body, author, created_at, updated_at, completed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+        .bind(
+          newId,
+          date,
+          status,
+          category,
+          title,
+          result || null,
+          body || null,
+          author,
+          now,
+          now,
+          status === "완료" ? now : null,
+        )
+        .run();
+      return json({ ok: true, id: newId });
+    }
+    // 완료로 바뀔 때만 완료 시각을 남기고, 이미 있으면 그대로 둔다
+    const r = await env.DB.prepare(
+      `UPDATE works SET work_date = ?, status = ?, category = ?, title = ?, result = ?, body = ?, author = ?, updated_at = ?, completed_at = CASE WHEN ? = '완료' THEN COALESCE(completed_at, ?) ELSE NULL END WHERE id = ?`,
+    )
+      .bind(
+        date,
+        status,
+        category,
+        title,
+        result || null,
+        body || null,
+        author,
+        now,
+        status,
+        now,
+        id,
+      )
+      .run();
+    if (!(r.meta?.changes > 0)) return json({ error: "Not found" }, 404);
+    return json({ ok: true, id });
+  } catch (e) {
+    return workFail(request, env, "save", e);
+  }
+}
+
+async function handleWorksDelete(request, env) {
+  const g = await workGate(request, env, "POST");
+  if (g.error) return g.error;
+  const id = String(g.body.id || "");
+  if (!/^wk[A-Za-z0-9]{14}$/.test(id))
+    return json({ error: "Invalid id" }, 400);
+  try {
+    const [, r] = await env.DB.batch([
+      env.DB.prepare(`DELETE FROM work_comments WHERE work_id = ?`).bind(id),
+      env.DB.prepare(`DELETE FROM works WHERE id = ?`).bind(id),
+    ]);
+    return json({ ok: true, id, deleted: (r?.meta?.changes || 0) > 0 });
+  } catch (e) {
+    return workFail(request, env, "delete", e);
+  }
+}
+
+async function handleWorkCommentAdd(request, env) {
+  const g = await workGate(request, env, "POST");
+  if (g.error) return g.error;
+  const workId = String(g.body.workId || "");
+  const author = String(g.body.author || "");
+  const body = workText(g.body.body, 1000);
+  if (!/^wk[A-Za-z0-9]{14}$/.test(workId))
+    return json({ error: "Invalid work id" }, 400);
+  if (!WORK_AUTHORS.has(author)) return json({ error: "Invalid author" }, 400);
+  if (!body) return json({ error: "Comment required" }, 400);
+  try {
+    const row = await env.DB.prepare(
+      `SELECT (SELECT 1 FROM works WHERE id = ?) AS found, (SELECT count(*) FROM work_comments WHERE work_id = ?) AS n`,
+    )
+      .bind(workId, workId)
+      .first();
+    if (!row?.found) return json({ error: "Not found" }, 404);
+    if (Number(row.n) >= WORK_COMMENTS_PER_WORK)
+      return json({ error: "Too many comments" }, 409);
+    const id = workNewId("wc");
+    const now = new Date().toISOString();
+    await env.DB.prepare(
+      `INSERT INTO work_comments (id, work_id, author, body, created_at) VALUES (?, ?, ?, ?, ?)`,
+    )
+      .bind(id, workId, author, body, now)
+      .run();
+    return json({ ok: true, id });
+  } catch (e) {
+    return workFail(request, env, "comment", e);
+  }
+}
+
+async function handleWorkCommentDelete(request, env) {
+  const g = await workGate(request, env, "POST");
+  if (g.error) return g.error;
+  const id = String(g.body.id || "");
+  if (!/^wc[A-Za-z0-9]{14}$/.test(id))
+    return json({ error: "Invalid id" }, 400);
+  try {
+    const r = await env.DB.prepare(`DELETE FROM work_comments WHERE id = ?`)
+      .bind(id)
+      .run();
+    return json({ ok: true, id, deleted: (r.meta?.changes || 0) > 0 });
+  } catch (e) {
+    return workFail(request, env, "comment-delete", e);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
 // 라우터
 // ─────────────────────────────────────────────────────────────────
 async function route(request, env) {
@@ -4311,6 +5509,16 @@ async function route(request, env) {
   if (path === "/api/admin/blacklist/delete")
     return handleBlacklistDelete(request, env);
 
+  // Admin works (업무관리)
+  if (path === "/api/admin/works/list") return handleWorksList(request, env);
+  if (path === "/api/admin/works/save") return handleWorksSave(request, env);
+  if (path === "/api/admin/works/delete")
+    return handleWorksDelete(request, env);
+  if (path === "/api/admin/works/comment")
+    return handleWorkCommentAdd(request, env);
+  if (path === "/api/admin/works/comment-delete")
+    return handleWorkCommentDelete(request, env);
+
   // Admin content
   if (path === "/api/admin/content") return handleAdminContent(request, env);
   if (path === "/api/admin/upload") return handleUpload(request, env);
@@ -4322,6 +5530,8 @@ async function route(request, env) {
     return handleAnalyticsSummary(request, env);
   if (path === "/api/admin/analytics/sync")
     return handleAnalyticsSync(request, env);
+  if (path === "/api/admin/analytics/visitors")
+    return handleAnalyticsVisitors(request, env);
 
   // Public
   if (path === "/api/content") return handlePublicContent(request, env);
@@ -4415,6 +5625,8 @@ export default {
 
     if (cronExpr === "0 18 * * *") {
       ctx.waitUntil(snapshotFallAudit(env).catch(() => {}));
+      // 방문자 분석 R2 캐시 중 7일 넘은 것 정리 (목록 100개씩 최대 10쪽)
+      ctx.waitUntil(vaPurgeR2Cache(env).catch(() => {}));
     }
 
     // 기존: 매일 홍유진TV 동기화

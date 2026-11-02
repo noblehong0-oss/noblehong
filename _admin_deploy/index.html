@@ -1524,6 +1524,1027 @@
           text-align: left;
         }
       }
+
+      /* 업무관리 */
+      .wk-root {
+        --wk-wine: #732e39;
+        --wk-ink-3: #8f8576;
+        --wk-good: #3a8860;
+      }
+      .wk-head {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .wk-sub {
+        font-size: 13px;
+        color: var(--ink-2);
+        margin-top: 4px;
+      }
+      .wk-tools {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .wk-month {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 3px 6px;
+      }
+      .wk-month b {
+        font-size: 14px;
+        padding: 0 6px;
+        min-width: 76px;
+        text-align: center;
+      }
+      .wk-month button {
+        border: 0;
+        background: none;
+        font-size: 16px;
+        color: var(--ink-2);
+        padding: 2px 8px;
+        cursor: pointer;
+      }
+      .wk-btn {
+        border: 1px solid var(--border);
+        background: #fff;
+        border-radius: 8px;
+        padding: 7px 12px;
+        font: inherit;
+        font-size: 13px;
+        color: var(--ink);
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .wk-btn.pri {
+        background: var(--espresso);
+        border-color: var(--espresso);
+        color: #fff;
+        font-weight: 700;
+      }
+      .wk-btn.gold,
+      .wk-btn.on {
+        background: var(--gold-soft);
+        border-color: var(--gold-2);
+        color: #5b3f10;
+        font-weight: 700;
+      }
+      .wk-btn.sm {
+        padding: 4px 10px;
+        font-size: 12px;
+      }
+      .wk-btn:disabled {
+        opacity: 0.55;
+        cursor: default;
+      }
+      .wk-filters {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        align-items: center;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 14px;
+        margin-bottom: 14px;
+      }
+      .wk-filters b {
+        font-size: 12px;
+        color: var(--wk-ink-3);
+        margin-right: 4px;
+      }
+      .wk-chip {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 3px 11px;
+        font: inherit;
+        font-size: 12.5px;
+        margin: 2px;
+        background: #fff;
+        cursor: pointer;
+        color: var(--ink);
+      }
+      .wk-chip.on {
+        background: var(--gold-soft);
+        border-color: var(--gold-2);
+        font-weight: 700;
+      }
+      .wk-msg {
+        background: #fff7e6;
+        border: 1px solid var(--gold-2);
+        border-radius: 10px;
+        padding: 9px 12px;
+        font-size: 13px;
+        margin-bottom: 12px;
+      }
+      .wk-kpis {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .wk-kpi {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 14px;
+      }
+      .wk-kpi .l {
+        font-size: 12px;
+        color: var(--wk-ink-3);
+      }
+      .wk-kpi .v {
+        font-size: 24px;
+        font-weight: 800;
+        margin-top: 2px;
+      }
+      .wk-kpi.done .v {
+        color: var(--wk-good);
+      }
+      .wk-kpi.prog .v {
+        color: var(--gold);
+      }
+      .wk-kpi.iss .v {
+        color: var(--wk-wine);
+      }
+      .wk-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: 16px;
+        align-items: start;
+      }
+      .wk-panel {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px 18px;
+        margin-bottom: 16px;
+      }
+      .wk-ph {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+      .wk-pt {
+        font-size: 15px;
+        font-weight: 800;
+      }
+      .wk-legend {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        color: var(--wk-ink-3);
+      }
+      .wk-legend i {
+        width: 13px;
+        height: 13px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+      .wk-legend i.dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--wk-wine);
+        margin-left: 6px;
+      }
+      .wk-legend .l0,
+      .wk-cell.l0 {
+        background: #f3efe4;
+      }
+      .wk-legend .l1,
+      .wk-cell.l1 {
+        background: #efe2c2;
+      }
+      .wk-legend .l2,
+      .wk-cell.l2 {
+        background: #e2c88f;
+      }
+      .wk-legend .l3,
+      .wk-cell.l3 {
+        background: #b8924a;
+        color: #fff;
+      }
+      .wk-legend .l4,
+      .wk-cell.l4 {
+        background: var(--espresso);
+        color: #fff;
+      }
+      .wk-cal {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+      }
+      .wk-dows {
+        margin-bottom: 6px;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--wk-ink-3);
+      }
+      .wk-cell {
+        aspect-ratio: 1 / 1;
+        border-radius: 8px;
+        padding: 6px;
+        position: relative;
+        border: 0;
+        font: inherit;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--ink-2);
+        text-align: left;
+        cursor: pointer;
+      }
+      .wk-cell.blank {
+        background: none;
+        cursor: default;
+      }
+      .wk-cell .n {
+        position: absolute;
+        right: 6px;
+        bottom: 4px;
+        font-size: 10px;
+        font-weight: 800;
+      }
+      .wk-cell .dot {
+        position: absolute;
+        right: 6px;
+        top: 6px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--wk-wine);
+      }
+      .wk-cell.l4 .dot,
+      .wk-cell.l3 .dot {
+        background: #f3b3bd;
+      }
+      .wk-cell.sel {
+        outline: 2px solid var(--gold);
+        outline-offset: -2px;
+      }
+      .wk-cell.today .t {
+        position: absolute;
+        left: 6px;
+        bottom: 4px;
+        font-size: 9px;
+        opacity: 0.8;
+      }
+      .wk-empty {
+        border: 1px dashed var(--border);
+        border-radius: 12px;
+        padding: 26px 14px;
+        text-align: center;
+        color: var(--wk-ink-3);
+        font-size: 13px;
+        background: #fff;
+      }
+      .wk-card {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin-bottom: 12px;
+        overflow: hidden;
+        background: #fff;
+      }
+      .wk-card.iss {
+        border-color: #d8a7ad;
+      }
+      .wk-card .top {
+        padding: 13px 15px;
+      }
+      .wk-card .row1 {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-bottom: 6px;
+      }
+      .wk-card h4 {
+        margin: 0;
+        font-size: 14.5px;
+      }
+      .wk-st {
+        font-size: 11px;
+        font-weight: 800;
+        border-radius: 999px;
+        padding: 2px 9px;
+      }
+      .wk-st.done {
+        background: #e3f1e8;
+        color: var(--wk-good);
+      }
+      .wk-st.prog {
+        background: var(--gold-soft);
+        color: #7a5a20;
+      }
+      .wk-st.iss {
+        background: #f6e3e6;
+        color: var(--wk-wine);
+      }
+      .wk-cat {
+        font-size: 11px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 1px 8px;
+        color: var(--ink-2);
+      }
+      .wk-result {
+        background: #fbf6e8;
+        border-left: 3px solid var(--gold);
+        border-radius: 6px;
+        padding: 7px 10px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #4a3410;
+        margin: 6px 0 8px;
+      }
+      .wk-body {
+        font-size: 13px;
+        color: var(--ink-2);
+        margin: 0 0 8px;
+        white-space: pre-line;
+      }
+      .wk-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        font-size: 11.5px;
+        color: var(--wk-ink-3);
+      }
+      .wk-meta .acts {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .wk-thread {
+        border-top: 1px solid #eee8da;
+        background: #faf8f3;
+        padding: 10px 15px;
+      }
+      .wk-c {
+        font-size: 12.5px;
+        margin-bottom: 6px;
+        display: flex;
+        gap: 6px;
+        align-items: flex-start;
+      }
+      .wk-c .bubble {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 5px 10px;
+        white-space: pre-line;
+      }
+      .wk-c small {
+        color: var(--wk-ink-3);
+        white-space: nowrap;
+        padding-top: 6px;
+      }
+      .wk-c button {
+        border: 0;
+        background: none;
+        color: var(--wk-ink-3);
+        cursor: pointer;
+        font-size: 13px;
+        padding: 4px 2px;
+      }
+      .wk-cin {
+        display: flex;
+        gap: 6px;
+      }
+      .wk-cin select,
+      .wk-cin input {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 6px 8px;
+        font: inherit;
+        font-size: 12.5px;
+        background: #fff;
+      }
+      .wk-cin input {
+        flex: 1;
+        min-width: 0;
+      }
+      .wk-report h5 {
+        margin: 12px 0 6px;
+        font-size: 13px;
+        color: var(--gold);
+      }
+      .wk-report ul {
+        margin: 0;
+        padding-left: 16px;
+      }
+      .wk-report li {
+        font-size: 13px;
+        margin: 3px 0;
+      }
+      .wk-report li em {
+        font-style: normal;
+        color: var(--wk-ink-3);
+        margin-right: 6px;
+      }
+      .wk-report li span {
+        color: #7a5a20;
+      }
+      .wk-modal[hidden] {
+        display: none;
+      }
+      .wk-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+      .wk-modal-bg {
+        position: absolute;
+        inset: 0;
+        background: rgba(26, 18, 7, 0.45);
+      }
+      .wk-modal-box {
+        position: relative;
+        background: #fff;
+        border-radius: 14px;
+        width: 100%;
+        max-width: 540px;
+        max-height: calc(100vh - 32px);
+        overflow-y: auto;
+        padding: 18px 20px;
+        box-shadow: 0 10px 30px rgba(42, 29, 10, 0.2);
+      }
+      .wk-modal-box h3 {
+        margin: 0 0 12px;
+        font-size: 16px;
+      }
+      .wk-f {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 12px;
+        color: var(--wk-ink-3);
+        font-weight: 700;
+      }
+      .wk-f input,
+      .wk-f select,
+      .wk-f textarea {
+        display: block;
+        width: 100%;
+        margin-top: 4px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px 10px;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 400;
+        color: var(--ink);
+        background: #fff;
+      }
+      .wk-f textarea {
+        min-height: 96px;
+        resize: vertical;
+      }
+      .wk-f3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+      }
+      .wk-ferr {
+        min-height: 18px;
+        font-size: 12px;
+        color: var(--wk-wine);
+        margin-bottom: 6px;
+      }
+      .wk-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 6px;
+      }
+      @media (max-width: 1100px) {
+        .wk-grid {
+          grid-template-columns: 1fr;
+        }
+        .wk-kpis {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 560px) {
+        .wk-f3 {
+          grid-template-columns: 1fr;
+        }
+        .wk-kpi .v {
+          font-size: 20px;
+        }
+      }
+      /* 방문자 분석 */
+      .va-root {
+        --va-wine: #732e39;
+        --va-ink-3: #8f8576;
+        --va-good: #3a8860;
+      }
+      .va-head {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      .va-tools {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .va-seg {
+        display: flex;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        overflow: hidden;
+        background: #fff;
+      }
+      .va-seg button {
+        border: 0;
+        background: none;
+        padding: 7px 14px;
+        color: var(--ink-2);
+        font-size: 13px;
+        white-space: nowrap;
+      }
+      .va-seg button.on {
+        background: var(--espresso);
+        color: #fff;
+      }
+      .va-dates {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--ink-2);
+        font-size: 13px;
+      }
+      .va-dates input {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 6px 8px;
+        background: #fff;
+        color: var(--ink);
+        font-size: 13px;
+      }
+      .va-chk {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--ink-2);
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .va-status {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: -6px 0 12px;
+        font-size: 12px;
+        color: var(--ink-2);
+      }
+      .va-refresh {
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--espresso);
+        border-radius: 999px;
+        padding: 5px 12px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .va-refresh:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .va-filters {
+        display: flex;
+        gap: 10px 18px;
+        flex-wrap: wrap;
+        align-items: center;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 10px 14px;
+        margin-bottom: 16px;
+      }
+      .va-fgroup b {
+        font-size: 12px;
+        color: var(--va-ink-3);
+        margin-right: 6px;
+      }
+      .va-chip {
+        display: inline-block;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 4px 11px;
+        margin: 2px 3px;
+        font-size: 13px;
+        background: #fff;
+        color: var(--ink);
+      }
+      .va-chip.on {
+        background: var(--gold-soft);
+        border-color: var(--gold);
+        color: var(--espresso);
+        font-weight: 700;
+      }
+      .va-fnote {
+        flex-basis: 100%;
+        font-size: 12px;
+        color: var(--va-wine);
+      }
+      .va-body {
+        transition: opacity 0.15s;
+      }
+      .va-body.va-busy {
+        opacity: 0.55;
+      }
+      .va-kpis {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .va-kpi {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 14px;
+        min-width: 0;
+      }
+      .va-kpi.va-key {
+        border-color: var(--gold);
+        background: #fffaf0;
+      }
+      .va-kpi .va-l {
+        font-size: 12px;
+        color: var(--va-ink-3);
+      }
+      .va-kpi .va-v {
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
+        color: var(--ink);
+        white-space: nowrap;
+      }
+      .va-kpi .va-s {
+        font-size: 12px;
+        color: var(--ink-2);
+      }
+      .va-kpi .va-d {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--va-good);
+      }
+      .va-kpi .va-d.va-down {
+        color: var(--va-wine);
+      }
+      .va-kpi .va-d.va-flat {
+        color: var(--va-ink-3);
+        font-weight: 600;
+      }
+      .va-panel {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px 18px;
+        margin-bottom: 16px;
+        min-width: 0;
+      }
+      .va-ph {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .va-pt {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--ink);
+      }
+      .va-pm {
+        font-size: 12px;
+        color: var(--va-ink-3);
+      }
+      .va-g2 {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+      .va-g2 > .va-panel {
+        margin-bottom: 0;
+      }
+      .va-flow svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .va-flow .va-gl {
+        stroke: #eee8da;
+      }
+      .va-flow .va-ax {
+        font-size: 11px;
+        fill: var(--va-ink-3);
+      }
+      .va-flow .va-ln {
+        fill: none;
+        stroke: var(--va-wine);
+        stroke-width: 2.2;
+      }
+      .va-flow .va-dt {
+        fill: var(--va-wine);
+      }
+      .va-legend {
+        display: flex;
+        gap: 6px 16px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        color: var(--ink-2);
+      }
+      .va-legend i {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        margin-right: 6px;
+        vertical-align: -1px;
+      }
+      .va-heat {
+        display: grid;
+        grid-template-columns: 24px repeat(24, minmax(0, 1fr));
+        gap: 2px;
+        font-size: 10.5px;
+        color: var(--va-ink-3);
+      }
+      .va-heat .va-hd {
+        align-self: center;
+        font-weight: 700;
+        color: var(--ink-2);
+      }
+      .va-heat i {
+        display: block;
+        aspect-ratio: 1.25;
+        border-radius: 3px;
+        background: color-mix(
+          in srgb,
+          var(--gold) calc(6% + var(--a) * 94%),
+          transparent
+        );
+      }
+      .va-heat.va-heat-l i {
+        background: color-mix(
+          in srgb,
+          var(--va-wine) calc(5% + var(--a) * 95%),
+          transparent
+        );
+      }
+      .va-insight {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 10px;
+        margin-top: 12px;
+      }
+      .va-insight div {
+        background: var(--bg);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+      .va-insight b {
+        display: block;
+        font-size: 17px;
+      }
+      .va-pair {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr) 92px;
+        gap: 8px;
+        align-items: center;
+        margin: 7px 0;
+        font-size: 13px;
+      }
+      .va-pair .va-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .va-pair .va-bars span {
+        display: block;
+        height: 9px;
+        border-radius: 0 3px 3px 0;
+      }
+      .va-pair .va-pv {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        font-size: 12px;
+        color: var(--ink-2);
+      }
+      .va-tablewrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .va-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      .va-table thead {
+        background: none;
+        border-bottom: 0;
+      }
+      .va-table th {
+        font-size: 11.5px;
+        color: var(--va-ink-3);
+        text-align: right;
+        font-weight: 700;
+        letter-spacing: 0;
+        padding: 7px 8px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+      .va-table th:first-child,
+      .va-table td:first-child {
+        text-align: left;
+      }
+      .va-table td {
+        padding: 8px;
+        border-bottom: 1px solid #f2eee4;
+        text-align: right;
+        font-size: 13px;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .va-table td .va-bar {
+        display: inline-block;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--gold);
+        vertical-align: middle;
+        margin-right: 6px;
+      }
+      .va-table tr.va-top td {
+        background: #fffaf0;
+        font-weight: 700;
+      }
+      .va-table th[data-va-sort] {
+        cursor: pointer;
+        user-select: none;
+      }
+      .va-table th[data-va-sort]:hover,
+      .va-table th.va-sorted {
+        color: var(--espresso);
+      }
+      .va-table tr[data-va-row] {
+        cursor: pointer;
+      }
+      .va-table tr.va-sel td:first-child {
+        box-shadow: inset 3px 0 0 var(--gold);
+      }
+      .va-channels {
+        min-width: 680px;
+      }
+      .va-fnl {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .va-fnl div {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        padding: 9px 12px;
+        border-radius: 8px;
+        background: #f6f2e8;
+        overflow: hidden;
+        font-size: 13px;
+      }
+      .va-fnl div::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: var(--w);
+        background: color-mix(in srgb, var(--gold) 32%, transparent);
+      }
+      .va-fnl span,
+      .va-fnl b {
+        position: relative;
+      }
+      .va-fnl small {
+        color: var(--va-ink-3);
+        margin-left: 8px;
+        font-weight: 500;
+      }
+      .va-dev {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 13px;
+      }
+      .va-stack {
+        display: flex;
+        height: 22px;
+        border-radius: 5px;
+        overflow: hidden;
+        margin: 4px 0 10px;
+      }
+      .va-stack span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
+        overflow: hidden;
+        font-size: 11px;
+        color: #fff;
+        white-space: nowrap;
+      }
+      .va-tabs2 {
+        display: flex;
+        gap: 4px;
+      }
+      .va-tabs2 button {
+        border: 1px solid var(--border);
+        background: #fff;
+        border-radius: 999px;
+        padding: 4px 12px;
+        font-size: 12.5px;
+        color: var(--ink);
+      }
+      .va-tabs2 button.on {
+        background: var(--espresso);
+        color: #fff;
+        border-color: var(--espresso);
+      }
+      .va-empty {
+        display: grid;
+        place-items: center;
+        min-height: 120px;
+        color: var(--ink-2);
+        font-size: 13px;
+        border: 1px dashed #ddd1ba;
+        border-radius: 8px;
+        background: #fffdf8;
+      }
+      @media (max-width: 1100px) {
+        .va-kpis {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .va-g2 {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+      @media (max-width: 700px) {
+        .va-kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .va-kpi .va-v {
+          font-size: 21px;
+        }
+        .va-tools,
+        .va-seg,
+        .va-dates {
+          width: 100%;
+        }
+        .va-seg button {
+          flex: 1;
+          padding: 7px 6px;
+        }
+        .va-dates input {
+          flex: 1;
+          min-width: 0;
+        }
+        .va-filters {
+          padding: 10px;
+        }
+        .va-fgroup {
+          width: 100%;
+        }
+        .va-panel {
+          padding: 14px 12px;
+        }
+        .va-insight b {
+          font-size: 15px;
+        }
+        .va-heat {
+          grid-template-columns: 18px repeat(24, minmax(0, 1fr));
+          gap: 1px;
+          font-size: 9px;
+        }
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
   </head>
@@ -1577,8 +2598,11 @@
         <div class="nav-item active" data-page="consultations">
           상담 접수 관리
         </div>
+        <div class="nav-section">운영</div>
+        <div class="nav-item" data-page="works">업무관리</div>
         <div class="nav-section">통계</div>
         <div class="nav-item" data-page="analytics">유입통계</div>
+        <div class="nav-item" data-page="visitors">방문자 분석</div>
         <div class="nav-section">콘텐츠 관리</div>
         <div class="nav-item" data-page="press">언론에 비친 노블홍</div>
         <div class="nav-item" data-page="campaign">결혼장려 공익캠페인</div>
@@ -1642,6 +2666,116 @@
         </section>
         <!-- /상담 접수 패널 -->
 
+        <section class="tab-panel wk-root" data-page-panel="works" hidden>
+          <div class="page-head wk-head">
+            <div>
+              <div class="eyebrow">WORK LOG</div>
+              <div class="title">업무관리</div>
+              <div class="wk-sub">
+                폴라애드가 진행한 작업과 결과를 날짜별로 남깁니다. 기록 아래에 의견을
+                남기실 수 있습니다.
+              </div>
+            </div>
+            <div class="wk-tools">
+              <div class="wk-month">
+                <button type="button" data-wk-month="-1" aria-label="이전 달">‹</button>
+                <b id="wkMonthLabel">-</b>
+                <button type="button" data-wk-month="1" aria-label="다음 달">›</button>
+              </div>
+              <button type="button" class="wk-btn gold" id="wkReportBtn">
+                리포트용 정리
+              </button>
+              <button type="button" class="wk-btn pri" id="wkAddBtn">
+                + 업무 기록
+              </button>
+            </div>
+          </div>
+          <div class="wk-filters">
+            <div>
+              <b>분류</b>
+              <span id="wkCatChips"></span>
+            </div>
+            <div>
+              <b>상태</b>
+              <span id="wkStatusChips"></span>
+            </div>
+          </div>
+          <div class="wk-msg" id="wkMsg" hidden></div>
+          <div class="wk-kpis" id="wkKpis"></div>
+          <section class="wk-panel wk-report" id="wkReport" hidden></section>
+          <div class="wk-grid">
+            <section class="wk-panel">
+              <div class="wk-ph">
+                <div class="wk-pt" id="wkCalTitle">-</div>
+                <div class="wk-legend">
+                  적음<i class="l0"></i><i class="l1"></i><i class="l2"></i
+                  ><i class="l3"></i><i class="l4"></i>많음 <i class="dot"></i>특이사항
+                </div>
+              </div>
+              <div class="wk-cal wk-dows">
+                <div>일</div>
+                <div>월</div>
+                <div>화</div>
+                <div>수</div>
+                <div>목</div>
+                <div>금</div>
+                <div>토</div>
+              </div>
+              <div class="wk-cal" id="wkCal"></div>
+            </section>
+            <section>
+              <div class="wk-ph">
+                <div class="wk-pt" id="wkDayTitle">-</div>
+              </div>
+              <div id="wkDay"></div>
+            </section>
+          </div>
+          <div class="wk-modal" id="wkModal" hidden>
+            <div class="wk-modal-bg" data-wk-close></div>
+            <div
+              class="wk-modal-box"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="wkModalTitle"
+            >
+              <h3 id="wkModalTitle">업무 기록 추가</h3>
+              <div class="wk-f3">
+                <label class="wk-f">날짜<input type="date" id="wkF_date" /></label>
+                <label class="wk-f">상태<select id="wkF_status"></select></label>
+                <label class="wk-f">분류<select id="wkF_cat"></select></label>
+              </div>
+              <label class="wk-f"
+                >제목 *<input
+                  type="text"
+                  id="wkF_title"
+                  maxlength="120"
+                  placeholder="예: 홈페이지 로딩 속도 개선"
+              /></label>
+              <label class="wk-f"
+                >결과·수치 (리포트에 그대로 쓰는 한 줄)<input
+                  type="text"
+                  id="wkF_result"
+                  maxlength="200"
+                  placeholder="예: 휴대폰 첫 화면 12.3초 → 3.1초"
+              /></label>
+              <label class="wk-f"
+                >내용<textarea
+                  id="wkF_body"
+                  maxlength="3000"
+                  placeholder="무엇을 했고 왜 했는지"
+                ></textarea>
+              </label>
+              <label class="wk-f">작성<select id="wkF_author"></select></label>
+              <div class="wk-ferr" id="wkFormErr"></div>
+              <div class="wk-actions">
+                <button type="button" class="wk-btn" data-wk-close>닫기</button>
+                <button type="button" class="wk-btn pri" id="wkSaveBtn">
+                  기록 추가
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
         <section class="tab-panel" data-page-panel="analytics" hidden>
           <div class="page-head">
             <div>
@@ -1743,6 +2877,158 @@
             </section>
           </div>
         </section>
+
+        <!-- 방문자 분석 패널 -->
+        <section class="tab-panel va-root" data-page-panel="visitors" hidden>
+          <div class="page-head va-head">
+            <div>
+              <div class="eyebrow">VISITOR ANALYTICS</div>
+              <div class="title">방문자 분석</div>
+            </div>
+            <div class="va-tools">
+              <div class="va-seg" role="group" aria-label="분석 기간">
+                <button type="button" data-va-range="7d">7일</button>
+                <button type="button" class="on" data-va-range="28d">28일</button>
+                <button type="button" data-va-range="90d">90일</button>
+                <button type="button" data-va-range="custom">직접 지정</button>
+              </div>
+              <span class="va-dates">
+                <input type="date" id="vaStart" aria-label="시작일" />
+                <span>~</span>
+                <input type="date" id="vaEnd" aria-label="종료일" />
+              </span>
+              <label class="va-chk">
+                <input type="checkbox" id="vaCompare" checked />
+                이전 기간과 비교
+              </label>
+            </div>
+          </div>
+          <div class="va-status">
+            <span id="vaStatus">—</span>
+            <button type="button" class="va-refresh" id="vaRefresh">
+              지금 새로 받기
+            </button>
+          </div>
+          <div class="va-filters">
+            <div class="va-fgroup">
+              <b>유입 경로</b>
+              <button type="button" class="va-chip on" data-va-f="channel" data-va-v="">전체</button>
+              <button type="button" class="va-chip" data-va-f="channel" data-va-v="Organic Search">검색</button>
+              <button type="button" class="va-chip" data-va-f="channel" data-va-v="Organic Search:naver">네이버 검색</button>
+              <button type="button" class="va-chip" data-va-f="channel" data-va-v="Organic Search:google">구글 검색</button>
+              <button type="button" class="va-chip" data-va-f="channel" data-va-v="Direct">직접 입력</button>
+              <button type="button" class="va-chip" data-va-f="channel" data-va-v="Paid Social">Meta 광고</button>
+              <button type="button" class="va-chip" data-va-f="channel" data-va-v="Organic Social">SNS</button>
+              <button type="button" class="va-chip" data-va-f="channel" data-va-v="Referral">다른 사이트</button>
+            </div>
+            <div class="va-fgroup">
+              <b>기기</b>
+              <button type="button" class="va-chip on" data-va-f="device" data-va-v="">전체</button>
+              <button type="button" class="va-chip" data-va-f="device" data-va-v="mobile">휴대폰</button>
+              <button type="button" class="va-chip" data-va-f="device" data-va-v="desktop">PC</button>
+            </div>
+            <div class="va-fgroup">
+              <b>방문 유형</b>
+              <button type="button" class="va-chip on" data-va-f="visitor" data-va-v="">전체</button>
+              <button type="button" class="va-chip" data-va-f="visitor" data-va-v="new">처음 방문</button>
+              <button type="button" class="va-chip" data-va-f="visitor" data-va-v="returning">재방문</button>
+            </div>
+            <div class="va-fnote" id="vaFilterNote" hidden>
+              상담 접수 수치는 필터와 관계없이 전체 기준입니다.
+            </div>
+          </div>
+
+          <div class="va-body" id="vaBody">
+            <div class="va-kpis" id="vaKpis"></div>
+
+            <section class="va-panel">
+              <div class="va-ph">
+                <div class="va-pt">방문과 상담 접수 흐름</div>
+                <div class="va-legend">
+                  <span><i style="background: var(--gold-2)"></i><span id="vaLegendV">방문자(주별)</span></span>
+                  <span><i style="background: var(--va-wine)"></i><span id="vaLegendL">상담 접수(주별 · 모든 출처)</span></span>
+                </div>
+              </div>
+              <div class="va-flow" id="vaFlow"></div>
+            </section>
+
+            <div class="va-g2">
+              <section class="va-panel">
+                <div class="va-ph">
+                  <div class="va-pt">언제 오고, 언제 남기나</div>
+                  <div class="va-tabs2" id="vaHeatTabs">
+                    <button type="button" class="on" data-va-heat="v">방문</button>
+                    <button type="button" data-va-heat="l">상담 접수</button>
+                  </div>
+                </div>
+                <div id="vaHeat"></div>
+                <div class="va-insight">
+                  <div>방문이 가장 많은 때<b id="vaPeakV">–</b></div>
+                  <div>접수가 가장 많은 때<b id="vaPeakL">–</b></div>
+                </div>
+              </section>
+              <section class="va-panel">
+                <div class="va-ph">
+                  <div class="va-pt">어디서 오나 · 방문과 접수 비교</div>
+                  <div class="va-legend">
+                    <span><i style="background: var(--gold)"></i>방문</span>
+                    <span><i style="background: var(--va-wine)"></i>접수</span>
+                  </div>
+                </div>
+                <div id="vaRegions"></div>
+              </section>
+            </div>
+
+            <section class="va-panel">
+              <div class="va-ph">
+                <div class="va-pt">어떤 경로가 상담으로 이어지나</div>
+                <div class="va-pm">
+                  열 제목을 누르면 정렬 · 행을 누르면 위 차트가 그 경로로 바뀜
+                </div>
+              </div>
+              <div class="va-tablewrap">
+                <table class="va-table va-channels" id="vaChannels"></table>
+              </div>
+            </section>
+
+            <div class="va-g2">
+              <section class="va-panel">
+                <div class="va-ph">
+                  <div class="va-pt">방문에서 상담까지</div>
+                  <div class="va-pm">홈페이지 안 흐름</div>
+                </div>
+                <div class="va-fnl" id="vaFunnel"></div>
+              </section>
+              <section class="va-panel">
+                <div class="va-ph">
+                  <div class="va-pt">처음 들어온 화면</div>
+                  <div class="va-pm">방문 기준</div>
+                </div>
+                <div class="va-tablewrap">
+                  <table class="va-table" id="vaLandings"></table>
+                </div>
+              </section>
+            </div>
+
+            <div class="va-g2">
+              <section class="va-panel">
+                <div class="va-ph">
+                  <div class="va-pt">기기와 재방문</div>
+                </div>
+                <div id="vaDevices"></div>
+              </section>
+              <section class="va-panel">
+                <div class="va-ph">
+                  <div class="va-pt">처음 온 방문자 vs 다시 온 방문자</div>
+                </div>
+                <div class="va-tablewrap">
+                  <table class="va-table" id="vaVisitorTypes"></table>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+        <!-- /방문자 분석 패널 -->
 
         <!-- 콘텐츠 모듈 9종 패널 (구조 뼈대) -->
         <section class="tab-panel" data-page-panel="press" hidden>
@@ -3160,6 +4446,10 @@
         });
         if (page === "analytics") {
           loadAnalyticsDashboard();
+        } else if (page === "visitors") {
+          loadVisitorAnalytics();
+        } else if (page === "works") {
+          loadWorks();
         } else if (page !== "consultations") {
           loadContentList(page);
         }
@@ -3554,5 +4844,1090 @@
       // 부팅
       checkAuth();
     </script>
+    <script>
+      // ───────── 방문자 분석 (GET /api/admin/analytics/visitors) ─────────
+      // 탭을 처음 열 때 1회, 기간·필터를 바꿀 때 디바운스 뒤 1회만 부른다. 주기 호출은 없다.
+      // 서버가 인자 조합별로 6시간 저장해 두므로 「지금 새로 받기」만 refresh=1 을 붙인다.
+      const VA_DOW = ["일", "월", "화", "수", "목", "금", "토"];
+      const VA_MAX_DAYS = 400;
+      const VA_CH_LABEL = {
+        "Organic Search": "검색",
+        "Organic Search:naver": "네이버 검색",
+        "Organic Search:naver_ad": "네이버 검색 광고",
+        "Organic Search:google": "구글 검색",
+        "Organic Search:daum": "다음 검색",
+        "Organic Search:other": "기타 검색",
+        Direct: "직접 입력",
+        "Paid Social": "Meta 광고",
+        Referral: "다른 사이트",
+        "Organic Social": "SNS 게시물",
+        "AI Assistant": "AI 검색",
+        "Organic Video": "유튜브",
+        "Paid Search": "검색 광고",
+        "Paid Video": "동영상 광고",
+        "Paid Other": "기타 광고",
+        Display: "배너 광고",
+        Email: "이메일",
+        "Cross-network": "여러 광고 지면",
+        Unassigned: "분류 안 됨",
+      };
+      const VA_PAGE_LABEL = {
+        "/": "메인",
+        "/about": "노블홍 소개",
+        "/news_detail": "언론·공지 상세",
+        "/contact": "상담 신청",
+        "/consulting": "맞춤 컨설팅",
+        "/noblematching": "노블매칭",
+        "/column_detail": "칼럼 상세",
+        "/matchinglounge": "매칭라운지",
+        "/matchinglab": "매칭랩",
+        "/couplemanager": "커플매니저",
+        "/campaign": "공익캠페인",
+        "/terms": "이용약관",
+      };
+      const VA_DEVICES = [
+        ["휴대폰", "mobile"],
+        ["PC", "desktop"],
+        ["태블릿", "tablet"],
+      ];
+      const vaState = {
+        range: "28d",
+        start: "",
+        end: "",
+        channel: "",
+        device: "",
+        visitor: "",
+        compare: true,
+        data: null,
+        loadedKey: "",
+        loading: false,
+        pending: false,
+        timer: 0,
+        heat: "v",
+        sort: { key: "s", dir: -1 },
+      };
+
+      function vaKstDate(offsetDays) {
+        return new Date(Date.now() + 9 * 3600000 + offsetDays * 86400000)
+          .toISOString()
+          .slice(0, 10);
+      }
+      function vaSpan(a, b) {
+        return (
+          Math.round(
+            (Date.parse(b + "T00:00:00Z") - Date.parse(a + "T00:00:00Z")) /
+              86400000,
+          ) + 1
+        );
+      }
+      function vaNum(v) {
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 0;
+      }
+      function vaN(v) {
+        return Math.round(vaNum(v)).toLocaleString("ko-KR");
+      }
+      function vaPct(a, b, d = 1) {
+        return b ? ((vaNum(a) / vaNum(b)) * 100).toFixed(d) + "%" : "0%";
+      }
+      function vaRate(r) {
+        return (vaNum(r) * 100).toFixed(0) + "%";
+      }
+      function vaMmss(s) {
+        const t = Math.round(vaNum(s));
+        return `${Math.floor(t / 60)}분 ${String(t % 60).padStart(2, "0")}초`;
+      }
+      function vaMd(iso) {
+        return `${+iso.slice(5, 7)}/${+iso.slice(8, 10)}`;
+      }
+      function vaFiltered() {
+        return !!(vaState.channel || vaState.device || vaState.visitor);
+      }
+
+      function vaParams(refresh) {
+        const p = new URLSearchParams();
+        if (vaState.range === "custom") {
+          p.set("start", vaState.start);
+          p.set("end", vaState.end);
+        } else {
+          p.set("range", vaState.range);
+        }
+        if (vaState.channel) p.set("channel", vaState.channel);
+        if (vaState.device) p.set("device", vaState.device);
+        if (vaState.visitor) p.set("visitor", vaState.visitor);
+        if (vaState.compare) p.set("compare", "1");
+        if (refresh) p.set("refresh", "1");
+        return p.toString();
+      }
+
+      function vaRangeError() {
+        if (vaState.range !== "custom") return "";
+        const { start, end } = vaState;
+        if (!start || !end) return "시작일과 종료일을 고르세요.";
+        if (start > end) return "시작일이 종료일보다 늦습니다.";
+        if (end > vaKstDate(0)) return "종료일은 오늘까지 고를 수 있습니다.";
+        if (vaSpan(start, end) > VA_MAX_DAYS)
+          return `기간은 최대 ${VA_MAX_DAYS}일까지 볼 수 있습니다.`;
+        return "";
+      }
+
+      function vaSetStatus(text) {
+        const el = document.getElementById("vaStatus");
+        if (el) el.textContent = text || "";
+      }
+
+      function vaStamp(d) {
+        const g = new Date(Date.parse(d.generatedAt) + 9 * 3600000);
+        const pad = (n) => String(n).padStart(2, "0");
+        const r = d.range || {};
+        return (
+          `${String(r.start || "").replace(/-/g, ".")} ~ ${String(r.end || "").slice(5).replace(/-/g, ".")} · ` +
+          `${g.getUTCMonth() + 1}월 ${g.getUTCDate()}일 ${pad(g.getUTCHours())}:${pad(g.getUTCMinutes())} 기준`
+        );
+      }
+
+      function vaSchedule() {
+        clearTimeout(vaState.timer);
+        const err = vaRangeError();
+        if (err) {
+          vaSetStatus(err);
+          return;
+        }
+        vaState.timer = setTimeout(() => loadVisitorAnalytics(false), 400);
+      }
+
+      async function loadVisitorAnalytics(refresh = false) {
+        clearTimeout(vaState.timer);
+        if (vaState.loading) {
+          vaState.pending = true;
+          return;
+        }
+        if (vaRangeError()) return;
+        const key = vaParams(false);
+        if (!refresh && key === vaState.loadedKey) {
+          // 같은 조건이면 다시 부르지 않고, 탭이 다시 보일 때 차트 폭만 맞춘다
+          if (vaState.data) vaRenderFlow(vaState.data);
+          return;
+        }
+        const body = document.getElementById("vaBody");
+        const btn = document.getElementById("vaRefresh");
+        vaState.loading = true;
+        body?.classList.add("va-busy");
+        if (btn) btn.disabled = true;
+        vaSetStatus("불러오는 중…");
+        try {
+          const r = await api(
+            `/api/admin/analytics/visitors?${vaParams(refresh)}`,
+          );
+          if (r.status === 401) {
+            showLogin();
+            return;
+          }
+          if (!r.ok) {
+            vaSetStatus(
+              r.status === 400
+                ? "기간이나 필터를 다시 확인해 주세요."
+                : r.status === 503
+                  ? "지금은 통계를 받을 수 없습니다. 1분 뒤 다시 시도해 주세요."
+                  : "통계를 불러오지 못했습니다. 잠시 뒤 다시 시도해 주세요.",
+            );
+            return;
+          }
+          vaState.loadedKey = key;
+          vaState.data = r.json;
+          vaRender(r.json);
+          vaSetStatus(vaStamp(r.json));
+        } catch (e) {
+          vaSetStatus("네트워크 오류로 불러오지 못했습니다.");
+        } finally {
+          vaState.loading = false;
+          body?.classList.remove("va-busy");
+          if (btn) btn.disabled = false;
+          if (vaState.pending) {
+            vaState.pending = false;
+            if (vaParams(false) !== vaState.loadedKey) loadVisitorAnalytics(false);
+          }
+        }
+      }
+
+      function vaRender(d) {
+        vaRenderKpis(d);
+        vaRenderFlow(d);
+        vaRenderHeat(d);
+        vaRenderRegions(d);
+        vaRenderChannels(d);
+        vaRenderFunnel(d);
+        vaRenderLandings(d);
+        vaRenderDevices(d);
+        vaRenderVisitorTypes(d);
+      }
+
+      function vaEmpty(text) {
+        return `<div class="va-empty">${escapeHtml(text || "이 기간에는 기록이 없습니다")}</div>`;
+      }
+
+      function vaRenderKpis(d) {
+        const el = document.getElementById("vaKpis");
+        if (!el) return;
+        const k = d.kpi || {};
+        const p = d.prev;
+        const leads = k.leads || { total: 0, home: 0 };
+        const filtered = vaFiltered();
+        const conv = (x) => (x && x.users ? (x.leads?.home || 0) / x.users : 0);
+        const delta = (cur, prev) => {
+          if (!p) return "";
+          if (!prev) return `<div class="va-d va-flat">이전 기간 기록 없음</div>`;
+          const r = (vaNum(cur) - prev) / prev;
+          const cls = r > 0 ? "" : r < 0 ? " va-down" : " va-flat";
+          return `<div class="va-d${cls}">이전 기간 대비 ${r > 0 ? "+" : ""}${(r * 100).toFixed(1)}%</div>`;
+        };
+        const cards = [
+          {
+            key: true,
+            l: "방문자",
+            v: vaN(k.users),
+            s: `방문 ${vaN(k.sessions)}회`,
+            d: delta(k.users, p?.users),
+          },
+          {
+            l: "재방문자",
+            v: vaN(k.returningUsers),
+            s: `방문자의 ${vaPct(k.returningUsers, k.users)}`,
+            d: delta(k.returningUsers, p?.returningUsers),
+          },
+          {
+            l: "평균 머문 시간",
+            v: vaMmss(k.avgSessionDuration),
+            s: `참여 방문 ${vaRate(k.engagementRate)}`,
+            d: delta(k.avgSessionDuration, p?.avgSessionDuration),
+          },
+          {
+            l: "상담 폼 시작",
+            v: vaN(k.formStartUsers),
+            s: `방문자의 ${vaPct(k.formStartUsers, k.users)}`,
+            d: delta(k.formStartUsers, p?.formStartUsers),
+          },
+          {
+            key: true,
+            l: "상담 접수 (전체)",
+            v: vaN(leads.total),
+            s: `홈페이지 ${vaN(leads.home)} · 광고 신청서 ${vaN(leads.total - leads.home)}`,
+            d: delta(leads.total, p?.leads?.total),
+          },
+          {
+            l: "홈페이지 전환율",
+            v: filtered ? "–" : vaPct(leads.home, k.users, 2),
+            s: filtered ? "필터를 풀면 보입니다" : "방문자 → 홈페이지 접수",
+            d: filtered ? "" : delta(conv(k), p ? conv(p) : 0),
+          },
+        ];
+        el.innerHTML = cards
+          .map(
+            (c) =>
+              `<div class="va-kpi${c.key ? " va-key" : ""}"><div class="va-l">${c.l}</div><div class="va-v">${c.v}</div><div class="va-s">${c.s}</div>${c.d}</div>`,
+          )
+          .join("");
+      }
+
+      function vaWeekStart(iso) {
+        const dt = new Date(iso + "T00:00:00Z");
+        dt.setUTCDate(dt.getUTCDate() - ((dt.getUTCDay() + 6) % 7));
+        return dt.toISOString().slice(0, 10);
+      }
+
+      function vaNice(v) {
+        if (!(v > 4)) return 4;
+        const step = Math.pow(10, Math.floor(Math.log10(v / 4)));
+        return Math.ceil(v / 4 / step) * step * 4;
+      }
+
+      function vaRenderFlow(d) {
+        const box = document.getElementById("vaFlow");
+        if (!box) return;
+        // 60일 이하는 일별, 넘으면 주별(월요일 시작)로 묶는다
+        const weekly = (d.range?.days || 0) > 60;
+        const unit = weekly ? "주별" : "일별";
+        const lv = document.getElementById("vaLegendV");
+        const ll = document.getElementById("vaLegendL");
+        if (lv) lv.textContent = `방문자(${unit})`;
+        if (ll) ll.textContent = `상담 접수(${unit} · 모든 출처)`;
+        const map = new Map();
+        for (const r of d.daily || []) {
+          const k = weekly ? vaWeekStart(r.d) : r.d;
+          const o = map.get(k) || { k, u: 0, meta: 0, home: 0, fall: 0 };
+          o.u += vaNum(r.users);
+          o.meta += vaNum(r.meta);
+          o.home += vaNum(r.home);
+          o.fall += vaNum(r.fall);
+          map.set(k, o);
+        }
+        const rows = Array.from(map.values()).sort((a, b) =>
+          a.k.localeCompare(b.k),
+        );
+        const leadOf = (o) => o.meta + o.home + o.fall;
+        if (!rows.some((o) => o.u || leadOf(o))) {
+          box.innerHTML = vaEmpty();
+          return;
+        }
+        const w = Math.max(320, Math.round(box.clientWidth || 1040));
+        const narrow = w < 640;
+        const h = narrow ? 240 : 300;
+        const l = narrow ? 34 : 44;
+        const r = narrow ? 30 : 44;
+        const t = 22;
+        const b = 36;
+        const ih = h - t - b;
+        const cw = (w - l - r) / rows.length;
+        const bw = Math.max(1, cw * 0.62);
+        const mu = vaNice(Math.max(...rows.map((o) => o.u)) * 1.1);
+        const ml = vaNice(Math.max(...rows.map(leadOf)) * 1.15);
+        const every = Math.max(1, Math.ceil(rows.length / Math.max(1, Math.floor((w - l - r) / 58))));
+        let s = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="방문과 상담 접수 흐름">`;
+        for (let i = 0; i <= 4; i++) {
+          const y = t + (ih * i) / 4;
+          s +=
+            `<line x1="${l}" x2="${w - r}" y1="${y}" y2="${y}" class="va-gl"/>` +
+            `<text x="${l - 8}" y="${y + 4}" class="va-ax" text-anchor="end">${Math.round(mu * (1 - i / 4))}</text>` +
+            `<text x="${w - r + 8}" y="${y + 4}" class="va-ax">${Math.round(ml * (1 - i / 4))}</text>`;
+        }
+        const pts = [];
+        rows.forEach((o, i) => {
+          const x = l + cw * i + (cw - bw) / 2;
+          const hh = (ih * o.u) / mu;
+          const L = leadOf(o);
+          const label = weekly ? `${vaMd(o.k)} 주` : vaMd(o.k);
+          s += `<rect x="${x.toFixed(1)}" y="${(h - b - hh).toFixed(1)}" width="${bw.toFixed(1)}" height="${hh.toFixed(1)}" rx="2" fill="var(--gold-2)"><title>${label} · 방문자 ${vaN(o.u)}명 · 접수 ${L}건 (Meta ${o.meta} · 홈페이지 ${o.home} · 행사 ${o.fall})</title></rect>`;
+          pts.push([x + bw / 2, h - b - (ih * L) / ml]);
+          if (i % every === 0)
+            s += `<text x="${(x + bw / 2).toFixed(1)}" y="${h - b + 20}" class="va-ax" text-anchor="middle">${vaMd(o.k)}</text>`;
+        });
+        const dot = rows.length > 90 ? 1.6 : 3;
+        s +=
+          `<polyline points="${pts.map((p) => p.map((v) => v.toFixed(1)).join(",")).join(" ")}" class="va-ln"/>` +
+          pts
+            .map(
+              (p) =>
+                `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${dot}" class="va-dt"/>`,
+            )
+            .join("");
+        s += `<text x="${l}" y="12" class="va-ax">방문자(명)</text><text x="${w - r}" y="12" class="va-ax" text-anchor="end">상담 접수(건)</text></svg>`;
+        box.innerHTML = s;
+      }
+
+      function vaHeatHtml(m, cls) {
+        const mx = Math.max(1, ...m.flat());
+        let s = `<div class="va-heat va-heat-${cls}"><div></div>`;
+        for (let hr = 0; hr < 24; hr++)
+          s += `<span>${hr % 3 === 0 ? hr : ""}</span>`;
+        m.forEach((row, w) => {
+          s +=
+            `<span class="va-hd">${VA_DOW[w]}</span>` +
+            row
+              .map(
+                (v, hr) =>
+                  `<i style="--a:${(v / mx).toFixed(3)}" title="${VA_DOW[w]} ${hr}시 · ${vaN(v)}${cls === "v" ? "회" : "건"}"></i>`,
+              )
+              .join("");
+        });
+        return s + `</div>`;
+      }
+
+      function vaPeak(m) {
+        let best = null;
+        m.forEach((row, w) =>
+          row.forEach((v, hr) => {
+            if (v > 0 && (!best || v > best[2])) best = [w, hr, v];
+          }),
+        );
+        return best ? `${VA_DOW[best[0]]}요일 ${best[1]}시` : "–";
+      }
+
+      function vaRenderHeat(d) {
+        const el = document.getElementById("vaHeat");
+        if (!el) return;
+        const grid = () => Array.from({ length: 7 }, () => Array(24).fill(0));
+        const v = d.dowHour?.visits || grid();
+        const l = d.dowHour?.leads || grid();
+        el.innerHTML = vaHeatHtml(vaState.heat === "l" ? l : v, vaState.heat);
+        document.getElementById("vaPeakV").textContent = vaPeak(v);
+        document.getElementById("vaPeakL").textContent = vaPeak(l);
+        document.querySelectorAll("#vaHeatTabs [data-va-heat]").forEach((b) => {
+          b.classList.toggle("on", b.dataset.vaHeat === vaState.heat);
+        });
+      }
+
+      function vaRenderRegions(d) {
+        const el = document.getElementById("vaRegions");
+        if (!el) return;
+        const visits = d.regions?.visits || [];
+        const leads = d.regions?.leads || [];
+        const vT = visits.reduce((a, x) => a + vaNum(x.users), 0);
+        const lT = leads.reduce((a, x) => a + vaNum(x.n), 0);
+        if (!vT && !lT) {
+          el.innerHTML = vaEmpty();
+          return;
+        }
+        const leadMap = new Map(leads.map((x) => [x.sido, vaNum(x.n)]));
+        const names = visits.map((x) => x.sido);
+        for (const x of leads) if (!names.includes(x.sido)) names.push(x.sido);
+        const visitMap = new Map(visits.map((x) => [x.sido, vaNum(x.users)]));
+        el.innerHTML = names
+          .slice(0, 8)
+          .map((k) => {
+            const vn = visitMap.get(k) || 0;
+            const ln = leadMap.get(k) || 0;
+            const vw = vT ? Math.min(100, (vn / vT) * 160) : 0;
+            const lw = lT ? Math.min(100, (ln / lT) * 160) : 0;
+            return `<div class="va-pair" title="${escapeHtml(k)} · 방문자 ${vaN(vn)}명 · 접수 ${vaN(ln)}건"><span>${escapeHtml(k)}</span><div class="va-bars"><span style="width:${vw.toFixed(1)}%;background:var(--gold)"></span><span style="width:${lw.toFixed(1)}%;background:var(--va-wine)"></span></div><span class="va-pv">${vaPct(vn, vT, 0)} · ${vaPct(ln, lT, 0)}</span></div>`;
+          })
+          .join("");
+      }
+
+      const VA_CH_COLS = [
+        ["k", "들어온 경로"],
+        ["s", "방문"],
+        ["u", "방문자"],
+        ["dur", "평균 머문 시간"],
+        ["pps", "화면 수"],
+        ["eng", "참여 비율"],
+        ["f", "상담 폼 시작"],
+        ["fr", "폼 시작률"],
+      ];
+
+      function vaRenderChannels(d) {
+        const el = document.getElementById("vaChannels");
+        if (!el) return;
+        const engines = d.searchEngines || [];
+        const source = engines.length
+          ? (d.channels || []).filter((x) => x.channel !== "Organic Search").concat(engines)
+          : d.channels || [];
+        const rows = source
+          .filter((x) => x.sessions || x.formStartUsers)
+          .map((x) => ({
+            raw: x.channel,
+            k: VA_CH_LABEL[x.channel] || x.channel,
+            s: vaNum(x.sessions),
+            u: vaNum(x.users),
+            dur: vaNum(x.avgSessionDuration),
+            pps: vaNum(x.pagesPerSession),
+            eng: vaNum(x.engagementRate),
+            f: vaNum(x.formStartUsers),
+            fr: x.users ? vaNum(x.formStartUsers) / x.users : 0,
+          }));
+        if (!rows.length) {
+          el.innerHTML = `<tbody><tr><td>${vaEmpty()}</td></tr></tbody>`;
+          return;
+        }
+        const { key, dir } = vaState.sort;
+        rows.sort((a, b) =>
+          key === "k"
+            ? dir * a.k.localeCompare(b.k, "ko")
+            : dir * (a[key] - b[key]) || b.s - a.s,
+        );
+        const maxS = Math.max(1, ...rows.map((x) => x.s));
+        const head = VA_CH_COLS.map(([c, label]) => {
+          const on = c === key;
+          const arrow = on ? (dir < 0 ? " ▼" : " ▲") : "";
+          const aria = on ? (dir < 0 ? "descending" : "ascending") : "none";
+          return `<th data-va-sort="${c}" aria-sort="${aria}"${on ? ' class="va-sorted"' : ""}>${label}${arrow}</th>`;
+        }).join("");
+        const body = rows
+          .map((x, i) => {
+            const cls = [i === 0 ? "va-top" : "", x.raw === vaState.channel ? "va-sel" : ""]
+              .filter(Boolean)
+              .join(" ");
+            return `<tr data-va-row="${escapeHtml(x.raw)}"${cls ? ` class="${cls}"` : ""} title="이 경로만 보기"><td>${escapeHtml(x.k)}</td><td><span class="va-bar" style="width:${Math.round((x.s / maxS) * 60)}px"></span>${vaN(x.s)}</td><td>${vaN(x.u)}</td><td>${vaMmss(x.dur)}</td><td>${x.pps.toFixed(1)}</td><td>${vaRate(x.eng)}</td><td>${vaN(x.f)}</td><td>${vaPct(x.f, x.u)}</td></tr>`;
+          })
+          .join("");
+        el.innerHTML = `<thead><tr>${head}</tr></thead><tbody>${body}</tbody>`;
+      }
+
+      function vaRenderFunnel(d) {
+        const el = document.getElementById("vaFunnel");
+        if (!el) return;
+        const f = d.funnel || {};
+        const steps = [
+          ["방문자", vaNum(f.users)],
+          ["끝까지 내려 봄", vaNum(f.scrollUsers)],
+          ["상담 폼 시작", vaNum(f.formStartUsers)],
+          ["홈페이지 상담 접수", vaNum(f.homeLeads)],
+        ];
+        if (!steps[0][1]) {
+          el.innerHTML = vaEmpty();
+          return;
+        }
+        el.innerHTML = steps
+          .map(
+            ([k, v], i) =>
+              `<div style="--w:${Math.max(4, Math.min(100, (v / steps[0][1]) * 100)).toFixed(1)}%"><span>${k}</span><b>${vaN(v)}${i ? `<small>${vaPct(v, steps[i - 1][1])}</small>` : ""}</b></div>`,
+          )
+          .join("");
+      }
+
+      function vaRenderLandings(d) {
+        const el = document.getElementById("vaLandings");
+        if (!el) return;
+        const rows = (d.landings || [])
+          .filter((x) => x.path && x.path !== "(not set)")
+          .slice(0, 7);
+        if (!rows.length) {
+          el.innerHTML = `<tbody><tr><td>${vaEmpty()}</td></tr></tbody>`;
+          return;
+        }
+        el.innerHTML =
+          `<thead><tr><th>화면</th><th>방문</th><th>머문 시간</th><th>참여</th><th>폼 시작</th></tr></thead><tbody>` +
+          rows
+            .map(
+              (x) =>
+                `<tr><td title="${escapeHtml(x.path)}">${escapeHtml(VA_PAGE_LABEL[x.path] || x.path)}</td><td>${vaN(x.sessions)}</td><td>${vaMmss(x.avgSessionDuration)}</td><td>${vaRate(x.engagementRate)}</td><td>${x.formStartUsers ? vaN(x.formStartUsers) : "–"}</td></tr>`,
+            )
+            .join("") +
+          `</tbody>`;
+      }
+
+      function vaRenderDevices(d) {
+        const el = document.getElementById("vaDevices");
+        if (!el) return;
+        const by = new Map((d.devices || []).map((x) => [x.device, x]));
+        const rows = VA_DEVICES.map(([k, key]) => {
+          const x = by.get(key) || {};
+          return { k, n: vaNum(x.newUsers), r: vaNum(x.returningUsers) };
+        }).filter((x) => x.n + x.r);
+        if (!rows.length) {
+          el.innerHTML = vaEmpty();
+          return;
+        }
+        el.innerHTML = rows
+          .map(
+            (x) =>
+              `<div class="va-dev"><b>${x.k}</b><span>${vaN(x.n + x.r)}명 · 재방문 ${vaPct(x.r, x.n + x.r)}</span></div><div class="va-stack"><span style="flex:${Math.max(x.n, 1)};background:var(--gold)">처음 ${vaN(x.n)}</span><span style="flex:${Math.max(x.r, 1)};background:var(--va-wine)">${vaN(x.r)}</span></div>`,
+          )
+          .join("");
+      }
+
+      function vaRenderVisitorTypes(d) {
+        const el = document.getElementById("vaVisitorTypes");
+        if (!el) return;
+        const by = new Map((d.visitorTypes || []).map((x) => [x.type, x]));
+        const row = (label, key, cls) => {
+          const x = by.get(key) || {};
+          return `<tr${cls ? ` class="${cls}"` : ""}><td>${label}</td><td>${vaN(x.users)}</td><td>${vaN(x.sessions)}</td><td>${vaMmss(x.avgSessionDuration)}</td><td>${vaNum(x.pagesPerSession).toFixed(1)}</td></tr>`;
+        };
+        el.innerHTML =
+          `<thead><tr><th></th><th>방문자</th><th>방문</th><th>머문 시간</th><th>화면 수</th></tr></thead><tbody>` +
+          row("처음 방문", "new", "") +
+          row("재방문", "returning", "va-top") +
+          `</tbody>`;
+      }
+
+      function vaSetFilter(field, value) {
+        vaState[field] = value;
+        document
+          .querySelectorAll(`.va-chip[data-va-f="${field}"]`)
+          .forEach((c) => c.classList.toggle("on", c.dataset.vaV === value));
+        const note = document.getElementById("vaFilterNote");
+        if (note) note.hidden = !vaFiltered();
+        vaSchedule();
+      }
+
+      function vaSetRangeButtons() {
+        document.querySelectorAll("[data-va-range]").forEach((b) => {
+          b.classList.toggle("on", b.dataset.vaRange === vaState.range);
+        });
+      }
+
+      function vaFillPresetDates() {
+        const days = { "7d": 7, "28d": 28, "90d": 90 }[vaState.range];
+        if (!days) return;
+        const s = document.getElementById("vaStart");
+        const e = document.getElementById("vaEnd");
+        if (s) s.value = vaKstDate(-(days - 1));
+        if (e) e.value = vaKstDate(0);
+      }
+
+      (function vaInit() {
+        const s = document.getElementById("vaStart");
+        const e = document.getElementById("vaEnd");
+        if (!s || !e) return;
+        s.max = e.max = vaKstDate(0);
+        vaFillPresetDates();
+        document.querySelectorAll("[data-va-range]").forEach((b) => {
+          b.addEventListener("click", () => {
+            vaState.range = b.dataset.vaRange;
+            if (vaState.range === "custom") {
+              vaState.start = s.value;
+              vaState.end = e.value;
+            } else {
+              vaFillPresetDates();
+            }
+            vaSetRangeButtons();
+            vaSchedule();
+          });
+        });
+        [s, e].forEach((input) =>
+          input.addEventListener("change", () => {
+            vaState.range = "custom";
+            vaState.start = s.value;
+            vaState.end = e.value;
+            vaSetRangeButtons();
+            vaSchedule();
+          }),
+        );
+        document.getElementById("vaCompare")?.addEventListener("change", (ev) => {
+          vaState.compare = ev.target.checked;
+          vaSchedule();
+        });
+        document.querySelectorAll(".va-chip[data-va-f]").forEach((c) => {
+          c.addEventListener("click", () => vaSetFilter(c.dataset.vaF, c.dataset.vaV));
+        });
+        document
+          .getElementById("vaRefresh")
+          ?.addEventListener("click", () => loadVisitorAnalytics(true));
+        document.getElementById("vaHeatTabs")?.addEventListener("click", (ev) => {
+          const b = ev.target.closest("[data-va-heat]");
+          if (!b) return;
+          vaState.heat = b.dataset.vaHeat;
+          if (vaState.data) vaRenderHeat(vaState.data);
+        });
+        document.getElementById("vaChannels")?.addEventListener("click", (ev) => {
+          const th = ev.target.closest("th[data-va-sort]");
+          if (th) {
+            const c = th.dataset.vaSort;
+            vaState.sort =
+              vaState.sort.key === c
+                ? { key: c, dir: -vaState.sort.dir }
+                : { key: c, dir: c === "k" ? 1 : -1 };
+            if (vaState.data) vaRenderChannels(vaState.data);
+            return;
+          }
+          const tr = ev.target.closest("tr[data-va-row]");
+          if (!tr) return;
+          const ch = tr.dataset.vaRow;
+          vaSetFilter("channel", vaState.channel === ch ? "" : ch);
+        });
+        let resizeTimer = 0;
+        window.addEventListener("resize", () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            const panel = document.querySelector('[data-page-panel="visitors"]');
+            if (vaState.data && panel && !panel.hidden) vaRenderFlow(vaState.data);
+          }, 200);
+        });
+      })();
+    </script>
+        <script>
+          // ───────── 업무관리 (/api/admin/works/*) ─────────
+          // 탭을 열 때와 달을 바꿀 때 그 달 기록만 한 번 받는다. 주기 호출은 없다.
+          // 저장·삭제·의견 등록 뒤에는 그 달을 한 번 다시 받는다. 처리 중에는 버튼을 잠근다.
+          const WK_STATUS = ["완료", "진행", "특이사항"];
+          const WK_CATS = ["홈페이지", "광고", "접수·CRM", "관리자", "콘텐츠", "리포트", "기타"];
+          const WK_AUTHORS = ["폴라애드", "노블홍"];
+          const WK_ST_CLASS = { 완료: "done", 진행: "prog", 특이사항: "iss" };
+          const WK_DOW = ["일", "월", "화", "수", "목", "금", "토"];
+          function wkToday() {
+            return new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10);
+          }
+          const wkState = {
+            month: wkToday().slice(0, 7),
+            works: [],
+            loadedMonth: "",
+            loading: false,
+            selected: "",
+            cat: "",
+            status: "",
+            report: false,
+            editingId: "",
+            busy: false,
+          };
+
+          function wkPad(n) {
+            return String(n).padStart(2, "0");
+          }
+          function wkTime(iso) {
+            const t = Date.parse(iso || "");
+            if (!Number.isFinite(t)) return "";
+            const d = new Date(t + 9 * 3600000);
+            return `${wkPad(d.getUTCMonth() + 1)}.${wkPad(d.getUTCDate())} ${wkPad(d.getUTCHours())}:${wkPad(d.getUTCMinutes())}`;
+          }
+          function wkShiftMonth(ym, n) {
+            const [y, m] = ym.split("-").map(Number);
+            return new Date(Date.UTC(y, m - 1 + n, 1)).toISOString().slice(0, 7);
+          }
+          function wkMonthDays(ym) {
+            const [y, m] = ym.split("-").map(Number);
+            return new Date(Date.UTC(y, m, 0)).getUTCDate();
+          }
+          function wkFiltered() {
+            return wkState.works.filter(
+              (w) =>
+                (!wkState.cat || w.category === wkState.cat) &&
+                (!wkState.status || w.status === wkState.status),
+            );
+          }
+          function wkMsg(text) {
+            const el = document.getElementById("wkMsg");
+            if (!el) return;
+            el.textContent = text || "";
+            el.hidden = !text;
+          }
+          function wkDefaultDate() {
+            const today = wkToday();
+            if (today.startsWith(wkState.month)) return today;
+            const dates = wkState.works.map((w) => w.date).sort();
+            return dates.length ? dates[dates.length - 1] : `${wkState.month}-01`;
+          }
+
+          async function loadWorks(force) {
+            if (wkState.loading) return;
+            if (!force && wkState.loadedMonth === wkState.month) {
+              wkRender();
+              return;
+            }
+            const month = wkState.month;
+            wkState.loading = true;
+            wkMsg("기록을 불러오는 중입니다.");
+            let r;
+            try {
+              r = await api(`/api/admin/works/list?month=${month}`);
+            } finally {
+              wkState.loading = false;
+            }
+            if (r.status === 401) {
+              showLogin();
+              return;
+            }
+            if (!r.ok) {
+              wkMsg("기록을 불러오지 못했습니다. 잠시 뒤 다시 열어 주세요.");
+              return;
+            }
+            // 받는 동안 달을 바꿨으면 바뀐 달을 한 번 더 받는다
+            if (month !== wkState.month) return loadWorks(true);
+            wkState.works = Array.isArray(r.json.works) ? r.json.works : [];
+            wkState.loadedMonth = month;
+            if (!wkState.selected.startsWith(month)) wkState.selected = wkDefaultDate();
+            wkMsg("");
+            wkRender();
+          }
+
+          function wkChips(el, field, values) {
+            if (!el) return;
+            el.innerHTML = ["", ...values]
+              .map(
+                (v) =>
+                  `<button type="button" class="wk-chip${wkState[field] === v ? " on" : ""}" data-wk-filter="${field}" data-wk-v="${escapeHtml(v)}">${v ? escapeHtml(v) : "전체"}</button>`,
+              )
+              .join("");
+          }
+
+          function wkRender() {
+            const [y, m] = wkState.month.split("-");
+            document.getElementById("wkMonthLabel").textContent = `${y}. ${m}`;
+            document.getElementById("wkCalTitle").textContent = `${y}. ${m}`;
+            wkChips(document.getElementById("wkCatChips"), "cat", WK_CATS);
+            wkChips(document.getElementById("wkStatusChips"), "status", WK_STATUS);
+            document.getElementById("wkReportBtn").classList.toggle("on", wkState.report);
+            const list = wkFiltered();
+            const count = (s) => list.filter((w) => w.status === s).length;
+            document.getElementById("wkKpis").innerHTML = [
+              ["", "이번 달 기록", list.length],
+              ["done", "완료", count("완료")],
+              ["prog", "진행", count("진행")],
+              ["iss", "특이사항", count("특이사항")],
+              ["", "결과 수치 기록", list.filter((w) => w.result).length],
+            ]
+              .map(([c, l, v]) => `<div class="wk-kpi ${c}"><div class="l">${l}</div><div class="v">${v}</div></div>`)
+              .join("");
+            wkRenderCalendar(list);
+            wkRenderDay(list);
+            wkRenderReport(list);
+          }
+
+          function wkRenderCalendar(list) {
+            const ym = wkState.month;
+            const [y, m] = ym.split("-").map(Number);
+            const first = new Date(Date.UTC(y, m - 1, 1)).getUTCDay();
+            const days = wkMonthDays(ym);
+            const today = wkToday();
+            const cells = [];
+            for (let i = 0; i < first; i++) cells.push(`<div class="wk-cell blank"></div>`);
+            for (let d = 1; d <= days; d++) {
+              const ds = `${ym}-${wkPad(d)}`;
+              const items = list.filter((w) => w.date === ds);
+              const n = items.length;
+              const lv = n === 0 ? 0 : n === 1 ? 1 : n <= 3 ? 2 : n <= 5 ? 3 : 4;
+              const cls = [`wk-cell`, `l${lv}`, ds === wkState.selected ? "sel" : "", ds === today ? "today" : ""]
+                .filter(Boolean)
+                .join(" ");
+              cells.push(
+                `<button type="button" class="${cls}" data-wk-date="${ds}" aria-label="${m}월 ${d}일 업무 ${n}건">${d}${n ? `<span class="n">${n}</span>` : ""}${items.some((w) => w.status === "특이사항") ? `<span class="dot"></span>` : ""}${ds === today ? `<span class="t">오늘</span>` : ""}</button>`,
+              );
+            }
+            document.getElementById("wkCal").innerHTML = cells.join("");
+          }
+
+          function wkCard(w) {
+            const st = WK_ST_CLASS[w.status] || "prog";
+            const toggle = w.status === "완료" ? "진행으로 되돌리기" : "완료 처리";
+            const comments = (w.comments || [])
+              .map(
+                (c) =>
+                  `<div class="wk-c"><span class="bubble">${escapeHtml(c.body)}</span><small>${escapeHtml(c.author)} · ${wkTime(c.createdAt)}</small><button type="button" data-wk-cdel="${escapeHtml(c.id)}" aria-label="의견 지우기">×</button></div>`,
+              )
+              .join("");
+            const authors = WK_AUTHORS.map(
+              (a) => `<option${a === "노블홍" ? " selected" : ""}>${a}</option>`,
+            ).join("");
+            return `<div class="wk-card${st === "iss" ? " iss" : ""}">
+      <div class="top">
+        <div class="row1"><span class="wk-st ${st}">${escapeHtml(w.status)}</span><span class="wk-cat">${escapeHtml(w.category)}</span><h4>${escapeHtml(w.title)}</h4></div>
+        ${w.result ? `<div class="wk-result">${escapeHtml(w.result)}</div>` : ""}
+        ${w.body ? `<p class="wk-body">${escapeHtml(w.body)}</p>` : ""}
+        <div class="wk-meta"><span>${escapeHtml(w.author)} · ${wkTime(w.createdAt)}${w.completedAt && w.status === "완료" ? ` · 완료 ${wkTime(w.completedAt)}` : ""}</span>
+          <span class="acts"><button type="button" class="wk-btn sm${w.status === "완료" ? "" : " gold"}" data-wk-act="toggle" data-id="${escapeHtml(w.id)}">${toggle}</button><button type="button" class="wk-btn sm" data-wk-act="edit" data-id="${escapeHtml(w.id)}">수정</button><button type="button" class="wk-btn sm" data-wk-act="delete" data-id="${escapeHtml(w.id)}">삭제</button></span></div>
+      </div>
+      <div class="wk-thread">${comments}
+        <div class="wk-cin"><select data-wk-cauthor="${escapeHtml(w.id)}" aria-label="의견 작성자">${authors}</select><input data-wk-cbody="${escapeHtml(w.id)}" maxlength="1000" placeholder="의견 남기기" /><button type="button" class="wk-btn sm gold" data-wk-cadd="${escapeHtml(w.id)}">등록</button></div>
+      </div>
+    </div>`;
+          }
+
+          function wkRenderDay(list) {
+            const ds = wkState.selected || `${wkState.month}-01`;
+            const [, m, d] = ds.split("-").map(Number);
+            const dow = WK_DOW[new Date(`${ds}T00:00:00Z`).getUTCDay()];
+            const items = list.filter((w) => w.date === ds);
+            document.getElementById("wkDayTitle").innerHTML =
+              `${m}월 ${d}일 (${dow}) <span class="wk-cat">${items.length ? `업무 ${items.length}건` : "기록 없음"}</span>`;
+            document.getElementById("wkDay").innerHTML = items.length
+              ? items.map(wkCard).join("")
+              : `<div class="wk-empty">이 날의 업무 기록이 없습니다.</div>`;
+          }
+
+          function wkReportLines(list) {
+            const out = [];
+            for (const cat of WK_CATS) {
+              const items = list.filter((w) => w.category === cat);
+              if (!items.length) continue;
+              out.push({ cat, items });
+            }
+            return out;
+          }
+
+          function wkRenderReport(list) {
+            const el = document.getElementById("wkReport");
+            el.hidden = !wkState.report;
+            if (!wkState.report) return;
+            const [y, m] = wkState.month.split("-").map(Number);
+            const groups = wkReportLines(list);
+            const body = groups.length
+              ? groups
+                  .map(
+                    (g) =>
+                      `<h5>${escapeHtml(g.cat)}</h5><ul>${g.items
+                        .map(
+                          (w) =>
+                            `<li><em>${w.date.slice(5).replace("-", "/")}</em><b>${escapeHtml(w.title)}</b>${w.result ? ` · <span>${escapeHtml(w.result)}</span>` : ""}${w.status === "완료" ? "" : ` (${escapeHtml(w.status)})`}</li>`,
+                        )
+                        .join("")}</ul>`,
+                  )
+                  .join("")
+              : `<div class="wk-empty">이번 달 기록이 없습니다.</div>`;
+            el.innerHTML = `<div class="wk-ph"><div class="wk-pt">리포트용 정리 · ${y}년 ${m}월</div><div class="wk-tools"><button type="button" class="wk-btn sm" data-wk-export="text">글로 복사</button><button type="button" class="wk-btn sm" data-wk-export="csv">엑셀(CSV) 받기</button></div></div>${body}`;
+          }
+
+          function wkReportText() {
+            const [y, m] = wkState.month.split("-").map(Number);
+            const lines = [`노블홍 업무 기록 · ${y}년 ${m}월`];
+            for (const g of wkReportLines(wkFiltered())) {
+              lines.push("", `[${g.cat}]`);
+              for (const w of g.items)
+                lines.push(
+                  `- ${w.date.slice(5).replace("-", "/")} ${w.title}${w.result ? ` · ${w.result}` : ""}${w.status === "완료" ? "" : ` (${w.status})`}`,
+                );
+            }
+            return lines.join("\n");
+          }
+
+          async function wkCopyText() {
+            const text = wkReportText();
+            try {
+              await navigator.clipboard.writeText(text);
+              wkMsg("리포트용 정리를 복사했습니다.");
+            } catch {
+              const ta = document.createElement("textarea");
+              ta.value = text;
+              document.body.appendChild(ta);
+              ta.select();
+              document.execCommand("copy");
+              ta.remove();
+              wkMsg("리포트용 정리를 복사했습니다.");
+            }
+          }
+
+          function wkDownloadCsv() {
+            const q = (v) => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`;
+            const rows = [["날짜", "상태", "분류", "제목", "결과·수치", "내용", "작성", "의견 수"]];
+            for (const w of wkFiltered())
+              rows.push([w.date, w.status, w.category, w.title, w.result, w.body, w.author, (w.comments || []).length]);
+            const csv = "﻿" + rows.map((r) => r.map(q).join(",")).join("\r\n");
+            const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `노블홍_업무기록_${wkState.month}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+          }
+
+          function wkFillSelect(id, values, value) {
+            document.getElementById(id).innerHTML = values
+              .map((v) => `<option${v === value ? " selected" : ""}>${escapeHtml(v)}</option>`)
+              .join("");
+          }
+
+          function wkOpenModal(work) {
+            wkState.editingId = work ? work.id : "";
+            document.getElementById("wkModalTitle").textContent = work ? "업무 기록 수정" : "업무 기록 추가";
+            document.getElementById("wkSaveBtn").textContent = work ? "수정 저장" : "기록 추가";
+            document.getElementById("wkF_date").value = work ? work.date : wkState.selected || wkToday();
+            wkFillSelect("wkF_status", WK_STATUS, work ? work.status : "완료");
+            wkFillSelect("wkF_cat", WK_CATS, work ? work.category : "홈페이지");
+            wkFillSelect("wkF_author", WK_AUTHORS, work ? work.author : "폴라애드");
+            document.getElementById("wkF_title").value = work ? work.title : "";
+            document.getElementById("wkF_result").value = work ? work.result : "";
+            document.getElementById("wkF_body").value = work ? work.body : "";
+            document.getElementById("wkFormErr").textContent = "";
+            document.getElementById("wkModal").hidden = false;
+            document.getElementById("wkF_title").focus();
+          }
+          function wkCloseModal() {
+            document.getElementById("wkModal").hidden = true;
+          }
+
+          async function wkPost(path, body) {
+            if (wkState.busy) return null;
+            wkState.busy = true;
+            document.querySelectorAll(".wk-root button").forEach((b) => (b.disabled = true));
+            try {
+              const r = await api(path, { method: "POST", body: JSON.stringify(body) });
+              if (r.status === 401) {
+                showLogin();
+                return null;
+              }
+              return r;
+            } catch {
+              return { ok: false, status: 0, json: {} };
+            } finally {
+              wkState.busy = false;
+              document.querySelectorAll(".wk-root button").forEach((b) => (b.disabled = false));
+            }
+          }
+
+          async function wkSave() {
+            const errEl = document.getElementById("wkFormErr");
+            const rec = {
+              date: document.getElementById("wkF_date").value,
+              status: document.getElementById("wkF_status").value,
+              category: document.getElementById("wkF_cat").value,
+              author: document.getElementById("wkF_author").value,
+              title: document.getElementById("wkF_title").value.trim(),
+              result: document.getElementById("wkF_result").value.trim(),
+              body: document.getElementById("wkF_body").value.trim(),
+            };
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(rec.date)) return void (errEl.textContent = "날짜를 골라 주세요.");
+            if (!rec.title) return void (errEl.textContent = "제목을 적어 주세요.");
+            if (wkState.editingId) rec.id = wkState.editingId;
+            const r = await wkPost("/api/admin/works/save", rec);
+            if (!r) return;
+            if (!r.ok) return void (errEl.textContent = "저장하지 못했습니다. 입력 내용을 확인해 주세요.");
+            wkCloseModal();
+            wkState.selected = rec.date;
+            wkState.month = rec.date.slice(0, 7);
+            await loadWorks(true);
+            wkMsg(wkState.editingId ? "기록을 고쳤습니다." : "기록을 추가했습니다.");
+          }
+
+          async function wkToggle(w) {
+            const next = w.status === "완료" ? "진행" : "완료";
+            const r = await wkPost("/api/admin/works/save", { ...w, status: next, comments: undefined });
+            if (r && r.ok) await loadWorks(true);
+            else if (r) wkMsg("상태를 바꾸지 못했습니다.");
+          }
+
+          async function wkDelete(w) {
+            if (!confirm(`「${w.title}」 기록과 달린 의견을 지울까요?`)) return;
+            const r = await wkPost("/api/admin/works/delete", { id: w.id });
+            if (r && r.ok) {
+              await loadWorks(true);
+              wkMsg("기록을 지웠습니다.");
+            } else if (r) wkMsg("기록을 지우지 못했습니다.");
+          }
+
+          async function wkComment(id) {
+            const input = document.querySelector(`[data-wk-cbody="${id}"]`);
+            const author = document.querySelector(`[data-wk-cauthor="${id}"]`).value;
+            const body = (input.value || "").trim();
+            if (!body) return input.focus();
+            const r = await wkPost("/api/admin/works/comment", { workId: id, author, body });
+            if (r && r.ok) await loadWorks(true);
+            else if (r) wkMsg("의견을 등록하지 못했습니다.");
+          }
+
+          async function wkCommentDelete(id) {
+            if (!confirm("이 의견을 지울까요?")) return;
+            const r = await wkPost("/api/admin/works/comment-delete", { id });
+            if (r && r.ok) await loadWorks(true);
+            else if (r) wkMsg("의견을 지우지 못했습니다.");
+          }
+
+          (function wkInit() {
+            const root = document.querySelector('[data-page-panel="works"]');
+            if (!root) return;
+            const find = (id) => wkState.works.find((w) => w.id === id);
+            root.addEventListener("click", (ev) => {
+              const t = ev.target.closest("button, [data-wk-close]");
+              if (!t || t.disabled) return;
+              if (t.matches("[data-wk-close]")) return wkCloseModal();
+              if (t.dataset.wkMonth) {
+                wkState.month = wkShiftMonth(wkState.month, Number(t.dataset.wkMonth));
+                wkState.selected = "";
+                return loadWorks(true);
+              }
+              if (t.dataset.wkDate) {
+                wkState.selected = t.dataset.wkDate;
+                return wkRender();
+              }
+              if (t.dataset.wkFilter) {
+                wkState[t.dataset.wkFilter] = t.dataset.wkV || "";
+                return wkRender();
+              }
+              if (t.dataset.wkExport === "text") return wkCopyText();
+              if (t.dataset.wkExport === "csv") return wkDownloadCsv();
+              if (t.dataset.wkCadd) return wkComment(t.dataset.wkCadd);
+              if (t.dataset.wkCdel) return wkCommentDelete(t.dataset.wkCdel);
+              if (t.dataset.wkAct) {
+                const w = find(t.dataset.id);
+                if (!w) return;
+                if (t.dataset.wkAct === "toggle") return wkToggle(w);
+                if (t.dataset.wkAct === "edit") return wkOpenModal(w);
+                if (t.dataset.wkAct === "delete") return wkDelete(w);
+              }
+              if (t.id === "wkAddBtn") return wkOpenModal(null);
+              if (t.id === "wkSaveBtn") return wkSave();
+              if (t.id === "wkReportBtn") {
+                wkState.report = !wkState.report;
+                return wkRender();
+              }
+            });
+            root.addEventListener("keydown", (ev) => {
+              if (ev.key === "Enter" && ev.target.matches("[data-wk-cbody]") && !ev.isComposing) {
+                ev.preventDefault();
+                wkComment(ev.target.dataset.wkCbody);
+              }
+              if (ev.key === "Escape" && !document.getElementById("wkModal").hidden) wkCloseModal();
+            });
+          })();
+        </script>
   </body>
 </html>
