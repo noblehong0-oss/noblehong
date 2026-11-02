@@ -850,7 +850,7 @@
           var loadStart = Date.now();
           document.addEventListener("DOMContentLoaded", function () {
             var elapsed = Date.now() - loadStart;
-            var remain = Math.max(0, 1000 - elapsed);
+            var remain = Math.max(0, 300 - elapsed);
             setTimeout(function () {
               overlay.style.opacity = "0";
               setTimeout(function () {

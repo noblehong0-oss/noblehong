@@ -31,6 +31,11 @@
       "permanent": true
     },
     {
+      "source": "/home_v3_motion",
+      "destination": "/",
+      "permanent": true
+    },
+    {
       "source": "/",
       "has": [
         {
