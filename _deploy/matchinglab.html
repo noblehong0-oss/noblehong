@@ -5267,6 +5267,7 @@
 
       function renderVideos() {
         const grid = document.getElementById("ytVideoGrid");
+        if (!grid) return;
         grid.innerHTML = ytVideoIds
           .map(
             (id, i) => `
@@ -5318,6 +5319,7 @@
 
       function renderShorts() {
         const track = document.getElementById("ytShortsGrid");
+        if (!track) return;
         track.innerHTML = ytShorts
           .map(
             (s) => `
@@ -5365,6 +5367,7 @@
       function closeVideoModal() {
         const overlay = document.getElementById("videoModal");
         const iframe = document.getElementById("videoIframe");
+        if (!overlay || !iframe) return;
         iframe.src = "";
         overlay.classList.remove("active");
         document.body.style.overflow = "";
@@ -5372,7 +5375,7 @@
 
       document
         .getElementById("videoModal")
-        .addEventListener("click", function (e) {
+        ?.addEventListener("click", function (e) {
           if (e.target === this) closeVideoModal();
         });
 

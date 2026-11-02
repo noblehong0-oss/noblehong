@@ -519,11 +519,14 @@
       };
 
       function loadProfile(key) {
-        // 데모 버튼 활성화
-        document.querySelectorAll(".demo-bar button").forEach(function (b) {
-          b.classList.remove("active");
-        });
-        event.target.classList.add("active");
+        // 데모 버튼 활성화 (첫 화면 호출처럼 클릭이 없으면 버튼 표시는 그대로 둔다)
+        var ev = window.event;
+        if (ev && ev.target && ev.target.closest) {
+          document.querySelectorAll(".demo-bar button").forEach(function (b) {
+            b.classList.remove("active");
+          });
+          ev.target.closest("button").classList.add("active");
+        }
 
         var card = document.getElementById("profileCard");
         var noResult = document.getElementById("noResult");
