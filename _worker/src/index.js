@@ -1,3 +1,7 @@
+import {
+  PageInputError, readPage, decodeCursor, pageResult, cachedPublicContent,
+} from "./content-performance.js";
+
 /**
  * 노블홍 API — Cloudflare Worker (전체 포팅)
  *
@@ -886,9 +890,9 @@ async function checkRateLimit(env, ip) {
   const oneHourAgo = new Date(Date.now() - 3600 * 1000).toISOString();
   try {
     const r = await env.DB.prepare(
-      `SELECT COUNT(*) as c FROM consultations WHERE "IP" = ? AND "제출일시" > ?`,
+      `SELECT COUNT(*) as c FROM (SELECT 1 FROM consultations WHERE "IP" = ? AND "제출일시" > ? LIMIT ?)`,
     )
-      .bind(ip, oneHourAgo)
+      .bind(ip, oneHourAgo, RATE_LIMIT_PER_HOUR)
       .first();
     return { limited: (r?.c || 0) >= RATE_LIMIT_PER_HOUR };
   } catch {
@@ -1560,6 +1564,7 @@ async function handleConsultationSubmit(request, env) {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// 가을 미팅 전용 폼: 접수 원본과 진단 기록은 비공개 D1에 보관한다.
 function fallJson(body, status = 200) {
   return json(body, status, { "Cache-Control": "private, no-store" });
 }
@@ -2666,35 +2671,17 @@ async function handleConsultationsList(request, env) {
   if (!env.DB) return json({ error: "DB not configured" }, 500);
 
   const url = new URL(request.url);
+  // 기존 어드민은 offset에 Airtable 토큰을 넘겼지만, D1은 정수 offset을 사용
+  const { offset } = readPage(Object.fromEntries(url.searchParams), 50, true);
   const source = url.searchParams.get("source") || "";
   const status = url.searchParams.get("status") || "";
   const q = (url.searchParams.get("q") || "").trim();
   const PAGE_SIZE = 50;
-  const noStore = { "Cache-Control": "private, no-store" };
   if (source.length > 100 || status.length > 30 || q.length > 100)
-    return json({ error: "Filter too long" }, 400, noStore);
-  const rawOffset = url.searchParams.get("offset") || "0";
-  if (!/^\d{1,4}$/.test(rawOffset) || Number(rawOffset) > 5000)
-    return json({ error: "Invalid offset" }, 400, noStore);
-  const offset = Number(rawOffset);
-  const rawCursor = url.searchParams.get("cursor");
-  if (rawCursor && offset) return json({ error: "Use cursor or offset" }, 400, noStore);
-  let cursor = null;
-  if (rawCursor) {
-    if (rawCursor.length > 1024 || !/^[A-Za-z0-9_-]+$/.test(rawCursor))
-      return json({ error: "Invalid cursor" }, 400, noStore);
-    try {
-      const encoded = rawCursor.replace(/-/g, "+").replace(/_/g, "/");
-      const binary = atob(encoded.padEnd(Math.ceil(encoded.length / 4) * 4, "="));
-      const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
-      const decoded = JSON.parse(new TextDecoder().decode(bytes));
-      if (!Array.isArray(decoded) || decoded.length !== 5 ||
-        decoded[0] !== source || decoded[1] !== status || decoded[2] !== q ||
-        typeof decoded[3] !== "string" || decoded[3].length > 40 ||
-        !/^rec[A-Za-z0-9]{14}$/.test(decoded[4])) throw new Error("cursor scope");
-      cursor = [decoded[3], decoded[4]];
-    } catch { return json({ error: "Invalid cursor" }, 400, noStore); }
-  }
+    return json({ error: "Filter too long" }, 400);
+  const scope = JSON.stringify(["consultations", source, status, q]);
+  const cursor = decodeCursor(url.searchParams.get("cursor"), scope, ["string", "string"]);
+  if (cursor && offset) return json({ error: "Use cursor or offset, not both" }, 400);
 
   const where = [];
   const binds = [];
@@ -2729,22 +2716,17 @@ async function handleConsultationsList(request, env) {
     )
       .bind(...binds, PAGE_SIZE + 1, offset)
       .all();
-    const rows = r.results || [];
-    const hasMore = rows.length > PAGE_SIZE;
-    const page = rows.slice(0, PAGE_SIZE);
-    let nextCursor = null;
-    if (hasMore && page.length) {
-      const last = page[page.length - 1];
-      const bytes = new TextEncoder().encode(JSON.stringify([source, status, q, last["제출일시"], last.id]));
-      let binary = "";
-      for (const byte of bytes) binary += String.fromCharCode(byte);
-      nextCursor = btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-    }
-    return json({ ok: true, records: page.map(rowToAirtableShape),
-      offset: hasMore && offset < 5000 ? String(offset + PAGE_SIZE) : null,
-      cursor: nextCursor, hasMore }, 200, noStore);
-  } catch {
-    return json({ error: "DB query failed" }, 500, noStore);
+    const page = pageResult(r.results || [], PAGE_SIZE, offset, scope, (row) => [row["제출일시"], row.id]);
+    const records = page.rows.map(rowToAirtableShape);
+    return json({ ok: true, records, offset: page.offset, cursor: page.cursor, hasMore: page.hasMore });
+  } catch (e) {
+    return json(
+      {
+        error: "DB query failed",
+        detail: String(e?.message || e).slice(0, 200),
+      },
+      500,
+    );
   }
 }
 
@@ -2871,9 +2853,13 @@ async function handleBlacklistList(request, env) {
   if (!env.DB) return json({ error: "DB not configured" }, 500);
 
   const url = new URL(request.url);
-  const offset = parseInt(url.searchParams.get("offset") || "0", 10) || 0;
+  const { offset } = readPage(Object.fromEntries(url.searchParams), 100, true);
   const q = (url.searchParams.get("q") || "").trim();
   const PAGE_SIZE = 100;
+  if (q.length > 100) return json({ error: "Filter too long" }, 400);
+  const scope = JSON.stringify(["blacklist", q]);
+  const cursor = decodeCursor(url.searchParams.get("cursor"), scope, ["string", "string"]);
+  if (cursor && offset) return json({ error: "Use cursor or offset, not both" }, 400);
 
   const where = [];
   const binds = [];
@@ -2882,18 +2868,20 @@ async function handleBlacklistList(request, env) {
     const like = `%${q.replace(/[^0-9a-zA-Z가-힣\s_-]/g, "")}%`;
     binds.push(like, like, like);
   }
+  if (cursor) {
+    where.push(`("등록일시", id) < (?, ?)`);
+    binds.push(...cursor);
+  }
   const whereSQL = where.length ? `WHERE ${where.join(" AND ")}` : "";
 
   try {
     const r = await env.DB.prepare(
-      `SELECT id, "연락처", "이름", "사유", "등록자", "등록일시" FROM blacklist ${whereSQL} ORDER BY "등록일시" DESC LIMIT ? OFFSET ?`,
+      `SELECT id, "연락처", "이름", "사유", "등록자", "등록일시" FROM blacklist ${whereSQL} ORDER BY "등록일시" DESC, id DESC LIMIT ? OFFSET ?`,
     )
-      .bind(...binds, PAGE_SIZE, offset)
+      .bind(...binds, PAGE_SIZE + 1, offset)
       .all();
-    const records = r.results || [];
-    const nextOffset =
-      records.length === PAGE_SIZE ? String(offset + PAGE_SIZE) : null;
-    return json({ ok: true, records, offset: nextOffset });
+    const page = pageResult(r.results || [], PAGE_SIZE, offset, scope, (row) => [row["등록일시"], row.id]);
+    return json({ ok: true, records: page.rows, offset: page.offset, cursor: page.cursor, hasMore: page.hasMore });
   } catch (e) {
     return json(
       {
@@ -3025,7 +3013,7 @@ async function handleAdminContent(request, env) {
   const action = params.action;
   const moduleKey = params.module;
   if (!action) return json({ error: "action required" }, 400);
-  if (!moduleKey || !MODULES[moduleKey])
+  if (!moduleKey || !Object.hasOwn(MODULES, moduleKey))
     return json({ error: "invalid module" }, 400);
   const mod = MODULES[moduleKey];
   if (!env.DB) return json({ error: "DB not bound" }, 500);
@@ -3050,6 +3038,7 @@ async function handleAdminContent(request, env) {
         return json({ error: `unknown action: ${action}` }, 400);
     }
   } catch (e) {
+    if (e instanceof PageInputError) return json({ error: e.message }, 400);
     tgDebug(
       env,
       `[noblehong/admin-content] ${moduleKey}/${action} ${(e?.message || "").slice(0, 160)}`,
@@ -3074,8 +3063,12 @@ function contentRowToShape(row, mod) {
 }
 
 async function contentList(env, mod, moduleKey, params) {
-  const limit = Math.min(Number(params.limit) || 50, 100);
-  const offset = Number(params.offset) || 0;
+  const { limit, offset } = readPage(params);
+  if (String(params.status || "").length > 30 || String(params.q || "").length > 100)
+    return json({ error: "Filter too long" }, 400);
+  const scope = JSON.stringify(["admin-content", moduleKey, params.status || "", params.q || ""]);
+  const cursor = decodeCursor(params.cursor, scope, ["number", "number", "string", "string"]);
+  if (cursor && offset) return json({ error: "Use cursor or offset, not both" }, 400);
   const where = [];
   const binds = [];
   if (params.status) {
@@ -3086,16 +3079,19 @@ async function contentList(env, mod, moduleKey, params) {
     where.push(`"${mod.primary}" LIKE ?`);
     binds.push(`%${params.q}%`);
   }
+  if (cursor) {
+    where.push(`(pinned, "정렬", "${mod.dateField}", id) < (?, ?, ?, ?)`);
+    binds.push(...cursor);
+  }
   const wsql = where.length ? `WHERE ${where.join(" AND ")}` : "";
-  const sql = `SELECT * FROM ${mod.table} ${wsql} ORDER BY pinned DESC, "정렬" DESC, "${mod.dateField}" DESC LIMIT ? OFFSET ?`;
-  binds.push(limit, offset);
+  const sql = `SELECT * FROM ${mod.table} ${wsql} ORDER BY pinned DESC, "정렬" DESC, "${mod.dateField}" DESC, id DESC LIMIT ? OFFSET ?`;
+  binds.push(limit + 1, offset);
   const r = await env.DB.prepare(sql)
     .bind(...binds)
     .all();
-  const rows = r.results || [];
-  const records = rows.map((row) => contentRowToShape(row, mod));
-  const nextOffset = rows.length === limit ? String(offset + limit) : null;
-  return json({ ok: true, module: moduleKey, records, offset: nextOffset });
+  const page = pageResult(r.results || [], limit, offset, scope, (row) => [Number(row.pinned), Number(row["정렬"]), row[mod.dateField], row.id]);
+  const records = page.rows.map((row) => contentRowToShape(row, mod));
+  return json({ ok: true, module: moduleKey, records, offset: page.offset, cursor: page.cursor, hasMore: page.hasMore });
 }
 
 async function contentGet(env, mod, params) {
@@ -4909,7 +4905,6 @@ async function handleAnalyticsVisitors(request, env) {
       );
     return json({ ...hit.body, cached: true }, 200, {
       "X-Visitor-Cache": hit.source,
-      "Cache-Control": "private, no-store",
     });
   }
 
@@ -4926,7 +4921,6 @@ async function handleAnalyticsVisitors(request, env) {
     if (env.BUCKET) bgRun(env, vaR2Put(env, keys.r2Key, payload));
     return json({ ...payload, cached: false }, 200, {
       "X-Visitor-Cache": "miss",
-      "Cache-Control": "private, no-store",
     });
   } catch (e) {
     if (e instanceof VaUpstreamError && e.status === 429)
@@ -4953,39 +4947,55 @@ async function handlePublicContent(request, env) {
     return json({ error: "Method not allowed" }, 405);
   const url = new URL(request.url);
   const moduleKey = url.searchParams.get("module");
-  if (!moduleKey || !MODULES[moduleKey])
+  if (!moduleKey || !Object.hasOwn(MODULES, moduleKey))
     return json({ error: "invalid module" }, 400);
   const mod = MODULES[moduleKey];
   if (!env.DB) return json({ error: "DB not bound" }, 500);
 
-  const limit = Math.min(Number(url.searchParams.get("limit")) || 20, 100);
-  const offset = Number(url.searchParams.get("offset")) || 0;
+  const params = Object.fromEntries(url.searchParams);
+  const { limit, offset } = readPage(params, 20);
   const onlyPinned = url.searchParams.get("pinned") === "true";
+  const view = params.view || "full";
+  if (!["full", "summary"].includes(view)) return json({ error: "Invalid view" }, 400);
+  const id = params.id || "";
+  if (id && !/^rec[a-zA-Z0-9]{14}$/.test(id)) return json({ error: "Invalid record id" }, 400);
+  const scope = JSON.stringify(["public-content", moduleKey, onlyPinned, view]);
+  const cursor = decodeCursor(params.cursor, scope, ["number", "number", "string", "string"]);
+  if ((cursor && offset) || (id && (cursor || offset)))
+    return json({ error: "Use id, cursor or offset separately" }, 400);
 
   const where = [`"상태" = ?`];
   const binds = ["공개"];
   if (onlyPinned) where.push(`pinned = 1`);
-  const sql = `SELECT * FROM ${mod.table} WHERE ${where.join(" AND ")} ORDER BY pinned DESC, "정렬" DESC, "${mod.dateField}" DESC LIMIT ? OFFSET ?`;
-  binds.push(limit, offset);
+  if (id) {
+    where.push("id = ?");
+    binds.push(id);
+  }
+  if (cursor) {
+    where.push(`(pinned, "정렬", "${mod.dateField}", id) < (?, ?, ?, ?)`);
+    binds.push(...cursor);
+  }
+  const columns = view === "summary"
+    ? ["id", ...mod.columns.filter((col) => col !== "본문"), "pinned", "정렬", "상태", "created_at"].map((col) => `"${col}"`).join(", ")
+    : "*";
+  const sql = `SELECT ${columns} FROM ${mod.table} WHERE ${where.join(" AND ")} ORDER BY pinned DESC, "정렬" DESC, "${mod.dateField}" DESC, id DESC LIMIT ? OFFSET ?`;
+  binds.push(id ? 1 : limit + 1, offset);
+  const queryKey = JSON.stringify([limit, offset, onlyPinned, view, id, cursor]);
 
   try {
-    const r = await env.DB.prepare(sql)
-      .bind(...binds)
-      .all();
-    const rows = r.results || [];
-    const records = rows.map((row) => contentRowToShape(row, mod));
-    const nextOffset = rows.length === limit ? String(offset + limit) : null;
-    return json(
-      { ok: true, module: moduleKey, records, offset: nextOffset },
-      200,
-      { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
-    );
+    return await cachedPublicContent(env, request, moduleKey, queryKey, async () => {
+      const r = await env.DB.prepare(sql).bind(...binds).all();
+      const page = pageResult(r.results || [], id ? 1 : limit, offset, scope, (row) => [Number(row.pinned), Number(row["정렬"]), row[mod.dateField], row.id]);
+      if (id && !page.rows.length) return json({ error: "Not found" }, 404, { "Cache-Control": "no-store" });
+      const records = page.rows.map((row) => contentRowToShape(row, mod));
+      return json({ ok: true, module: moduleKey, records, offset: page.offset, cursor: page.cursor, hasMore: page.hasMore });
+    });
   } catch (e) {
     tgDebug(
       env,
       `[noblehong/public-content] ${moduleKey} ${(e?.message || "").slice(0, 160)}`,
     );
-    return json({ error: "Server error" }, 500);
+    return json({ error: "Server error" }, 500, { "Cache-Control": "no-store" });
   }
 }
 
@@ -5552,8 +5562,12 @@ export default {
       return new Response(null, { status: 204, headers: cors });
     try {
       const response = await route(request, env);
+      if (new URL(request.url).pathname.startsWith("/api/admin/"))
+        response.headers.set("Cache-Control", "private, no-store");
       return mergeHeaders(response, cors);
     } catch (err) {
+      if (err instanceof PageInputError)
+        return mergeHeaders(json({ error: err.message }, 400, { "Cache-Control": "no-store" }), cors);
       return mergeHeaders(json({ error: "Uncaught exception" }, 500), cors);
     }
   },

@@ -1521,6 +1521,8 @@
       const state = {
         records: [],
         offset: null,
+        cursor: null,
+        hasMore: false,
         filter: { source: "", status: "", q: "" },
         currentId: null,
       };
@@ -1542,11 +1544,13 @@
       }
 
       function showLogin() {
+        clearConsultationsForAuth();
         document.getElementById("loginShell").style.display = "flex";
         document.getElementById("app").style.display = "none";
       }
 
       function showApp() {
+        clearConsultationsForAuth();
         document.getElementById("loginShell").style.display = "none";
         document.getElementById("app").style.display = "grid";
         const urlId = new URLSearchParams(location.search).get("id");
@@ -1647,6 +1651,7 @@
       document
         .getElementById("btnLogout")
         .addEventListener("click", async () => {
+          clearConsultationsForAuth();
           await api("/api/admin/logout", { method: "POST" });
           location.reload();
         });
@@ -1754,7 +1759,6 @@
             `<span class="consult-meta-dot">·</span>${esc(address)}`,
           );
         }
-
         const ip = f["IP"] || "";
         const geo = [f["접속국가"], f["접속지역"], f["접속도시"]]
           .filter(Boolean).join(" · ");
@@ -1828,32 +1832,124 @@
           .join("");
       }
 
-      async function loadConsultations(append = false) {
-        if (append && (!state.offset || Number(state.offset) > 5000)) return;
+      const consultationPaging = {
+        generation: 0, active: null, filterKey: "", pages: 0, bytes: 0,
+        seen: new Set(), halted: false,
+      };
+      const CONSULTATION_LIMITS = { pages: 100, records: 5000, bytes: 8 * 1024 * 1024, timeout: 10000 };
+
+      function clearConsultationsForAuth() {
+        consultationPaging.generation++;
+        consultationPaging.active?.controller.abort();
+        consultationPaging.active = null;
+        consultationPaging.seen.clear();
+        consultationPaging.pages = consultationPaging.bytes = 0;
+        consultationPaging.halted = false;
+        consultationPaging.filterKey = "";
+        state.records = [];
+        state.offset = state.cursor = state.currentId = null;
+        state.hasMore = false;
+        document.getElementById("rowsBody").innerHTML = "";
+        document.getElementById("countLabel").textContent = "";
+        const more = document.getElementById("btnLoadMore");
+        more.style.display = "none";
+        more.disabled = false;
+        document.getElementById("modalDl").innerHTML = "";
+        document.getElementById("modalMemo").value = "";
+        document.getElementById("modalBack").classList.remove("open");
+      }
+
+      function loadConsultations(append = false) {
+        const filterKey = JSON.stringify(state.filter);
+        if (filterKey !== consultationPaging.filterKey) append = false;
+        const token = append ? (state.cursor ? "cursor:" + state.cursor : "offset:" + state.offset) : "first";
+        const requestKey = filterKey + "|" + token;
+        if (consultationPaging.active?.key === requestKey)
+          return consultationPaging.active.promise;
+        if (append && (!state.hasMore || consultationPaging.halted)) return Promise.resolve();
+
+        consultationPaging.active?.controller.abort();
+        const generation = ++consultationPaging.generation;
+        if (!append) {
+          consultationPaging.filterKey = filterKey;
+          consultationPaging.pages = consultationPaging.bytes = 0;
+          consultationPaging.seen.clear();
+          consultationPaging.halted = false;
+          state.records = [];
+          state.offset = state.cursor = null;
+          state.hasMore = false;
+        }
         const params = new URLSearchParams();
         if (state.filter.source) params.set("source", state.filter.source);
         if (state.filter.status) params.set("status", state.filter.status);
         if (state.filter.q) params.set("q", state.filter.q);
-        if (append && state.offset) params.set("offset", state.offset);
-
+        if (append && state.cursor) params.set("cursor", state.cursor);
+        else if (append && state.offset) params.set("offset", state.offset);
         const body = document.getElementById("rowsBody");
-        if (!append)
+        const more = document.getElementById("btnLoadMore");
+        if (!append) {
           body.innerHTML = `<div class="loader">불러오는 중...</div>`;
-
-        const r = await api("/api/admin/consultations/list?" + params);
-        if (!r.ok) {
-          if (r.status === 401) {
-            showLogin();
-            return;
-          }
-          body.innerHTML = `<div class="empty">불러오기 실패: ${esc(r.json.error || "")}</div>`;
-          return;
+          more.style.display = "none";
         }
+        more.disabled = true;
+        const controller = new AbortController();
+        const active = { key: requestKey, controller, promise: null };
+        consultationPaging.active = active;
+        const current = () => generation === consultationPaging.generation && filterKey === JSON.stringify(state.filter);
+        active.promise = (async () => {
+          const timeout = setTimeout(() => controller.abort(), CONSULTATION_LIMITS.timeout);
+          try {
+            const r = await api("/api/admin/consultations/list?" + params, { signal: controller.signal, cache: "no-store" });
+            if (!current()) return;
+            if (!r.ok) {
+              if (r.status === 401) { showLogin(); return; }
+              throw new Error(r.json.error || "");
+            }
+            const records = r.json.records;
+            if (!Array.isArray(records) || records.length > 50 || records.some(rec => !rec || typeof rec.id !== "string" || !rec.fields || typeof rec.fields !== "object"))
+              throw new Error("Invalid consultation page");
+            const cursor = typeof r.json.cursor === "string" && r.json.cursor ? r.json.cursor : null;
+            const offset = r.json.offset == null ? null : String(r.json.offset);
+            if ((cursor && (cursor.length > 2048 || !/^[\w-]+$/.test(cursor))) || (offset && !/^\d+$/.test(offset)))
+              throw new Error("Invalid pagination token");
+            const seenIds = new Set(state.records.map(rec => rec.id));
+            let added = 0;
+            for (const rec of records) {
+              if (seenIds.has(rec.id)) continue;
+              const bytes = new TextEncoder().encode(JSON.stringify(rec)).byteLength;
+              if (state.records.length >= CONSULTATION_LIMITS.records || consultationPaging.bytes + bytes > CONSULTATION_LIMITS.bytes) {
+                consultationPaging.halted = true;
+                break;
+              }
+              state.records.push(rec);
+              seenIds.add(rec.id);
+              consultationPaging.bytes += bytes;
+              added++;
+            }
+            consultationPaging.pages++;
+            consultationPaging.seen.add(token);
+            const nextToken = cursor ? "cursor:" + cursor : (offset ? "offset:" + offset : "");
+            state.cursor = cursor;
+            state.offset = offset;
+            state.hasMore = consultationPaging.halted || (r.json.hasMore !== false && !!nextToken);
+            if (consultationPaging.pages >= CONSULTATION_LIMITS.pages || state.records.length >= CONSULTATION_LIMITS.records || (nextToken && consultationPaging.seen.has(nextToken)) || records.length === 0 || (append && added === 0) || (!cursor && offset && Number(offset) > 5000))
+              consultationPaging.halted = true;
+            renderConsultations();
+          } catch (error) {
+            if (current()) body.innerHTML = `<div class="empty">불러오기 실패: ${esc(error?.message || "")}</div>`;
+          } finally {
+            clearTimeout(timeout);
+            if (consultationPaging.active === active) {
+              consultationPaging.active = null;
+              more.disabled = consultationPaging.halted;
+            }
+          }
+        })();
+        return active.promise;
+      }
 
-        if (append) state.records = state.records.concat(r.json.records || []);
-        else state.records = r.json.records || [];
-        state.offset = /^\d{1,4}$/.test(String(r.json.offset || "")) && Number(r.json.offset) <= 5000 ? r.json.offset : null;
-
+      function renderConsultations() {
+        const body = document.getElementById("rowsBody");
         if (state.records.length === 0) {
           body.innerHTML = `<div class="empty" style="padding:40px;text-align:center;color:#8a7e60">조건에 맞는 접수 내역이 없습니다.</div>`;
         } else {
@@ -1863,8 +1959,8 @@
           "총 " +
           state.records.length +
           "건" +
-          (state.offset ? " (더 있음)" : "");
-        document.getElementById("btnLoadMore").style.display = state.offset
+          (state.hasMore ? " (더 있음)" : "");
+        document.getElementById("btnLoadMore").style.display = state.hasMore
           ? "inline-block"
           : "none";
 

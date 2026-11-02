@@ -2613,6 +2613,8 @@
         <div class="nav-item" data-page="youtube">홍유진 TV</div>
         <div class="nav-item" data-page="instagram">인스타그램</div>
         <div class="nav-item" data-page="blog">네이버 블로그</div>
+        <div class="nav-section">운영 관리</div>
+        <div class="nav-item" data-page="blacklist">블랙리스트</div>
         <div class="sidebar-footer">
           <button id="btnLogout" class="logout-btn">로그아웃</button>
         </div>
@@ -3189,6 +3191,83 @@
             <div class="loader">불러오는 중...</div>
           </div>
         </section>
+
+        <!-- 블랙리스트 패널 -->
+        <section class="tab-panel" data-page-panel="blacklist" hidden>
+          <div class="page-head">
+            <div>
+              <div class="eyebrow">BLACKLIST</div>
+              <div class="title">블랙리스트</div>
+              <div
+                style="
+                  margin-top: 6px;
+                  font-size: 12px;
+                  color: var(--gold-2);
+                  letter-spacing: 0.4px;
+                "
+              >
+                여기에 등록된 연락처는 메타광고 / 사이드바 / 하단바 / 풀폼
+                전부에서 자동 차단됩니다 (조용히 무반응 + 텔레그램 알림).
+              </div>
+            </div>
+            <div id="blacklistCount" class="count">—</div>
+          </div>
+
+          <div
+            class="filter-bar"
+            style="
+              display: flex;
+              gap: 10px;
+              flex-wrap: wrap;
+              align-items: center;
+            "
+          >
+            <input
+              id="blInputPhone"
+              type="text"
+              placeholder="연락처 (예: 010-1234-5678)"
+              maxlength="20"
+              style="min-width: 200px"
+            />
+            <input
+              id="blInputName"
+              type="text"
+              placeholder="이름 (선택)"
+              maxlength="50"
+              style="min-width: 140px"
+            />
+            <input
+              id="blInputReason"
+              type="text"
+              placeholder="사유 메모 (선택)"
+              maxlength="200"
+              style="flex: 1 1 220px; min-width: 220px"
+            />
+            <button id="btnBlAdd" class="primary">추가</button>
+          </div>
+
+          <div
+            class="filter-bar"
+            style="margin-top: 10px; display: flex; gap: 10px"
+          >
+            <input
+              id="blSearchInput"
+              type="search"
+              placeholder="연락처 · 이름 · 사유 검색"
+              style="flex: 1 1 240px"
+            />
+            <button id="btnBlSearch">조회</button>
+            <button id="btnBlReset">초기화</button>
+          </div>
+
+          <div id="blacklistBody" class="table-wrap" style="margin-top: 14px">
+            <div class="loader">불러오는 중...</div>
+          </div>
+          <div class="pagination" style="margin-top: 16px; text-align: center">
+            <button id="btnBlLoadMore" style="display: none">더 보기</button>
+          </div>
+        </section>
+        <!-- /블랙리스트 패널 -->
       </main>
     </div>
 
@@ -3278,6 +3357,8 @@
       const state = {
         records: [],
         offset: null,
+        cursor: null,
+        hasMore: false,
         filter: { source: "", status: "", q: "" },
         currentId: null,
       };
@@ -3299,11 +3380,13 @@
       }
 
       function showLogin() {
+        clearConsultationsForAuth();
         document.getElementById("loginShell").style.display = "flex";
         document.getElementById("app").style.display = "none";
       }
 
       function showApp() {
+        clearConsultationsForAuth();
         document.getElementById("loginShell").style.display = "none";
         document.getElementById("app").style.display = "grid";
         const urlId = new URLSearchParams(location.search).get("id");
@@ -3370,6 +3453,7 @@
       document
         .getElementById("btnLogout")
         .addEventListener("click", async () => {
+          clearConsultationsForAuth();
           await api("/api/admin/logout", { method: "POST" });
           location.reload();
         });
@@ -3504,7 +3588,6 @@
             `<span class="consult-meta-dot">·</span>${esc(address)}`,
           );
         }
-
         const ip = f["IP"] || "";
         const geo = [f["접속국가"], f["접속지역"], f["접속도시"]]
           .filter(Boolean).join(" · ");
@@ -3578,32 +3661,124 @@
           .join("");
       }
 
-      async function loadConsultations(append = false) {
-        if (append && (!state.offset || Number(state.offset) > 5000)) return;
+      const consultationPaging = {
+        generation: 0, active: null, filterKey: "", pages: 0, bytes: 0,
+        seen: new Set(), halted: false,
+      };
+      const CONSULTATION_LIMITS = { pages: 100, records: 5000, bytes: 8 * 1024 * 1024, timeout: 10000 };
+
+      function clearConsultationsForAuth() {
+        consultationPaging.generation++;
+        consultationPaging.active?.controller.abort();
+        consultationPaging.active = null;
+        consultationPaging.seen.clear();
+        consultationPaging.pages = consultationPaging.bytes = 0;
+        consultationPaging.halted = false;
+        consultationPaging.filterKey = "";
+        state.records = [];
+        state.offset = state.cursor = state.currentId = null;
+        state.hasMore = false;
+        document.getElementById("rowsBody").innerHTML = "";
+        document.getElementById("countLabel").textContent = "";
+        const more = document.getElementById("btnLoadMore");
+        more.style.display = "none";
+        more.disabled = false;
+        document.getElementById("modalDl").innerHTML = "";
+        document.getElementById("modalMemo").value = "";
+        document.getElementById("modalBack").classList.remove("open");
+      }
+
+      function loadConsultations(append = false) {
+        const filterKey = JSON.stringify(state.filter);
+        if (filterKey !== consultationPaging.filterKey) append = false;
+        const token = append ? (state.cursor ? "cursor:" + state.cursor : "offset:" + state.offset) : "first";
+        const requestKey = filterKey + "|" + token;
+        if (consultationPaging.active?.key === requestKey)
+          return consultationPaging.active.promise;
+        if (append && (!state.hasMore || consultationPaging.halted)) return Promise.resolve();
+
+        consultationPaging.active?.controller.abort();
+        const generation = ++consultationPaging.generation;
+        if (!append) {
+          consultationPaging.filterKey = filterKey;
+          consultationPaging.pages = consultationPaging.bytes = 0;
+          consultationPaging.seen.clear();
+          consultationPaging.halted = false;
+          state.records = [];
+          state.offset = state.cursor = null;
+          state.hasMore = false;
+        }
         const params = new URLSearchParams();
         if (state.filter.source) params.set("source", state.filter.source);
         if (state.filter.status) params.set("status", state.filter.status);
         if (state.filter.q) params.set("q", state.filter.q);
-        if (append && state.offset) params.set("offset", state.offset);
-
+        if (append && state.cursor) params.set("cursor", state.cursor);
+        else if (append && state.offset) params.set("offset", state.offset);
         const body = document.getElementById("rowsBody");
-        if (!append)
+        const more = document.getElementById("btnLoadMore");
+        if (!append) {
           body.innerHTML = `<div class="loader">불러오는 중...</div>`;
-
-        const r = await api("/api/admin/consultations/list?" + params);
-        if (!r.ok) {
-          if (r.status === 401) {
-            showLogin();
-            return;
-          }
-          body.innerHTML = `<div class="empty">불러오기 실패: ${esc(r.json.error || "")}</div>`;
-          return;
+          more.style.display = "none";
         }
+        more.disabled = true;
+        const controller = new AbortController();
+        const active = { key: requestKey, controller, promise: null };
+        consultationPaging.active = active;
+        const current = () => generation === consultationPaging.generation && filterKey === JSON.stringify(state.filter);
+        active.promise = (async () => {
+          const timeout = setTimeout(() => controller.abort(), CONSULTATION_LIMITS.timeout);
+          try {
+            const r = await api("/api/admin/consultations/list?" + params, { signal: controller.signal, cache: "no-store" });
+            if (!current()) return;
+            if (!r.ok) {
+              if (r.status === 401) { showLogin(); return; }
+              throw new Error(r.json.error || "");
+            }
+            const records = r.json.records;
+            if (!Array.isArray(records) || records.length > 50 || records.some(rec => !rec || typeof rec.id !== "string" || !rec.fields || typeof rec.fields !== "object"))
+              throw new Error("Invalid consultation page");
+            const cursor = typeof r.json.cursor === "string" && r.json.cursor ? r.json.cursor : null;
+            const offset = r.json.offset == null ? null : String(r.json.offset);
+            if ((cursor && (cursor.length > 2048 || !/^[\w-]+$/.test(cursor))) || (offset && !/^\d+$/.test(offset)))
+              throw new Error("Invalid pagination token");
+            const seenIds = new Set(state.records.map(rec => rec.id));
+            let added = 0;
+            for (const rec of records) {
+              if (seenIds.has(rec.id)) continue;
+              const bytes = new TextEncoder().encode(JSON.stringify(rec)).byteLength;
+              if (state.records.length >= CONSULTATION_LIMITS.records || consultationPaging.bytes + bytes > CONSULTATION_LIMITS.bytes) {
+                consultationPaging.halted = true;
+                break;
+              }
+              state.records.push(rec);
+              seenIds.add(rec.id);
+              consultationPaging.bytes += bytes;
+              added++;
+            }
+            consultationPaging.pages++;
+            consultationPaging.seen.add(token);
+            const nextToken = cursor ? "cursor:" + cursor : (offset ? "offset:" + offset : "");
+            state.cursor = cursor;
+            state.offset = offset;
+            state.hasMore = consultationPaging.halted || (r.json.hasMore !== false && !!nextToken);
+            if (consultationPaging.pages >= CONSULTATION_LIMITS.pages || state.records.length >= CONSULTATION_LIMITS.records || (nextToken && consultationPaging.seen.has(nextToken)) || records.length === 0 || (append && added === 0) || (!cursor && offset && Number(offset) > 5000))
+              consultationPaging.halted = true;
+            renderConsultations();
+          } catch (error) {
+            if (current()) body.innerHTML = `<div class="empty">불러오기 실패: ${esc(error?.message || "")}</div>`;
+          } finally {
+            clearTimeout(timeout);
+            if (consultationPaging.active === active) {
+              consultationPaging.active = null;
+              more.disabled = consultationPaging.halted;
+            }
+          }
+        })();
+        return active.promise;
+      }
 
-        if (append) state.records = state.records.concat(r.json.records || []);
-        else state.records = r.json.records || [];
-        state.offset = /^\d{1,4}$/.test(String(r.json.offset || "")) && Number(r.json.offset) <= 5000 ? r.json.offset : null;
-
+      function renderConsultations() {
+        const body = document.getElementById("rowsBody");
         if (state.records.length === 0) {
           body.innerHTML = `<div class="empty" style="padding:40px;text-align:center;color:#8a7e60">조건에 맞는 접수 내역이 없습니다.</div>`;
         } else {
@@ -3613,8 +3788,8 @@
           "총 " +
           state.records.length +
           "건" +
-          (state.offset ? " (더 있음)" : "");
-        document.getElementById("btnLoadMore").style.display = state.offset
+          (state.hasMore ? " (더 있음)" : "");
+        document.getElementById("btnLoadMore").style.display = state.hasMore
           ? "inline-block"
           : "none";
 
@@ -4437,6 +4612,201 @@
         });
       }
 
+      // ─────────────────────────────────────────────
+      // 블랙리스트 관리 (등록/조회/삭제)
+      // 매칭 키: 연락처(숫자만). 4개 폼 핸들러가 자동 차단
+      // ─────────────────────────────────────────────
+      const blState = { offset: 0, q: "", loaded: false };
+
+      function blEscape(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function blFormatPhone(digits) {
+        const d = String(digits || "").replace(/[^0-9]/g, "");
+        if (d.length === 11)
+          return d.slice(0, 3) + "-" + d.slice(3, 7) + "-" + d.slice(7, 11);
+        if (d.length === 10)
+          return d.slice(0, 3) + "-" + d.slice(3, 6) + "-" + d.slice(6, 10);
+        return d;
+      }
+
+      function blFormatDate(iso) {
+        if (!iso) return "—";
+        try {
+          const d = new Date(iso);
+          if (isNaN(d.getTime())) return iso;
+          const yy = String(d.getFullYear()).slice(2);
+          const mm = String(d.getMonth() + 1).padStart(2, "0");
+          const dd = String(d.getDate()).padStart(2, "0");
+          const hh = String(d.getHours()).padStart(2, "0");
+          const mi = String(d.getMinutes()).padStart(2, "0");
+          return `${yy}.${mm}.${dd} ${hh}:${mi}`;
+        } catch {
+          return iso;
+        }
+      }
+
+      async function loadBlacklist(reset = true) {
+        const body = document.getElementById("blacklistBody");
+        const countEl = document.getElementById("blacklistCount");
+        const loadMore = document.getElementById("btnBlLoadMore");
+        if (!body) return;
+        if (reset) {
+          blState.offset = 0;
+          body.innerHTML = '<div class="loader">불러오는 중...</div>';
+        }
+        const params = new URLSearchParams();
+        if (blState.offset) params.set("offset", String(blState.offset));
+        if (blState.q) params.set("q", blState.q);
+        const qs = params.toString();
+        const r = await api("/api/admin/blacklist/list" + (qs ? "?" + qs : ""));
+        if (!r.ok) {
+          body.innerHTML =
+            '<div class="empty">불러오기 실패 (' +
+            blEscape(r.json?.error || r.status) +
+            ")</div>";
+          return;
+        }
+        const records = r.json.records || [];
+        const html = records.length
+          ? '<table style="width:100%;border-collapse:collapse">' +
+            "<thead><tr>" +
+            '<th style="text-align:left;padding:10px 12px;color:var(--gold-2);font-size:11px;letter-spacing:1px;border-bottom:1px solid var(--line)">연락처</th>' +
+            '<th style="text-align:left;padding:10px 12px;color:var(--gold-2);font-size:11px;letter-spacing:1px;border-bottom:1px solid var(--line)">이름</th>' +
+            '<th style="text-align:left;padding:10px 12px;color:var(--gold-2);font-size:11px;letter-spacing:1px;border-bottom:1px solid var(--line)">사유</th>' +
+            '<th style="text-align:left;padding:10px 12px;color:var(--gold-2);font-size:11px;letter-spacing:1px;border-bottom:1px solid var(--line)">등록자</th>' +
+            '<th style="text-align:left;padding:10px 12px;color:var(--gold-2);font-size:11px;letter-spacing:1px;border-bottom:1px solid var(--line)">등록일시</th>' +
+            '<th style="padding:10px 12px;border-bottom:1px solid var(--line)"></th>' +
+            "</tr></thead><tbody>" +
+            records
+              .map(
+                (rec) =>
+                  '<tr data-bl-id="' +
+                  blEscape(rec.id) +
+                  '">' +
+                  '<td style="padding:12px;font-variant-numeric:tabular-nums;font-weight:600">' +
+                  blEscape(blFormatPhone(rec["연락처"])) +
+                  "</td>" +
+                  '<td style="padding:12px">' +
+                  blEscape(rec["이름"] || "—") +
+                  "</td>" +
+                  '<td style="padding:12px;color:#a89b80">' +
+                  blEscape(rec["사유"] || "—") +
+                  "</td>" +
+                  '<td style="padding:12px;color:#a89b80;font-size:12px">' +
+                  blEscape(rec["등록자"] || "—") +
+                  "</td>" +
+                  '<td style="padding:12px;color:#a89b80;font-size:12px">' +
+                  blEscape(blFormatDate(rec["등록일시"])) +
+                  "</td>" +
+                  '<td style="padding:12px;text-align:right"><button class="bl-del" data-bl-id="' +
+                  blEscape(rec.id) +
+                  '">해제</button></td>' +
+                  "</tr>",
+              )
+              .join("") +
+            "</tbody></table>"
+          : '<div class="empty" style="padding:32px;text-align:center;color:#a89b80">등록된 블랙리스트가 없습니다.</div>';
+        if (reset) body.innerHTML = html;
+        else body.insertAdjacentHTML("beforeend", html);
+
+        if (countEl) countEl.textContent = `${records.length}건 표시`;
+
+        if (r.json.offset) {
+          blState.offset = parseInt(r.json.offset, 10) || 0;
+          if (loadMore) loadMore.style.display = "";
+        } else if (loadMore) {
+          loadMore.style.display = "none";
+        }
+
+        body.querySelectorAll(".bl-del").forEach((btn) => {
+          btn.addEventListener("click", () =>
+            deleteBlacklist(btn.dataset.blId),
+          );
+        });
+      }
+
+      async function addBlacklist() {
+        const phoneEl = document.getElementById("blInputPhone");
+        const nameEl = document.getElementById("blInputName");
+        const reasonEl = document.getElementById("blInputReason");
+        const btn = document.getElementById("btnBlAdd");
+        if (!phoneEl) return;
+        const phone = phoneEl.value.trim();
+        const digits = phone.replace(/[^0-9]/g, "");
+        if (digits.length < 9 || digits.length > 11) {
+          alert("연락처 형식을 확인하세요 (9~11자리 숫자).");
+          phoneEl.focus();
+          return;
+        }
+        const name = nameEl ? nameEl.value.trim() : "";
+        const reason = reasonEl ? reasonEl.value.trim() : "";
+        btn.disabled = true;
+        const r = await api("/api/admin/blacklist/add", {
+          method: "POST",
+          body: JSON.stringify({ phone: digits, name, reason }),
+        });
+        btn.disabled = false;
+        if (!r.ok) {
+          alert(r.json?.error || "추가 실패");
+          return;
+        }
+        phoneEl.value = "";
+        if (nameEl) nameEl.value = "";
+        if (reasonEl) reasonEl.value = "";
+        await loadBlacklist(true);
+      }
+
+      async function deleteBlacklist(id) {
+        if (!id) return;
+        if (!confirm("이 항목을 블랙리스트에서 해제하시겠어요?")) return;
+        const r = await api("/api/admin/blacklist/delete", {
+          method: "POST",
+          body: JSON.stringify({ id }),
+        });
+        if (!r.ok) {
+          alert(r.json?.error || "해제 실패");
+          return;
+        }
+        await loadBlacklist(true);
+      }
+
+      document
+        .getElementById("btnBlAdd")
+        ?.addEventListener("click", addBlacklist);
+      document
+        .getElementById("blInputPhone")
+        ?.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") addBlacklist();
+        });
+      document.getElementById("btnBlSearch")?.addEventListener("click", () => {
+        const q = document.getElementById("blSearchInput")?.value.trim() || "";
+        blState.q = q;
+        loadBlacklist(true);
+      });
+      document
+        .getElementById("blSearchInput")
+        ?.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            blState.q = e.target.value.trim();
+            loadBlacklist(true);
+          }
+        });
+      document.getElementById("btnBlReset")?.addEventListener("click", () => {
+        const s = document.getElementById("blSearchInput");
+        if (s) s.value = "";
+        blState.q = "";
+        loadBlacklist(true);
+      });
+      document
+        .getElementById("btnBlLoadMore")
+        ?.addEventListener("click", () => loadBlacklist(false));
+
       function switchTab(page) {
         document.querySelectorAll(".nav-item[data-page]").forEach((n) => {
           n.classList.toggle("active", n.dataset.page === page);
@@ -4450,6 +4820,8 @@
           loadVisitorAnalytics();
         } else if (page === "works") {
           loadWorks();
+        } else if (page === "blacklist") {
+          loadBlacklist(true);
         } else if (page !== "consultations") {
           loadContentList(page);
         }
