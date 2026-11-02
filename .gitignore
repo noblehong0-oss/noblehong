@@ -87,3 +87,22 @@ _legacy_forms_ref/
 
 # wrangler 로컬 시크릿 (절대 커밋 금지)
 .dev.vars
+
+# ── 보안: 계정·접속 정보와 내부 작업물 (2026-11-02 점검) ──
+# 키·인증서 파일
+*.pem
+*.key
+*.p12
+*.pfx
+*credentials*.json
+service-account*.json
+# 관리자 접속 정보를 실값으로 담는 로컬 안내서 (전역 규칙: *.local.html)
+*.local.html
+# 계정·로그인·관리자 연락처가 들어 있는 안내서
+guide_admin_access.html
+guide_cafe24_accounts.html
+# 고객 서버(카페24 CRM) 패치 코드와 데이터 덤프
+_cafe24_patch/
+_worker/_airtable_dump/
+# 로컬 작업 폴더: 핸드오프, 운영 배포 사본, 관리자 쿠키 서명 스크립트
+.workspace/
