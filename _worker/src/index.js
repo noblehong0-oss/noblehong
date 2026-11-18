@@ -1143,14 +1143,20 @@ async function postToCafe24(env, fields) {
   const _url = new URL(env.CRM_ENDPOINT);
   const _hostnameUrl = `http://crm.noblehong.com${_url.pathname}${_url.search}`;
 
-  // 카페24 IIS는 종종 일시 지연(App Pool recycle, MSSQL 락) 발생.
-  // 15s 타임아웃 + 1회 재시도(1.5s 대기). 총 최대 ~31.5s.
-  const TIMEOUT_MS = 15000;
-  const MAX_ATTEMPTS = 2;
-  let lastErr;
-  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+  // 카페24 IIS는 밤 시간에 15초 넘게 늦게 답하면서도 첫 요청은 저장한다.
+  // 2026-11-18 MSSQL 대조: 결과 칸이 빈 접수 8건 전부 같은 분이 2행씩 들어가 있었다(시간 초과 뒤 재시도가 만든 중복).
+  // 그래서 시간 초과·연결 오류는 다시 보내지 않는다. 다시 보내는 경우는 CRM이 저장 실패(「알 수 없는 오류」)를
+  // 직접 알린 때뿐이다. 전체를 22초 안에 끝내야 waitUntil 30초 안에서 결과 기록과 실패 알림까지 마친다.
+  const DEADLINE_MS = 22000;
+  const started = Date.now();
+  for (let attempt = 1; attempt <= 2; attempt++) {
     const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+    const t = setTimeout(
+      () => ctrl.abort(),
+      DEADLINE_MS - (Date.now() - started),
+    );
+    let text = "";
+    let status = 0;
     try {
       const r = await fetch(_hostnameUrl, {
         method: "POST",
@@ -1165,40 +1171,39 @@ async function postToCafe24(env, fields) {
         signal: ctrl.signal,
         redirect: "manual",
       });
+      status = r.status;
       // 응답은 UTF-8 HTML (inc_top.html: Response.CharSet="utf-8")
       const bytes = new Uint8Array(await r.arrayBuffer());
-      let text = "";
       try {
         text = new TextDecoder("utf-8", { fatal: false }).decode(bytes);
       } catch {
         text = new TextDecoder("euc-kr").decode(bytes);
       }
-      // 디버그: Cafe24 응답 첫 300자를 Telegram으로 관측 (성공/실패 모두)
-      bgRun(
-        env,
-        tgDebug(
-          env,
-          `[노블홍/cafe24-debug] status=${r.status} attempt=${attempt}\nname=${fields.u_name}\nhp=${fields.u_hp}\nbody(head)=${text
-            .replace(/<[^>]+>/g, " ")
-            .replace(/\s+/g, " ")
-            .slice(0, 280)}`,
-        ),
-      );
-      if (text.includes("알 수 없는 오류"))
-        throw new Error("CRM returned error alert");
-      return { ok: true, status: r.status, attempt };
     } catch (e) {
-      lastErr = e;
-      if (attempt < MAX_ATTEMPTS) {
-        await new Promise((res) => setTimeout(res, 1500));
-        continue;
-      }
+      if (ctrl.signal.aborted)
+        throw new Error(
+          `CRM 응답 ${DEADLINE_MS / 1000}초 초과(저장됐을 수 있음, CRM 접수 목록 확인)`,
+        );
       throw e;
     } finally {
       clearTimeout(t);
     }
+    // 디버그: Cafe24 응답 첫 300자를 Telegram으로 관측 (성공/실패 모두)
+    bgRun(
+      env,
+      tgDebug(
+        env,
+        `[노블홍/cafe24-debug] status=${status} attempt=${attempt}\nname=${fields.u_name}\nhp=${fields.u_hp}\nbody(head)=${text
+          .replace(/<[^>]+>/g, " ")
+          .replace(/\s+/g, " ")
+          .slice(0, 280)}`,
+      ),
+    );
+    if (!text.includes("알 수 없는 오류")) return { ok: true, status, attempt };
+    if (attempt === 2 || Date.now() - started > DEADLINE_MS - 8000)
+      throw new Error("CRM returned error alert");
+    await sleep(1500);
   }
-  throw lastErr;
 }
 
 // 브라우저 Pixel과 같은 event_id를 사용해 중복 전환을 하나로 묶는다.
@@ -1716,6 +1721,7 @@ async function handleFallMeeting(request, env) {
     .catch(async (error) => {
       await recordCafe24Result(env, recordId, `fail:${String(error?.message || error).slice(0, 80)}`);
       await recordFallStage(env, auditFields, "crm_failed", String(error?.message || error));
+      await tgDebug(env, `[노블홍/fall-meeting] 카페24 전송 실패\nRecord:${recordId}\n${String(error?.message || error).slice(0, 200)}`);
     }));
   if (eventId) {
     bgRun(env, sendFallMeetingCapi(env, {
