@@ -1991,6 +1991,15 @@ async function linkMetaLead(env, leadId, consultationId) {
   } catch {}
 }
 
+// CRM 특이사항 분류 — 카페24 u_memo 맨 앞에 붙는다(접수 목록 「비고」, 배정 뒤 준회원 「특이사항」).
+// 캠페인명을 먼저 보고 없으면 광고명으로 판단한다. 가을미팅은 홈페이지 신청과 같은 문구를 쓴다.
+export function metaLeadCategory(campaignName, adName) {
+  const s = `${campaignName || ""} ${adName || ""}`;
+  if (/가을\s*(미팅|버스팅)/.test(s)) return "가을미팅신청";
+  if (/성혼/.test(s)) return "성혼";
+  return "";
+}
+
 async function handleMetaLead(request, env) {
   if (request.method !== "POST")
     return json({ error: "Method not allowed" }, 405);
@@ -2046,6 +2055,10 @@ async function handleMetaLead(request, env) {
   );
   const region = cleanLine(body["지역"] || g.region || "", 100);
   const adName = cleanLine(body["광고명"] || body.adName || "", 200);
+  const campaignName = cleanLine(
+    body["캠페인명"] || body.campaignName || "",
+    200,
+  );
   // 플랫폼: ig/fb 정규화 (instagram, facebook, IG, FB, instagram_feed 등 모두 수용)
   const platformRaw = String(body["플랫폼"] || body.platform || "")
     .toLowerCase()
@@ -2160,7 +2173,12 @@ async function handleMetaLead(request, env) {
         : platform === "fb"
           ? "Meta광고-FB"
           : "Meta광고";
-    const cafe24Memo = adName ? `[${cafe24Tag}] ${adName}` : `[${cafe24Tag}]`;
+    const cafe24Memo = [
+      metaLeadCategory(campaignName, adName),
+      adName ? `[${cafe24Tag}] ${adName}` : `[${cafe24Tag}]`,
+    ]
+      .filter(Boolean)
+      .join(" · ");
     bgRun(
       env,
       postToCafe24(env, {
